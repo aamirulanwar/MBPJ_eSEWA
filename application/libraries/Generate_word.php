@@ -593,15 +593,8 @@ class Generate_word {
         ob_clean();
         $filename = 'Notis '.notice_level($notice_level).' - '.$get_details['NAME'].'.docx';
         $templateProcessor->saveAs($filename);
-		
-		$wordPdf = \PhpOffice\PhpWord\IOFactory::load($filename.".docx");
-		
-		$pdfWriter = \PhpOffice\PhpWord\IOFactory::createWriter($wordPdf , 'PDF');
-		unlink($filename.".pdf");
-		$pdfWriter->save($filename.".pdf");  
 
-        // header('Content-Disposition: attachment; filename='.$filename);
-		header('Content-Type: application/msword;');
+        header('Content-Disposition: attachment; filename='.$filename);
         header('Content-Transfer-Encoding: binary');
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
         header('Expires: 0');

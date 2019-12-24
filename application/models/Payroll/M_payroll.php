@@ -28,7 +28,7 @@ class M_payroll extends CI_Model
         $this->payroll->where('AMAUN',$data['AMAUN']);
         $this->payroll->where('TKH_HANTAR',$data['TKH_HANTAR']);
         $this->payroll->where('TBACA',$data['TBACA']);
-        $this->payroll->update('PAYROLL',$data_update);
+        $this->payroll->update('PAYROLL.SEWA_STAGING',$data_update);
         return true;
     }
 }

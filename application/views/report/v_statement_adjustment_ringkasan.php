@@ -149,7 +149,7 @@
                             echo '<th>Jumlah (Kredit) (RM)</th>';
                             echo '<tr>';
                             echo '</thead>';
-                            echo '</body>';
+                            echo '<tbody>';
 
                             foreach ($report['category'] as $category):
                                 echo '<tr>';

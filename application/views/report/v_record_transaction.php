@@ -116,7 +116,7 @@
 //                    echo '<th>No. bill</th>';
                     echo '</tr>';
                     echo '</thead>';
-                    echo '</body>';
+                    echo '<tbody>';
 
                     $amount = 0;
                     foreach ($data_report as $row):
