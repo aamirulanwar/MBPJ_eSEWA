@@ -1,0 +1,84 @@
+.breadcrumb-item{
+    line-height: 45px;
+}
+
+.card-header{
+    background-color: white !important;
+}
+
+.col-form-label{
+    font-weight: bold !important;
+}
+
+.mandatory{
+    color: #d14;
+    font-size: 15px;
+}
+
+.valError {
+    color: #c40000;
+    font-size: 14px;
+    margin-bottom: 0px;
+}
+
+.card-footer{
+    background-color: white !important;
+}
+
+.login-page{
+    background-image: url("../../assets/images/login/login-v1-bg.jpg");
+    background-size: cover;
+    width: 100%;
+    position: relative;
+    background-repeat: no-repeat;
+}
+
+.login-page .login-content{
+    background-image: url("../../assets/images/login/mpkj-bg-v2.jpg");
+    background-size: cover;
+    width: 100%;
+    background-position: bottom;
+    position: relative;
+    background-repeat: no-repeat;
+}
+
+.login-page .card{
+    border-radius: 0px !important;
+    background-color: rgba(255,255,255,0);
+}
+
+.login-page .card-group > .card{
+    margin-bottom: 0px !important;
+    border: 0;
+}
+
+.login-page .card-footer{
+    background-color: #cecece !important;
+    border-radius: 0 !important;
+}
+
+.header-h1{
+    text-decoration: underline !important;
+}
+
+.form-control[readonly] {
+    background-color: transparent;
+    opacity: 1;
+}
+
+.sidebar .nav-dropdown .nav-dropdown-items .nav-link {
+    padding-left: 23px;
+}
+
+.badge-info {
+    color: #ffffff !important;
+}
+
+.img_upload{
+    width: 250px;
+    border: 1px solid #d4d3d3;
+}
+.attachment_application > .img_upload{
+    width: 100px;
+    border: 1px solid #d4d3d3;
+}
