@@ -1226,9 +1226,11 @@ class Report extends CI_Controller
                         $i=0;
                         foreach ($data_category as $category):
                                 $i = $i+1;
+								/*
                                 if($i==4):
                                     break;
                                 endif;
+								*/
                             #tunggakan
 //                            $tr_code_payment_overdue = substr_replace($row['TRCODE_CATEGORY'],'12',0,2);
                             $data_search_overdue['tr_code_like']    = '12';//$tr_code_payment_overdue;
@@ -1306,12 +1308,6 @@ class Report extends CI_Controller
                             $loop_category_1['category_details']      = $this->m_category->get_a_category_details($category['CATEGORY_ID']);
                             $loop_category[] = $loop_category_1;
 
-//                            $row['data_type_details']['category']   = $loop_category;
-//                            echo $category['CATEGORY_ID'];
-//                            $row['semasa']          = $semasa;
-//                            $row['bayaran_semasa']  = $bayaran_semasa;
-
-//                            $data_report[] = $row;
                         endforeach;
                         $row['category'] = $loop_category;
                         $data_report[] = $row;
@@ -1319,76 +1315,7 @@ class Report extends CI_Controller
                 endforeach;
             endif;
 
-//            pre($data_report);
 
-//            $data_account = $this->m_acc_account->get_account_by_search($data_search);
-//            if($data_account):
-//                foreach ($data_account as $row):
-//                    #tunggakan
-//                    $tr_code_payment_overdue = substr_replace($row['TRCODE_CATEGORY'],'12',0,2);
-//                    $data_search_overdue['tr_code_like']    = '12';//$tr_code_payment_overdue;
-//                    $data_search_overdue['account_id']      = $row['ACCOUNT_ID'];
-//                    $data_search_overdue['bill_category']   = 'B';
-//                    $tunggakan  = $this->m_bill_item->get_bill_by_search($data_search_overdue);
-//
-//                    #$bayaran
-//                    $tr_code_payment_payment = substr_replace($row['TRCODE_CATEGORY'],'22',0,2);
-//                    $data_search_payment['tr_code_like']    = '22';
-//                    $data_search_payment['account_id']      = $row['ACCOUNT_ID'];
-//                    $data_search_payment['bill_category']   = 'R';
-//                    $bayaran    = $this->m_bill_item->get_bill_by_search($data_search_payment);
-//
-//                    #lebbihan
-//                    $tr_code_payment_payment = substr_replace($row['TRCODE_CATEGORY'],'22',0,2);
-//                    $data_search_lebihan['tr_code_like']    = '11119999';
-//                    $data_search_lebihan['account_id']      = $row['ACCOUNT_ID'];
-//                    $data_search_lebihan['bill_category']   = 'B';
-//                    $lebihan    = $this->m_bill_item->get_bill_by_search($data_search_lebihan);
-//
-//                    #cukai
-//                    $tr_code_payment_payment = substr_replace($row['TRCODE_CATEGORY'],'22',0,2);
-//                    $data_search_cukai['tr_code_start']   = '11110025';
-//                    $data_search_cukai['tr_code_end']     = '11110029';
-//                    $data_search_cukai['account_id']      = $row['ACCOUNT_ID'];
-//                    $data_search_cukai['bill_category']   = 'B';
-//                    $cukai    = $this->m_bill_item->get_bill_by_search($data_search_cukai);
-//
-//                    #bayaran cukai
-//                    $tr_code_payment_payment = substr_replace($row['TRCODE_CATEGORY'],'22',0,2);
-//                    $data_search_bayaran_cukai['tr_code_start']   = '11110025';
-//                    $data_search_bayaran_cukai['tr_code_end']     = '11110029';
-//                    $data_search_bayaran_cukai['account_id']      = $row['ACCOUNT_ID'];
-//                    $data_search_bayaran_cukai['bill_category']   = 'R';
-//                    $bayaran_cukai    = $this->m_bill_item->get_bill_by_search($data_search_bayaran_cukai);
-//
-//                    #sewaan semasa
-//                    $tr_code_payment_payment = substr_replace($row['TRCODE_CATEGORY'],'22',0,2);
-//                    $data_search_semasa['tr_code']           = $row['TRCODE_CATEGORY'];
-//                    $data_search_semasa['account_id']        = $row['ACCOUNT_ID'];
-//                    $data_search_semasa['bill_category']     = 'B';
-//                    $semasa    = $this->m_bill_item->get_bill_by_search($data_search_semasa);
-//
-//                    #bayaran sewaan
-//                    $bayaran_semasa = substr_replace($row['TRCODE_CATEGORY'],'21',0,2);
-//                    $data_search_bayaran_semasa['tr_code']           = $bayaran_semasa;
-//                    $data_search_bayaran_semasa['account_id']        = $row['ACCOUNT_ID'];
-//                    $data_search_bayaran_semasa['bill_category']     = 'R';
-//                    $bayaran_semasa    = $this->m_bill_item->get_bill_by_search($data_search_bayaran_semasa);
-//
-//                    $row['tunggakan']       = $tunggakan;
-//                    $row['bayaran']         = $bayaran;
-//                    $row['lebihan']         = $lebihan;
-//                    $row['cukai']           = $cukai;
-//                    $row['bayaran_cukai']   = $bayaran_cukai;
-//                    $row['semasa']          = $semasa;
-//                    $row['bayaran_semasa']  = $bayaran_semasa;
-//
-//                    $data_report[] = $row;
-//                endforeach;
-//            endif;
-
-//            pre($data_report);
-//            echo last_query();
             $data['data_report']    = $data_report;
             $data['data_search']    = $data_search;
         else:

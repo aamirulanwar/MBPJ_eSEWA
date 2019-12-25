@@ -94,7 +94,7 @@ class M_acc_account extends CI_Model
             endif;
         endif;
         if(isset($data_search['name']) && having_value($data_search['name'])):
-            db_where("acc.name like '%".$data_search['name']."%'");
+            db_where("upper(acc.name) like '%".strtoupper($data_search['name'])."%'");
         endif;
         if(isset($data_search['ic_number_company_reg']) && having_value($data_search['ic_number_company_reg'])):
             db_where("(acc.ic_number like '%".$data_search['ic_number_company_reg']."%' or acc.company_registration_number like '%".$data_search['ic_number_company_reg']."%')");
@@ -140,7 +140,7 @@ class M_acc_account extends CI_Model
             endif;
         endif;
         if(isset($data_search['name']) && having_value($data_search['name'])):
-            db_where("acc.name like '%".$data_search['name']."%'");
+            db_where("upper(acc.name) like '%".strtoupper($data_search['name'])."%'");
         endif;
         if(isset($data_search['status_bill']) && having_value($data_search['status_bill'])):
             db_where('a.STATUS_BILL',STATUS_BILL_ACTIVE);

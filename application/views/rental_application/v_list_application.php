@@ -49,7 +49,7 @@ notify_msg('notify_msg');
                 </div>
                 <div class="col-lg-3" style="margin-top: 20px;margin-bottom: 20px;">
                     <div class="input-group">
-                        <input type="text" name="ref_number" value="<?php echo search_default($data_search,'ref_number');?>" class="form-control" placeholder="">
+                        <input type="text" name="ref_number" value="<?php echo search_default($data_search,'ref_number');?>" class="form-control" placeholder="Pemohon">
                         <span class="input-group-btn">
                         <button class="btn btn-success btn-square" type="submit">Cari</button>
                     </span>

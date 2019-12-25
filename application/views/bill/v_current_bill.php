@@ -185,6 +185,8 @@ notify_msg('notify_msg');
                 <div class="p-2 border-div" style="min-height: 400px;">
                     <div class="text-center"><strong>BUTIRAN BAYARAN</strong><br><br></div>
                     <?php
+						// echo "<pre>";
+						// var_dump($bill_item); die();
                         if($bill_item):
                             echo '<table class="table">';
                             $total = 0;
