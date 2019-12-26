@@ -10,14 +10,14 @@
  * file that was distributed with this source code. For the full list of
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
- * @link        https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2014 PHPWord contributors
+ * @see         https://github.com/PHPOffice/PHPWord
+ * @copyright   2010-2018 PHPWord contributors
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
 namespace PhpOffice\PhpWord\Writer\RTF\Style;
 
-use PhpOffice\PhpWord\Style\Alignment;
+use PhpOffice\PhpWord\SimpleType\Jc;
 
 /**
  * RTF paragraph style writer
@@ -26,7 +26,6 @@ use PhpOffice\PhpWord\Style\Alignment;
  */
 class Paragraph extends AbstractStyle
 {
-
     /**
      * Depth of table container nested level; Primarily used for RTF writer/reader
      *
@@ -49,13 +48,12 @@ class Paragraph extends AbstractStyle
         }
 
         $alignments = array(
-            Alignment::ALIGN_LEFT => '\ql',
-            Alignment::ALIGN_RIGHT => '\qr',
-            Alignment::ALIGN_CENTER => '\qc',
-            Alignment::ALIGN_BOTH => '\qj',
+            Jc::START  => '\ql',
+            Jc::END    => '\qr',
+            Jc::CENTER => '\qc',
+            Jc::BOTH   => '\qj',
         );
 
-        $align = $style->getAlign();
         $spaceAfter = $style->getSpaceAfter();
         $spaceBefore = $style->getSpaceBefore();
 
@@ -63,11 +61,51 @@ class Paragraph extends AbstractStyle
         if ($this->nestedLevel == 0) {
             $content .= '\pard\nowidctlpar ';
         }
-        if (isset($alignments[$align])) {
-            $content .= $alignments[$align];
+        if (isset($alignments[$style->getAlignment()])) {
+            $content .= $alignments[$style->getAlignment()];
         }
-        $content .= $this->getValueIf($spaceBefore !== null, '\sb' . $spaceBefore);
-        $content .= $this->getValueIf($spaceAfter !== null, '\sa' . $spaceAfter);
+        $content .= $this->writeIndentation($style->getIndentation());
+        $content .= $this->getValueIf($spaceBefore !== null, '\sb' . round($spaceBefore));
+        $content .= $this->getValueIf($spaceAfter !== null, '\sa' . round($spaceAfter));
+
+        $styles = $style->getStyleValues();
+        $content .= $this->writeTabs($styles['tabs']);
+
+        return $content;
+    }
+
+    /**
+     * Writes an \PhpOffice\PhpWord\Style\Indentation
+     *
+     * @param null|\PhpOffice\PhpWord\Style\Indentation $indent
+     * @return string
+     */
+    private function writeIndentation($indent = null)
+    {
+        if (isset($indent) && $indent instanceof \PhpOffice\PhpWord\Style\Indentation) {
+            $writer = new Indentation($indent);
+
+            return $writer->write();
+        }
+
+        return '';
+    }
+
+    /**
+     * Writes tabs
+     *
+     * @param \PhpOffice\PhpWord\Style\Tab[] $tabs
+     * @return string
+     */
+    private function writeTabs($tabs = null)
+    {
+        $content = '';
+        if (!empty($tabs)) {
+            foreach ($tabs as $tab) {
+                $styleWriter = new Tab($tab);
+                $content .= $styleWriter->write();
+            }
+        }
 
         return $content;
     }
@@ -76,7 +114,6 @@ class Paragraph extends AbstractStyle
      * Set nested level.
      *
      * @param int $value
-     * @return void
      */
     public function setNestedLevel($value)
     {

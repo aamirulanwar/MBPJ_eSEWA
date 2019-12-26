@@ -10,24 +10,46 @@
  * file that was distributed with this source code. For the full list of
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
- * @link        https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2014 PHPWord contributors
+ * @see         https://github.com/PHPOffice/PHPWord
+ * @copyright   2010-2018 PHPWord contributors
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
 namespace PhpOffice\PhpWord\Style;
 
-/**
- * Table style
- */
+use PhpOffice\PhpWord\ComplexType\TblWidth as TblWidthComplexType;
+use PhpOffice\PhpWord\SimpleType\Jc;
+use PhpOffice\PhpWord\SimpleType\JcTable;
+use PhpOffice\PhpWord\SimpleType\TblWidth;
+
 class Table extends Border
 {
     /**
-     * @const string Table width units http://www.schemacentral.com/sc/ooxml/t-w_ST_TblWidth.html
+     * @deprecated Use \PhpOffice\PhpWord\SimpleType\TblWidth::AUTO instead
      */
     const WIDTH_AUTO = 'auto'; // Automatically determined width
+    /**
+     * @deprecated Use \PhpOffice\PhpWord\SimpleType\TblWidth::PERCENT instead
+     */
     const WIDTH_PERCENT = 'pct'; // Width in fiftieths (1/50) of a percent (1% = 50 unit)
+    /**
+     * @deprecated Use \PhpOffice\PhpWord\SimpleType\TblWidth::TWIP instead
+     */
     const WIDTH_TWIP = 'dxa'; // Width in twentieths (1/20) of a point (twip)
+
+    //values for http://www.datypic.com/sc/ooxml/t-w_ST_TblLayoutType.html
+    /**
+     * AutoFit Table Layout
+     *
+     * @var string
+     */
+    const LAYOUT_AUTO = 'autofit';
+    /**
+     * Fixed Width Table Layout
+     *
+     * @var string
+     */
+    const LAYOUT_FIXED = 'fixed';
 
     /**
      * Is this a first row style?
@@ -107,9 +129,9 @@ class Table extends Border
     private $shading;
 
     /**
-     * @var \PhpOffice\PhpWord\Style\Alignment Alignment
+     * @var string
      */
-    private $alignment;
+    private $alignment = '';
 
     /**
      * @var int|float Width value
@@ -119,7 +141,42 @@ class Table extends Border
     /**
      * @var string Width unit
      */
-    private $unit = self::WIDTH_AUTO;
+    private $unit = TblWidth::AUTO;
+
+    /**
+     * @var int|float cell spacing value
+     */
+    protected $cellSpacing = null;
+
+    /**
+     * @var string Table Layout
+     */
+    private $layout = self::LAYOUT_AUTO;
+
+    /**
+     * Position
+     *
+     * @var \PhpOffice\PhpWord\Style\TablePosition
+     */
+    private $position;
+
+    /** @var TblWidthComplexType|null */
+    private $indent;
+
+    /**
+     * The width of each column, computed based on the max cell width of each column
+     *
+     * @var int[]
+     */
+    private $columnWidths;
+
+    /**
+     * Visually Right to Left Table
+     *
+     * @see  http://www.datypic.com/sc/ooxml/e-w_bidiVisual-1.html
+     * @var bool
+     */
+    private $bidiVisual = false;
 
     /**
      * Create new table style
@@ -129,27 +186,33 @@ class Table extends Border
      */
     public function __construct($tableStyle = null, $firstRowStyle = null)
     {
-        $this->alignment = new Alignment();
-
         // Clone first row from table style, but with certain properties disabled
         if ($firstRowStyle !== null && is_array($firstRowStyle)) {
             $this->firstRowStyle = clone $this;
             $this->firstRowStyle->isFirstRow = true;
-            unset($this->firstRowStyle->firstRowStyle);
-            unset($this->firstRowStyle->borderInsideHSize);
-            unset($this->firstRowStyle->borderInsideHColor);
-            unset($this->firstRowStyle->borderInsideVSize);
-            unset($this->firstRowStyle->borderInsideVColor);
-            unset($this->firstRowStyle->cellMarginTop);
-            unset($this->firstRowStyle->cellMarginLeft);
-            unset($this->firstRowStyle->cellMarginRight);
-            unset($this->firstRowStyle->cellMarginBottom);
+            unset($this->firstRowStyle->firstRowStyle, $this->firstRowStyle->borderInsideHSize, $this->firstRowStyle->borderInsideHColor, $this->firstRowStyle->borderInsideVSize, $this->firstRowStyle->borderInsideVColor, $this->firstRowStyle->cellMarginTop, $this->firstRowStyle->cellMarginLeft, $this->firstRowStyle->cellMarginRight, $this->firstRowStyle->cellMarginBottom, $this->firstRowStyle->cellSpacing);
             $this->firstRowStyle->setStyleByArray($firstRowStyle);
         }
 
         if ($tableStyle !== null && is_array($tableStyle)) {
             $this->setStyleByArray($tableStyle);
         }
+    }
+
+    /**
+     * @param float|int $cellSpacing
+     */
+    public function setCellSpacing($cellSpacing = null)
+    {
+        $this->cellSpacing = $cellSpacing;
+    }
+
+    /**
+     * @return float|int
+     */
+    public function getCellSpacing()
+    {
+        return $this->cellSpacing;
     }
 
     /**
@@ -192,7 +255,7 @@ class Table extends Border
     /**
      * Get TLRBHV Border Size
      *
-     * @return integer[]
+     * @return int[]
      */
     public function getBorderSize()
     {
@@ -430,7 +493,7 @@ class Table extends Border
     /**
      * Get cell margin
      *
-     * @return integer[]
+     * @return int[]
      */
     public function getCellMargin()
     {
@@ -438,7 +501,7 @@ class Table extends Border
             $this->cellMarginTop,
             $this->cellMarginLeft,
             $this->cellMarginRight,
-            $this->cellMarginBottom
+            $this->cellMarginBottom,
         );
     }
 
@@ -494,26 +557,55 @@ class Table extends Border
     }
 
     /**
-     * Get alignment
+     * @since 0.13.0
      *
      * @return string
      */
-    public function getAlign()
+    public function getAlignment()
     {
-        return $this->alignment->getValue();
+        return $this->alignment;
     }
 
     /**
-     * Set alignment
+     * @since 0.13.0
      *
      * @param string $value
+     *
      * @return self
+     */
+    public function setAlignment($value)
+    {
+        if (JcTable::isValid($value) || Jc::isValid($value)) {
+            $this->alignment = $value;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @deprecated 0.13.0 Use the `getAlignment` method instead.
+     *
+     * @return string
+     *
+     * @codeCoverageIgnore
+     */
+    public function getAlign()
+    {
+        return $this->getAlignment();
+    }
+
+    /**
+     * @deprecated 0.13.0 Use the `setAlignment` method instead.
+     *
+     * @param string $value
+     *
+     * @return self
+     *
+     * @codeCoverageIgnore
      */
     public function setAlign($value = null)
     {
-        $this->alignment->setValue($value);
-
-        return $this;
+        return $this->setAlignment($value);
     }
 
     /**
@@ -557,8 +649,32 @@ class Table extends Border
      */
     public function setUnit($value = null)
     {
-        $enum = array(self::WIDTH_AUTO, self::WIDTH_PERCENT, self::WIDTH_TWIP);
-        $this->unit = $this->setEnumVal($value, $enum, $this->unit);
+        TblWidth::validate($value);
+        $this->unit = $value;
+
+        return $this;
+    }
+
+    /**
+     * Get layout
+     *
+     * @return string
+     */
+    public function getLayout()
+    {
+        return $this->layout;
+    }
+
+    /**
+     * Set layout
+     *
+     * @param string $value
+     * @return self
+     */
+    public function setLayout($value = null)
+    {
+        $enum = array(self::LAYOUT_AUTO, self::LAYOUT_FIXED);
+        $this->layout = $this->setEnumVal($value, $enum, $this->layout);
 
         return $this;
     }
@@ -574,7 +690,7 @@ class Table extends Border
      */
     private function getTableOnlyProperty($property)
     {
-        if ($this->isFirstRow === false) {
+        if (false === $this->isFirstRow) {
             return $this->$property;
         }
 
@@ -594,13 +710,100 @@ class Table extends Border
      */
     private function setTableOnlyProperty($property, $value, $isNumeric = true)
     {
-        if ($this->isFirstRow === false) {
-            if ($isNumeric === true) {
+        if (false === $this->isFirstRow) {
+            if (true === $isNumeric) {
                 $this->$property = $this->setNumericVal($value, $this->$property);
             } else {
                 $this->$property = $value;
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * Get position
+     *
+     * @return \PhpOffice\PhpWord\Style\TablePosition
+     */
+    public function getPosition()
+    {
+        return $this->position;
+    }
+
+    /**
+     * Set position
+     *
+     * @param mixed $value
+     * @return self
+     */
+    public function setPosition($value = null)
+    {
+        $this->setObjectVal($value, 'TablePosition', $this->position);
+
+        return $this;
+    }
+
+    /**
+     * @return TblWidthComplexType
+     */
+    public function getIndent()
+    {
+        return $this->indent;
+    }
+
+    /**
+     * @param TblWidthComplexType $indent
+     * @return self
+     * @see http://www.datypic.com/sc/ooxml/e-w_tblInd-1.html
+     */
+    public function setIndent(TblWidthComplexType $indent)
+    {
+        $this->indent = $indent;
+
+        return $this;
+    }
+
+    /**
+     * Get the columnWidths
+     *
+     * @return null|int[]
+     */
+    public function getColumnWidths()
+    {
+        return $this->columnWidths;
+    }
+
+    /**
+     * The column widths
+     *
+     * @param int[] $value
+     */
+    public function setColumnWidths(array $value = null)
+    {
+        $this->columnWidths = $value;
+    }
+
+    /**
+     * Get bidiVisual
+     *
+     * @return bool
+     */
+    public function isBidiVisual()
+    {
+        return $this->bidiVisual;
+    }
+
+    /**
+     * Set bidiVisual
+     *
+     * @param bool $bidi
+     *            Set to true to visually present table as Right to Left
+     * @return self
+     */
+    public function setBidiVisual($bidi)
+    {
+        $this->bidiVisual = $bidi;
 
         return $this;
     }

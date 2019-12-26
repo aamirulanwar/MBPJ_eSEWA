@@ -10,19 +10,16 @@
  * file that was distributed with this source code. For the full list of
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
- * @link        https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2014 PHPWord contributors
+ * @see         https://github.com/PHPOffice/PHPWord
+ * @copyright   2010-2018 PHPWord contributors
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
 namespace PhpOffice\PhpWord\Element;
 
-use PhpOffice\PhpWord\Exception\Exception;
+use PhpOffice\PhpWord\ComplexType\FootnoteProperties;
 use PhpOffice\PhpWord\Style\Section as SectionStyle;
 
-/**
- * Section
- */
 class Section extends AbstractContainer
 {
     /**
@@ -52,24 +49,32 @@ class Section extends AbstractContainer
     private $footers = array();
 
     /**
+     * The properties for the footnote of this section
+     *
+     * @var FootnoteProperties
+     */
+    private $footnoteProperties;
+
+    /**
      * Create new instance
      *
      * @param int $sectionCount
-     * @param array $style
+     * @param null|array|\PhpOffice\PhpWord\Style $style
      */
     public function __construct($sectionCount, $style = null)
     {
         $this->sectionId = $sectionCount;
         $this->setDocPart($this->container, $this->sectionId);
-        $this->style = new SectionStyle();
-        $this->setStyle($style);
+        if (null === $style) {
+            $style = new SectionStyle();
+        }
+        $this->style = $this->setNewStyle(new SectionStyle(), $style);
     }
 
     /**
      * Set section style.
      *
      * @param array $style
-     * @return void
      */
     public function setStyle($style = null)
     {
@@ -91,9 +96,11 @@ class Section extends AbstractContainer
     /**
      * Add header
      *
-     * @param string $type
-     * @return Header
      * @since 0.10.0
+     *
+     * @param string $type
+     *
+     * @return Header
      */
     public function addHeader($type = Header::AUTO)
     {
@@ -103,9 +110,11 @@ class Section extends AbstractContainer
     /**
      * Add footer
      *
-     * @param string $type
-     * @return Footer
      * @since 0.10.0
+     *
+     * @param string $type
+     *
+     * @return Footer
      */
     public function addFooter($type = Header::AUTO)
     {
@@ -133,12 +142,44 @@ class Section extends AbstractContainer
     }
 
     /**
+     * Get the footnote properties
+     *
+     * @return FootnoteProperties
+     */
+    public function getFootnoteProperties()
+    {
+        return $this->footnoteProperties;
+    }
+
+    /**
+     * Get the footnote properties
+     *
+     * @deprecated Use the `getFootnoteProperties` method instead
+     *
+     * @return FootnoteProperties
+     */
+    public function getFootnotePropoperties()
+    {
+        return $this->footnoteProperties;
+    }
+
+    /**
+     * Set the footnote properties
+     *
+     * @param FootnoteProperties $footnoteProperties
+     */
+    public function setFootnoteProperties(FootnoteProperties $footnoteProperties = null)
+    {
+        $this->footnoteProperties = $footnoteProperties;
+    }
+
+    /**
      * Is there a header for this section that is for the first page only?
      *
      * If any of the Header instances have a type of Header::FIRST then this method returns true.
      * False otherwise.
      *
-     * @return boolean
+     * @return bool
      */
     public function hasDifferentFirstPage()
     {
@@ -147,17 +188,26 @@ class Section extends AbstractContainer
                 return true;
             }
         }
+        foreach ($this->footers as $footer) {
+            if ($footer->getType() == Header::FIRST) {
+                return true;
+            }
+        }
+
         return false;
     }
 
     /**
      * Add header/footer
      *
-     * @param string $type
-     * @param boolean $header
-     * @return Header|Footer
-     * @throws \PhpOffice\PhpWord\Exception\Exception
      * @since 0.10.0
+     *
+     * @param string $type
+     * @param bool $header
+     *
+     * @throws \Exception
+     *
+     * @return Header|Footer
      */
     private function addHeaderFooter($type = Header::AUTO, $header = true)
     {
@@ -173,18 +223,19 @@ class Section extends AbstractContainer
             $container->setPhpWord($this->phpWord);
 
             $collection[$index] = $container;
-            return $container;
-        } else {
-            throw new Exception('Invalid header/footer type.');
-        }
 
+            return $container;
+        }
+        throw new \Exception('Invalid header/footer type.');
     }
 
     /**
      * Set section style
      *
-     * @param array $settings
      * @deprecated 0.12.0
+     *
+     * @param array $settings
+     *
      * @codeCoverageIgnore
      */
     public function setSettings($settings = null)
@@ -195,8 +246,10 @@ class Section extends AbstractContainer
     /**
      * Get section style
      *
-     * @return \PhpOffice\PhpWord\Style\Section
      * @deprecated 0.12.0
+     *
+     * @return \PhpOffice\PhpWord\Style\Section
+     *
      * @codeCoverageIgnore
      */
     public function getSettings()
@@ -207,8 +260,10 @@ class Section extends AbstractContainer
     /**
      * Create header
      *
-     * @return Header
      * @deprecated 0.10.0
+     *
+     * @return Header
+     *
      * @codeCoverageIgnore
      */
     public function createHeader()
@@ -219,8 +274,10 @@ class Section extends AbstractContainer
     /**
      * Create footer
      *
-     * @return Footer
      * @deprecated 0.10.0
+     *
+     * @return Footer
+     *
      * @codeCoverageIgnore
      */
     public function createFooter()
@@ -231,16 +288,18 @@ class Section extends AbstractContainer
     /**
      * Get footer
      *
-     * @return Footer
      * @deprecated 0.10.0
+     *
+     * @return Footer
+     *
      * @codeCoverageIgnore
      */
     public function getFooter()
     {
         if (empty($this->footers)) {
             return null;
-        } else {
-            return $this->footers[1];
         }
+
+        return $this->footers[1];
     }
 }
