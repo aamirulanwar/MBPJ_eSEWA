@@ -39,76 +39,13 @@ class Generate_word {
             $this->generate_acceptance_letter($id);
         elseif($doc_type==DOC_AGREEMENT):
             $this->generate_agreement($id);
-		elseif($doc_type==DOC_SIGNATURE):
+        elseif($doc_type==DOC_SIGNATURE):   
             $this->generate_signature($id);
         elseif($doc_type==DOC_NOTICE):
             $this->generate_notice($id, $doc_sub_type,$notice_info);
         elseif($doc_type==DOC_QUARTERS):
             $this->generate_quarters_doc($id, $doc_sub_type);
         endif;
-    }
-	
-	private function generate_signature($id)
-    {
-        $get_details = $this->ci->m_acc_account->get_account_details($id);
-        $template = 'dokumen tandatangan.docx';
-            
-        // $address = '';
-        // if(!empty($get_details['ADDRESS_1'])):
-        //     $address = $get_details['ADDRESS_1'];
-        //     if(!empty($get_details['ADDRESS_1'])):
-        //         $address = $get_details['ADDRESS_1'];
-        //     endif;
-        // endif;
-        $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($_SERVER['DOCUMENT_ROOT'].'/file_download/perjanjian/'.$template);
-        
-        $templateProcessor->setValue('letter_date',date_display(timenow(),'d F Y','malay'));
-        $templateProcessor->setValue('letter_time',date_display(timenow(),'h:i:sa'));
-        $templateProcessor->setValue('letter_date_hijri',date_display_hijri(timenow()));
-       // $templateProcessor->setValue('file_number_juu',$get_details['FILE_NUMBER_JUU']);
-        $templateProcessor->setValue('name',$get_details['NAME']);
-        $templateProcessor->setValue('name_caps',strtoupper($get_details['NAME']));
-       // $templateProcessor->setValue('director_name',strtoupper($get_details['DIRECTOR_NAME']));
-       // $templateProcessor->setValue('comp_reg_no',$get_details['COMPANY_REGISTRATION_NUMBER']);
-       // $templateProcessor->setValue('phone_no',$get_details['HOME_PHONE_NUMBER']);
-       // $templateProcessor->setValue('fax_no',$get_details['FAX_NUMBER']);
-       // $templateProcessor->setValue('category_name',$get_details['CATEGORY_NAME']);
-       // $templateProcessor->setValue('asset_name',$get_details['ASSET_NAME']);
-        // $templateProcessor->setValue('asset_add',$get_details['ASSET_ADD']);
-        $templateProcessor->setValue('ic_number',display_ic_number($get_details['IC_NUMBER']));
-        // $templateProcessor->setValue('staff_number',display_ic_number($get_details['STAFF_NUMBER']));
-        // $templateProcessor->setValue('address',$get_details['MAIL_ADDRESS_1']);
-        // $templateProcessor->setValue('address2',$get_details['MAIL_ADDRESS_2']); 
-        // $templateProcessor->setValue('address3',$get_details['MAIL_ADDRESS_3']);
-        // $templateProcessor->setValue('postcode',$get_details['MAIL_POSTCODE']);
-        // $templateProcessor->setValue('location_billboard',$get_details['LOCATION_BILLBOARD']);
-        // $templateProcessor->setValue('area_billboard',$get_details['AREA_BILLBOARD']);
-        // $templateProcessor->setValue('phone_number',display_mobile_number($get_details['MOBILE_PHONE_NUMBER']));
-        // $templateProcessor->setValue('rental_duration',$get_details['RENTAL_DURATION']);
-        // $templateProcessor->setValue('rental_duration_word',convertNumberToWord($get_details['RENTAL_DURATION']));
-        // $templateProcessor->setValue('date_start',date_display($get_details['DATE_START'],'d F Y','malay'));
-        // $templateProcessor->setValue('date_end',date_display($get_details['DATE_END'],'d F Y','malay'));
-        // $templateProcessor->setValue('date_start_month',ucfirst(date_display($get_details['DATE_START'],'F Y','malay')));
-        // $templateProcessor->setValue('rental_charge',num($get_details['RENTAL_CHARGE']));
-        // $templateProcessor->setValue('rental_charge_word',convertNumberToWord($get_details['RENTAL_CHARGE']));
-        // $templateProcessor->setValue('tipping_fee',num($get_details['WASTE_MANAGEMENT_CHARGE']));
-        // $templateProcessor->setValue('tipping_fee_word',convertNumberToWord($get_details['WASTE_MANAGEMENT_CHARGE']));
-        // $templateProcessor->setValue('rental_use_name',$get_details['RENTAL_USE_NAME']);
-        // $templateProcessor->setValue('deposit',num($get_details['COLLATERAL_RENTAL']));
-        // $templateProcessor->setValue('deposit_word',convertNumberToWord($get_details['COLLATERAL_RENTAL']));
-        
-        ob_clean();
-        $filename = 'Dokumen Tandatangan - '.$get_details['NAME'].'.docx';
-        $templateProcessor->saveAs($filename);
-        header('Content-Disposition: attachment; filename='.$filename);
-        header('Content-Transfer-Encoding: binary');
-        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-        header('Expires: 0');
-        header('Pragma: public');
-        flush();
-        readfile($filename);
-        unlink($filename);
-        exit;
     }
 
     private function generate_interview_rating_form($id)
@@ -499,13 +436,13 @@ class Generate_word {
         $templateProcessor->setValue('fax_no',$get_details['FAX_NUMBER']);
         $templateProcessor->setValue('category_name',$get_details['CATEGORY_NAME']);
         $templateProcessor->setValue('asset_name',$get_details['ASSET_NAME']);
-		$templateProcessor->setValue('asset_add',$get_details['ASSET_ADD']);
+        $templateProcessor->setValue('asset_add',$get_details['ASSET_ADD']);
         $templateProcessor->setValue('ic_number',display_ic_number($get_details['IC_NUMBER']));
         $templateProcessor->setValue('staff_number',display_ic_number($get_details['STAFF_NUMBER']));
-        // $templateProcessor->setValue('address',$get_details['MAIL_ADDRESS']);
-		$templateProcessor->setValue('address',$get_details['MAIL_ADDRESS_1']);
-        $templateProcessor->setValue('address2',$get_details['MAIL_ADDRESS_2']); 
-        $templateProcessor->setValue('address3',$get_details['MAIL_ADDRESS_3']);
+        //$templateProcessor->setValue('address',$get_details['MAIL_ADDRESS']);
+        $templateProcessor->setValue('address',$get_details['MAIL_ADDRESS_1']); 
+        $templateProcessor->setValue('address2',$get_details['MAIL_ADDRESS_2']);    
+        $templateProcessor->setValue('address3',$get_details['MAIL_ADDRESS_3']);    
         $templateProcessor->setValue('postcode',$get_details['MAIL_POSTCODE']);
         $templateProcessor->setValue('location_billboard',$get_details['LOCATION_BILLBOARD']);
         $templateProcessor->setValue('area_billboard',$get_details['AREA_BILLBOARD']);
@@ -551,6 +488,69 @@ class Generate_word {
         exit;
     }
 
+    private function generate_signature($id)    
+    {   
+        $get_details = $this->ci->m_acc_account->get_account_details($id);  
+        $template = 'dokumen tandatangan.docx'; 
+                
+        // $address = '';   
+        // if(!empty($get_details['ADDRESS_1'])):   
+        //     $address = $get_details['ADDRESS_1'];    
+        //     if(!empty($get_details['ADDRESS_1'])):   
+        //         $address = $get_details['ADDRESS_1'];    
+        //     endif;   
+        // endif;   
+        $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($_SERVER['DOCUMENT_ROOT'].'/file_download/perjanjian/'.$template);    
+            
+        $templateProcessor->setValue('letter_date',date_display(timenow(),'d F Y','malay'));    
+        $templateProcessor->setValue('letter_time',date_display(timenow(),'h:i:sa'));   
+        $templateProcessor->setValue('letter_date_hijri',date_display_hijri(timenow()));    
+       // $templateProcessor->setValue('file_number_juu',$get_details['FILE_NUMBER_JUU']);  
+        $templateProcessor->setValue('name',$get_details['NAME']);  
+        $templateProcessor->setValue('name_caps',strtoupper($get_details['NAME'])); 
+       // $templateProcessor->setValue('director_name',strtoupper($get_details['DIRECTOR_NAME']));  
+       // $templateProcessor->setValue('comp_reg_no',$get_details['COMPANY_REGISTRATION_NUMBER']);  
+       // $templateProcessor->setValue('phone_no',$get_details['HOME_PHONE_NUMBER']);   
+       // $templateProcessor->setValue('fax_no',$get_details['FAX_NUMBER']);    
+       // $templateProcessor->setValue('category_name',$get_details['CATEGORY_NAME']);  
+       // $templateProcessor->setValue('asset_name',$get_details['ASSET_NAME']);    
+        // $templateProcessor->setValue('asset_add',$get_details['ASSET_ADD']); 
+        $templateProcessor->setValue('ic_number',display_ic_number($get_details['IC_NUMBER'])); 
+        // $templateProcessor->setValue('staff_number',display_ic_number($get_details['STAFF_NUMBER']));    
+        // $templateProcessor->setValue('address',$get_details['MAIL_ADDRESS_1']);  
+        // $templateProcessor->setValue('address2',$get_details['MAIL_ADDRESS_2']);     
+        // $templateProcessor->setValue('address3',$get_details['MAIL_ADDRESS_3']); 
+        // $templateProcessor->setValue('postcode',$get_details['MAIL_POSTCODE']);  
+        // $templateProcessor->setValue('location_billboard',$get_details['LOCATION_BILLBOARD']);   
+        // $templateProcessor->setValue('area_billboard',$get_details['AREA_BILLBOARD']);   
+        // $templateProcessor->setValue('phone_number',display_mobile_number($get_details['MOBILE_PHONE_NUMBER'])); 
+        // $templateProcessor->setValue('rental_duration',$get_details['RENTAL_DURATION']); 
+        // $templateProcessor->setValue('rental_duration_word',convertNumberToWord($get_details['RENTAL_DURATION']));   
+        // $templateProcessor->setValue('date_start',date_display($get_details['DATE_START'],'d F Y','malay')); 
+        // $templateProcessor->setValue('date_end',date_display($get_details['DATE_END'],'d F Y','malay')); 
+        // $templateProcessor->setValue('date_start_month',ucfirst(date_display($get_details['DATE_START'],'F Y','malay')));    
+        // $templateProcessor->setValue('rental_charge',num($get_details['RENTAL_CHARGE']));    
+        // $templateProcessor->setValue('rental_charge_word',convertNumberToWord($get_details['RENTAL_CHARGE']));   
+        // $templateProcessor->setValue('tipping_fee',num($get_details['WASTE_MANAGEMENT_CHARGE']));    
+        // $templateProcessor->setValue('tipping_fee_word',convertNumberToWord($get_details['WASTE_MANAGEMENT_CHARGE']));   
+        // $templateProcessor->setValue('rental_use_name',$get_details['RENTAL_USE_NAME']); 
+        // $templateProcessor->setValue('deposit',num($get_details['COLLATERAL_RENTAL']));  
+        // $templateProcessor->setValue('deposit_word',convertNumberToWord($get_details['COLLATERAL_RENTAL'])); 
+            
+        ob_clean(); 
+        $filename = 'Dokumen Tandatangan - '.$get_details['NAME'].'.docx';  
+        $templateProcessor->saveAs($filename);  
+        header('Content-Disposition: attachment; filename='.$filename); 
+        header('Content-Transfer-Encoding: binary');    
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');    
+        header('Expires: 0');   
+        header('Pragma: public');   
+        flush();    
+        readfile($filename);    
+        unlink($filename);  
+        exit;   
+    }
+
     private function generate_notice($id, $notice_level,$notice_info=array())
     {
         $get_details = $this->ci->m_acc_account->get_account_details($id);
@@ -565,8 +565,8 @@ class Generate_word {
             $template = '3.notis_tuntutan_pembayaran_sewaan_-_BORANG_C.docx';
         elseif($notice_level==NOTICE_LEVEL_4):
             $template = '4.LOD_dan_notis_mahkamah.docx';
-        elseif($notice_level==NOTICE_LEVEL_5):            
-			$template = '5.notis_tarik_balik_-_BORANG_D.docx';
+        elseif($notice_level==NOTICE_LEVEL_5):
+            $template = '5.notis_tarik_balik_-_BORANG_D.docx';
         elseif($notice_level==NOTICE_LEVEL_6):
             $template = '6.tindakan_mahkamah.docx';
         else:

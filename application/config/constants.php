@@ -202,13 +202,15 @@ define('NOTICE_LEVEL_6',6);
 
 define('SELANGOR_IC_CODE','10|41|42|43|44');
 
-define('DEPENDENT_LIST_ARR',serialize(array('Anak','Isteri','Ibu','Ayah','Adik bawah 18 tahun')));
+define('DEPENDENT_LIST_ARR',serialize(array('Anak','Isteri','Ibu','Ayah','Adik bawah 18 tahun')));	
 define('STATE_LIST',serialize(array('SELANGOR','JOHOR','KEDAH','KELANTAN','KUALA LUMPUR','LABUAN','MELAKA','NEGERI SEMBILAN','PAHANG','PUTRAJAYA','PERLIS','PULAU PINANG','PERAK','TERENGGANU','SABAH','SARAWAK')));
 
-// For Production Env Only
+// For Production Env Only	
 /*
+
 define('DEPENDENT_LIST_ARR',array('Anak','Isteri','Ibu','Ayah','Adik bawah 18 tahun'));
 define('STATE_LIST',array('SELANGOR','JOHOR','KEDAH','KELANTAN','KUALA LUMPUR','LABUAN','MELAKA','NEGERI SEMBILAN','PAHANG','PUTRAJAYA','PERLIS','PULAU PINANG','PERAK','TERENGGANU','SABAH','SARAWAK'));
+
 */
 
 define('RENTAL_STATUS_YES',1);
