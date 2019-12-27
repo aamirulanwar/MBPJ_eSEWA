@@ -20,6 +20,9 @@ class M_a_category extends CI_Model
         if(isset($data_search['search']) && having_value($data_search['search'])):
             db_where("upper(a.category_name) like '%".trim(strtoupper($data_search['search']))."%' or upper(a.category_code) like '%".trim(strtoupper($data_search['search']))."%'");
         endif;
+        if(isset($data_search['type_name']) && having_value($data_search['type_name'])):
+            db_where("upper(t.type_name) like '%".trim(strtoupper($data_search['type_name']))."%'");
+        endif;
         if(isset($data_search['type_id']) && having_value($data_search['type_id'])):
             db_where("a.type_id",$data_search['type_id']);
         endif;
@@ -41,6 +44,9 @@ class M_a_category extends CI_Model
         db_from('a_category a');
         if(isset($data_search['search']) && having_value($data_search['search'])):
             db_where("upper(a.category_name) like '%".trim(strtoupper($data_search['search']))."%'");
+        endif;
+        if(isset($data_search['type_name']) && having_value($data_search['type_name'])):
+            db_where("upper(t.type_name) like '%".trim(strtoupper($data_search['type_name']))."%'");
         endif;
         if(isset($data_search['type_id']) && having_value($data_search['type_id'])):
             db_where('t.type_id',$data_search['type_id']);
