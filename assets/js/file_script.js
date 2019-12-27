@@ -118,7 +118,6 @@ function remove_dependent(no_remove) {
 }
 
 function upload_picture(upload_name) {
-
     $('#upload_name').val(upload_name);
     var opts = {
         'url': '/upload_file/insert_temp/',
@@ -166,7 +165,7 @@ function remove_image_upload(upload_name,id) {
         },
         success: function (data) { //probably this request will return anything, it'll be put in var "data"
             if(data==1){
-                alert(upload_name);
+                // alert(upload_name);
                 $('#'+upload_name+'_content').html('<input accept="image/png,image/jpeg,image/jpg" type="file" onchange="upload_picture(\''+upload_name+'\')" name="'+upload_name+'" id="'+upload_name+'" class="form-control">');
                 $('#'+upload_name+'_status').val('');
             }

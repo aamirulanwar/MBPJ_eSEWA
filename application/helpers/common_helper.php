@@ -163,7 +163,6 @@ function radio_default($val_item,$val_data){
 function get_status_active($status){
     if($status==STATUS_ACTIVE):
         echo '<span class="badge badge-success">Aktif</span>';
-        
     else:
         echo '<span class="badge badge-danger">Tidak Aktif</span>';
     endif;
@@ -171,11 +170,11 @@ function get_status_active($status){
 
 function get_status_rental($status){
     if($status==RENTAL_STATUS_YES):
-        // echo '<span class="badge badge-success">Ya</span>';
-		echo '<span class="badge badge-success">Boleh Disewa</span>';
+ // echo '<span class="badge badge-success">Ya</span>';
+    echo '<span class="badge badge-success">Boleh Disewa</span>';
     else:
-        // echo '<span class="badge badge-danger">Tidak</span>';
-        echo '<span class="badge badge-danger">Disewa</span>';
+ // echo '<span class="badge badge-danger">Tidak</span>';
+    echo '<span class="badge badge-danger">Disewa</span>';
     endif;
 }
 
@@ -422,8 +421,8 @@ function notice_level($level){
         return 'Ketiga';
     elseif ($level==NOTICE_LEVEL_4):
         return 'LOD';
-    elseif ($level==NOTICE_LEVEL_5):        
-		return 'Penamatan';
+    elseif ($level==NOTICE_LEVEL_5):
+        return 'Penamatan';
     elseif ($level==NOTICE_LEVEL_6):
         return 'Mahkamah';
     endif;
@@ -441,8 +440,8 @@ function born_in_selangor($ic_number){
 }
 
 function select_state($input='',$name_input='address_state'){
-    //$state_arr = STATE_LIST; // For Production Env Only
-    $state_arr = unserialize(STATE_LIST);
+    $state_arr = STATE_LIST; //For Production Env Only
+     $state_arr = unserialize(STATE_LIST);
 
     $data_select = '<select class="form-control" id="'.$name_input.'" name="'.$name_input.'">';
     foreach ($state_arr as $row):

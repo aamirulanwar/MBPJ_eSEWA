@@ -145,7 +145,7 @@ notify_msg('notify_msg');
                                     endif;
                                 endif;
                                 ?>
-								<i class="icons font-xl mt-5 cui-file"></i><div><a href="/account/doc_signature/<?php echo urlEncrypt($row['ACCOUNT_ID'])?>" target="_blank">Dokumen Tandatangan</div></a>
+                                <i class="icons font-xl mt-5 cui-file"></i><div><a href="/account/doc_signature/<?php echo urlEncrypt($row['ACCOUNT_ID'])?>" target="_blank">Dokumen Tandatangan</div></a>
                             </td>
                         </tr>
                     <?php

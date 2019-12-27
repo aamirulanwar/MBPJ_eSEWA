@@ -24,6 +24,8 @@ class Account extends CI_Controller
         load_model('File/M_file_gallery', 'm_file_gallery');
         load_model('Department/M_department','m_dept');
         load_model('File/M_file_upload_temp', 'm_file_upload_temp');
+        load_model('Account/M_acc_kuarters_defect', 'm_acc_kuarters_defect');
+        load_model('Account/M_acc_kuarters_defect_list', 'm_acc_kuarters_defect_list');
     }
 
     function _remap($method)
@@ -34,13 +36,18 @@ class Account extends CI_Controller
             'calculate_duration',
             'account_create_list',
             'doc_agreement',
+            'doc_signature',
             'doc_quarters',
-			'doc_signature',
             'update_acc',
             'detail_acc',
             'generate_bill',
             'create_acc_direct',
-            'time_extension'
+            'time_extension',
+            'kuarters_list',
+            'kuarters_add',
+            'kuarters_detais',
+            'delete_kuarters',
+            'delete_item'
         );
         #set pages data
         (in_array($method,$array)) ? $this->$method() : $this->create_acc();
@@ -1279,14 +1286,14 @@ class Account extends CI_Controller
         load_library('Generate_word');
         $this->generate_word->word_document($id, DOC_AGREEMENT);
     }
-	
-	function doc_signature(){
-        $id = urlDecrypt(uri_segment(3));
-        if(!is_numeric($id)):
-            return false;
-        endif;
-        load_library('Generate_word');
-        $this->generate_word->word_document($id, DOC_SIGNATURE);
+
+    function doc_signature(){   
+        $id = urlDecrypt(uri_segment(3));   
+        if(!is_numeric($id)):   
+            return false;   
+        endif;  
+        load_library('Generate_word');  
+        $this->generate_word->word_document($id, DOC_SIGNATURE);    
     }
 
     function doc_quarters(){
@@ -1461,5 +1468,253 @@ class Account extends CI_Controller
         endif;
 
         templates('/account/v_update_account',$data);
+    }
+
+    function kuarters_list(){
+        $this->auth->restrict_access($this->curuser,array(5003));
+
+        $data['link_1']     = 'Akaun sewaan';
+        $data['link_2']     = 'Senarai laporan kerosakan kuarters';
+        $data['link_3']     = '';
+        $data['pagetitle']  = 'Senarai laporan kerosakan kuarters';
+
+        $search_segment = uri_segment(3);
+
+        $post           = $this->input->post();
+        $filter_session = get_session('arr_filter_acc_kuarters');
+        if(!empty($post)):
+            $this->session->set_userdata('arr_filter_acc_kuarters',$post);
+            $data_search = $post;
+        else:
+            if(!empty($filter_session)):
+                $data_search = $filter_session;
+            else:
+                $data_search['search']  = '';
+            endif;
+        endif;
+
+        $data['data_search']    = $data_search;
+
+        $total = $this->m_acc_kuarters_defect->count_account_defect($data_search);
+        $links          = '/account/kuarters_list';
+        $uri_segment    = 3;
+        $per_page       = 20;
+        paging_config($links,$total,$per_page,$uri_segment);
+
+        $data_list              = $this->m_acc_kuarters_defect->get_account_defect($per_page,$search_segment,$data_search);
+        $data['total_result']   = $total;
+        $data['data_list']      = $data_list;
+
+        templates('account/acc_defect/v_list_account_defect',$data);
+    }
+
+    function kuarters_add(){
+//        $this->auth->restrict_access($this->curuser,array(3014));
+
+        $data['link_1']     = 'Akaun sewaan';
+        $data['link_2']     = '<a href="/account/kuarters_list">Senarai laporan kerosakan kuarters</a>';
+        $data['link_3']     = 'Kerosakan Kuarters';
+        $data['pagetitle']  = '';
+
+        $data['kuarters']   = $this->m_acc_account->get_account_kuarters();
+
+        validation_rules('date_added','<strong>tarikh</strong>','required');
+        validation_rules('acc_number','<strong>no. akaun sewaan</strong>','required');
+
+        if(validation_run()==false):
+            templates('/account/acc_defect/v_acc_defect_add',$data);
+        else:
+            $id = input_data('acc_number').strtotime(timenow()).$this->curuser['USER_ID'];
+            $data_insert_main['ACC_KUARTERS_DEFECT_ID'] = $id;
+            $data_insert_main['account_id']             = input_data('acc_number');
+            $data_insert_main['date_added']             = input_data('date_added');
+
+            $this->m_acc_kuarters_defect->insert_kuarters_defect($data_insert_main);
+
+            $data_info      = input_data('info[]');
+            $data_category  = input_data('category[]');
+            if($data_info):
+                $i = 0;
+                foreach (input_data('info[]') as $row):
+                    if($row || $_FILES['upload_name_'.$i] || $data_category[$i]):
+                        $path_image = '';
+                        $file_name  = '';
+                        $folder_ext = date('YmdHis');
+                        if($_FILES['upload_name_'.$i]['name']):
+                            if (!file_exists("file_upload/kuarters/".$folder_ext."/")):
+                                mkdir("file_upload/kuarters/".$folder_ext."/", 0777, true);
+                            endif;
+
+                            $config['upload_path'] 	    = "./file_upload/kuarters/".$folder_ext."/" ;
+                            $config['allowed_types']    = '*';
+                            $config['max_size']         = '15120';
+                            $config['max_width']        = '4000';
+                            $config['max_height']       = '4000';
+                            $config['encrypt_name']	    = false;
+                            $config['overwrite']        = false;
+//                            $config['file_name']        = $_FILES['upload_name_'.$i]['name'].'_'.date('YmdHis');
+//                            $filename = $data_file_ext['name'][$i];
+//                            $ext = pathinfo($filename,PATHINFO_EXTENSION);
+
+                            $this->load->library('upload', $config);
+
+                            $result_upload = $this->upload->do_upload('upload_name_'.$i);
+
+                            if (!$result_upload):
+                                $error = $this->upload->display_errors();
+                                $data['error_remark']   =  $error;
+                            else:
+                                $info_upload = $this->upload->data();
+                                $file_name  = $info_upload['file_name'];
+                                $path_image = '/file_upload/kuarters/'.$folder_ext.'/'.$file_name;
+                            endif;
+                        endif;
+
+                        $id_list = input_data('acc_number').strtotime(timenow()).$this->curuser['USER_ID'].$i;
+                        $data_insert_list['ID_LIST']                = $id_list;
+                        $data_insert_list['ACC_KUARTERS_DEFECT_ID'] = $id;
+                        $data_insert_list['INFO']                   = $row;
+                        $data_insert_list['CATEGORY']               = $data_category[$i];
+                        $data_insert_list['ATTACHMENT_FILE']        = $path_image;
+                        $data_insert_list['FILE_NAME']              = $file_name;
+
+                        $this->m_acc_kuarters_defect_list->insert_kuarters_defect_list($data_insert_list);
+                    endif;
+                    $i = $i+1;
+                endforeach;
+            endif;
+            set_notify('notify_msg',TEXT_SAVE_RECORD);
+            redirect('/account/kuarters_add/');
+        endif;
+    }
+
+    function kuarters_detais(){
+        $data['link_1']     = 'Akaun sewaan';
+        $data['link_2']     = '<a href="/account/kuarters_list">Senarai laporan kerosakan kuarters</a>';
+        $data['link_3']     = 'Terperinci Kerosakan Kuarters';
+        $data['pagetitle']  = '';
+
+        $id = urlDecrypt(uri_segment(3));
+        if(!is_numeric($id)):
+            return false;
+        endif;
+
+        $get_details = $this->m_acc_kuarters_defect->get_account_defect_by_id($id);
+        if(!$get_details):
+            return false;
+        endif;
+
+        $get_list               = $this->m_acc_kuarters_defect_list->get_list_defect($get_details['ACC_KUARTERS_DEFECT_ID']);
+        $data['get_details']    = $get_details;
+        $data['get_list']       = $get_list;
+
+//        pre($get_details);
+
+        validation_rules('info[]','<strong>tarikh</strong>','required');
+
+        if(validation_run()==false):
+            templates('/account/acc_defect/v_acc_defect_details',$data);
+        else:
+            $id = $get_details['ACC_KUARTERS_DEFECT_ID'];
+
+            $data_info      = input_data('info[]');
+            $data_category  = input_data('category[]');
+            if($data_info):
+                $i = 0;
+                foreach (input_data('info[]') as $row):
+                    $new_id_list = count($get_list)+1+$i;
+                    if($row || $_FILES['upload_name_'.$i] || $data_category[$i]):
+                        $path_image = '';
+                        $file_name  = '';
+                        $folder_ext = date('Ymdh');
+                        if($_FILES['upload_name_'.$i]['name']):
+                            if (!file_exists("file_upload/kuarters/".$folder_ext."/")):
+                                mkdir("file_upload/kuarters/".$folder_ext."/", 0777, true);
+                            endif;
+
+                            $config['upload_path'] 	    = "./file_upload/kuarters/".$folder_ext."/" ;
+                            $config['allowed_types']    = '*';
+                            $config['max_size']         = '15120';
+                            $config['max_width']        = '4000';
+                            $config['max_height']       = '4000';
+                            $config['encrypt_name']	    = false;
+                            $config['overwrite']        = false;
+//                            $config['file_name']        = $_FILES['upload_name_'.$i]['name'].'_'.date('YmdHis');
+//                            $filename = $data_file_ext['name'][$i];
+//                            $ext = pathinfo($filename,PATHINFO_EXTENSION);
+
+                            $this->load->library('upload', $config);
+
+                            $result_upload = $this->upload->do_upload('upload_name_'.$i);
+
+                            if (!$result_upload):
+                                $error = $this->upload->display_errors();
+                                $data['error_remark']   =  $error;
+                            else:
+                                $info_upload = $this->upload->data();
+                                $file_name  = $info_upload['file_name'];
+                                $path_image = '/file_upload/kuarters/'.$folder_ext.'/'.$file_name;
+                            endif;
+                        endif;
+
+                        $id_list = input_data('acc_number').strtotime(timenow()).$this->curuser['USER_ID'].$new_id_list;
+                        $data_insert_list['ID_LIST']                = $id_list;
+                        $data_insert_list['ACC_KUARTERS_DEFECT_ID'] = $id;
+                        $data_insert_list['INFO']                   = $row;
+                        $data_insert_list['CATEGORY']               = $data_category[$i];
+                        $data_insert_list['ATTACHMENT_FILE']        = $path_image;
+                        $data_insert_list['FILE_NAME']              = $file_name;
+
+                        $this->m_acc_kuarters_defect_list->insert_kuarters_defect_list($data_insert_list);
+                    endif;
+                    $i = $i+1;
+                endforeach;
+            endif;
+            set_notify('notify_msg',TEXT_SAVE_RECORD);
+            redirect('/account/kuarters_detais/'.uri_segment(3));
+        endif;
+    }
+
+    function delete_kuarters(){
+        if(is_ajax()):
+            $delete_id = input_data('delete_id');
+//            $check_available_user = $this->m_user->check_available_user($delete_id);
+//            if($check_available_user):
+            $data_update['soft_delete'] = SOFT_DELETE_TRUE;
+            $delete = $this->m_acc_kuarters_defect->delete_kuarters($delete_id);
+            if($delete):
+                $this->m_acc_kuarters_defect_list->delete_item_by_parent_id($delete_id);
+                set_notify('user',TEXT_DELETE_RECORD,1);
+                echo TEXT_DELETE_RECORD;
+            else:
+                set_notify('user',TEXT_DELETE_UNSUCCESSFUL,2);
+                echo TEXT_DELETE_UNSUCCESSFUL;
+            endif;
+//            else:
+//                set_notify('user','Data tidak boleh dipadam kerana terdapat pengguna menggunakan kumpulan pengguna ini',2);
+//            endif;
+//            echo 1;
+        endif;
+    }
+
+    function delete_item(){
+        if(is_ajax()):
+            $delete_id = input_data('delete_id');
+//            $check_available_user = $this->m_user->check_available_user($delete_id);
+//            if($check_available_user):
+            $data_update['soft_delete'] = SOFT_DELETE_TRUE;
+            $delete = $this->m_acc_kuarters_defect_list->delete_item($delete_id);
+            if($delete):
+                set_notify('user',TEXT_DELETE_RECORD,1);
+                echo TEXT_DELETE_RECORD;
+            else:
+                set_notify('user',TEXT_DELETE_UNSUCCESSFUL,2);
+                echo TEXT_DELETE_UNSUCCESSFUL;
+            endif;
+//            else:
+//                set_notify('user','Data tidak boleh dipadam kerana terdapat pengguna menggunakan kumpulan pengguna ini',2);
+//            endif;
+//            echo 1;
+        endif;
     }
 }

@@ -76,7 +76,7 @@ class Bill_lib {
             #update done generate next bill for auto generate
             if($data_stage_1['status_acc']==STATUS_ACCOUNT_NONACTIVE):
                 if($this->tunggakan_notice_up==false):
-                    $data_update_acc['STATUS_BILL'] = STATUS_BILL_NONACTIVE; // STATUS_BILL_NONACTIVE = 2
+                    $data_update_acc['STATUS_BILL'] = STATUS_BILL_NONACTIVE;
                     $upd_acc = $this->update_acc($data_stage_1['account_id'],$data_update_acc);
 
                     if($upd_acc):
@@ -118,9 +118,9 @@ class Bill_lib {
         $data['status_bill']    = $data_acc['STATUS_BILL'];
         $data['status_acc']     = $data_acc['STATUS_ACC'];
         $data_bill  = $this->get_cur_bill_data($account_id,$data_acc['BILL_TYPE']);
-        $bill_id    = 0;
-        $bill_item = array();
-        $charge_faedah = false;
+        $bill_id        = 0;
+        $bill_item      = array();
+        $charge_faedah  = false;
 
         if(empty($data_bill) && $data_acc['STATUS_ACC']==STATUS_ACCOUNT_ACTIVE):
 
@@ -336,15 +336,15 @@ class Bill_lib {
                 $data['bill_id']    = $bill_id;
             endif;
 
-//            pre($data_bill_item);
-//            exit;
-
             if($data_bill_item):
                 foreach ($data_bill_item as $row_item):
+//                    pre($row_item);
                     $data_bill_cur = array();
 
-                    $get_bill_sum   = $this->get_bill_sum($account_id,$row_item['TR_CODE'],'semasa',$row_item['REMARK']);
+                    $get_bill_sum   = $this->get_bill_sum($account_id,$row_item['TR_CODE'],'semasa');
                     $total_bil      = $get_bill_sum['BILL'] + ($get_bill_sum['JOURNAL']);
+
+//                    pre($get_bill_sum);
 
                     $total_paid = $total_paid-$total_bil;
 
@@ -353,6 +353,8 @@ class Bill_lib {
 
                     $get_resit_sum  = $this->get_bill_sum($account_id,$code_payment,'semasa');
                     $total_resit    = $get_resit_sum['RESIT'] + ($get_resit_sum['JOURNAL']);
+
+//                    pre($get_resit_sum);
 
                     $total_amount = $total_bil - $total_resit;
 
@@ -380,6 +382,9 @@ class Bill_lib {
                 endforeach;
             endif;
         endif;
+
+//        pre($bill_item);
+//        exit;
 
         $up_level_notice = false;
 
