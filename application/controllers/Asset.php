@@ -67,7 +67,7 @@ class Asset extends CI_Controller
             if(!empty($arr_filter_user_session)):
                 $data_search = get_session('arr_filter_code_category');
             else:
-                $data_search['search'] = '';
+                $data_search['type_name'] = '';
             endif;
         endif;
         $data['data_search'] = $data_search;
