@@ -47,16 +47,6 @@ class Cron extends CI_Controller
     function daily_cron(){
         ini_set('MAX_EXECUTION_TIME', '-1');
 
-        #get payroll insert to int_payment
-        $data_cron_payroll = $this->m_cron_config->get_data_cron('GET_DATA_PAYROLL');
-        if($data_cron_payroll):
-            try {
-                $this->get_payroll_payment();
-            } catch (Exception $e) {
-                echo 'Caught exception function $data_cron_generate_bill_01: ',  $e->getMessage(), "\n";
-            }
-        endif;
-
         #bill every month
         $data_cron_generate_bill_01 = $this->m_cron_config->get_data_cron('GENERATE_BILL_01');
         if($data_cron_generate_bill_01):
@@ -77,6 +67,16 @@ class Cron extends CI_Controller
                     }
                 endif;
             endif;
+        endif;
+
+        #get payroll insert to int_payment
+        $data_cron_payroll = $this->m_cron_config->get_data_cron('GET_DATA_PAYROLL');
+        if($data_cron_payroll):
+            try {
+                $this->get_payroll_payment();
+            } catch (Exception $e) {
+                echo 'Caught exception function $data_cron_generate_bill_01: ',  $e->getMessage(), "\n";
+            }
         endif;
 
         #bill faedah

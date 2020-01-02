@@ -406,6 +406,12 @@
                                 <i class="nav-icon fa fa-circle fa-sm"></i> Lanjutan Sewaan</a>
                         </li>
                         <?php endif;?>
+<!--                        --><?php //if($this->auth->access_view($this->curuser,array(5005))):?>
+                            <li class="nav-item">
+                                <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('kuarters_list','kuarters_add','kuarters_detais'))?>" href="/account/kuarters_list">
+                                    <i class="nav-icon fa fa-circle fa-sm"></i> Laporan Kerosakan Kuarters</a>
+                            </li>
+<!--                        --><?php //endif;?>
                     </ul>
                 </li>
                 <?php endif;?>
@@ -492,7 +498,7 @@
 <!--                        </li>-->
                         <!-- <li class="nav-item">
                             <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('account_adjustment'))?>" href="/report/account_adjustment">
-                                <i class="nav-icon fa fa-circle fa-sm"></i> Penyesuaian Akaun</a>
+                                <i class="nav-icon fa fa-RFcircle fa-sm"></i> Penyesuaian Akaun</a>
                         </li> -->
                         <?php if($this->auth->access_view($this->curuser,array(8003))):?>
                         <li class="nav-item">

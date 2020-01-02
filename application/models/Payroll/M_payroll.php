@@ -10,7 +10,7 @@ class M_payroll extends CI_Model
 
     function get_payroll_new($data_search = array()){
         $this->payroll->select('*');
-        $this->payroll->from('PAYROLL.SEWA_STAGING');
+          $this->payroll->from('PAYROLL.SEWA_STAGING');
 		$this->payroll->where('TBACA','N');
 		$this->payroll->order_by('TKH_HANTAR');
         $sql = $this->payroll->get();
