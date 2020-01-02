@@ -1,4 +1,4 @@
-<div class="form-group row">
+    <div class="form-group row">
     <label class="col-sm-3 col-form-label">Salinan kad pengenalan <span class="mandatory">*</span></label>
     <div class="col-sm-5">
         <div id="ic_number_pic_content">
@@ -58,3 +58,24 @@
         <?php echo form_error('ssm_pic_status')?>
     </div>
 </div>
+<div class="form-group row">
+    <label class="col-sm-3 col-form-label">Dokumen Perjanjian </label>
+    <div class="col-sm-5">
+        <div id="doc_agreement_upload">
+            <?php
+            if($doc_agreement):
+                ?>
+                <img class="img_upload" src="/<?php echo FILE_UPLOAD_TEMP.'/'.$doc_agreement['FILE_NAME']?>">&nbsp;&nbsp;<button onclick="remove_image_upload('doc_agreement',<?php echo $doc_agreement['ID']?>)" type="button" class="btn btn-danger">x</i></button>
+            <?php
+            else:
+                ?>
+                <input type="file" accept="image/png,image/jpeg,image/jpg,image/pdf" onchange="upload_picture('doc_agreement')" name="doc_agreement" id="doc_agreement" class="form-control">
+            <?php
+            endif;
+            ?>
+        </div>
+        <input type="hidden" name="upload_name" id="upload_name" class="form-control" value="<?php echo set_value('doc_agreement',($doc_agreement)?1:'')?>">
+        <?php echo form_error('doc_agreement')?>
+    </div>
+</div>
+            
