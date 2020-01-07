@@ -16,7 +16,7 @@ notify_msg('user');
         <form class="form-horizontal" action="/asset/category" method="post">
             <div class="col-lg-4 row" style="margin-top: 20px;margin-bottom: 20px;">
                 <div class="input-group">
-                    <input type="text" name="type_name" value="<?php echo search_default($data_search,'type_name');?>" class="form-control" placeholder="Jenis Harta">
+                    <input type="text" name="search" value="<?php echo search_default($data_search,'search');?>" class="form-control" placeholder="Nama Kategori">
                     <span class="input-group-btn">
                     <button class="btn btn-success btn-square" type="submit">Carian</button>
                 </span>

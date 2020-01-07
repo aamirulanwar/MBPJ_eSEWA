@@ -1,0 +1,17 @@
+RewriteEngine On
+RewriteRule ^(application) - [F,L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule .* index.php/$0 [PT,L]
+
+#
+#RewriteEngine On
+#RewriteCond %{HTTPS} off [OR]
+#RewriteCond %{HTTP_HOST} !^www\. [OR]
+#RewriteCond %{HTTP_HOST} ^reseller\.academy$ [NC]
+#RewriteRule ^ https://reseller.academy%{REQUEST_URI} [R=301,L,NE]
+#RewriteCond %{THE_REQUEST} ^[A-Z]+\ /index\.php(/[^\ ]*)?\ HTTP/
+#RewriteRule ^index\.php(/(.*))?$ reseller.academy$/$2 [R=301,L]
+#RewriteCond %{REQUEST_FILENAME} !-f
+#RewriteCond %{REQUEST_FILENAME} !-d
+#RewriteRule .* index.php/$0 [PT,L]

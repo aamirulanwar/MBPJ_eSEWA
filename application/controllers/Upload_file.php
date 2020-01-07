@@ -44,7 +44,7 @@ class Upload_file extends CI_Controller
         $data['id_upload']      = '';
 
         $config['upload_path'] 	    = "./".FILE_UPLOAD_TEMP. "/" ;
-        $config['allowed_types']    = 'gif|jpg|png|jpeg|JPG|JPEG|PNG|GIF|txt|TXT|PDF';
+        $config['allowed_types']    = 'gif|jpg|png|jpeg|JPG|JPEG|PNG|GIF|txt|TXT';
         $config['max_size']         = '15120';
         $config['max_width']        = '4000';
         $config['max_height']       = '4000';
