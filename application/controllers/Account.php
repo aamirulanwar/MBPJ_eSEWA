@@ -1295,11 +1295,10 @@ class Account extends CI_Controller
             return false; 
         elseif(is_numeric($id)):
             // $this->m_c_document->get_record_exist($id,'DOC_SIGNATURE');
-            $this->m_c_document->update_document_printed($id,'DOC_SIGNATURE');
+            echo $this->m_c_document->update_document_printed($id,'DOC_SIGNATURE');
             load_library('Generate_word');  
             $this->generate_word->word_document($id, DOC_SIGNATURE);  
-        endif;
-        redirect($_SERVER['REQUEST_URI'], 'refresh'); 
+        endif;        
     }
 
     function doc_quarters(){
