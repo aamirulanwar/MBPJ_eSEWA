@@ -10,17 +10,15 @@
  * file that was distributed with this source code. For the full list of
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
- * @see         https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2018 PHPWord contributors
+ * @link        https://github.com/PHPOffice/PHPWord
+ * @copyright   2010-2014 PHPWord contributors
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
 namespace PhpOffice\PhpWord\Style;
 
-use PhpOffice\Common\Text;
 use PhpOffice\PhpWord\Exception\InvalidStyleException;
-use PhpOffice\PhpWord\SimpleType\Jc;
-use PhpOffice\PhpWord\SimpleType\TextAlignment;
+use PhpOffice\PhpWord\Shared\String;
 
 /**
  * Paragraph style
@@ -47,7 +45,7 @@ use PhpOffice\PhpWord\SimpleType\TextAlignment;
  * - Borders
  * - Background
  *
- * @see  http://www.schemacentral.com/sc/ooxml/t-w_CT_PPr.html
+ * @link http://www.schemacentral.com/sc/ooxml/t-w_CT_PPr.html
  */
 class Paragraph extends Border
 {
@@ -61,7 +59,7 @@ class Paragraph extends Border
      *
      * @var array
      */
-    protected $aliases = array('line-height' => 'lineHeight', 'line-spacing' => 'spacing');
+    protected $aliases = array('line-height' => 'lineHeight');
 
     /**
      * Parent style
@@ -78,9 +76,11 @@ class Paragraph extends Border
     private $next;
 
     /**
-     * @var string
+     * Alignment
+     *
+     * @var \PhpOffice\PhpWord\Style\Alignment
      */
-    private $alignment = '';
+    private $alignment;
 
     /**
      * Indentation
@@ -160,32 +160,12 @@ class Paragraph extends Border
     private $shading;
 
     /**
-     * Ignore Spacing Above and Below When Using Identical Styles
-     *
-     * @var bool
+     * Create new instance
      */
-    private $contextualSpacing = false;
-
-    /**
-     * Right to Left Paragraph Layout
-     *
-     * @var bool
-     */
-    private $bidi = false;
-
-    /**
-     * Vertical Character Alignment on Line
-     *
-     * @var string
-     */
-    private $textAlignment;
-
-    /**
-     * Suppress hyphenation for paragraph
-     *
-     * @var bool
-     */
-    private $suppressAutoHyphens = false;
+    public function __construct()
+    {
+        $this->alignment = new Alignment();
+    }
 
     /**
      * Set Style value
@@ -196,9 +176,11 @@ class Paragraph extends Border
      */
     public function setStyleValue($key, $value)
     {
-        $key = Text::removeUnderscorePrefix($key);
-        if ('indent' == $key || 'hanging' == $key) {
-            $value = $value * 720;  // 720 twips is 0.5 inch
+        $key = String::removeUnderscorePrefix($key);
+        if ($key == 'indent' || $key == 'hanging') {
+            $value = $value * 720;
+        } elseif ($key == 'spacing') {
+            $value += 240; // because line height of 1 matches 240 twips
         }
 
         return parent::setStyleValue($key, $value);
@@ -217,83 +199,50 @@ class Paragraph extends Border
     public function getStyleValues()
     {
         $styles = array(
-            'name'                => $this->getStyleName(),
-            'basedOn'             => $this->getBasedOn(),
-            'next'                => $this->getNext(),
-            'alignment'           => $this->getAlignment(),
-            'indentation'         => $this->getIndentation(),
-            'spacing'             => $this->getSpace(),
-            'pagination'          => array(
-                'widowControl'    => $this->hasWidowControl(),
-                'keepNext'        => $this->isKeepNext(),
-                'keepLines'       => $this->isKeepLines(),
-                'pageBreak'       => $this->hasPageBreakBefore(),
+            'name'              => $this->getStyleName(),
+            'basedOn'           => $this->getBasedOn(),
+            'next'              => $this->getNext(),
+            'alignment'         => $this->getAlign(),
+            'indentation'       => $this->getIndentation(),
+            'spacing'           => $this->getSpace(),
+            'pagination'        => array(
+                'widowControl'  => $this->hasWidowControl(),
+                'keepNext'      => $this->isKeepNext(),
+                'keepLines'     => $this->isKeepLines(),
+                'pageBreak'     => $this->hasPageBreakBefore(),
             ),
-            'numbering'           => array(
-                'style'           => $this->getNumStyle(),
-                'level'           => $this->getNumLevel(),
+            'numbering'         => array(
+                'style'         => $this->getNumStyle(),
+                'level'         => $this->getNumLevel(),
             ),
-            'tabs'                => $this->getTabs(),
-            'shading'             => $this->getShading(),
-            'contextualSpacing'   => $this->hasContextualSpacing(),
-            'bidi'                => $this->isBidi(),
-            'textAlignment'       => $this->getTextAlignment(),
-            'suppressAutoHyphens' => $this->hasSuppressAutoHyphens(),
+            'tabs'              => $this->getTabs(),
+            'shading'           => $this->getShading(),
         );
 
         return $styles;
     }
 
     /**
-     * @since 0.13.0
+     * Get alignment
      *
      * @return string
-     */
-    public function getAlignment()
-    {
-        return $this->alignment;
-    }
-
-    /**
-     * @since 0.13.0
-     *
-     * @param string $value
-     *
-     * @return self
-     */
-    public function setAlignment($value)
-    {
-        if (Jc::isValid($value)) {
-            $this->alignment = $value;
-        }
-
-        return $this;
-    }
-
-    /**
-     * @deprecated 0.13.0 Use the `getAlignment` method instead.
-     *
-     * @return string
-     *
-     * @codeCoverageIgnore
      */
     public function getAlign()
     {
-        return $this->getAlignment();
+        return $this->alignment->getValue();
     }
 
     /**
-     * @deprecated 0.13.0 Use the `setAlignment` method instead.
+     * Set alignment
      *
      * @param string $value
-     *
      * @return self
-     *
-     * @codeCoverageIgnore
      */
     public function setAlign($value = null)
     {
-        return $this->setAlignment($value);
+        $this->alignment->setValue($value);
+
+        return $this;
     }
 
     /**
@@ -435,7 +384,7 @@ class Paragraph extends Border
     /**
      * Get space before paragraph
      *
-     * @return int
+     * @return integer
      */
     public function getSpaceBefore()
     {
@@ -456,7 +405,7 @@ class Paragraph extends Border
     /**
      * Get space after paragraph
      *
-     * @return int
+     * @return integer
      */
     public function getSpaceAfter()
     {
@@ -477,7 +426,7 @@ class Paragraph extends Border
     /**
      * Get spacing between lines
      *
-     * @return int|float
+     * @return int
      */
     public function getSpacing()
     {
@@ -487,33 +436,12 @@ class Paragraph extends Border
     /**
      * Set spacing between lines
      *
-     * @param int|float $value
+     * @param int $value
      * @return self
      */
     public function setSpacing($value = null)
     {
         return $this->setSpace(array('line' => $value));
-    }
-
-    /**
-     * Get spacing line rule
-     *
-     * @return string
-     */
-    public function getSpacingLineRule()
-    {
-        return $this->getChildStyleValue($this->spacing, 'lineRule');
-    }
-
-    /**
-     * Set the spacing line rule
-     *
-     * @param string $value Possible values are defined in LineSpacingRule
-     * @return \PhpOffice\PhpWord\Style\Paragraph
-     */
-    public function setSpacingLineRule($value)
-    {
-        return $this->setSpace(array('lineRule' => $value));
     }
 
     /**
@@ -530,24 +458,21 @@ class Paragraph extends Border
      * Set the line height
      *
      * @param int|float|string $lineHeight
-     *
-     * @throws \PhpOffice\PhpWord\Exception\InvalidStyleException
      * @return self
+     * @throws \PhpOffice\PhpWord\Exception\InvalidStyleException
      */
     public function setLineHeight($lineHeight)
     {
         if (is_string($lineHeight)) {
-            $lineHeight = (float) (preg_replace('/[^0-9\.\,]/', '', $lineHeight));
+            $lineHeight = floatval(preg_replace('/[^0-9\.\,]/', '', $lineHeight));
         }
 
-        if ((!is_int($lineHeight) && !is_float($lineHeight)) || !$lineHeight) {
+        if ((!is_integer($lineHeight) && !is_float($lineHeight)) || !$lineHeight) {
             throw new InvalidStyleException('Line height must be a valid number');
         }
 
         $this->lineHeight = $lineHeight;
-        $this->setSpacing(($lineHeight - 1) * self::LINE_HEIGHT);
-        $this->setSpacingLineRule(\PhpOffice\PhpWord\SimpleType\LineSpacingRule::AUTO);
-
+        $this->setSpacing($lineHeight * self::LINE_HEIGHT);
         return $this;
     }
 
@@ -718,7 +643,6 @@ class Paragraph extends Border
      * Get allow first/last line to display on a separate page setting
      *
      * @deprecated 0.10.0
-     *
      * @codeCoverageIgnore
      */
     public function getWidowControl()
@@ -730,7 +654,6 @@ class Paragraph extends Border
      * Get keep paragraph with next paragraph setting
      *
      * @deprecated 0.10.0
-     *
      * @codeCoverageIgnore
      */
     public function getKeepNext()
@@ -742,7 +665,6 @@ class Paragraph extends Border
      * Get keep all lines on one page setting
      *
      * @deprecated 0.10.0
-     *
      * @codeCoverageIgnore
      */
     public function getKeepLines()
@@ -754,7 +676,6 @@ class Paragraph extends Border
      * Get start paragraph on next page setting
      *
      * @deprecated 0.10.0
-     *
      * @codeCoverageIgnore
      */
     public function getPageBreakBefore()
@@ -783,92 +704,5 @@ class Paragraph extends Border
         $this->setObjectVal($value, 'Shading', $this->shading);
 
         return $this;
-    }
-
-    /**
-     * Get contextualSpacing
-     *
-     * @return bool
-     */
-    public function hasContextualSpacing()
-    {
-        return $this->contextualSpacing;
-    }
-
-    /**
-     * Set contextualSpacing
-     *
-     * @param bool $contextualSpacing
-     * @return self
-     */
-    public function setContextualSpacing($contextualSpacing)
-    {
-        $this->contextualSpacing = $contextualSpacing;
-
-        return $this;
-    }
-
-    /**
-     * Get bidirectional
-     *
-     * @return bool
-     */
-    public function isBidi()
-    {
-        return $this->bidi;
-    }
-
-    /**
-     * Set bidi
-     *
-     * @param bool $bidi
-     *            Set to true to write from right to left
-     * @return self
-     */
-    public function setBidi($bidi)
-    {
-        $this->bidi = $bidi;
-
-        return $this;
-    }
-
-    /**
-     * Get textAlignment
-     *
-     * @return string
-     */
-    public function getTextAlignment()
-    {
-        return $this->textAlignment;
-    }
-
-    /**
-     * Set textAlignment
-     *
-     * @param string $textAlignment
-     * @return self
-     */
-    public function setTextAlignment($textAlignment)
-    {
-        TextAlignment::validate($textAlignment);
-        $this->textAlignment = $textAlignment;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasSuppressAutoHyphens()
-    {
-        return $this->suppressAutoHyphens;
-    }
-
-    /**
-     * @param bool $suppressAutoHyphens
-     */
-    public function setSuppressAutoHyphens($suppressAutoHyphens)
-    {
-        $this->suppressAutoHyphens = (bool) $suppressAutoHyphens;
     }
 }

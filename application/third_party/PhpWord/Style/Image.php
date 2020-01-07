@@ -10,11 +10,10 @@
  * file that was distributed with this source code. For the full list of
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
- * @see         https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2018 PHPWord contributors
+ * @link        https://github.com/PHPOffice/PHPWord
+ * @copyright   2010-2014 PHPWord contributors
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
-
 namespace PhpOffice\PhpWord\Style;
 
 /**
@@ -61,9 +60,9 @@ class Image extends Frame
     public function __construct()
     {
         parent::__construct();
-        $this->setUnit(self::UNIT_PT);
+        $this->setUnit('px');
 
-        // Backward compatibility setting
+        // Backward compatilibity setting
         // @todo Remove on 1.0.0
         $this->setWrap(self::WRAPPING_STYLE_INLINE);
         $this->setHPos(self::POSITION_HORIZONTAL_LEFT);
@@ -134,9 +133,7 @@ class Image extends Frame
      * Set wrapping style
      *
      * @param string $wrappingStyle
-     *
      * @throws \InvalidArgumentException
-     *
      * @return self
      */
     public function setWrappingStyle($wrappingStyle)
@@ -160,9 +157,7 @@ class Image extends Frame
      * Set positioning type
      *
      * @param string $positioning
-     *
      * @throws \InvalidArgumentException
-     *
      * @return self
      */
     public function setPositioning($positioning)
@@ -186,9 +181,7 @@ class Image extends Frame
      * Set horizontal alignment
      *
      * @param string $alignment
-     *
      * @throws \InvalidArgumentException
-     *
      * @return self
      */
     public function setPosHorizontal($alignment)
@@ -212,9 +205,7 @@ class Image extends Frame
      * Set vertical alignment
      *
      * @param string $alignment
-     *
      * @throws \InvalidArgumentException
-     *
      * @return self
      */
     public function setPosVertical($alignment)
@@ -238,9 +229,7 @@ class Image extends Frame
      * Set horizontal relation
      *
      * @param string $relto
-     *
      * @throws \InvalidArgumentException
-     *
      * @return self
      */
     public function setPosHorizontalRel($relto)
@@ -264,9 +253,7 @@ class Image extends Frame
      * Set vertical relation
      *
      * @param string $relto
-     *
      * @throws \InvalidArgumentException
-     *
      * @return self
      */
     public function setPosVerticalRel($relto)

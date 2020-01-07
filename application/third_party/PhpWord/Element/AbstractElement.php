@@ -10,8 +10,8 @@
  * file that was distributed with this source code. For the full list of
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
- * @see         https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2018 PHPWord contributors
+ * @link        https://github.com/PHPOffice/PHPWord
+ * @copyright   2010-2014 PHPWord contributors
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
@@ -19,6 +19,7 @@ namespace PhpOffice\PhpWord\Element;
 
 use PhpOffice\PhpWord\Media;
 use PhpOffice\PhpWord\PhpWord;
+use PhpOffice\PhpWord\Style;
 
 /**
  * Element abstract class
@@ -73,7 +74,7 @@ abstract class AbstractElement
     /**
      * Unique Id for element
      *
-     * @var string
+     * @var int
      */
     protected $elementId;
 
@@ -94,20 +95,6 @@ abstract class AbstractElement
     private $nestedLevel = 0;
 
     /**
-     * A reference to the parent
-     *
-     * @var AbstractElement|null
-     */
-    private $parent;
-
-    /**
-     * changed element info
-     *
-     * @var TrackChange
-     */
-    private $trackChange;
-
-    /**
      * Parent container type
      *
      * @var string
@@ -122,25 +109,11 @@ abstract class AbstractElement
     protected $mediaRelation = false;
 
     /**
-     * Is part of collection; true for Title, Footnote, Endnote, Chart, and Comment
+     * Is part of collection; true for Title, Footnote, Endnote, and Chart
      *
      * @var bool
      */
     protected $collectionRelation = false;
-
-    /**
-     * The start position for the linked comment
-     *
-     * @var Comment
-     */
-    protected $commentRangeStart;
-
-    /**
-     * The end position for the linked comment
-     *
-     * @var Comment
-     */
-    protected $commentRangeEnd;
 
     /**
      * Get PhpWord
@@ -156,6 +129,7 @@ abstract class AbstractElement
      * Set PhpWord as reference.
      *
      * @param \PhpOffice\PhpWord\PhpWord $phpWord
+     * @return void
      */
     public function setPhpWord(PhpWord $phpWord = null)
     {
@@ -177,6 +151,7 @@ abstract class AbstractElement
      *
      * @param string $docPart
      * @param int $docPartId
+     * @return void
      */
     public function setDocPart($docPart, $docPartId = 1)
     {
@@ -233,6 +208,7 @@ abstract class AbstractElement
      * Set element index.
      *
      * @param int $value
+     * @return void
      */
     public function setElementIndex($value)
     {
@@ -251,6 +227,8 @@ abstract class AbstractElement
 
     /**
      * Set element unique ID from 6 first digit of md5.
+     *
+     * @return void
      */
     public function setElementId()
     {
@@ -271,6 +249,7 @@ abstract class AbstractElement
      * Set relation Id.
      *
      * @param int $value
+     * @return void
      */
     public function setRelationId($value)
     {
@@ -288,74 +267,16 @@ abstract class AbstractElement
     }
 
     /**
-     * Get comment start
-     *
-     * @return Comment
-     */
-    public function getCommentRangeStart()
-    {
-        return $this->commentRangeStart;
-    }
-
-    /**
-     * Set comment start
-     *
-     * @param Comment $value
-     */
-    public function setCommentRangeStart(Comment $value)
-    {
-        if ($this instanceof Comment) {
-            throw new \InvalidArgumentException('Cannot set a Comment on a Comment');
-        }
-        $this->commentRangeStart = $value;
-        $this->commentRangeStart->setStartElement($this);
-    }
-
-    /**
-     * Get comment end
-     *
-     * @return Comment
-     */
-    public function getCommentRangeEnd()
-    {
-        return $this->commentRangeEnd;
-    }
-
-    /**
-     * Set comment end
-     *
-     * @param Comment $value
-     */
-    public function setCommentRangeEnd(Comment $value)
-    {
-        if ($this instanceof Comment) {
-            throw new \InvalidArgumentException('Cannot set a Comment on a Comment');
-        }
-        $this->commentRangeEnd = $value;
-        $this->commentRangeEnd->setEndElement($this);
-    }
-
-    /**
-     * Get parent element
-     *
-     * @return AbstractElement|null
-     */
-    public function getParent()
-    {
-        return $this->parent;
-    }
-
-    /**
      * Set parent container
      *
      * Passed parameter should be a container, except for Table (contain Row) and Row (contain Cell)
      *
      * @param \PhpOffice\PhpWord\Element\AbstractElement $container
+     * @return void
      */
-    public function setParentContainer(self $container)
+    public function setParentContainer(AbstractElement $container)
     {
         $this->parentContainer = substr(get_class($container), strrpos(get_class($container), '\\') + 1);
-        $this->parent = $container;
 
         // Set nested level
         $this->nestedLevel = $container->getNestedLevel();
@@ -380,17 +301,16 @@ abstract class AbstractElement
      *
      * - Image element needs to be passed to Media object
      * - Icon needs to be set for Object element
+     *
+     * @return void
      */
     private function setMediaRelation()
     {
-        if (!$this instanceof Link && !$this instanceof Image && !$this instanceof OLEObject) {
+        if (!$this instanceof Link && !$this instanceof Image && !$this instanceof Object) {
             return;
         }
 
         $elementName = substr(get_class($this), strrpos(get_class($this), '\\') + 1);
-        if ($elementName == 'OLEObject') {
-            $elementName = 'Object';
-        }
         $mediaPart = $this->getMediaPart();
         $source = $this->getSource();
         $image = null;
@@ -400,7 +320,7 @@ abstract class AbstractElement
         $rId = Media::addElement($mediaPart, strtolower($elementName), $source, $image);
         $this->setRelationId($rId);
 
-        if ($this instanceof OLEObject) {
+        if ($this instanceof Object) {
             $icon = $this->getIcon();
             $rId = Media::addElement($mediaPart, 'image', $icon, new Image($icon));
             $this->setImageRelationId($rId);
@@ -409,6 +329,8 @@ abstract class AbstractElement
 
     /**
      * Set relation Id for elements that will be registered in the Collection subnamespaces.
+     *
+     * @return void
      */
     private function setCollectionRelation()
     {
@@ -427,7 +349,7 @@ abstract class AbstractElement
      */
     public function isInSection()
     {
-        return $this->docPart == 'Section';
+        return ($this->docPart == 'Section');
     }
 
     /**
@@ -451,52 +373,18 @@ abstract class AbstractElement
     }
 
     /**
-     * Sets the trackChange information
-     *
-     * @param TrackChange $trackChange
-     */
-    public function setTrackChange(TrackChange $trackChange)
-    {
-        $this->trackChange = $trackChange;
-    }
-
-    /**
-     * Gets the trackChange information
-     *
-     * @return TrackChange
-     */
-    public function getTrackChange()
-    {
-        return $this->trackChange;
-    }
-
-    /**
-     * Set changed
-     *
-     * @param string $type INSERTED|DELETED
-     * @param string $author
-     * @param null|int|\DateTime $date allways in UTC
-     */
-    public function setChangeInfo($type, $author, $date = null)
-    {
-        $this->trackChange = new TrackChange($type, $author, $date);
-    }
-
-    /**
      * Set enum value
      *
-     * @param string|null $value
-     * @param string[] $enum
-     * @param string|null $default
-     *
+     * @param mixed $value
+     * @param array $enum
+     * @param mixed $default
+     * @return mixed
      * @throws \InvalidArgumentException
-     * @return string|null
-     *
      * @todo Merge with the same method in AbstractStyle
      */
     protected function setEnumVal($value = null, $enum = array(), $default = null)
     {
-        if ($value !== null && trim($value) != '' && !empty($enum) && !in_array($value, $enum)) {
+        if ($value != null && trim($value) != '' && !empty($enum) && !in_array($value, $enum)) {
             throw new \InvalidArgumentException("Invalid style value: {$value}");
         } elseif ($value === null || trim($value) == '') {
             $value = $default;

@@ -10,14 +10,14 @@
  * file that was distributed with this source code. For the full list of
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
- * @see         https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2018 PHPWord contributors
+ * @link        https://github.com/PHPOffice/PHPWord
+ * @copyright   2010-2014 PHPWord contributors
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
 namespace PhpOffice\PhpWord\Element;
 
-use PhpOffice\Common\Text as CommonText;
+use PhpOffice\PhpWord\Shared\String;
 use PhpOffice\PhpWord\Style\Font;
 use PhpOffice\PhpWord\Style\Paragraph;
 
@@ -29,7 +29,7 @@ class PreserveText extends AbstractElement
     /**
      * Text content
      *
-     * @var string|array
+     * @var string
      */
     private $text;
 
@@ -47,23 +47,27 @@ class PreserveText extends AbstractElement
      */
     private $paragraphStyle;
 
+
     /**
      * Create a new Preserve Text Element
      *
      * @param string $text
      * @param mixed $fontStyle
      * @param mixed $paragraphStyle
+     * @return self
      */
     public function __construct($text = null, $fontStyle = null, $paragraphStyle = null)
     {
         $this->fontStyle = $this->setNewStyle(new Font('text'), $fontStyle);
         $this->paragraphStyle = $this->setNewStyle(new Paragraph(), $paragraphStyle);
 
-        $this->text = CommonText::toUTF8($text);
+        $this->text = String::toUTF8($text);
         $matches = preg_split('/({.*?})/', $this->text, null, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
         if (isset($matches[0])) {
             $this->text = $matches;
         }
+
+        return $this;
     }
 
     /**
@@ -89,7 +93,7 @@ class PreserveText extends AbstractElement
     /**
      * Get Text content
      *
-     * @return string|array
+     * @return string
      */
     public function getText()
     {

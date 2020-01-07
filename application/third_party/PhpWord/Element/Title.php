@@ -10,14 +10,14 @@
  * file that was distributed with this source code. For the full list of
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
- * @see         https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2018 PHPWord contributors
+ * @link        https://github.com/PHPOffice/PHPWord
+ * @copyright   2010-2014 PHPWord contributors
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
 namespace PhpOffice\PhpWord\Element;
 
-use PhpOffice\Common\Text as CommonText;
+use PhpOffice\PhpWord\Shared\String;
 use PhpOffice\PhpWord\Style;
 
 /**
@@ -28,7 +28,7 @@ class Title extends AbstractElement
     /**
      * Title Text content
      *
-     * @var string|TextRun
+     * @var string
      */
     private $text;
 
@@ -56,24 +56,18 @@ class Title extends AbstractElement
     /**
      * Create a new Title Element
      *
-     * @param string|TextRun $text
+     * @param string $text
      * @param int $depth
      */
     public function __construct($text, $depth = 1)
     {
-        if (is_string($text)) {
-            $this->text = CommonText::toUTF8($text);
-        } elseif ($text instanceof TextRun) {
-            $this->text = $text;
-        } else {
-            throw new \InvalidArgumentException('Invalid text, should be a string or a TextRun');
+        $this->text = String::toUTF8($text);
+        $this->depth = $depth;
+        if (array_key_exists("Heading_{$this->depth}", Style::getStyles())) {
+            $this->style = "Heading{$this->depth}";
         }
 
-        $this->depth = $depth;
-        $styleName = $depth === 0 ? 'Title' : "Heading_{$this->depth}";
-        if (array_key_exists($styleName, Style::getStyles())) {
-            $this->style = str_replace('_', '', $styleName);
-        }
+        return $this;
     }
 
     /**
@@ -89,7 +83,7 @@ class Title extends AbstractElement
     /**
      * Get depth
      *
-     * @return int
+     * @return integer
      */
     public function getDepth()
     {

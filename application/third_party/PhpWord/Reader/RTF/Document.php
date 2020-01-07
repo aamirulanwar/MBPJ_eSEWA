@@ -10,15 +10,14 @@
  * file that was distributed with this source code. For the full list of
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
- * @see         https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2018 PHPWord contributors
+ * @link        https://github.com/PHPOffice/PHPWord
+ * @copyright   2010-2014 PHPWord contributors
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
 namespace PhpOffice\PhpWord\Reader\RTF;
 
 use PhpOffice\PhpWord\PhpWord;
-use PhpOffice\PhpWord\SimpleType\Jc;
 
 /**
  * RTF document reader
@@ -131,6 +130,7 @@ class Document
      * - Pushes every other character into the text queue
      *
      * @param \PhpOffice\PhpWord\PhpWord $phpWord
+     * @return void
      * @todo Use `fread` stream for scalability
      */
     public function read(PhpWord $phpWord)
@@ -140,7 +140,7 @@ class Document
             125 => 'markClosing',   // }
             92  => 'markBackslash', // \
             10  => 'markNewline',   // LF
-            13  => 'markNewline',   // CR
+            13  => 'markNewline'    // CR
         );
 
         $this->phpWord = $phpWord;
@@ -152,24 +152,24 @@ class Document
 
         // Walk each characters
         while ($this->offset < $this->length) {
-            $char = $this->rtf[$this->offset];
+            $char  = $this->rtf[$this->offset];
             $ascii = ord($char);
 
             if (isset($markers[$ascii])) { // Marker found: {, }, \, LF, or CR
                 $markerFunction = $markers[$ascii];
                 $this->$markerFunction();
             } else {
-                if (false === $this->isControl) { // Non control word: Push character
+                if ($this->isControl === false) { // Non control word: Push character
                     $this->pushText($char);
                 } else {
-                    if (preg_match('/^[a-zA-Z0-9-]?$/', $char)) { // No delimiter: Buffer control
+                    if (preg_match("/^[a-zA-Z0-9-]?$/", $char)) { // No delimiter: Buffer control
                         $this->control .= $char;
                         $this->isFirst = false;
                     } else { // Delimiter found: Parse buffered control
                         if ($this->isFirst) {
                             $this->isFirst = false;
                         } else {
-                            if (' ' == $char) { // Discard space as a control word delimiter
+                            if ($char == ' ') { // Discard space as a control word delimiter
                                 $this->flushControl(true);
                             }
                         }
@@ -183,6 +183,8 @@ class Document
 
     /**
      * Mark opening braket `{` character.
+     *
+     * @return void
      */
     private function markOpening()
     {
@@ -192,6 +194,8 @@ class Document
 
     /**
      * Mark closing braket `}` character.
+     *
+     * @return void
      */
     private function markClosing()
     {
@@ -201,6 +205,8 @@ class Document
 
     /**
      * Mark backslash `\` character.
+     *
+     * @return void
      */
     private function markBackslash()
     {
@@ -216,6 +222,8 @@ class Document
 
     /**
      * Mark newline character: Flush control word because it's not possible to span multiline.
+     *
+     * @return void
      */
     private function markNewline()
     {
@@ -228,6 +236,7 @@ class Document
      * Flush control word or text.
      *
      * @param bool $isControl
+     * @return void
      */
     private function flush($isControl = false)
     {
@@ -242,21 +251,24 @@ class Document
      * Flush control word.
      *
      * @param bool $isControl
+     * @return void
      */
     private function flushControl($isControl = false)
     {
-        if (1 === preg_match('/^([A-Za-z]+)(-?[0-9]*) ?$/', $this->control, $match)) {
+        if (preg_match("/^([A-Za-z]+)(-?[0-9]*) ?$/", $this->control, $match) === 1) {
             list(, $control, $parameter) = $match;
             $this->parseControl($control, $parameter);
         }
 
-        if (true === $isControl) {
+        if ($isControl === true) {
             $this->setControl(false);
         }
     }
 
     /**
      * Flush text in queue.
+     *
+     * @return void
      */
     private function flushText()
     {
@@ -264,7 +276,7 @@ class Document
             if (isset($this->flags['property'])) { // Set property
                 $this->flags['value'] = $this->text;
             } else { // Set text
-                if (true === $this->flags['paragraph']) {
+                if ($this->flags['paragraph'] === true) {
                     $this->flags['paragraph'] = false;
                     $this->flags['text'] = $this->text;
                 }
@@ -283,6 +295,7 @@ class Document
      * Reset control word and first char state.
      *
      * @param bool $value
+     * @return void
      */
     private function setControl($value)
     {
@@ -294,13 +307,14 @@ class Document
      * Push text into queue.
      *
      * @param string $char
+     * @return void
      */
     private function pushText($char)
     {
-        if ('<' == $char) {
-            $this->text .= '&lt;';
-        } elseif ('>' == $char) {
-            $this->text .= '&gt;';
+        if ($char == '<') {
+            $this->text .= "&lt;";
+        } elseif ($char == '>') {
+            $this->text .= "&gt;";
         } else {
             $this->text .= $char;
         }
@@ -311,18 +325,19 @@ class Document
      *
      * @param string $control
      * @param string $parameter
+     * @return void
      */
     private function parseControl($control, $parameter)
     {
         $controls = array(
             'par'       => array(self::PARA,    'paragraph',    true),
-            'b'         => array(self::STYL,    'font',         'bold',          true),
-            'i'         => array(self::STYL,    'font',         'italic',        true),
-            'u'         => array(self::STYL,    'font',         'underline',     true),
-            'strike'    => array(self::STYL,    'font',         'strikethrough', true),
-            'fs'        => array(self::STYL,    'font',         'size',          $parameter),
-            'qc'        => array(self::STYL,    'paragraph',    'alignment',     Jc::CENTER),
-            'sa'        => array(self::STYL,    'paragraph',    'spaceAfter',    $parameter),
+            'b'         => array(self::STYL,    'font',         'bold',         true),
+            'i'         => array(self::STYL,    'font',         'italic',       true),
+            'u'         => array(self::STYL,    'font',         'underline',    true),
+            'strike'    => array(self::STYL,    'font',         'strikethrough',true),
+            'fs'        => array(self::STYL,    'font',         'size',         $parameter),
+            'qc'        => array(self::STYL,    'paragraph',    'align',        'center'),
+            'sa'        => array(self::STYL,    'paragraph',    'spaceAfter',   $parameter),
             'fonttbl'   => array(self::SKIP,    'fonttbl',      null),
             'colortbl'  => array(self::SKIP,    'colortbl',     null),
             'info'      => array(self::SKIP,    'info',         null),
@@ -350,6 +365,7 @@ class Document
      * Read paragraph.
      *
      * @param array $directives
+     * @return void
      */
     private function readParagraph($directives)
     {
@@ -362,6 +378,7 @@ class Document
      * Read style.
      *
      * @param array $directives
+     * @return void
      */
     private function readStyle($directives)
     {
@@ -373,6 +390,7 @@ class Document
      * Read skip.
      *
      * @param array $directives
+     * @return void
      */
     private function readSkip($directives)
     {
@@ -383,6 +401,8 @@ class Document
 
     /**
      * Read text.
+     *
+     * @return void
      */
     private function readText()
     {

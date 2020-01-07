@@ -10,15 +10,15 @@
  * file that was distributed with this source code. For the full list of
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
- * @see         https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2018 PHPWord contributors
+ * @link        https://github.com/PHPOffice/PHPWord
+ * @copyright   2010-2014 PHPWord contributors
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
 namespace PhpOffice\PhpWord\Reader\Word2007;
 
-use PhpOffice\Common\XMLReader;
 use PhpOffice\PhpWord\PhpWord;
+use PhpOffice\PhpWord\Shared\XMLReader;
 
 /**
  * Numbering reader
@@ -31,6 +31,7 @@ class Numbering extends AbstractPart
      * Read numbering.xml.
      *
      * @param \PhpOffice\PhpWord\PhpWord $phpWord
+     * @return void
      */
     public function read(PhpWord $phpWord)
     {
@@ -89,9 +90,9 @@ class Numbering extends AbstractPart
     /**
      * Read numbering level definition from w:abstractNum and w:num
      *
-     * @param \PhpOffice\Common\XMLReader $xmlReader
+     * @param \PhpOffice\PhpWord\Shared\XMLReader $xmlReader
      * @param \DOMElement $subnode
-     * @param int $levelId
+     * @param integer $levelId
      * @return array
      */
     private function readLevel(XMLReader $xmlReader, \DOMElement $subnode, $levelId)
@@ -104,7 +105,7 @@ class Numbering extends AbstractPart
         $level['restart'] = $xmlReader->getAttribute('w:val', $subnode, 'w:lvlRestart');
         $level['suffix'] = $xmlReader->getAttribute('w:val', $subnode, 'w:suff');
         $level['text'] = $xmlReader->getAttribute('w:val', $subnode, 'w:lvlText');
-        $level['alignment'] = $xmlReader->getAttribute('w:val', $subnode, 'w:lvlJc');
+        $level['align'] = $xmlReader->getAttribute('w:val', $subnode, 'w:lvlJc');
         $level['tab'] = $xmlReader->getAttribute('w:pos', $subnode, 'w:pPr/w:tabs/w:tab');
         $level['left'] = $xmlReader->getAttribute('w:left', $subnode, 'w:pPr/w:ind');
         $level['hanging'] = $xmlReader->getAttribute('w:hanging', $subnode, 'w:pPr/w:ind');

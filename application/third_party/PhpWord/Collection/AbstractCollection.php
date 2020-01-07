@@ -10,9 +10,9 @@
  * file that was distributed with this source code. For the full list of
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
- * @see         https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2018 PHPWord contributors
- * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
+ * @link        https://github.com/PHPOffice/PHPWord
+ * @copyright   2010-2014 PHPWord contributors
+ * @license     http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt LGPL
  */
 
 namespace PhpOffice\PhpWord\Collection;
@@ -27,14 +27,14 @@ abstract class AbstractCollection
     /**
      * Items
      *
-     * @var \PhpOffice\PhpWord\Element\AbstractContainer[]
+     * @var array
      */
     private $items = array();
 
     /**
      * Get items
      *
-     * @return \PhpOffice\PhpWord\Element\AbstractContainer[]
+     * @return array
      */
     public function getItems()
     {
@@ -45,22 +45,23 @@ abstract class AbstractCollection
      * Get item by index
      *
      * @param int $index
-     * @return \PhpOffice\PhpWord\Element\AbstractContainer
+     * @return mixed
      */
     public function getItem($index)
     {
         if (array_key_exists($index, $this->items)) {
             return $this->items[$index];
+        } else {
+            return null;
         }
-
-        return null;
     }
 
     /**
      * Set item.
      *
      * @param int $index
-     * @param \PhpOffice\PhpWord\Element\AbstractContainer $item
+     * @param mixed $item
+     * @return void
      */
     public function setItem($index, $item)
     {
@@ -72,7 +73,7 @@ abstract class AbstractCollection
     /**
      * Add new item
      *
-     * @param \PhpOffice\PhpWord\Element\AbstractContainer $item
+     * @param mixed $item
      * @return int
      */
     public function addItem($item)

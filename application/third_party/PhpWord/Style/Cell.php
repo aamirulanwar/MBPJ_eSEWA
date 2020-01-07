@@ -10,15 +10,12 @@
  * file that was distributed with this source code. For the full list of
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
- * @see         https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2018 PHPWord contributors
+ * @link        https://github.com/PHPOffice/PHPWord
+ * @copyright   2010-2014 PHPWord contributors
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
 namespace PhpOffice\PhpWord\Style;
-
-use PhpOffice\PhpWord\SimpleType\TblWidth;
-use PhpOffice\PhpWord\SimpleType\VerticalJc;
 
 /**
  * Table cell style
@@ -29,47 +26,19 @@ class Cell extends Border
      * Vertical alignment constants
      *
      * @const string
-     * @deprecated Use \PhpOffice\PhpWord\SimpleType\VerticalJc::TOP instead
      */
     const VALIGN_TOP = 'top';
-    /**
-     * @deprecated Use \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER instead
-     */
     const VALIGN_CENTER = 'center';
-    /**
-     * @deprecated Use \PhpOffice\PhpWord\SimpleType\VerticalJc::BOTTOM instead
-     */
     const VALIGN_BOTTOM = 'bottom';
-    /**
-     * @deprecated Use \PhpOffice\PhpWord\SimpleType\VerticalJc::BOTH instead
-     */
     const VALIGN_BOTH = 'both';
 
-    //Text direction constants
     /**
-     * Left to Right, Top to Bottom
-     */
-    const TEXT_DIR_LRTB = 'lrTb';
-    /**
-     * Top to Bottom, Right to Left
-     */
-    const TEXT_DIR_TBRL = 'tbRl';
-    /**
-     * Bottom to Top, Left to Right
+     * Text direction constants
+     *
+     * @const string
      */
     const TEXT_DIR_BTLR = 'btLr';
-    /**
-     * Left to Right, Top to Bottom Rotated
-     */
-    const TEXT_DIR_LRTBV = 'lrTbV';
-    /**
-     * Top to Bottom, Right to Left Rotated
-     */
-    const TEXT_DIR_TBRLV = 'tbRlV';
-    /**
-     * Top to Bottom, Left to Right Rotated
-     */
-    const TEXT_DIR_TBLRV = 'tbLrV';
+    const TEXT_DIR_TBRL = 'tbRl';
 
     /**
      * Vertical merge (rowspan) constants
@@ -103,7 +72,7 @@ class Cell extends Border
     /**
      * colspan
      *
-     * @var int
+     * @var integer
      */
     private $gridSpan;
 
@@ -125,20 +94,6 @@ class Cell extends Border
     private $shading;
 
     /**
-     * Width
-     *
-     * @var int
-     */
-    private $width;
-
-    /**
-     * Width unit
-     *
-     * @var string
-     */
-    private $unit = TblWidth::TWIP;
-
-    /**
      * Get vertical align.
      *
      * @return string
@@ -156,8 +111,8 @@ class Cell extends Border
      */
     public function setVAlign($value = null)
     {
-        VerticalJc::validate($value);
-        $this->vAlign = $this->setEnumVal($value, VerticalJc::values(), $this->vAlign);
+        $enum = array(self::VALIGN_TOP, self::VALIGN_CENTER, self::VALIGN_BOTTOM, self::VALIGN_BOTH);
+        $this->vAlign = $this->setEnumVal($value, $enum, $this->vAlign);
 
         return $this;
     }
@@ -195,9 +150,9 @@ class Cell extends Border
     {
         if ($this->shading !== null) {
             return $this->shading->getFill();
+        } else {
+            return null;
         }
-
-        return null;
     }
 
     /**
@@ -214,7 +169,7 @@ class Cell extends Border
     /**
      * Get grid span (colspan).
      *
-     * @return int
+     * @return integer
      */
     public function getGridSpan()
     {
@@ -282,55 +237,9 @@ class Cell extends Border
     }
 
     /**
-     * Get cell width
-     *
-     * @return int
-     */
-    public function getWidth()
-    {
-        return $this->width;
-    }
-
-    /**
-     * Set cell width
-     *
-     * @param int $value
-     * @return self
-     */
-    public function setWidth($value)
-    {
-        $this->setIntVal($value);
-
-        return $this;
-    }
-
-    /**
-     * Get width unit
-     *
-     * @return string
-     */
-    public function getUnit()
-    {
-        return $this->unit;
-    }
-
-    /**
-     * Set width unit
-     *
-     * @param string $value
-     */
-    public function setUnit($value)
-    {
-        $this->unit = $this->setEnumVal($value, array(TblWidth::AUTO, TblWidth::PERCENT, TblWidth::TWIP), TblWidth::TWIP);
-
-        return $this;
-    }
-
-    /**
      * Get default border color
      *
      * @deprecated 0.10.0
-     *
      * @codeCoverageIgnore
      */
     public function getDefaultBorderColor()

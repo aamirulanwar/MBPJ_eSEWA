@@ -10,8 +10,8 @@
  * file that was distributed with this source code. For the full list of
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
- * @see         https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2018 PHPWord contributors
+ * @link        https://github.com/PHPOffice/PHPWord
+ * @copyright   2010-2014 PHPWord contributors
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
@@ -26,6 +26,8 @@ class Title extends AbstractElement
 {
     /**
      * Write title element.
+     *
+     * @return void
      */
     public function write()
     {
@@ -47,37 +49,27 @@ class Title extends AbstractElement
             $xmlWriter->endElement();
         }
 
-        $bookmarkRId = null;
-        if ($element->getDepth() !== 0) {
-            $rId = $element->getRelationId();
-            $bookmarkRId = $element->getPhpWord()->addBookmark();
+        $rId = $element->getRelationId();
+        $bookmarkRId = $element->getPhpWord()->addBookmark();
 
-            // Bookmark start for TOC
-            $xmlWriter->startElement('w:bookmarkStart');
-            $xmlWriter->writeAttribute('w:id', $bookmarkRId);
-            $xmlWriter->writeAttribute('w:name', "_Toc{$rId}");
-            $xmlWriter->endElement(); //w:bookmarkStart
-        }
+        // Bookmark start for TOC
+        $xmlWriter->startElement('w:bookmarkStart');
+        $xmlWriter->writeAttribute('w:id', $bookmarkRId);
+        $xmlWriter->writeAttribute('w:name', "_Toc{$rId}");
+        $xmlWriter->endElement();
 
         // Actual text
-        $text = $element->getText();
-        if (is_string($text)) {
-            $xmlWriter->startElement('w:r');
-            $xmlWriter->startElement('w:t');
-            $this->writeText($text);
-            $xmlWriter->endElement(); // w:t
-            $xmlWriter->endElement(); // w:r
-        } elseif ($text instanceof \PhpOffice\PhpWord\Element\AbstractContainer) {
-            $containerWriter = new Container($xmlWriter, $text);
-            $containerWriter->write();
-        }
+        $xmlWriter->startElement('w:r');
+        $xmlWriter->startElement('w:t');
+        $xmlWriter->writeRaw($this->getText($element->getText()));
+        $xmlWriter->endElement();
+        $xmlWriter->endElement();
 
-        if ($element->getDepth() !== 0) {
-            // Bookmark end
-            $xmlWriter->startElement('w:bookmarkEnd');
-            $xmlWriter->writeAttribute('w:id', $bookmarkRId);
-            $xmlWriter->endElement(); //w:bookmarkEnd
-        }
-        $xmlWriter->endElement(); //w:p
+        // Bookmark end
+        $xmlWriter->startElement('w:bookmarkEnd');
+        $xmlWriter->writeAttribute('w:id', $bookmarkRId);
+        $xmlWriter->endElement();
+
+        $xmlWriter->endElement();
     }
 }

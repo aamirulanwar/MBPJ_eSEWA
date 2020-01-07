@@ -10,8 +10,8 @@
  * file that was distributed with this source code. For the full list of
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
- * @see         https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2018 PHPWord contributors
+ * @link        https://github.com/PHPOffice/PHPWord
+ * @copyright   2010-2014 PHPWord contributors
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
@@ -26,6 +26,8 @@ class PreserveText extends Text
 {
     /**
      * Write preserve text element.
+     *
+     * @return void
      */
     public function write()
     {
@@ -58,7 +60,7 @@ class PreserveText extends Text
 
                 $xmlWriter->startElement('w:instrText');
                 $xmlWriter->writeAttribute('xml:space', 'preserve');
-                $this->writeText($text);
+                $xmlWriter->writeRaw($text);
                 $xmlWriter->endElement();
                 $xmlWriter->endElement();
 
@@ -80,7 +82,7 @@ class PreserveText extends Text
 
                 $xmlWriter->startElement('w:t');
                 $xmlWriter->writeAttribute('xml:space', 'preserve');
-                $this->writeText($this->getText($text));
+                $xmlWriter->writeRaw($this->getText($text));
                 $xmlWriter->endElement();
                 $xmlWriter->endElement();
             }

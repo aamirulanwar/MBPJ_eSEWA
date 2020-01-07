@@ -10,9 +10,9 @@
  * file that was distributed with this source code. For the full list of
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
- * @see         https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2018 PHPWord contributors
- * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
+ * @link        https://github.com/PHPOffice/PHPWord
+ * @copyright   2010-2014 PHPWord contributors
+ * @license     http://www.gnu.org/licenses/lgpl.txt LGPL
  */
 
 namespace PhpOffice\PhpWord\Element;
@@ -36,7 +36,7 @@ class TOC extends AbstractElement
     /**
      * Font style
      *
-     * @var \PhpOffice\PhpWord\Style\Font|string
+     * @var \PhpOffice\PhpWord\Style\Font|array|string
      */
     private $fontStyle;
 
@@ -54,13 +54,14 @@ class TOC extends AbstractElement
      */
     private $maxDepth = 9;
 
+
     /**
      * Create a new Table-of-Contents Element
      *
      * @param mixed $fontStyle
      * @param array $tocStyle
-     * @param int $minDepth
-     * @param int $maxDepth
+     * @param integer $minDepth
+     * @param integer $maxDepth
      */
     public function __construct($fontStyle = null, $tocStyle = null, $minDepth = 1, $maxDepth = 9)
     {
@@ -120,7 +121,7 @@ class TOC extends AbstractElement
     /**
      * Get Font Style
      *
-     * @return \PhpOffice\PhpWord\Style\Font|string
+     * @return \PhpOffice\PhpWord\Style\Font
      */
     public function getStyleFont()
     {
@@ -131,6 +132,7 @@ class TOC extends AbstractElement
      * Set max depth.
      *
      * @param int $value
+     * @return void
      */
     public function setMaxDepth($value)
     {
@@ -151,6 +153,7 @@ class TOC extends AbstractElement
      * Set min depth.
      *
      * @param int $value
+     * @return void
      */
     public function setMinDepth($value)
     {

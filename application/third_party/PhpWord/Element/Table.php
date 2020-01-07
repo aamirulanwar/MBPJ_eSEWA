@@ -10,8 +10,8 @@
  * file that was distributed with this source code. For the full list of
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
- * @see         https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2018 PHPWord contributors
+ * @link        https://github.com/PHPOffice/PHPWord
+ * @copyright   2010-2014 PHPWord contributors
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
@@ -121,6 +121,7 @@ class Table extends AbstractElement
      * Set table width.
      *
      * @param int $width
+     * @return void
      */
     public function setWidth($width)
     {
@@ -135,40 +136,18 @@ class Table extends AbstractElement
     public function countColumns()
     {
         $columnCount = 0;
-
-        $rowCount = count($this->rows);
-        for ($i = 0; $i < $rowCount; $i++) {
-            /** @var \PhpOffice\PhpWord\Element\Row $row Type hint */
-            $row = $this->rows[$i];
-            $cellCount = count($row->getCells());
-            if ($columnCount < $cellCount) {
-                $columnCount = $cellCount;
+        if (is_array($this->rows)) {
+            $rowCount = count($this->rows);
+            for ($i = 0; $i < $rowCount; $i++) {
+                /** @var \PhpOffice\PhpWord\Element\Row $row Type hint */
+                $row = $this->rows[$i];
+                $cellCount = count($row->getCells());
+                if ($columnCount < $cellCount) {
+                    $columnCount = $cellCount;
+                }
             }
         }
 
         return $columnCount;
-    }
-
-    /**
-     * The first declared cell width for each column
-     *
-     * @return int[]
-     */
-    public function findFirstDefinedCellWidths()
-    {
-        $cellWidths = array();
-
-        foreach ($this->rows as $row) {
-            $cells = $row->getCells();
-            if (count($cells) <= count($cellWidths)) {
-                continue;
-            }
-            $cellWidths = array();
-            foreach ($cells as $cell) {
-                $cellWidths[] = $cell->getWidth();
-            }
-        }
-
-        return $cellWidths;
     }
 }

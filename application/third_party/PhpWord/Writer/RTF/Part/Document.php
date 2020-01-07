@@ -10,8 +10,8 @@
  * file that was distributed with this source code. For the full list of
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
- * @see         https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2018 PHPWord contributors
+ * @link        https://github.com/PHPOffice/PHPWord
+ * @copyright   2010-2014 PHPWord contributors
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
@@ -25,7 +25,7 @@ use PhpOffice\PhpWord\Writer\RTF\Style\Section as SectionStyleWriter;
  * RTF document part writer
  *
  * @since 0.11.0
- * @see  http://www.biblioscape.com/rtf15_spec.htm#Heading24
+ * @link http://www.biblioscape.com/rtf15_spec.htm#Heading24
  */
 class Document extends AbstractPart
 {
@@ -54,13 +54,9 @@ class Document extends AbstractPart
     {
         $docProps = $this->getParentWriter()->getPhpWord()->getDocInfo();
         $properties = array('title', 'subject', 'category', 'keywords', 'comment',
-            'author', 'operator', 'creatim', 'revtim', 'company', 'manager', );
-        $mapping = array(
-            'comment'  => 'description',
-            'author'   => 'creator',
-            'operator' => 'lastModifiedBy',
-            'creatim'  => 'created',
-            'revtim'   => 'modified', );
+            'author', 'operator', 'creatim', 'revtim', 'company', 'manager');
+        $mapping = array('comment' => 'description', 'author' => 'creator', 'operator' => 'lastModifiedBy',
+            'creatim' => 'created', 'revtim' => 'modified');
         $dateFields = array('creatim', 'revtim');
 
         $content = '';
@@ -69,11 +65,7 @@ class Document extends AbstractPart
         $content .= '\info';
         foreach ($properties as $property) {
             $method = 'get' . (isset($mapping[$property]) ? $mapping[$property] : $property);
-            if (!in_array($property, $dateFields) && Settings::isOutputEscapingEnabled()) {
-                $value = $this->escaper->escape($docProps->$method());
-            } else {
-                $value = $docProps->$method();
-            }
+            $value = $docProps->$method();
             $value = in_array($property, $dateFields) ? $this->getDateValue($value) : $value;
             $content .= "{\\{$property} {$value}}";
         }
@@ -90,10 +82,6 @@ class Document extends AbstractPart
      */
     private function writeFormatting()
     {
-        $docSettings = $this->getParentWriter()->getPhpWord()->getSettings();
-        // Applies a language to a text run (defaults to 1036 : French (France))
-        $langId = $docSettings->getThemeFontLang() != null && $docSettings->getThemeFontLang()->getLangId() != null ? $docSettings->getThemeFontLang()->getLangId() : 1036;
-
         $content = '';
 
         $content .= '\deftab720'; // Set the default tab size (720 twips)
@@ -102,7 +90,7 @@ class Document extends AbstractPart
         $content .= '\uc1'; // Set the numberof bytes that follows a unicode character
         $content .= '\pard'; // Resets to default paragraph properties.
         $content .= '\nowidctlpar'; // No widow/orphan control
-        $content .= '\lang' . $langId;
+        $content .= '\lang1036'; // Applies a language to a text run (1036 : French (France))
         $content .= '\kerning1'; // Point size (in half-points) above which to kern character pairs
         $content .= '\fs' . (Settings::getDefaultFontSize() * 2); // Set the font size in half-points
         $content .= PHP_EOL;
@@ -117,6 +105,7 @@ class Document extends AbstractPart
      */
     private function writeSections()
     {
+
         $content = '';
 
         $sections = $this->getParentWriter()->getPhpWord()->getSections();

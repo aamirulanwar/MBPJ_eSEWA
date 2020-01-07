@@ -10,21 +10,17 @@
  * file that was distributed with this source code. For the full list of
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
- * @see         https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2018 PHPWord contributors
+ * @link        https://github.com/PHPOffice/PHPWord
+ * @copyright   2010-2014 PHPWord contributors
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
 namespace PhpOffice\PhpWord\Writer\RTF\Element;
 
-use PhpOffice\Common\Text as CommonText;
-use PhpOffice\PhpWord\Element\AbstractElement as Element;
-use PhpOffice\PhpWord\Escaper\Rtf;
-use PhpOffice\PhpWord\Settings;
-use PhpOffice\PhpWord\Style;
+use PhpOffice\PhpWord\Shared\String;
 use PhpOffice\PhpWord\Style\Font as FontStyle;
+use PhpOffice\PhpWord\Style;
 use PhpOffice\PhpWord\Style\Paragraph as ParagraphStyle;
-use PhpOffice\PhpWord\Writer\AbstractWriter;
 use PhpOffice\PhpWord\Writer\HTML\Element\AbstractElement as HTMLAbstractElement;
 use PhpOffice\PhpWord\Writer\RTF\Style\Font as FontStyleWriter;
 use PhpOffice\PhpWord\Writer\RTF\Style\Paragraph as ParagraphStyleWriter;
@@ -50,15 +46,10 @@ abstract class AbstractElement extends HTMLAbstractElement
      */
     private $paragraphStyle;
 
-    public function __construct(AbstractWriter $parentWriter, Element $element, $withoutP = false)
-    {
-        parent::__construct($parentWriter, $element, $withoutP);
-
-        $this->escaper = new Rtf();
-    }
-
     /**
      * Get font and paragraph styles.
+     *
+     * @return void
      */
     protected function getStyles()
     {
@@ -110,7 +101,6 @@ abstract class AbstractElement extends HTMLAbstractElement
 
         $styleWriter = new ParagraphStyleWriter($this->paragraphStyle);
         $styleWriter->setNestedLevel($this->element->getNestedLevel());
-
         return $styleWriter->write();
     }
 
@@ -122,11 +112,7 @@ abstract class AbstractElement extends HTMLAbstractElement
      */
     protected function writeText($text)
     {
-        if (Settings::isOutputEscapingEnabled()) {
-            return $this->escaper->escape($text);
-        }
-
-        return CommonText::toUnicode($text); // todo: replace with `return $text;` later.
+        return String::toUnicode($text);
     }
 
     /**

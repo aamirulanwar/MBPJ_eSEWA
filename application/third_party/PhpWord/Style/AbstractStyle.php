@@ -10,14 +10,14 @@
  * file that was distributed with this source code. For the full list of
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
- * @see         https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2018 PHPWord contributors
+ * @link        https://github.com/PHPOffice/PHPWord
+ * @copyright   2010-2014 PHPWord contributors
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
 namespace PhpOffice\PhpWord\Style;
 
-use PhpOffice\Common\Text;
+use PhpOffice\PhpWord\Shared\String;
 
 /**
  * Abstract style class
@@ -138,11 +138,10 @@ abstract class AbstractStyle
     {
         if ($substyleObject !== null) {
             $method = "get{$substyleProperty}";
-
             return $substyleObject->$method();
+        } else {
+            return null;
         }
-
-        return null;
     }
 
     /**
@@ -162,7 +161,7 @@ abstract class AbstractStyle
         if (isset($this->aliases[$key])) {
             $key = $this->aliases[$key];
         }
-        $method = 'set' . Text::removeUnderscorePrefix($key);
+        $method = 'set' . String::removeUnderscorePrefix($key);
         if (method_exists($this, $method)) {
             $this->$method($value);
         }
@@ -243,12 +242,12 @@ abstract class AbstractStyle
     protected function setIntVal($value, $default = null)
     {
         if (is_string($value) && (preg_match('/[^\d]/', $value) == 0)) {
-            $value = (int) $value;
+            $value = intval($value);
         }
         if (!is_numeric($value)) {
             $value = $default;
         } else {
-            $value = (int) $value;
+            $value = intval($value);
         }
 
         return $value;
@@ -264,7 +263,7 @@ abstract class AbstractStyle
     protected function setFloatVal($value, $default = null)
     {
         if (is_string($value) && (preg_match('/[^\d\.\,]/', $value) == 0)) {
-            $value = (float) $value;
+            $value = floatval($value);
         }
         if (!is_numeric($value)) {
             $value = $default;
@@ -279,14 +278,13 @@ abstract class AbstractStyle
      * @param mixed $value
      * @param array $enum
      * @param mixed $default
-     *
-     * @throws \InvalidArgumentException
      * @return mixed
+     * @throws \InvalidArgumentException
      */
     protected function setEnumVal($value = null, $enum = array(), $default = null)
     {
         if ($value != null && trim($value) != '' && !empty($enum) && !in_array($value, $enum)) {
-            throw new \InvalidArgumentException("Invalid style value: {$value} Options:" . implode(',', $enum));
+            throw new \InvalidArgumentException("Invalid style value: {$value} Options:".join(',', $enum));
         } elseif ($value === null || trim($value) == '') {
             $value = $default;
         }
@@ -329,7 +327,7 @@ abstract class AbstractStyle
     protected function setPairedVal(&$property, &$pairProperty, $value)
     {
         $property = $this->setBoolVal($value, $property);
-        if ($value === true) {
+        if ($value == true) {
             $pairProperty = false;
         }
 
@@ -339,12 +337,9 @@ abstract class AbstractStyle
     /**
      * Set style using associative array
      *
-     * @deprecated 0.11.0
-     *
      * @param array $style
-     *
      * @return self
-     *
+     * @deprecated 0.11.0
      * @codeCoverageIgnore
      */
     public function setArrayStyle(array $style = array())
