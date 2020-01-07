@@ -1,12 +1,12 @@
 .DS_Store
-application/config/*
-application/file_map/*
-application/file_upload/*
-application/system/*
-application/user_guide/*
-application/vendor/*
-application/config/*
-application/config/database.php
+**application/config/*
+**application/file_map/*
+**application/file_upload/*
+**application/system/*
+**application/user_guide/*
+**application/vendor/*
+**application/config/*
+**application/config/database.php
 
 application/cache/*
 !application/cache/index.html
