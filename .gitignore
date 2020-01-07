@@ -36,3 +36,4 @@ application/system/*
 application/user_guide/*
 application/vendor/*
 application/config/*
+application/config/database.php
