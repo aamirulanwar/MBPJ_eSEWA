@@ -49,8 +49,8 @@ class M_c_document extends CI_Model
 
     public function get_record_exist($accountId,$documentName)
     {
-        $this->db->where('account_id', $accountId);
-        $this->db->where('document_name', $documentName);
+        $this->db->where('ACCOUNT_ID', $accountId);
+        $this->db->where('DOCUMENT_NAME', $documentName);
         $total_exist = $this->db->count_all('C_DOCUMENT_LOG');
 
         return $total_exist;
@@ -58,8 +58,10 @@ class M_c_document extends CI_Model
 
     public function update_document_printed($accountId,$documentName)
     {
-        $recordExist = $this->get_record_exist($accountId,$documentName);
-        if ($recordExist == 0)
+        $records = $this->get_total_printed($accountId,$documentName);
+        $recordExist = count($records);
+        
+        if ($recordExist == 0 )
         {
             $this->insert_record_document($accountId,$documentName);
         }
@@ -67,6 +69,5 @@ class M_c_document extends CI_Model
         {
             $this->update_record_document($accountId,$documentName);
         }
-        return true;
     }
 }
