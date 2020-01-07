@@ -109,7 +109,7 @@ class M_acc_account extends CI_Model
     }
 
     function get_account($per_page='',$search_segment='',$data_search=array()){
-        db_select('a.*,acc.*,t.*,c.*,r.*');
+        db_select('a.*,acc.*,t.*,c.*,r.*,(select TOTAL_COUNT from C_DOCUMENT_LOG where C_DOCUMENT_LOG.DOCUMENT_NAME = '."'DOC_SIGNATURE'".' and C_DOCUMENT_LOG.account_id = a.account_id ) as TOTAL_COUNT');
         db_select("to_char(a.dt_added, 'yyyy-mm-dd hh24:mi:ss') as dt_create_acc",false);
         db_join('acc_user acc','acc.user_id = a.user_id');
         db_join('a_type t','t.type_id = a.type_id');

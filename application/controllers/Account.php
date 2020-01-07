@@ -26,6 +26,7 @@ class Account extends CI_Controller
         load_model('File/M_file_upload_temp', 'm_file_upload_temp');
         load_model('Account/M_acc_kuarters_defect', 'm_acc_kuarters_defect');
         load_model('Account/M_acc_kuarters_defect_list', 'm_acc_kuarters_defect_list');
+        load_model('Account/M_c_document', 'm_c_document');
     }
 
     function _remap($method)
@@ -1287,13 +1288,18 @@ class Account extends CI_Controller
         $this->generate_word->word_document($id, DOC_AGREEMENT);
     }
 
-    function doc_signature(){   
+    function doc_signature(){  
+
         $id = urlDecrypt(uri_segment(3));   
         if(!is_numeric($id)):   
-            return false;   
-        endif;  
-        load_library('Generate_word');  
-        $this->generate_word->word_document($id, DOC_SIGNATURE);    
+            return false; 
+        elseif(is_numeric($id)):
+            // $this->m_c_document->get_record_exist($id,'DOC_SIGNATURE');
+            $this->m_c_document->update_document_printed($id,'DOC_SIGNATURE');
+            load_library('Generate_word');  
+            $this->generate_word->word_document($id, DOC_SIGNATURE);  
+        endif;
+        redirect($_SERVER['REQUEST_URI'], 'refresh'); 
     }
 
     function doc_quarters(){

@@ -39,10 +39,10 @@ class M_c_document extends CI_Model
 
     public function get_total_printed($accountId,$documentName)
     {
-        $this->db->select('total_count');
+        $this->db->select('TOTAL_COUNT');
         $this->db->from('C_DOCUMENT_LOG');
-        $this->db->where('account_id', $accountId);
-        $this->db->where('document_name', $documentName);
+        $this->db->where('ACCOUNT_ID', $accountId);
+        $this->db->where('DOCUMENT_NAME', $documentName);
         $query = $this->db->get();
         return $query->result();
     }
