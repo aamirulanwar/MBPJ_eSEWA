@@ -857,13 +857,6 @@ class Account extends CI_Controller
     function update_acc(){
         $this->auth->restrict_access($this->curuser,array(5004));
 
-        $form_session   = input_data('form_session');
-        $random_number  = rand(1,1000);
-        if(empty($form_session)):
-            $form_session       = 'form_2'.'_'.$this->curuser['USER_ID'].'_'.date('YmdHis').'_'.$random_number;
-        endif;
-        $data['form_session']   = $form_session;
-
         $data['link_1']     = 'Akaun Sewaan';
         $data['link_2']     = 'Kemaskini akaun';
         $data['link_3']     = '';
@@ -873,35 +866,6 @@ class Account extends CI_Controller
         if(!is_numeric($id)):
             return false;
         endif;
-
-        // var_dump($form_session);
-        // die();
-
-        $data['doc_agreement']      = $this->m_file_upload_temp->get_file_by_session_id($form_session,'doc_agreement');
-        validation_rules('doc_agreement','<strong>Dokumen Perjanjian</strong>','');
-              
-                #insert file
-                $form_session = $this->m_file_upload_temp->get_file_by_session_id($form_session);
-                if($form_session):
-                    foreach ($form_session as $row):
-                        if (!file_exists(FILE_APPLICATION.$application_id.'/')):
-                            mkdir(FILE_APPLICATION.$application_id.'/', 0777, true);
-                        endif;
-
-                        $data_file['filename']    = $row['FILE_NAME'];
-                        $data_file['extension']   = $row['FILE_TYPE'];
-                        $data_file['path']        = FILE_APPLICATION.$application_id.'/';
-                        $data_file['ref_id']      = $application_id;
-                        $data_file['file_type']   = $row['IMAGE_TYPE'];
-                        $data_file['module_type'] = $row['MODULE_TYPE'];
-
-                        copy(FILE_UPLOAD_TEMP.$row['FILE_NAME'], FILE_APPLICATION.$application_id.'/'.$row['FILE_NAME']);
-                        $file_id = $this->m_file_gallery->insert($data_file);
-
-                        unlink(FILE_UPLOAD_TEMP.$row['FILE_NAME']);
-                        $delete         = $this->m_file_upload_temp->delete_by_id($row['ID']);
-                    endforeach;
-                endif;
 
         $get_details = $this->m_acc_account->get_account_details($id);
         if(!$get_details):
