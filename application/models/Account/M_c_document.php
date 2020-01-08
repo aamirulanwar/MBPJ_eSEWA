@@ -14,7 +14,7 @@ class M_c_document extends CI_Model
     public function insert_record_document($accountId,$documentName){
         $this->account_id       = $accountId; // please read the below note
         $this->document_name    = $documentName;
-        $this->total_count    = 0;
+        $this->total_count    = 1;
 
         $this->db->insert('C_DOCUMENT_LOG', $this);
     }
