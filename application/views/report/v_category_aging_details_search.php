@@ -62,8 +62,8 @@
 </form>
 <div class="card card-accent-info">
     <div class="card-body">
-        <div class="table-responsive">
+<!--        <div class="table-responsive">-->
             <?php load_view('/report/v_category_aging_details')?>
-        </div>
+<!--        </div>-->
     </div>
 </div>
