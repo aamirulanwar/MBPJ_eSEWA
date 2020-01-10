@@ -352,7 +352,7 @@ class M_acc_account extends CI_Model
     public function get_account_aging_report($category_id,$acc_status){
         db_select('a.*,ass.*,au.*');
         db_from('acc_account a');
-        db_join('a_asset ass','a.asset_id=ass.asset_id');
+        db_join('a_asset ass','a.asset_id=ass.asset_id','LEFT');
         db_join('acc_user au','au.user_id=a.user_id');
         db_where('a.category_id',$category_id);
         if(isset($acc_status) && having_value($acc_status)):

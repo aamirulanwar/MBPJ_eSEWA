@@ -102,6 +102,10 @@ class M_bill_item extends CI_Model
 //        db_join('acc_account acc','acc.account_id = m.account_id');
 //        db_join('acc_user usr','acc.user_id = usr.user_id');
         db_where('tr_gst_status',1);
+//        db_where('tr_code != 12110025');
+//        db_where('PREV_YEAR_OUTSTANDING',0);
+        db_where("(i.tr_code NOT LIKE '12%') ");
+
 
         if(isset($data_search['date_start']) && having_value($data_search['date_start'])):
             db_where("m.dt_added >= to_date('".date('d-M-y',strtotime($data_search['date_start']))."')");
@@ -211,7 +215,8 @@ class M_bill_item extends CI_Model
         db_join('acc_account acc','acc.account_id = m.account_id');
         db_join('a_type t','t.type_id = acc.type_id');
         db_join('a_category c','c.category_id = acc.category_id');
-        db_where("(i.item_desc NOT LIKE '%LEPAS%') ");
+        db_where("(i.tr_code NOT LIKE '12%') ");
+//        db_where('PREV_YEAR_OUTSTANDING',0);
         db_where('tr_gst_status',1);
 
         if(isset($data_search['date_start']) && having_value($data_search['date_start'])):
@@ -326,9 +331,15 @@ class M_bill_item extends CI_Model
     function record_transaction($data_search=array()){
         db_select('m.*');
         db_select('i.*');
+        db_select('acc.ACCOUNT_NUMBER');
+        db_select('usr.name');
         db_select("to_char(i.dt_added, 'yyyy-mm-dd hh24:mi:ss') as dt_bill",false);
         db_from('b_item i');
         db_join('b_master m','m.bill_id = i.bill_id');
+        db_join('acc_account acc','acc.account_id = m.account_id');
+        db_join('acc_user usr','acc.user_id = usr.user_id');
+//        db_where('i.PREV_YEAR_OUTSTANDING','0');
+        db_where("(i.tr_code NOT LIKE '12%') ");
         if(isset($data_search['date_start']) && having_value($data_search['date_start'])):
             db_where("i.dt_added >= to_date('".date('d-M-y',strtotime($data_search['date_start']))."')");
         endif;
@@ -361,6 +372,7 @@ class M_bill_item extends CI_Model
         db_where('i.bill_category','B');
         db_where('i.PREV_YEAR_OUTSTANDING','0');
         db_where("i.dt_added <= to_date('".date('d-M-y',strtotime($date_calculate))."')");
+        db_order('i.ITEM_ID');
         $sql = db_get('');
 //        echo last_query();
 //        exit;
@@ -371,6 +383,7 @@ class M_bill_item extends CI_Model
 
     function get_item_amount_not_equal_by_category($category_id,$date_calculate){
         db_select('i.*');
+//        db_select('acc.*');
         db_select('i.amount+(i.total_journal) as amount');
         db_select("to_char(i.dt_added, 'yyyy-mm-dd') as dt_added",false);
         db_from('b_item i');
@@ -381,6 +394,7 @@ class M_bill_item extends CI_Model
         db_where('i.bill_category','B');
         db_where('i.PREV_YEAR_OUTSTANDING','0');
         db_where("i.dt_added <= to_date('".date('d-M-y',strtotime($date_calculate))."')");
+        db_order('acc.account_id,i.ITEM_ID');
         $sql = db_get('');
 //        echo last_query();
 //        exit;

@@ -43,7 +43,7 @@ class M_login extends ci_model
 
         db_where('user_email',$username);
         $sql = db_get('users',1);
-
+        $user_id = 0;
         if($sql->num_rows()!=0):
             $sql = $sql->result();
             $user_id = $sql[0]->USER_ID;
@@ -64,7 +64,7 @@ class M_login extends ci_model
             $data_insert['log_id']                  = 1001;
             $data_insert['remark']                  = $post_arr;
             $data_insert['status']                  = PROCESS_STATUS_FAILED;
-            $data_insert['user_id']                 = 0;
+            $data_insert['user_id']                 = $user_id;
 
             $this->audit_trail_lib->add($data_insert);
             return false;

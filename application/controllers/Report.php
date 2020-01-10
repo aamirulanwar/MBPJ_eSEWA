@@ -202,20 +202,17 @@ class Report extends CI_Controller
                 );
             endif;
 //            exit;
+            $x=0;
             if($data_category_loop):
                 $i = 0;
                 foreach ($data_category_loop as $row_cat):
                     $data_category_report = $this->m_category->get_a_category_details($row_cat['CATEGORY_ID']);
-
-//                    $i = $i+1;
-//                    if($i==20):
-//                        break;
-//                    endif;
+//                    exit;
                     $data_asset = $this->m_acc_account->get_account_aging_report($row_cat['CATEGORY_ID'],input_data('acc_status'));
-
                     if($data_asset):
                         foreach ($data_asset as $row):
                             $data_bill = $this->m_bill_item->get_item_amount_not_equal($row['ACCOUNT_ID'],$date_calculate);
+//                            pre($data_bill);
                             if($data_bill):
                                 $data_1 = 0;
                                 $data_2 = 0;
@@ -228,29 +225,30 @@ class Report extends CI_Controller
                                 $data_9 = 0;
                                 $data_10 = 0;
                                 foreach ($data_bill as $row_bill):
+                                    $x = $x+1;
 //                            pre($row_bill);
 //                        exit;
                                     #1-3
                                     if($row_bill['DT_ADDED'] <=$date_calculate && $row_bill['DT_ADDED'] > date('Y-m-d',strtotime('-3 month',strtotime($date_calculate)))):
                                         $data_1 = $data_1+($row_bill['AMOUNT']-$row_bill['TOTAL_PAID']);
                                     elseif($row_bill['DT_ADDED'] <= date('Y-m-d',strtotime('-3 month',strtotime($date_calculate))) && $row_bill['DT_ADDED'] > date('Y-m-d',strtotime('-6 month',strtotime($date_calculate)))):
-                                        $data_2 = $data_1+($row_bill['AMOUNT']-$row_bill['TOTAL_PAID']);
+                                        $data_2 = $data_2+($row_bill['AMOUNT']-$row_bill['TOTAL_PAID']);
                                     elseif($row_bill['DT_ADDED'] <= date('Y-m-d',strtotime('-6 month',strtotime($date_calculate))) && $row_bill['DT_ADDED'] > date('Y-m-d',strtotime('-9 month',strtotime($date_calculate)))):
-                                        $data_3 = $data_1+($row_bill['AMOUNT']-$row_bill['TOTAL_PAID']);
+                                        $data_3 = $data_3+($row_bill['AMOUNT']-$row_bill['TOTAL_PAID']);
                                     elseif($row_bill['DT_ADDED'] <= date('Y-m-d',strtotime('-9 month',strtotime($date_calculate))) && $row_bill['DT_ADDED'] > date('Y-m-d',strtotime('-12 month',strtotime($date_calculate)))):
-                                        $data_4 = $data_1+($row_bill['AMOUNT']-$row_bill['TOTAL_PAID']);
+                                        $data_4 = $data_4+($row_bill['AMOUNT']-$row_bill['TOTAL_PAID']);
                                     elseif($row_bill['DT_ADDED'] <= date('Y-m-d',strtotime('-12 month',strtotime($date_calculate))) && $row_bill['DT_ADDED'] > date('Y-m-d',strtotime('-2 year',strtotime($date_calculate)))):
-                                        $data_5 = $data_1+($row_bill['AMOUNT']-$row_bill['TOTAL_PAID']);
+                                        $data_5 = $data_5+($row_bill['AMOUNT']-$row_bill['TOTAL_PAID']);
                                     elseif($row_bill['DT_ADDED'] <= date('Y-m-d',strtotime('-2 year',strtotime($date_calculate))) && $row_bill['DT_ADDED'] > date('Y-m-d',strtotime('-3 year',strtotime($date_calculate)))):
-                                        $data_6 = $data_1+($row_bill['AMOUNT']-$row_bill['TOTAL_PAID']);
+                                        $data_6 = $data_6+($row_bill['AMOUNT']-$row_bill['TOTAL_PAID']);
                                     elseif($row_bill['DT_ADDED'] <= date('Y-m-d',strtotime('-3 year',strtotime($date_calculate))) && $row_bill['DT_ADDED'] > date('Y-m-d',strtotime('-4 year',strtotime($date_calculate)))):
-                                        $data_7 = $data_1+($row_bill['AMOUNT']-$row_bill['TOTAL_PAID']);
+                                        $data_7 = $data_7+($row_bill['AMOUNT']-$row_bill['TOTAL_PAID']);
                                     elseif($row_bill['DT_ADDED'] <= date('Y-m-d',strtotime('-4 year',strtotime($date_calculate))) && $row_bill['DT_ADDED'] > date('Y-m-d',strtotime('-5 year',strtotime($date_calculate)))):
-                                        $data_8 = $data_1+($row_bill['AMOUNT']-$row_bill['TOTAL_PAID']);
+                                        $data_8 = $data_8+($row_bill['AMOUNT']-$row_bill['TOTAL_PAID']);
                                     elseif($row_bill['DT_ADDED'] <= date('Y-m-d',strtotime('-5 year',strtotime($date_calculate))) && $row_bill['DT_ADDED'] > date('Y-m-d',strtotime('-6 year',strtotime($date_calculate)))):
-                                        $data_9 = $data_1+($row_bill['AMOUNT']-$row_bill['TOTAL_PAID']);
+                                        $data_9 = $data_9+($row_bill['AMOUNT']-$row_bill['TOTAL_PAID']);
                                     elseif($row_bill['DT_ADDED'] <= date('Y-m-d',strtotime('-6 year',strtotime($date_calculate)))):
-                                        $data_10 = $data_1+($row_bill['AMOUNT']-$row_bill['TOTAL_PAID']);
+                                        $data_10 = $data_10+($row_bill['AMOUNT']-$row_bill['TOTAL_PAID']);
                                     endif;
                                 endforeach;
                                 $row['data_1'] = $data_1;
@@ -344,6 +342,8 @@ class Report extends CI_Controller
                     if($data_category):
                         foreach ($data_category as $row):
                             $data_bill = $this->m_bill_item->get_item_amount_not_equal_by_category($row['CATEGORY_ID'],$date_calculate);
+//                            pre($data_bill);
+//                            exit;
                             if($data_bill):
                                 $data_1 = 0;
                                 $data_2 = 0;
@@ -360,23 +360,25 @@ class Report extends CI_Controller
                                     if($row_bill['DT_ADDED'] <=$date_calculate && $row_bill['DT_ADDED'] > date('Y-m-d',strtotime('-3 month',strtotime($date_calculate)))):
                                         $data_1 = $data_1+($row_bill['AMOUNT']-$row_bill['TOTAL_PAID']);
                                     elseif($row_bill['DT_ADDED'] <= date('Y-m-d',strtotime('-3 month',strtotime($date_calculate))) && $row_bill['DT_ADDED'] > date('Y-m-d',strtotime('-6 month',strtotime($date_calculate)))):
-                                        $data_2 = $data_1+($row_bill['AMOUNT']-$row_bill['TOTAL_PAID']);
+                                        $data_2 = $data_2+($row_bill['AMOUNT']-$row_bill['TOTAL_PAID']);
                                     elseif($row_bill['DT_ADDED'] <= date('Y-m-d',strtotime('-6 month',strtotime($date_calculate))) && $row_bill['DT_ADDED'] > date('Y-m-d',strtotime('-9 month',strtotime($date_calculate)))):
-                                        $data_3 = $data_1+($row_bill['AMOUNT']-$row_bill['TOTAL_PAID']);
+                                        $data_3 = $data_3+($row_bill['AMOUNT']-$row_bill['TOTAL_PAID']);
                                     elseif($row_bill['DT_ADDED'] <= date('Y-m-d',strtotime('-9 month',strtotime($date_calculate))) && $row_bill['DT_ADDED'] > date('Y-m-d',strtotime('-12 month',strtotime($date_calculate)))):
-                                        $data_4 = $data_1+($row_bill['AMOUNT']-$row_bill['TOTAL_PAID']);
+                                        $data_4 = $data_4+($row_bill['AMOUNT']-$row_bill['TOTAL_PAID']);
                                     elseif($row_bill['DT_ADDED'] <= date('Y-m-d',strtotime('-12 month',strtotime($date_calculate))) && $row_bill['DT_ADDED'] > date('Y-m-d',strtotime('-2 year',strtotime($date_calculate)))):
-                                        $data_5 = $data_1+($row_bill['AMOUNT']-$row_bill['TOTAL_PAID']);
+                                        $data_5 = $data_5+($row_bill['AMOUNT']-$row_bill['TOTAL_PAID']);
+//                                        echo $data_5.'xxxx';
+//                                        echo ($row_bill['AMOUNT']-$row_bill['TOTAL_PAID']).'<br>';
                                     elseif($row_bill['DT_ADDED'] <= date('Y-m-d',strtotime('-2 year',strtotime($date_calculate))) && $row_bill['DT_ADDED'] > date('Y-m-d',strtotime('-3 year',strtotime($date_calculate)))):
-                                        $data_6 = $data_1+($row_bill['AMOUNT']-$row_bill['TOTAL_PAID']);
+                                        $data_6 = $data_6+($row_bill['AMOUNT']-$row_bill['TOTAL_PAID']);
                                     elseif($row_bill['DT_ADDED'] <= date('Y-m-d',strtotime('-3 year',strtotime($date_calculate))) && $row_bill['DT_ADDED'] > date('Y-m-d',strtotime('-4 year',strtotime($date_calculate)))):
-                                        $data_7 = $data_1+($row_bill['AMOUNT']-$row_bill['TOTAL_PAID']);
+                                        $data_7 = $data_7+($row_bill['AMOUNT']-$row_bill['TOTAL_PAID']);
                                     elseif($row_bill['DT_ADDED'] <= date('Y-m-d',strtotime('-4 year',strtotime($date_calculate))) && $row_bill['DT_ADDED'] > date('Y-m-d',strtotime('-5 year',strtotime($date_calculate)))):
-                                        $data_8 = $data_1+($row_bill['AMOUNT']-$row_bill['TOTAL_PAID']);
+                                        $data_8 = $data_8+($row_bill['AMOUNT']-$row_bill['TOTAL_PAID']);
                                     elseif($row_bill['DT_ADDED'] <= date('Y-m-d',strtotime('-5 year',strtotime($date_calculate))) && $row_bill['DT_ADDED'] > date('Y-m-d',strtotime('-6 year',strtotime($date_calculate)))):
-                                        $data_9 = $data_1+($row_bill['AMOUNT']-$row_bill['TOTAL_PAID']);
+                                        $data_9 = $data_9+($row_bill['AMOUNT']-$row_bill['TOTAL_PAID']);
                                     elseif($row_bill['DT_ADDED'] <= date('Y-m-d',strtotime('-6 year',strtotime($date_calculate)))):
-                                        $data_10 = $data_1+($row_bill['AMOUNT']-$row_bill['TOTAL_PAID']);
+                                        $data_10 = $data_10+($row_bill['AMOUNT']-$row_bill['TOTAL_PAID']);
                                     endif;
                                 endforeach;
                                 $row['data_1'] = $data_1;
@@ -1230,7 +1232,7 @@ class Report extends CI_Controller
                                 if($i==4):
                                     break;
                                 endif;
-                              */  
+                              */
                             #tunggakan
 //                            $tr_code_payment_overdue = substr_replace($row['TRCODE_CATEGORY'],'12',0,2);
                             $data_search_overdue['tr_code_like']    = '12';//$tr_code_payment_overdue;

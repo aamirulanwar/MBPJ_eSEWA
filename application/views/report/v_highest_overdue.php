@@ -82,40 +82,40 @@
                 if($data_report):
                     ?>
                     <div class="pull-right">
-                        <button onclick="window.print()" class="btn btn-warning btn-sm pull-right">Print</button>
+                        <button onclick="print_report()" class="btn btn-warning btn-sm pull-right">Print</button>
                     </div>
                     <br>
                     <br>
                     <?php
-                    echo '<table class="table table-hover table-bordered table-scroll" style="font-size: 9px;">';
+                    echo '<table class="table table-hover table-bordered table-scroll data-print" style="font-size: 9px;">';
                     echo '<thead>';
                     echo '<tr>';
-                    echo '<th>Bil</th>';
-                    echo '<th>Jenis Harta</th>';
-                    echo '<th>No Akaun</th>';
-                    echo '<th>Nama</th>';
-                    echo '<th>Kod Harta</th>';
-                    echo '<th>Alamat Perniagaan Harta</th>';
-                    echo '<th>Tarikh Mula</th>';
-                    echo '<th>Tarikh Akhir</th>';
-                    echo '<th>Kadar Sewaan Bulanan (RM)</th>';
-                    echo '<th>Tunggakan Sewaan (RM)</th>';
-                    echo '<th>Tunggakan Sewaan Tahun Semasa (RM)</th>';
-                    echo '<th>Jumlah Keseluruhan Tunggakan (RM)</th>';
+                    echo '<th width="4%">Bil</th>';
+                    echo '<th width="6%">Jenis Harta</th>';
+                    echo '<th width="8%">No Akaun</th>';
+                    echo '<th width="9%">Nama</th>';
+                    echo '<th width="5%">Kod Harta</th>';
+                    echo '<th width="10%">Alamat Perniagaan Harta</th>';
+                    echo '<th width="9%">Tarikh Mula</th>';
+                    echo '<th width="9%">Tarikh Akhir</th>';
+                    echo '<th width="10%">Kadar Sewaan Bulanan (RM)</th>';
+                    echo '<th width="10%">Tunggakan Sewaan (RM)</th>';
+                    echo '<th width="10%">Tunggakan Sewaan Tahun Semasa (RM)</th>';
+                    echo '<th width="10%">Jumlah Keseluruhan Tunggakan (RM)</th>';
                     echo '</tr>';
                     echo '</thead>';
                     echo '</body>';
                     foreach ($data_report as $row):
                         $i = $i+1;
                         echo '<tr>';
-                        echo '<td>'.$i.'</td>';
-                        echo '<td>'.$row['account_details']['TYPE_NAME'].'</td>';
-                        echo '<td>'.$row['account_details']['ACCOUNT_NUMBER'].'<br>';
+                        echo '<td width="4%">'.$i.'</td>';
+                        echo '<td width="6%">'.$row['account_details']['TYPE_NAME'].'</td>';
+                        echo '<td width="8%">'.$row['account_details']['ACCOUNT_NUMBER'].'<br>';
                             get_status_active($row['account_details']['STATUS_ACC']);
                         echo '</td>';
-                        echo '<td>'.$row['account_details']['NAME'].'</td>';
-                        echo '<td>'.$row['account_details']['CATEGORY_CODE'].'</td>';
-                        echo '<td>'.$row['account_details']['ASSET_ADD'].'</td>';
+                        echo '<td width="9%">'.$row['account_details']['NAME'].'</td>';
+                        echo '<td width="5%">'.$row['account_details']['CATEGORY_CODE'].'</td>';
+                        echo '<td width="10%">'.$row['account_details']['ASSET_ADD'].'</td>';
                         $date_start = '-';
                         $date_end   = '-';
                         if($row['account_details']['FIRST_DATE_START']):
@@ -124,12 +124,12 @@
                         if($row['account_details']['DATE_END']):
                             $date_end   = date_display($row['account_details']['DATE_END']);
                         endif;
-                        echo '<td>'.$date_start.'</td>';
-                        echo '<td>'.$date_end.'</td>';
-                        echo '<td style="text-align: right">'.num($row['account_details']['RENTAL_CHARGE'],3).'</td>';
-                        echo '<td style="text-align: right">'.num($row['TAHUN_LEPAS'],3).'</td>';
-                        echo '<td style="text-align: right">'.num($row['TAHUN_SEMASA'],3).'</td>';
-                        echo '<td style="text-align: right">'.num($row['JUMLAH_TUNGGAKAN'],3).'</td>';
+                        echo '<td width="9%">'.$date_start.'</td>';
+                        echo '<td width="9%">'.$date_end.'</td>';
+                        echo '<td width="10%" style="text-align: right">'.num($row['account_details']['RENTAL_CHARGE'],3).'</td>';
+                        echo '<td width="10%" style="text-align: right">'.num($row['TAHUN_LEPAS'],3).'</td>';
+                        echo '<td width="10%" style="text-align: right">'.num($row['TAHUN_SEMASA'],3).'</td>';
+                        echo '<td width="10%" style="text-align: right">'.num($row['JUMLAH_TUNGGAKAN'],3).'</td>';
                         echo '</tr>';
 
                         $all_rental_charge      += $row['account_details']['RENTAL_CHARGE'];

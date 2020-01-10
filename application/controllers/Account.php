@@ -1287,7 +1287,7 @@ class Account extends CI_Controller
         load_library('Generate_word');
         $this->generate_word->word_document($id, DOC_AGREEMENT);
     }
-
+  
     function doc_signature(){  
 
         $id = urlDecrypt(uri_segment(3));   
@@ -1299,6 +1299,7 @@ class Account extends CI_Controller
             load_library('Generate_word');  
             $this->generate_word->word_document($id, DOC_SIGNATURE);  
         endif;        
+      
     }
 
     function doc_quarters(){

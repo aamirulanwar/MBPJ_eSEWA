@@ -13,6 +13,8 @@ class M_audit_trail extends CI_Model
         db_from('audit_trail a');
         db_join('users u','u.user_id = a.user_id','left');
         db_join('department d','d.department_id = u.department_id','LEFT');
+        db_where('u.user_id > 0');
+
         if(isset($data_search['date_start']) && having_value($data_search['date_start'])):
             db_where("a.dt_added >= to_date('".date('d-M-y',strtotime($data_search['date_start']))."')");
         endif;
@@ -36,6 +38,7 @@ class M_audit_trail extends CI_Model
         db_from('audit_trail a');
         db_join('users u','u.user_id = a.user_id','left');
         db_join('department d','d.department_id = u.department_id','LEFT');
+        db_where('u.user_id > 0');
         if(isset($data_search['date_start']) && having_value($data_search['date_start'])):
             db_where("a.dt_added >= to_date('".date('d-M-y',strtotime($data_search['date_start']))."')");
         endif;

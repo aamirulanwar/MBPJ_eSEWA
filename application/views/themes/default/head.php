@@ -78,6 +78,14 @@
             .need-print{
                 display: block;
             }
+            .table-responsive{
+                overflow: visible;
+            }
+
+            .table-own{
+                /*overflow: hidden;*/
+                height: 100% !important;
+            }
         }
 
         .table-scroll{
@@ -110,8 +118,8 @@
         }
 
         .table-scroll td,.table-scroll th{
-            flex-basis:100%;
-            flex-grow:2;
+            /*flex-basis:100%;*/
+            /*flex-grow:2;*/
             display: block;
             /*text-align:center;*/
         }
@@ -139,8 +147,10 @@
         @media print{
             .table-scroll tbody{
                 /* Position */
-                display: block; position:relative;
-                width:100%; overflow-y:hidden;
+                display: block;
+                position:relative;
+                width:100%;
+                overflow-y:hidden;
             }
 
             .table-scroll thead{
@@ -152,7 +162,7 @@
             }
 
             .table-scroll tbody{
-                max-height: 100%;
+                /*max-height: 100%;*/
             }
         }
     </style>
