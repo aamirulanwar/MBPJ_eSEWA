@@ -1287,18 +1287,19 @@ class Account extends CI_Controller
         load_library('Generate_word');
         $this->generate_word->word_document($id, DOC_AGREEMENT);
     }
+  
+    function doc_signature(){  
 
-    function doc_signature(){
-
-        $id = urlDecrypt(uri_segment(3));
-        if(!is_numeric($id)):
-            return false;
+        $id = urlDecrypt(uri_segment(3));   
+        if(!is_numeric($id)):   
+            return false; 
         elseif(is_numeric($id)):
             // $this->m_c_document->get_record_exist($id,'DOC_SIGNATURE');
             echo $this->m_c_document->update_document_printed($id,'DOC_SIGNATURE');
-            load_library('Generate_word');
-            $this->generate_word->word_document($id, DOC_SIGNATURE);
-        endif;
+            load_library('Generate_word');  
+            $this->generate_word->word_document($id, DOC_SIGNATURE);  
+        endif;        
+      
     }
 
     function doc_quarters(){
