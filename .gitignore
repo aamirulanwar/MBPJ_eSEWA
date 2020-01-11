@@ -1,11 +1,5 @@
 .DS_Store
-application/config/*
-application/file_map/*
-application/file_upload/*
-application/system/*
-application/user_guide/*
-application/vendor/*
-application/config/*
+application/
 
 application/cache/*
 !application/cache/index.html
@@ -36,14 +30,4 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 *.sublime-project
 tests/tests/
 tests/results/
-**application\config\*
-**application\file_map\*
-**application\file_upload\*
-**application\system\*
-**application\user_guide\*
-**application\vendor\*
-file_download/notis/old_document/4.notis_tarik_balik_-_BORANG_D.docx
-file_download/notis/old_document/5.LOD_dan_notis_mahkamah.docx
-application/config/database.php
-application/config/database.php
-application/controllers/Welcome.php
+application/config/*.php
