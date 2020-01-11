@@ -33,3 +33,4 @@ tests/results/
 application/config/*.php
 *.docx
 application/config/database.php
+application/controllers/Welcome.php
