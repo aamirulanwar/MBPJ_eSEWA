@@ -1,6 +1,11 @@
 <?php
 notify_msg('notify_msg');
 ?>
+<script type="text/javascript">
+    setTimeout(function(){
+       window.location.reload(1);
+    }, 15000);
+</script>
 <div class="card card-accent-info">
     <div class="card-header">
         <div class="pull-left">
@@ -15,18 +20,6 @@ notify_msg('notify_msg');
     <div class="card-body">
         <form class="form-horizontal" action="/account/account_list" method="post">
             <div class="row">
-<!--                <div class="col-lg-3" style="margin-top: 20px;margin-bottom: 20px;">-->
-<!--                    <select name="type_id" class="form-control">-->
-<!--                        <option value=""> - Semua - </option>-->
-<!--                        --><?php
-//                        if($data_type):
-//                            foreach ($data_type as $row):
-//                                echo option_value($row['TYPE_ID'],$row['TYPE_NAME'],'type_id',search_default($data_search,'type_id'));
-//                            endforeach;
-//                        endif;
-//                        ?>
-<!--                    </select>-->
-<!--                </div>-->
                 <div class="col-lg-3" style="margin-top: 20px;margin-bottom: 20px;">
                     <select name="category_id" class="form-control js-example-basic-single">
                         <option value=""> - Semua - </option>
@@ -48,12 +41,6 @@ notify_msg('notify_msg');
                         echo option_value(3,'Akaun tidak aktif','almost_expired',search_default($data_search,'almost_expired'));
                         ?>
                     </select>
-<!--                    <div class="form-check">-->
-<!--                        <input name="almost_expired" class="form-check-input" --><?php //echo set_checkbox('almost_expired',search_default($data_search,'almost_expired'))?><!-- type="checkbox" value="1">-->
-<!--                        <label class="form-check-label" for="defaultCheck1">-->
-<!--                            Akaun hampir tamat-->
-<!--                        </label>-->
-<!--                    </div>-->
                 </div>
                 <div class="col-lg-4" style="margin-top: 20px;margin-bottom: 20px;">
                     <div class="input-group">
@@ -145,7 +132,7 @@ notify_msg('notify_msg');
                                     endif;
                                 endif;
                                 ?>
-                                <i class="icons font-xl mt-5 cui-file"></i><div><a href="/account/doc_signature/<?php echo urlEncrypt($row['ACCOUNT_ID'])?>" target="_blank">Dokumen Tandatangan <?php if ($row["TOTAL_COUNT"]>0){echo "(".$row["TOTAL_COUNT"].")";} ?></div></a>
+                                <i class="icons font-xl mt-5 cui-file"></i><div><a href="/account/doc_signature/<?php echo urlEncrypt($row['ACCOUNT_ID'])?>" target="_parent">Dokumen Tandatangan <?php if ($row["TOTAL_COUNT"]>0){echo "(".$row["TOTAL_COUNT"].")";} ?></div></a>
                             </td>
                         </tr>
                     <?php
