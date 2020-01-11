@@ -32,3 +32,4 @@ tests/tests/
 tests/results/
 application/config/*.php
 *.docx
+application/config/database.php
