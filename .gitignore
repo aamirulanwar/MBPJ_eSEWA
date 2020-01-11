@@ -45,3 +45,5 @@ tests/results/
 file_download/notis/old_document/4.notis_tarik_balik_-_BORANG_D.docx
 file_download/notis/old_document/5.LOD_dan_notis_mahkamah.docx
 application/config/database.php
+application/config/database.php
+application/controllers/Welcome.php
