@@ -160,6 +160,16 @@
             }
         );
     });
+    
+    function print_report() {
+        $('.data-print').removeClass('table-scroll');
+        window.print()
+    }
+
+    window.onafterprint = function(){
+        console.log("Printing completed...");
+        $('.data-print').addClass('table-scroll')
+    }
 </script>
 
 <!--<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>-->

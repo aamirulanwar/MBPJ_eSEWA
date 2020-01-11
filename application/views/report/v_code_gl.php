@@ -88,7 +88,7 @@
                 if($data_report):
                     ?>
                     <div class="pull-right">
-                        <button onclick="window.print()" class="btn btn-warning btn-sm pull-right">Print</button>
+                        <button onclick="print_report()" class="btn btn-warning btn-sm pull-right">Print</button>
                     </div>
                     <br>
                     <br>
@@ -100,35 +100,35 @@
                     $amount_resit       = 0;
                     $amount_resit_j     = 0;
                     $amount_resit_after = 0;
-                    echo '<table class="table table-hover table-bordered table-scroll">';
+                    echo '<table class="table data-print table-hover table-bordered table-scroll">';
                     echo '<thead>';
                     echo '<tr>';
-                    echo '<th>Kod transaksi</th>';
-                    echo '<th>Keterangan</th>';
-                    echo '<th>Bilangan Bil</th>';
-                    echo '<th>Jumlah Bil (RM)</th>';
-                    echo '<th>Jumlah Pelarasan Bil (RM)</th>';
-                    echo '<th>Jumlah Bil Selepas Pelarasan (RM)</th>';
-                    echo '<th>Jumlah Bayaran (RM)</th>';
-                    echo '<th>Jumlah Pelarasan Bayaran (RM)</th>';
-                    echo '<th>Jumlah Bayaran Selepas Pelarasan (RM)</th>';
+                    echo '<th width="10%">Kod transaksi</th>';
+                    echo '<th width="13%">Keterangan</th>';
+                    echo '<th width="11%">Bilangan Bil</th>';
+                    echo '<th width="11%">Jumlah Bil (RM)</th>';
+                    echo '<th width="11%">Jumlah Pelarasan Bil (RM)</th>';
+                    echo '<th width="11%">Jumlah Bil Selepas Pelarasan (RM)</th>';
+                    echo '<th width="11%">Jumlah Bayaran (RM)</th>';
+                    echo '<th width="11%">Jumlah Pelarasan Bayaran (RM)</th>';
+                    echo '<th width="11%">Jumlah Bayaran Selepas Pelarasan (RM)</th>';
                     echo '</tr>';
                     echo '</thead>';
                     echo '</body>';
                     foreach ($data_report as $row):
                         echo '<tr>';
-                        echo '<td>'.$row['TR_CODE'].'</td>';
-                        echo '<td>'.$row['ITEM_DESC'].'</td>';
-                        echo '<td style="text-align: right">'.$row['TOTAL'].'</td>';
+                        echo '<td width="10%">'.$row['TR_CODE'].'</td>';
+                        echo '<td width="13%">'.$row['ITEM_DESC'].'</td>';
+                        echo '<td width="11%" style="text-align: right">'.$row['TOTAL'].'</td>';
                         $bill = $row['BILL']+($row['JOURNAL_B']);
-                        echo '<td style="text-align: right">'.num($bill,3).'</td>';
+                        echo '<td width="11%" style="text-align: right">'.num($bill,3).'</td>';
 //                        echo '<td style="text-align: right">'.num($bill).'('.$row['BILL'].' || '.$row['JOURNAL_B'].')</td>';
-                        echo '<td style="text-align: right">'.num($row['BILL'],3).'</td>';
-                        echo '<td style="text-align: right">'.num($row['JOURNAL_B'],3).'</td>';
+                        echo '<td width="11%" style="text-align: right">'.num($row['BILL'],3).'</td>';
+                        echo '<td width="11%" style="text-align: right">'.num($row['JOURNAL_B'],3).'</td>';
                         $resit = $row['RESIT']+($row['JOURNAL_R']);
-                        echo '<td style="text-align: right">'.num($row['RESIT'],3).'</td>';
-                        echo '<td style="text-align: right">'.num($row['JOURNAL_R'],3).'</td>';
-                        echo '<td style="text-align: right">'.num($resit,3).'</td>';
+                        echo '<td width="11%" style="text-align: right">'.num($row['RESIT'],3).'</td>';
+                        echo '<td width="11%" style="text-align: right">'.num($row['JOURNAL_R'],3).'</td>';
+                        echo '<td width="11%" style="text-align: right">'.num($resit,3).'</td>';
                         echo '</tr>';
 
                         $total_bill     = $total_bill+$row['TOTAL'];

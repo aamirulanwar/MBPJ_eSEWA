@@ -97,22 +97,23 @@
                 if($data_report):
                     ?>
                     <div class="pull-right">
-                        <button onclick="window.print()" class="btn btn-warning btn-sm pull-right">Print</button>
+                        <button onclick="print_report()" class="btn btn-warning btn-sm pull-right">Print</button>
                     </div>
                     <br>
                     <br>
                     <?php
-                    echo '<table class="table table-hover table-bordered table-scroll">';
+                    echo '<table class="data-print table table-hover table-bordered table-scroll">';
                     echo '<thead>';
                     echo '<tr>';
-                    echo '<th>No. bill / no. resit</th>';
-                    echo '<th>Tarikh bill/resit</th>';
-                    echo '<th>Kod transaksi</th>';
-                    echo '<th>Keterangan</th>';
-                    echo '<th>Jenis</th>';
-                    echo '<th>Amaun debit (RM)</th>';
-                    echo '<th>Amaun kredit (RM)</th>';
-                    echo '<th>Jumlah Amaun (RM)</th>';
+                    echo '<th width="12%">No. bill / no. resit</th>';
+                    echo '<th width="10%">Tarikh bill/resit</th>';
+                    echo '<th width="10%">Kod transaksi</th>';
+                    echo '<th width="11%">Maklumat penyewa</th>';
+                    echo '<th width="15%">Keterangan</th>';
+                    echo '<th width="10%">Jenis</th>';
+                    echo '<th width="10%">Amaun debit (RM)</th>';
+                    echo '<th width="10%">Amaun kredit (RM)</th>';
+                    echo '<th width="12%">Jumlah Amaun (RM)</th>';
 //                    echo '<th>No. bill</th>';
                     echo '</tr>';
                     echo '</thead>';
@@ -138,17 +139,18 @@
                             $type           = 'Resit';
                         endif;
 
-                        echo '<td>'.$bill_number.$resit_number.'</td>';
-                        echo '<td>'.date_display($row['DT_BILL']).'</td>';
+                        echo '<td width="12%">'.$bill_number.$resit_number.'</td>';
+                        echo '<td width="10%">'.date_display($row['DT_BILL']).'</td>';
 //                        echo '<td>'.$resit_number.'</td>';
-                        echo '<td>'.$row['TR_CODE'].'</td>';
-                        echo '<td>'.$row['ITEM_DESC'].'</td>';
-                        echo '<td>'.$type.'</td>';
+                        echo '<td width="10%">'.$row['TR_CODE'].'</td>';
+                        echo '<td width="11%"><strong>'.$row['ACCOUNT_NUMBER'].'</strong><br>'.$row['NAME'].'</td>';
+                        echo '<td width="15%">'.$row['ITEM_DESC'].'</td>';
+                        echo '<td width="10%">'.$type.'</td>';
 
                         $amount = $amount+($bill_amaun-($resit_amaun));
-                        echo '<td class="text-right">'.num($bill_amaun,3).'</td>';
-                        echo '<td class="text-right">'.num($resit_amaun,3).'</td>';
-                        echo '<td class="text-right">'.num($amount,3).'</td>';
+                        echo '<td  width="10%" class="text-right">'.num($bill_amaun,3).'</td>';
+                        echo '<td  width="10%" class="text-right">'.num($resit_amaun,3).'</td>';
+                        echo '<td  width="12%" class="text-right">'.num($amount,3).'</td>';
                         echo '</tr>';
                     endforeach;
                     echo '</tbody>';
@@ -172,6 +174,11 @@
                 <?php
             endif;
         ?>
+
+        window.onafterprint = function(){
+            console.log("Printing completed...");
+            $('.data-print').addClass('table-scroll')
+        }
         // var type_id = $('#type_id').val();
         //get_category_by_type('<?php //echo search_default($data_search,'category_id')?>//');
     });

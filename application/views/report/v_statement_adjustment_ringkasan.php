@@ -11,6 +11,51 @@
     th{
         text-align: center;
     }
+
+    @media print{
+        @page {
+            size: landscape;
+            margin: 0.2in;
+        }
+        div.landscape {
+            overflow: hidden;
+            /*page-break-after: always;*/
+            background: white;
+        }
+        div.landscape {
+            /*width: 276mm;*/
+            /*height: 190mm;*/
+        }
+        .table th, .table td{
+            padding: 1px !important;
+            font-size: 8px !important;
+        }
+
+        .table-responsive{
+            overflow: hidden;
+        }
+
+        .card-footer{
+            display: none;
+        }
+
+    }
+    ::-webkit-scrollbar {
+        width: 5px;
+        height: 10px;
+        border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: rgba(90, 90, 90,0.1);
+    }
+    ::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.2);
+    }
+    .table th, .table td{
+        padding: 1px !important;
+        font-size: 8px !important;
+    }
 </style>
 <form method="post" action="/report/adjustment_statement_ringkasan">
     <div class="card card-accent-info">
@@ -116,64 +161,67 @@
                             $total_debit    = 0;
                             $total_kredit   = 0;
                             $total_baki     = 0;
-                            echo '<table class="table table-hover table-bordered table-adjustment">';
+                            echo '<table class="table table-hover table-bordered table-adjustment" style="margin-bottom: 0px;">';
                             echo '<thead>';
                             echo '<tr>';
-                            echo '<th rowspan="2">Kod Kategori</th>';
-                            echo '<th rowspan="2">Tunggakan Sewa (RM)</th>';
+                            echo '<th width="5%" rowspan="2">Kod Kategori</th>';
+                            echo '<th width="5%" rowspan="2">Tunggakan Sewa (RM)</th>';
                             echo '<th colspan="2">Pelarasan</th>';
-                            echo '<th rowspan="2">Terimaan Tunggakan (RM)</th>';
+                            echo '<th width="5%" rowspan="2">Terimaan Tunggakan (RM)</th>';
                             echo '<th colspan="2">Pelarasan</th>';
-                            echo '<th rowspan="2">Lebihan (RM)</th>';
+                            echo '<th width="5%" rowspan="2">Lebihan (RM)</th>';
                             echo '<th colspan="2">Pelarasan</th>';
-                            echo '<th rowspan="2">Sewaan Semasa (RM)</th>';
+                            echo '<th width="5%" rowspan="2">Sewaan Semasa (RM)</th>';
                             echo '<th colspan="2">Pelarasan</th>';
-                            echo '<th rowspan="2">Terimaan Semasa (RM)</th>';
+                            echo '<th width="5%" rowspan="2">Terimaan Semasa (RM)</th>';
                             echo '<th colspan="2">Pelarasan</th>';
                             echo '<th colspan="2">Jumlah </th>';
-                            echo '<th rowspan="2">Baki Bawa Kehadapan (RM)</th>';
+                            echo '<th width="5%" rowspan="2">Baki Bawa Kehadapan (RM)</th>';
                             echo '</tr>';
                             echo '<tr>';
 //                        echo '<th>Akaun No.</th>';
-                            echo '<th>Debit (RM)</th>';
-                            echo '<th>Kredit (RM)</th>';
-                            echo '<th>Debit (RM)</th>';
-                            echo '<th>Kredit (RM)</th>';
-                            echo '<th>Debit (RM)</th>';
-                            echo '<th>Kredit (RM)</th>';
-                            echo '<th>Debit (RM)</th>';
-                            echo '<th>Kredit (RM)</th>';
-                            echo '<th>Debit (RM)</th>';
-                            echo '<th>Kredit (RM)</th>';
-                            echo '<th>Jumlah (Debit) (RM)</th>';
-                            echo '<th>Jumlah (Kredit) (RM)</th>';
+                            echo '<th width="5%">Debit (RM)</th>';
+                            echo '<th width="5%">Kredit (RM)</th>';
+                            echo '<th width="5%">Debit (RM)</th>';
+                            echo '<th width="5%">Kredit (RM)</th>';
+                            echo '<th width="5%">Debit (RM)</th>';
+                            echo '<th width="5%">Kredit (RM)</th>';
+                            echo '<th width="5%">Debit (RM)</th>';
+                            echo '<th width="5%">Kredit (RM)</th>';
+                            echo '<th width="5%">Debit (RM)</th>';
+                            echo '<th width="5%">Kredit (RM)</th>';
+                            echo '<th width="5%">Jumlah (Debit) (RM)</th>';
+                            echo '<th width="5%">Jumlah (Kredit) (RM)</th>';
                             echo '<tr>';
                             echo '</thead>';
+                            echo '</table>';
+                            echo '<div class="table-own" style="height: 300px; overflow: overlay">';
+                            echo '<table class="table table-hover table-bordered table-adjustment">';
                             echo '<tbody>';
 
                             foreach ($report['category'] as $category):
                                 echo '<tr>';
-                                echo '<td>'.$category['category_details']['CATEGORY_NAME'].' - '.$category['category_details']['CATEGORY_CODE'].'</td>';
+                                echo '<td width="5%">'.$category['category_details']['CATEGORY_NAME'].' - '.$category['category_details']['CATEGORY_CODE'].'</td>';
 //                        echo '<td>';
 //                        echo $row['ACCOUNT_NUMBER'].'<br>';
 //                        echo 'Nama penyewa :<br>'.$row['NAME'].'<br>';
 //                        echo 'Kod harta :<br>'.$row['TYPE_NAME'].'<br>';
 //                        echo '</td>';
-                                echo '<td style="text-align: right">'.num($category['tunggakan']['TUNGGAKAN'],3).'</td>';
-                                echo '<td style="text-align: right">'.num($category['tunggakan']['DEBIT'],3).'</td>';
-                                echo '<td style="text-align: right">'.num($category['tunggakan']['KREDIT'],3).'</td>';
-                                echo '<td style="text-align: right">'.num($category['bayaran']['TUNGGAKAN'],3).'</td>';
-                                echo '<td style="text-align: right">'.num($category['bayaran']['DEBIT'],3).'</td>';
-                                echo '<td style="text-align: right">'.num($category['bayaran']['KREDIT'],3).'</td>';
-                                echo '<td style="text-align: right">'.num(abs($category['lebihan']['TUNGGAKAN']),3).'</td>';
-                                echo '<td style="text-align: right">'.num($category['lebihan']['DEBIT'],3).'</td>';
-                                echo '<td style="text-align: right">'.num($category['lebihan']['KREDIT'],3).'</td>';
-                                echo '<td style="text-align: right">'.num($category['semasa']['TUNGGAKAN'],3).'</td>';
-                                echo '<td style="text-align: right">'.num($category['semasa']['DEBIT'],3).'</td>';
-                                echo '<td style="text-align: right">'.num($category['semasa']['KREDIT'],3).'</td>';
-                                echo '<td style="text-align: right">'.num($category['bayaran_semasa']['TUNGGAKAN'],3).'</td>';
-                                echo '<td style="text-align: right">'.num($category['bayaran_semasa']['DEBIT'],3).'</td>';
-                                echo '<td style="text-align: right">'.num($category['bayaran_semasa']['KREDIT'],3).'</td>';
+                                echo '<td width="5%" style="text-align: right">'.num($category['tunggakan']['TUNGGAKAN'],3).'</td>';
+                                echo '<td width="5%" style="text-align: right">'.num($category['tunggakan']['DEBIT'],3).'</td>';
+                                echo '<td width="5%" style="text-align: right">'.num($category['tunggakan']['KREDIT'],3).'</td>';
+                                echo '<td width="5%" style="text-align: right">'.num($category['bayaran']['TUNGGAKAN'],3).'</td>';
+                                echo '<td width="5%" style="text-align: right">'.num($category['bayaran']['DEBIT'],3).'</td>';
+                                echo '<td width="5%" style="text-align: right">'.num($category['bayaran']['KREDIT'],3).'</td>';
+                                echo '<td width="5%" style="text-align: right">'.num(abs($category['lebihan']['TUNGGAKAN']),3).'</td>';
+                                echo '<td width="5%" style="text-align: right">'.num($category['lebihan']['DEBIT'],3).'</td>';
+                                echo '<td width="5%" style="text-align: right">'.num($category['lebihan']['KREDIT'],3).'</td>';
+                                echo '<td width="5%" style="text-align: right">'.num($category['semasa']['TUNGGAKAN'],3).'</td>';
+                                echo '<td width="5%" style="text-align: right">'.num($category['semasa']['DEBIT'],3).'</td>';
+                                echo '<td width="5%" style="text-align: right">'.num($category['semasa']['KREDIT'],3).'</td>';
+                                echo '<td width="5%" style="text-align: right">'.num($category['bayaran_semasa']['TUNGGAKAN'],3).'</td>';
+                                echo '<td width="5%" style="text-align: right">'.num($category['bayaran_semasa']['DEBIT'],3).'</td>';
+                                echo '<td width="5%" style="text-align: right">'.num($category['bayaran_semasa']['KREDIT'],3).'</td>';
 
 //                                $debit  = $category['tunggakan']['TUNGGAKAN']+$category['cukai']['TUNGGAKAN'];
 //                                $kredit = $category['bayaran']['TUNGGAKAN']+abs($category['lebihan']['TUNGGAKAN'])+$category['bayaran_cukai']['TUNGGAKAN'];
@@ -182,8 +230,8 @@
                                 $total_debit    += $debit;
                                 $total_kredit   += $kredit;
 
-                                echo '<td style="text-align: right">'.num($debit,3).'</td>';
-                                echo '<td style="text-align: right">'.num($kredit,3).'</td>';
+                                echo '<td width="5%" style="text-align: right">'.num($debit,3).'</td>';
+                                echo '<td width="5%" style="text-align: right">'.num($kredit,3).'</td>';
 
                                 $baki_1 = $category['tunggakan']['TUNGGAKAN']+$category['semasa']['TUNGGAKAN']+$debit;
                                 $baki_2 = $category['bayaran']['TUNGGAKAN']+abs($category['lebihan']['TUNGGAKAN'])+$category['bayaran_semasa']['TUNGGAKAN']+$kredit;
@@ -192,7 +240,7 @@
                                 $baki = $baki_1-$baki_2;
                                 $total_baki     += $baki;
 
-                                echo '<td style="text-align: right">'.num($baki,3).'</td>';
+                                echo '<td width="5%" style="text-align: right">'.num($baki,3).'</td>';
 //                        echo '<td>'.$row['ITEM_DESC'].'</td>';
 //                        echo '<td style="text-align: right">'.$row['TOTAL'].'</td>';
 //                        $bill = $row['BILL']+($row['JOURNAL_B']);
@@ -208,6 +256,7 @@
                             endforeach;
                             echo '</tbody>';
                             echo '</table>';
+                            echo '</div>';
 
                             echo '<table class="table table-hover table-bordered ">';
                             echo '<thead>';

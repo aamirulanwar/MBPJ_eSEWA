@@ -75,12 +75,12 @@
                 if($data_gst):
                     ?>
                     <div class="pull-right">
-                        <button onclick="window.print()" class="btn btn-warning btn-sm pull-right">Print</button>
+                        <button onclick="print_report()" class="btn btn-warning btn-sm pull-right">Print</button>
                     </div>
                     <br>
                     <br>
                     <?php
-                    echo '<table class="table table-hover table-bordered">';
+                    echo '<table class="table table-hover table-bordered data-print table-scroll">';
 //                        echo '<thead>';
 //                        echo '<tr>';
 //                        echo '<th>&nbsp;</th>';
@@ -100,13 +100,13 @@
                         echo '<thead>';
 
                         echo '<tr>';
-                        echo '<th>Bil</th>';
-                        echo '<th><strong>'.$key.'</strong></th>';
-                        echo '<th>Jumlah Bil (RM)</th>';
-                        echo '<th>Jumlah Bil Pelarasan (RM)</th>';
-                        echo '<th>Jumlah Bayaran / Resit (RM)</th>';
-                        echo '<th>Jumlah Bayaran / Resit Pelarasan (RM)</th>';
-                        echo '<th>Baki Perlu Dibayar (RM)</th>';
+                        echo '<th width="5%">Bil</th>';
+                        echo '<th width="20%"><strong>'.$key.'</strong></th>';
+                        echo '<th width="15%">Jumlah Bil (RM)</th>';
+                        echo '<th width="15%">Jumlah Bil Pelarasan (RM)</th>';
+                        echo '<th width="15%">Jumlah Bayaran / Resit (RM)</th>';
+                        echo '<th width="15%">Jumlah Bayaran / Resit Pelarasan (RM)</th>';
+                        echo '<th width="15%">Baki Perlu Dibayar (RM)</th>';
                         echo '</tr>';
                         echo '</thead>';
                         echo '<tbody>';
@@ -117,25 +117,25 @@
                                 $k = $k + 1;
                                 $i = $i+1;
                                 echo '<tr>';
-                                echo '<td>'.$i.'</td>';
-                                echo '<td style="padding-left: 10px;">'.$category['CATEGORY_NAME'].'</td>';
-                                echo '<td style="text-align: right">';
+                                echo '<td width="5%">'.$i.'</td>';
+                                echo '<td width="20%" style="padding-left: 10px;">'.$category['CATEGORY_NAME'].'</td>';
+                                echo '<td width="15%" style="text-align: right">';
                                     echo num($category['BILL'],3);
                                     $bill +=$category['BILL'];
                                 echo '</td>';
-                                echo '<td style="text-align: right">';
+                                echo '<td width="15%" style="text-align: right">';
                                     echo num($category['JOURNAL_B'],3);
                                     $bill_pelarasan += $category['JOURNAL_B'];
                                 echo '</td>';
-                                echo '<td style="text-align: right">';
+                                echo '<td width="15%" style="text-align: right">';
                                     echo num($category['RESIT'],3);
                                     $resit += $category['RESIT'];
                                 echo '</td>';
-                                echo '<td style="text-align: right">';
+                                echo '<td width="15%" style="text-align: right">';
                                     echo num($category['JOURNAL_R'],3);
                                     $resit_pelarasan += $category['JOURNAL_R'];
                                 echo '</td>';
-                                echo '<td style="text-align: right">';
+                                echo '<td width="15%" style="text-align: right">';
                                     $baki = ($category['BILL']+($category['JOURNAL_B']))-($category['RESIT']+($category['JOURNAL_R']));
                                     $baki_all += $baki;
                                     echo num($baki,3);

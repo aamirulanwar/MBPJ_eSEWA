@@ -2,6 +2,37 @@
     th{
         text-align: center;
     }
+    @media print{
+        .table th, .table td{
+            padding: 4px !important;
+            /*font-size: 8px !important;*/
+        }
+
+        .table-responsive{
+            overflow: hidden;
+        }
+
+        .card-footer{
+            display: none;
+        }
+
+    }
+    ::-webkit-scrollbar {
+        width: 5px;
+        height: 10px;
+        border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: rgba(90, 90, 90,0.1);
+    }
+    ::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.2);
+    }
+    .table th, .table td{
+        padding: 4px !important;
+        font-size: 11px !important;
+    }
 </style>
 <form method="post" action="/report/payment/">
     <div class="card card-accent-info">
@@ -85,23 +116,26 @@
                             $j = 0;
                             foreach ($row['acc'] as $acc):
                                 if($acc['account_details_trans']):
-                                    echo '<table class="table table-hover table-bordered table-aging">';
+                                    echo '<table class="table table-hover table-bordered table-aging" style="margin-bottom: 0px">';
                                     echo '<thead>';
                                     echo '<tr>';
-                                    echo '<th>No.</th>';
-                                    echo '<th>No akaun</th>';
-                                    echo '<th>Nama</th>';
-                                    echo '<th>Kod Harta</th>';
-                                    echo '<th>No. Bil</th>';
-                                    echo '<th>Tarikh Bil/Resit</th>';
-                                    echo '<th>Kod</th>';
-                                    echo '<th>Keterangan</th>';
-                                    echo '<th>Jenis</th>';
-                                    echo '<th>Amaun Debit (RM)</th>';
-                                    echo '<th>Amaun Kredit (RM)</th>';
-                                    echo '<th>Jumlah (RM)</th>';
+                                    echo '<th width="5%">No.</th>';
+                                    echo '<th width="7%">No akaun</th>';
+                                    echo '<th width="9%">Nama</th>';
+                                    echo '<th width="9%">Kod Harta</th>';
+                                    echo '<th width="9%">No. Bil</th>';
+                                    echo '<th width="8%">Tarikh Bil/Resit</th>';
+                                    echo '<th width="8%">Kod</th>';
+                                    echo '<th width="11%">Keterangan</th>';
+                                    echo '<th width="7%">Jenis</th>';
+                                    echo '<th width="9%">Amaun Debit (RM)</th>';
+                                    echo '<th width="9%">Amaun Kredit (RM)</th>';
+                                    echo '<th width="9%">Jumlah (RM)</th>';
                                     echo '</tr>';
                                     echo '</thead>';
+                                    echo '</table>';
+                                    echo '<div class="table-own" style="height: 300px; overflow: overlay">';
+                                    echo '<table class="table table-hover table-bordered table-adjustment">';
                                     echo '<tbody>';
                                     $data_amount = 0;
                                     $i = 0;
@@ -110,22 +144,22 @@
                                         $i = $i+1;
                                         echo '<tr>';
                                         if($i==1):
-                                            echo '<td rowspan="'.count($acc['account_details_trans']).'">'.$j.'<br>';
-                                            echo '<td rowspan="'.count($acc['account_details_trans']).'">'.$acc['ACCOUNT_NUMBER'].'<br>';
+                                            echo '<td width="5%" rowspan="'.count($acc['account_details_trans']).'">'.$j.'<br>';
+                                            echo '<td width="7%" rowspan="'.count($acc['account_details_trans']).'">'.$acc['ACCOUNT_NUMBER'].'<br>';
                                             echo get_status_active($acc['STATUS_ACC']);
                                             echo '</td>';
-                                            echo '<td rowspan="'.count($acc['account_details_trans']).'">'.$acc['NAME'].'</td>';
+                                            echo '<td width="9%" rowspan="'.count($acc['account_details_trans']).'">'.$acc['NAME'].'</td>';
                                             if($acc['data_asset']):
                                                 $data_asset = $acc['data_asset']['ASSET_NAME'];
                                             else:
                                                 $data_asset = '-';
                                             endif;
-                                            echo '<td rowspan="'.count($acc['account_details_trans']).'">'.$data_asset.'</td>';
+                                            echo '<td width="9%" rowspan="'.count($acc['account_details_trans']).'">'.$data_asset.'</td>';
                                         endif;
-                                        echo '<td>'.$trans['BILL_NUMBER'].'</td>';
-                                        echo '<td>'.date('d/m/y',strtotime($trans['DT_BILL'])).'</td>';
-                                        echo '<td>'.$trans['TR_CODE'].'</td>';
-                                        echo '<td>'.$trans['ITEM_DESC'].'</td>';
+                                        echo '<td width="9%">'.$trans['BILL_NUMBER'].'</td>';
+                                        echo '<td width="8%">'.date('d/m/y',strtotime($trans['DT_BILL'])).'</td>';
+                                        echo '<td width="8%">'.$trans['TR_CODE'].'</td>';
+                                        echo '<td width="11%">'.$trans['ITEM_DESC'].'</td>';
 
                                         $bill_cat       = '';
                                         $amount_debit   = 0;
@@ -149,14 +183,15 @@
                                                 $data_amount   = $data_amount-($amount_kredit);
                                             endif;
                                         endif;
-                                        echo '<td>'.$bill_cat.'</td>';
-                                        echo '<td style="text-align: right">'.num($amount_debit,3).'</td>';
-                                        echo '<td style="text-align: right">'.num($amount_kredit,3).'</td>';
-                                        echo '<td style="text-align: right">'.num($data_amount,3).'</td>';
+                                        echo '<td width="7%">'.$bill_cat.'</td>';
+                                        echo '<td width="9%" style="text-align: right">'.num($amount_debit,3).'</td>';
+                                        echo '<td width="9%" style="text-align: right">'.num($amount_kredit,3).'</td>';
+                                        echo '<td width="9%" style="text-align: right">'.num($data_amount,3).'</td>';
                                         echo '</tr>';
                                     endforeach;
                                     echo '</tbody>';
                                     echo '</table>';
+                                    echo '</div>';
 //                                else:
 //                                    echo '<table class="table table-hover table-bordered table-aging">';
 //                                    echo '<tr><td class="text-center"> - Tiada data - </td></tr>';
