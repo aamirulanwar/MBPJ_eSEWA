@@ -565,7 +565,15 @@ class Generate_word {
         elseif($notice_level==NOTICE_LEVEL_3):
             $template = '3.notis_tuntutan_pembayaran_sewaan_-_BORANG_C.docx';
         elseif($notice_level==NOTICE_LEVEL_4):
-            $template = '4.LOD_dan_notis_mahkamah.docx';
+            if($notice_info['SEWAAN'] > 0 || $notice_info['TIPPING'] > 0  && $get_details['STATUS_ACC'] != 1):
+                $template = '4.LOD_dan_notis_mahkamah_with_tunggakan_caj.docx';
+            elseif($notice_info['SEWAAN'] > 0 || $notice_info['TIPPING'] > 0 && $get_details['STATUS_ACC'] == 1):
+                $template = '4.LOD_dan_notis_mahkamah_withboth_ticks.docx';
+            elseif(($notice_info['SEWAAN'] == 0 || $notice_info['TIPPING'] == 0) && $get_details['STATUS_ACC'] == 1):
+                $template = '4.LOD_dan_notis_mahkamah_with_akaun_aktif.docx';
+            else:
+                $template = '4.LOD_dan_notis_mahkamah.docx';
+            endif;            
         elseif($notice_level==NOTICE_LEVEL_5):
             $template = '5.notis_tarik_balik_-_BORANG_D.docx';
         elseif($notice_level==NOTICE_LEVEL_6):
