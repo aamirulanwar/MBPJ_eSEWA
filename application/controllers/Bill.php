@@ -20,7 +20,7 @@ class Bill extends CI_Controller
         load_model('Account/M_acc_user', 'm_acc_user');
         load_model('Account/M_acc_account', 'm_acc_account');
         load_model('Asset/M_a_asset', 'm_a_asset');
-//        load_model('Transaction/M_tr_code', 'm_tr_code');
+       // load_model('Transaction/M_tr_code', 'm_tr_code');
         load_model('TrCode/M_tran_code', 'm_tr_code');
         load_model('Bill/M_bill_master', 'm_bill_master');
         load_model('Bill/M_bill_item', 'm_bill_item');
@@ -143,7 +143,7 @@ class Bill extends CI_Controller
         $bill_item = $this->bill_lib->generate_bill($data_bill_lib);
         $data_bill_master = $this->m_bill_master->get_bill_master($bill_item['bill_id']);
 
-        $data['item_bil']       = $bill_item['item'];
+        $data['item_bil']       = $bill_item['item'];   
         $data['account']        = $get_details;
         $data['statement_type'] = 'BIL';
         $data['bill_master']    = $data_bill_master;
@@ -166,26 +166,26 @@ class Bill extends CI_Controller
                     $search_tr_code['MCT_TRCODENEW'] = $row;
                     $tr_code = $this->m_tr_code->get_tr_code($search_tr_code);
 
-//                    $insert_code['BILL_ID']             = $bill_item['bill_id'];
-//                    $insert_code['TR_CODE']             = $tr_code['MCT_TRCODE_NEW'];
-////                    $insert_code['TR_ID']               = $tr_code['TR_ID'];
-//                    $insert_code['AMOUNT']              = (($add_minus_arr[$i]=='minus')?'-':'').currencyToDouble($amount_arr[$i]);
-////                    $insert_code['PRIORITY']            = $tr_code['PRIORITY'];
-//                    $insert_code['TR_TYPE']             = $tr_code['TR_TYPE'];
-//                    $insert_code['ACCOUNT_ID']          = $id;
-//                    $insert_code['ITEM_DESC']           = $tr_code['MCT_TRDESC'];
-//                    $insert_code['TR_CODE_OLD']         = $tr_code['MCT_TRCODE_OLD'];
-//                    $insert_code['BILL_CATEGORY']       = $type_arr[$i];
-//                    $insert_code['COMPLETE_PAYMENT']    = 0;
+                   // $insert_code['BILL_ID']             = $bill_item['bill_id'];
+                   // $insert_code['TR_CODE']             = $tr_code['MCT_TRCODE_NEW'];
+                   // // $insert_code['TR_ID']               = $tr_code['TR_ID'];
+                   // $insert_code['AMOUNT']              = (($add_minus_arr[$i]=='minus')?'-':'').currencyToDouble($amount_arr[$i]);
+                   // // $insert_code['PRIORITY']            = $tr_code['PRIORITY'];
+                   // $insert_code['TR_TYPE']             = $tr_code['TR_TYPE'];
+                   // $insert_code['ACCOUNT_ID']          = $id;
+                   // $insert_code['ITEM_DESC']           = $tr_code['MCT_TRDESC'];
+                   // $insert_code['TR_CODE_OLD']         = $tr_code['MCT_TRCODE_OLD'];
+                   // $insert_code['BILL_CATEGORY']       = $type_arr[$i];
+                   // $insert_code['COMPLETE_PAYMENT']    = 0;
 
                     $insert_code['BILL_ID']     = $bill_item['bill_id'];
                     $insert_code['TR_CODE']     = $tr_code['MCT_TRCODENEW'];
-//                    $insert_code['TR_ID']       = $code_gst_waste['TR_ID'];
-//                    $insert_code['AMOUNT']      = num(($code_gst_waste['PERCENTAGE']*$data_acc['WASTE_MANAGEMENT_CHARGE'])/100,1);
-//                    $insert_code['AMOUNT']      = (($add_minus_arr[$i]=='minus')?'-':'').currencyToDouble($amount_arr[$i]);
+                   // $insert_code['TR_ID']       = $code_gst_waste['TR_ID'];
+                   // $insert_code['AMOUNT']      = num(($code_gst_waste['PERCENTAGE']*$data_acc['WASTE_MANAGEMENT_CHARGE'])/100,1);
+                   // $insert_code['AMOUNT']      = (($add_minus_arr[$i]=='minus')?'-':'').currencyToDouble($amount_arr[$i]);
                     $insert_code['AMOUNT']      = currencyToDouble($amount_arr[$i]);
                     $insert_code['PRIORITY']    = $tr_code['MCT_PRIORT'];
-//                    $insert_code['TR_TYPE']     = $code_gst_waste['TR_TYPE'];
+                   // $insert_code['TR_TYPE']     = $code_gst_waste['TR_TYPE'];
                     $insert_code['ACCOUNT_ID']  = $id;
                     $insert_code['BILL_CATEGORY']       = "B";
                     $remark = '';
@@ -194,7 +194,7 @@ class Bill extends CI_Controller
                     endif;
                     $insert_code['ITEM_DESC']   = $tr_code['MCT_TRDESC'];
                     $insert_code['REMARK']      = $remark;
-//                    $insert_code['TR_CODE_OLD'] = $code_gst_waste['MCT_TRCODE_OLD'];
+                   // $insert_code['TR_CODE_OLD'] = $code_gst_waste['MCT_TRCODE_OLD'];
 
                     #check gst type
                     $gst_status = check_trans_gst($insert_code['TR_CODE'],$insert_code['ITEM_DESC']);
@@ -291,8 +291,8 @@ class Bill extends CI_Controller
     function add_transaction(){
         if(is_ajax()):
             $type = input_data('type');
-//            $data_search['TR_TYPE']         = 1;
-//            $data_search['AUTO_GENERATE']   = 0;
+           // $data_search['TR_TYPE']         = 1;
+           // $data_search['AUTO_GENERATE']   = 0;
             $data_search['MCT_TSTATS'] = 'B';
             $data_transaction = $this->m_tr_code->get_tr_code_list($data_search);
             
@@ -344,44 +344,44 @@ class Bill extends CI_Controller
     }
 
     function bill_history(){
-//        $this->auth->restrict_access($this->curuser,array(6004));
-//
-//        $data['link_1']     = 'Bil sewaan';
-//        $data['link_2']     = 'Senarai akaun';
-//        $data['link_3']     = 'Resit terdahulu';
-//        $data['pagetitle']  = 'Senarai resit terdahulu';
-//
+       // $this->auth->restrict_access($this->curuser,array(6004));
+
+       // $data['link_1']     = 'Bil sewaan';
+       // $data['link_2']     = 'Senarai akaun';
+       // $data['link_3']     = 'Resit terdahulu';
+       // $data['pagetitle']  = 'Senarai resit terdahulu';
+
         $id = urlDecrypt(uri_segment(3));
         if(!is_numeric($id)):
             return false;
         endif;
-//
+
         $data_account = $this->m_acc_account->get_account_details($id);
         if(empty($data_account)):
             return false;
         endif;
-//
-//        $data['data_account'] = $data_account;
-//
-//        $per_page       = 20;
-//        $search_segment = uri_segment(4);
-//        $data_search['bill_category']   = 'R';
-//        $data_search['account_id']      = $id;
-//        $data_list = $this->m_bill_master->get_bill_history_list($per_page,$search_segment,$data_search);
-//        if(!$data_list):
-//            return false;
-//        endif;
-//
-//        $total = $this->m_bill_master->count_bill_history($data_search);
-//        $links          = '/bill/bill_history/'.uri_segment(3);
-//        $uri_segment    = 4;
-//        $per_page       = 20;
-//        paging_config($links,$total,$per_page,$uri_segment);
-//
-//        $data['data_list']      = $data_list;
-//        $data['total_result']   = $total;
-//
-//        templates('bill/v_list_bill_history',$data);
+
+       // $data['data_account'] = $data_account;
+
+       // $per_page       = 20;
+       // $search_segment = uri_segment(4);
+       // $data_search['bill_category']   = 'R';
+       // $data_search['account_id']      = $id;
+       // $data_list = $this->m_bill_master->get_bill_history_list($per_page,$search_segment,$data_search);
+       // if(!$data_list):
+       //     return false;
+       // endif;
+
+       // $total = $this->m_bill_master->count_bill_history($data_search);
+       // $links          = '/bill/bill_history/'.uri_segment(3);
+       // $uri_segment    = 4;
+       // $per_page       = 20;
+       // paging_config($links,$total,$per_page,$uri_segment);
+
+       // $data['data_list']      = $data_list;
+       // $data['total_result']   = $total;
+
+       // templates('bill/v_list_bill_history',$data);
         $data_search['date_start']  = '';
         $data_search['date_end']    = '';
         $data_search['type_id']     = '';
@@ -406,7 +406,7 @@ class Bill extends CI_Controller
         endif;
 
         $data_bill_master = $this->m_bill_master->get_bill_master($bill_id);
-//        pre($data_bill_master);
+       // pre($data_bill_master);
 
         $get_details = $this->m_acc_account->get_account_details($data_bill_master['ACCOUNT_ID']);
         if(!$get_details):
@@ -415,7 +415,7 @@ class Bill extends CI_Controller
 
         $new_bill_item  = array();
         $bill_item      = $this->m_bill_item->get_bill_item($bill_id);
-//        pre($bill_item);
+       // pre($bill_item);
         if($bill_item):
             foreach ($bill_item as $row):
                 $row['amount']      = $row['AMOUNT'];
@@ -428,10 +428,7 @@ class Bill extends CI_Controller
         $data['statement_type'] = 'RESIT';
         $data['bill_master']    = $data_bill_master;
         $data['bill_item']      = $new_bill_item;
-//        pre($data['bill_item']);
-
-
-
+       // pre($data['bill_item']);
         templates('bill/v_current_bill',$data);
     }
 

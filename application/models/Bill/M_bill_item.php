@@ -11,9 +11,9 @@ class M_bill_item extends CI_Model
         db_select('i.*');
         db_select("to_char(i.dt_added, 'yyyy') as dt_added",false);
         db_from('b_item i');
-        db_join('tr_code t','i.tr_id=t.tr_id');
+        db_join('admin.mctrancode t','i.tr_code=t.mct_trcodenew');
         db_where('i.bill_id',$id);
-        db_order('t.priority');
+        db_order('t.mct_priort');
         $sql = db_get('');
         if($sql):
             return $sql->result_array();

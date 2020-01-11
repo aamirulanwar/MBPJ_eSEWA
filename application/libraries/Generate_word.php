@@ -537,6 +537,7 @@ class Generate_word {
         // $templateProcessor->setValue('deposit',num($get_details['COLLATERAL_RENTAL']));  
         // $templateProcessor->setValue('deposit_word',convertNumberToWord($get_details['COLLATERAL_RENTAL'])); 
             
+        
         ob_clean(); 
         $filename = 'Dokumen Tandatangan - '.$get_details['NAME'].'.docx';  
         $templateProcessor->saveAs($filename);  
@@ -544,11 +545,11 @@ class Generate_word {
         header('Content-Transfer-Encoding: binary');    
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');    
         header('Expires: 0');   
-        header('Pragma: public');   
+        header('Pragma: public');
         flush();    
         readfile($filename);    
-        unlink($filename);  
-        exit;   
+        unlink($filename);
+        exit;
     }
 
     private function generate_notice($id, $notice_level,$notice_info=array())
