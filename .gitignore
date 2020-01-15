@@ -1,11 +1,4 @@
 .DS_Store
-**application/config/*
-**application/file_map/*
-**application/file_upload/*
-**application/system/*
-**application/user_guide/*
-**application/vendor/*
-**application/config/*
 
 application/cache/*
 !application/cache/index.html
@@ -34,11 +27,5 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 *.stTheme.cache
 *.sublime-workspace
 *.sublime-project
-tests/tests/
-tests/results/
-**application\config\*
-**application\file_map\*
-**application\file_upload\*
-**application\system\*
-**application\user_guide\*
-**application\vendor\*
+/tests/tests/
+/tests/results/

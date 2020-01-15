@@ -390,7 +390,7 @@ class Bill extends CI_Controller
         $data_search['order_by']    = '';
         $this->session->set_userdata('arr_filter_record_transaction', $data_search);
 
-        redirect('/report/record_transaction/post');
+        redirect('/report/record_transaction/post/'.uri_segment(4).'/'.uri_segment(5));
 
     }
 

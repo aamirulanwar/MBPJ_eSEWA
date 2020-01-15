@@ -1,4 +1,10 @@
-<form id="my_form" method="post" action="/report/record_transaction/">
+<?php
+if(uri_segment(3)=='post'):
+    echo '<form id="my_form" method="post" action="/report/record_transaction/'.uri_segment(4).'/'.uri_segment(5).'">';
+else:
+    echo '<form id="my_form" method="post" action="/report/record_transaction/'.uri_segment(3).'/'.uri_segment(4).'">';
+endif;
+?>
     <div class="card card-accent-info">
         <div class="card-body">
             <h1 class="need-print" style="margin-bottom: 20px;"><?php echo $pagetitle?></h1>
@@ -72,15 +78,32 @@
                     <label class="no-need-print"><a href="javascript:;" onclick="document.getElementById('date_end').value=''">Kosongkan tarikh tamat</a></label>
                 </div>
             </div>
-<!--            <div class="form-group row">-->
-<!--                <div class="col-sm-4">-->
-<!--                    <input type="input" name="date_start" class="form-control date_class" placeholder="Tarikh mula" value="--><?php //echo set_value('date_start',$data_search['date_start'])?><!--">-->
-<!--                </div>-->
-<!--                <label class="col-sm-2 col-form-label text-center"> hingga </label>-->
-<!--                <div class="col-sm-4">-->
-<!--                    <input type="input" name="date_end" class="form-control date_class" placeholder="Tarikh tamat" value="--><?php //echo set_value('date_end',$data_search['date_end'])?><!--">-->
-<!--                </div>-->
-<!--            </div>-->
+            <?php
+            if(uri_segment(3) && uri_segment(3)!='post'):
+                ?>
+                <div class="form-group row">
+                    <div class="col-sm-12">
+                        <h5>No akaun : <?php echo uri_segment(3)?></h5>
+<!--                        <label class="col-form-label">No akaun</label>-->
+<!--                        <p class="form-control-plaintext">--><?php //echo uri_segment(3)?><!--</p>-->
+                    </div>
+                </div>
+            <?php
+            endif;
+            ?>
+            <?php
+                if(uri_segment(4) && uri_segment(3)!='post'):
+            ?>
+            <div class="form-group row">
+                <div class="col-sm-12">
+                    <h5>Nama : <?php echo urldecode(uri_segment(4))?></h5>
+<!--                    <label class="col-form-label">Nama</label>-->
+<!--                    <p class="form-control-plaintext">--><?php //echo urldecode(uri_segment(4))?><!--</p>-->
+                </div>
+            </div>
+            <?php
+                endif;
+            ?>
         </div>
         <div class="card-footer">
             <div class="col-sm-12">

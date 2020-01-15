@@ -2,6 +2,9 @@
     th{
         text-align: center;
     }
+    .table-aging{
+        font-size: 13px !important;
+    }
 </style>
 <form method="post" action="/report/gst_rental_simple/">
     <div class="card card-accent-info">
@@ -80,7 +83,7 @@
                     <br>
                     <br>
                     <?php
-                    echo '<table class="table table-hover table-bordered data-print table-scroll">';
+                    echo '<table class="table table-hover table-bordered data-print table-scroll table-aging">';
 //                        echo '<thead>';
 //                        echo '<tr>';
 //                        echo '<th>&nbsp;</th>';
@@ -96,17 +99,19 @@
                     $resit              = 0;
                     $resit_pelarasan    = 0;
                     $baki_all           = 0;
+                    $baki_tunggakan     = 0;
                     foreach ($data_gst as $key=>$row):
                         echo '<thead>';
 
                         echo '<tr>';
                         echo '<th width="5%">Bil</th>';
                         echo '<th width="20%"><strong>'.$key.'</strong></th>';
-                        echo '<th width="15%">Jumlah Bil (RM)</th>';
-                        echo '<th width="15%">Jumlah Bil Pelarasan (RM)</th>';
-                        echo '<th width="15%">Jumlah Bayaran / Resit (RM)</th>';
-                        echo '<th width="15%">Jumlah Bayaran / Resit Pelarasan (RM)</th>';
-                        echo '<th width="15%">Baki Perlu Dibayar (RM)</th>';
+                        echo '<th width="12%">Jumlah Bil (RM)</th>';
+                        echo '<th width="13%">Jumlah Bil Pelarasan (RM)</th>';
+                        echo '<th width="12%">Jumlah Bayaran / Resit (RM)</th>';
+                        echo '<th width="12%">Jumlah Bayaran / Resit Pelarasan (RM)</th>';
+                        echo '<th width="12%">Baki Tunggakan</th>';
+                        echo '<th width="17%">Baki Perlu Dibayar (RM)</th>';
                         echo '</tr>';
                         echo '</thead>';
                         echo '<tbody>';
@@ -119,26 +124,38 @@
                                 echo '<tr>';
                                 echo '<td width="5%">'.$i.'</td>';
                                 echo '<td width="20%" style="padding-left: 10px;">'.$category['CATEGORY_NAME'].'</td>';
-                                echo '<td width="15%" style="text-align: right">';
+                                echo '<td width="12%" style="text-align: right">';
                                     echo num($category['BILL'],3);
-                                    $bill +=$category['BILL'];
+                                    $bill += $category['BILL'];
                                 echo '</td>';
-                                echo '<td width="15%" style="text-align: right">';
+                                echo '<td width="13%" style="text-align: right">';
                                     echo num($category['JOURNAL_B'],3);
                                     $bill_pelarasan += $category['JOURNAL_B'];
                                 echo '</td>';
-                                echo '<td width="15%" style="text-align: right">';
+                                echo '<td width="12%" style="text-align: right">';
                                     echo num($category['RESIT'],3);
                                     $resit += $category['RESIT'];
                                 echo '</td>';
-                                echo '<td width="15%" style="text-align: right">';
+                                echo '<td width="12%" style="text-align: right">';
                                     echo num($category['JOURNAL_R'],3);
                                     $resit_pelarasan += $category['JOURNAL_R'];
                                 echo '</td>';
-                                echo '<td width="15%" style="text-align: right">';
+                                echo '<td width="12%" style="text-align: right">';
+                                    $total = 0;
+                                    if($category['data_report_prv']):
+                                        $total = ($category['data_report_prv']['BILL']+$category['data_report_prv']['JOURNAL_B'])-($category['data_report_prv']['RESIT']+$category['data_report_prv']['JOURNAL_R']);
+                                        echo num($total,3);
+                                    endif;
+                                    $baki_tunggakan += $total;
+                                echo '</td>';
+                                echo '<td width="17%" style="text-align: right">';
                                     $baki = ($category['BILL']+($category['JOURNAL_B']))-($category['RESIT']+($category['JOURNAL_R']));
                                     $baki_all += $baki;
                                     echo num($baki,3);
+                                    if($total>0):
+                                        echo '+'.num($total,3);
+                                        echo '<br>'.num($baki+$total,3);
+                                    endif;
                                 echo '</td>';
                                 echo '</tr>';
                             endforeach;
@@ -166,6 +183,9 @@
                                 Jumlah Bayaran / Resit Pelarasan (RM)
                             </th>
                             <th>
+                                Baki Tunggakan (RM)
+                            </th>
+                            <th>
                                 Baki Perlu Dibayar (RM)
                             </th>
                         </tr>
@@ -189,7 +209,15 @@
                             </td>
                             <td class="text-right">
                                 <?php
+                                echo num($baki_tunggakan,3);
+                                ?>
+                            </td><td class="text-right">
+                                <?php
                                 echo num($baki_all,3);
+                                if($baki_tunggakan>0):
+                                    echo '+'.num($baki_tunggakan,3);
+                                    echo '<br>'.num($baki_all+$baki_tunggakan,3);
+                                endif;
                                 ?>
                             </td>
                         </tr>

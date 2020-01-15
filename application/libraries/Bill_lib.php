@@ -91,6 +91,11 @@ class Bill_lib {
                 endif;
             endif;
 
+            if(empty($data_stage_1['item'])):
+                $data_return = $this->generate_empty_bill($data_stage_1);
+                $data_stage_1['item'] = $data_return;
+            endif;
+
 //            pre($data_stage_1);
 //            echo '<hr>';
             return $data_stage_1;
@@ -1016,6 +1021,46 @@ class Bill_lib {
         db_set_date_time('dt_added',timenow());
         db_insert('notice_log',$data_insert);
         return true;
+    }
+
+    function generate_empty_bill($data_bil){
+        $data_cur_bill  = $this->get_generate_empty_bill($data_bil);
+        $bill_item      = array();
+        if($data_cur_bill):
+            foreach ($data_cur_bill as $row):
+                $tr_code_details = $this->get_data_tr_code($row['TR_CODE']);
+
+                $data_bill_row['priority'] = 99;
+                if($tr_code_details):
+                    $data_bill_row['priority']      = $tr_code_details['MCT_PRIORT'];
+                endif;
+                $data_bill_row['tr_code_old']   = $row['TR_CODE_OLD'];
+                $data_bill_row['tr_code']       = $row['TR_CODE'];
+                $data_bill_row['amount']        = 0;
+                $data_bill_row['item_desc']     = $row['ITEM_DESC'];
+                $data_bill_row['gst_status']    = 0;
+//                $data_bill_row['item_id']       = $row['ITEM_ID'];
+
+                $bill_item[]                    = $data_bill_row;
+            endforeach;
+        endif;
+        return $bill_item;
+    }
+
+    function get_generate_empty_bill($data_bil){
+        db_select('i.tr_code,i.item_desc,i.TR_CODE_OLD');
+        db_from('B_ITEM i');
+        db_join('b_master m','m.bill_id = i.bill_id');
+        db_where('m.account_id',$data_bil['account_id']);
+        db_where('i.bill_category','B');
+        db_where('i.TR_GST_STATUS',0);
+        db_where('i.tr_code is not null');
+        db_group('tr_code,item_desc,TR_CODE_OLD');
+
+        $sql = db_get();
+        if($sql):
+            return $sql->result_array();
+        endif;
     }
 
 }
