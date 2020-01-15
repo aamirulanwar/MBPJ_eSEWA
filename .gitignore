@@ -1,5 +1,8 @@
 .DS_Store
 
+application/
+
+
 application/cache/*
 !application/cache/index.html
 
@@ -27,5 +30,11 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 *.stTheme.cache
 *.sublime-workspace
 *.sublime-project
-/tests/tests/
-/tests/results/
+
+tests/tests/
+tests/results/
+application/config/*.php
+*.docx
+application/config/database.php
+application/controllers/Welcome.php
+
