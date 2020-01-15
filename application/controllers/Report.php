@@ -486,7 +486,8 @@ class Report extends CI_Controller
 
 //                    pre($data_acc);
 //                    exit;
-                    $data_item  = $this->m_bill_item->report_rental_gst($data_search);
+                    $data_item      = $this->m_bill_item->report_rental_gst($data_search);
+                    $data_item_prv  = $this->m_bill_item->report_rental_gst_prv($data_search);
 
                     $row['data_acc']    = $data_acc;
                     if($data_item):
@@ -553,6 +554,8 @@ class Report extends CI_Controller
                             endif;
 
                             $item['jurnal']         = $data_jurnal;
+                            $row['prv_data']       = $data_item_prv;
+//                            pre($item['prv_data']);
 //                            $item['gst_actual']     = $data_gst_actual;
 
                             $row['data_item'][]     = $item;
@@ -565,8 +568,8 @@ class Report extends CI_Controller
                 endforeach;
             endif;
     //        echo last_query();
-            $data['data_gst']       = $data_report;
-            $data['data_search']    = $data_search;
+            $data['data_gst']           = $data_report;
+            $data['data_search']        = $data_search;
         else:
             $data['data_gst']       = array();
             $data['data_search']    = $data_search;
@@ -587,173 +590,6 @@ class Report extends CI_Controller
 
         templates('/report/v_rental_gst',$data);
     }
-
-//    function gst_rental_simple(){
-////        $this->auth->restrict_access($this->curuser,array(2001));
-//        $data['link_1']     = 'Laporan';
-//        $data['link_2']     = 'Bil gst (Ringkasan)';
-//        $data['link_3']     = '';
-//        $data['pagetitle']  = 'Laporan Bil GST (Ringkasan)';
-//
-//        $search_segment = uri_segment(3);
-//
-//        $post           = $this->input->post();
-//        $filter_session = get_session('arr_filter_rental_gst_simple');
-//        if(!empty($post)):
-//            $this->session->set_userdata('arr_filter_rental_gst_simple',$post);
-//            $data_search = $post;
-//        else:
-//            if(!empty($filter_session)):
-//                $data_search = $filter_session;
-//            else:
-//                $data_search['date_start']  = date_display(timenow(),'d M Y');
-//                $data_search['date_end']    = '';
-//                $data_search['type_id']     = '';
-//                $data_search['category_id'] = '';
-//            endif;
-//        endif;
-//        $data['data_type']   = $this->m_type->get_a_type();
-//
-//        if($_POST):
-//            $data_report = $this->m_bill_item->report_rental_gst_simple($data_search);
-////            echo last_query();
-////            pre($data_report);
-////            exit;
-////            pre($data_report);
-//            $data_report_new = array();
-//
-//
-//            if($data_report):
-//                foreach ($data_report as $row):
-//                    if($row['BILL_CATEGORY']=='B'):
-//                        if(isset($data_report_new[$row['TYPE_NAME']][$row['CATEGORY_NAME']]['b'])):
-//                            $data_report_new[$row['TYPE_NAME']][$row['CATEGORY_NAME']]['b'] = $data_report_new[$row['TYPE_NAME']][$row['CATEGORY_NAME']]['b']+$row['AMOUNT'];
-//                        else:
-//                            $data_report_new[$row['TYPE_NAME']][$row['CATEGORY_NAME']]['b'] = $row['AMOUNT'];
-//                        endif;
-//                    elseif ($row['BILL_CATEGORY']=='R'):
-//                        if(isset($data_report_new[$row['TYPE_NAME']][$row['CATEGORY_NAME']]['r'])):
-//                            $data_report_new[$row['TYPE_NAME']][$row['CATEGORY_NAME']]['r'] = $data_report_new[$row['TYPE_NAME']][$row['CATEGORY_NAME']]['r']+$row['AMOUNT'];
-//                        else:
-//                            $data_report_new[$row['TYPE_NAME']][$row['CATEGORY_NAME']]['r'] = $row['AMOUNT'];
-//                        endif;
-//                    elseif ($row['BILL_CATEGORY']=='J'):
-//                        if( substr($row['TR_CODE'], 0, 1)==2):
-//                            if(isset($data_report_new[$row['TYPE_NAME']][$row['CATEGORY_NAME']]['jr'])):
-//                                $data_report_new[$row['TYPE_NAME']][$row['CATEGORY_NAME']]['jr'] = $data_report_new[$row['TYPE_NAME']][$row['CATEGORY_NAME']]['jr']+$row['AMOUNT'];
-//                            else:
-//                                $data_report_new[$row['TYPE_NAME']][$row['CATEGORY_NAME']]['jr'] = $row['AMOUNT'];
-//                            endif;
-//                        elseif( substr($row['TR_CODE'], 0, 1)==1):
-//                            if(isset($data_report_new[$row['TYPE_NAME']][$row['CATEGORY_NAME']]['jb'])):
-//                                $data_report_new[$row['TYPE_NAME']][$row['CATEGORY_NAME']]['jb'] = $data_report_new[$row['TYPE_NAME']][$row['CATEGORY_NAME']]['jb']+$row['AMOUNT'];
-//                            else:
-//                                $data_report_new[$row['TYPE_NAME']][$row['CATEGORY_NAME']]['jb'] = $row['AMOUNT'];
-//                            endif;
-//                        endif;
-//                    endif;
-//                endforeach;
-//            endif;
-////            echo last_query();
-//            $data['data_gst']       = $data_report_new;
-//            $data['data_search']    = $data_search;
-//
-////            pre($data_report_new);
-////            $data['data_type']   = $this->m_type->get_a_type();
-//            //            $get_data_acc = $this->m_acc_account->acc_with_bill_gst($data_search);
-////            $data_report = array();
-////            if($get_data_acc):
-////                foreach ($get_data_acc as $key=>$row):
-////                    $data_search['account_id']  = $row['ACCOUNT_ID'];
-////                    $data_acc   = $this->m_acc_account->get_account_details($row['ACCOUNT_ID']);
-////                    $data_item  = $this->m_bill_item->report_rental_gst($data_search);
-////                    //                echo last_query();
-////                    $row['data_acc']    = $data_acc;
-////                    if($data_item):
-////                        foreach ($data_item as $item):
-////                            $data_jurnal        = array();
-////                            $data_gst_actual    = array();
-////                            if($item['BILL_CATEGORY']=='B'):
-////                                $data_search_item_jurnal['bill_month']      = $item['BILL_MONTH'];
-////                                $data_search_item_jurnal['bill_year']       = $item['BILL_YEAR'];
-////                                $data_search_item_jurnal['tr_code']         = $item['TR_CODE'];
-////                                $data_search_item_jurnal['account_id']      = $item['ACCOUNT_ID'];
-////                                //                            pre($data_search_item_jurnal);
-////                                $data_jurnal = $this->m_bill_item->get_item_jurnal($data_search_item_jurnal);
-////                            elseif ($item['BILL_CATEGORY']=='R'):
-////                                $data_search_item_jurnal['bill_month']      = $item['BILL_MONTH'];
-////                                $data_search_item_jurnal['bill_year']       = $item['BILL_YEAR'];
-////                                $data_search_item_jurnal['tr_code']         = $item['TR_CODE'];
-////                                $data_search_item_jurnal['account_id']      = $item['ACCOUNT_ID'];
-////                                //                            pre($data_search_item_jurnal);
-////                                $data_jurnal = $this->m_bill_item->get_item_jurnal($data_search_item_jurnal);
-////                            endif;
-////
-////                            if($item['GST_TYPE']==GST_TYPE_RENTAL):
-////                                $data_search_item_jurnal['bill_month']      = $item['BILL_MONTH'];
-////                                $data_search_item_jurnal['bill_year']       = $item['BILL_YEAR'];
-////                                $data_search_item_jurnal['tr_code']         = $item['TR_CODE'];
-////                                $data_search_item_jurnal['account_id']      = $item['ACCOUNT_ID'];
-////
-////                                $data_search_tr_code['tr_id'] = $data_acc['TR_ID_CATEGORY'];
-////                                $tr_code = $this->m_tr_code->get_tr_code($data_search_tr_code);
-////                                if($tr_code):
-////
-////                                    $data_search_item_jurnal['bill_month']      = $item['BILL_MONTH'];
-////                                    $data_search_item_jurnal['bill_year']       = $item['BILL_YEAR'];
-////                                    $data_search_item_jurnal['tr_code']         = $tr_code['MCT_TRCODE_NEW'];
-////                                    $data_search_item_jurnal['account_id']      = $item['ACCOUNT_ID'];
-////                                    $data_gst_actual = $this->m_bill_item->get_item_bill($data_search_item_jurnal);
-////                                    $item['gst_actual']     = $data_gst_actual;
-////                                endif;
-////                            elseif ($item['GST_TYPE']==GST_TYPE_WATER):
-////                                $data_search_item_jurnal['bill_month']      = $item['BILL_MONTH'];
-////                                $data_search_item_jurnal['bill_year']       = $item['BILL_YEAR'];
-////                                $data_search_item_jurnal['tr_code']         = '11110016';
-////                                $data_search_item_jurnal['account_id']      = $item['ACCOUNT_ID'];
-////                                $data_gst_actual = $this->m_bill_item->get_item_bill($data_search_item_jurnal);
-////                                $item['gst_actual']     = $data_gst_actual;
-////                            elseif ($item['GST_TYPE']==GST_TYPE_TIPPING):
-////                                $data_search_item_jurnal['bill_month']      = $item['BILL_MONTH'];
-////                                $data_search_item_jurnal['bill_year']       = $item['BILL_YEAR'];
-////                                $data_search_item_jurnal['tr_code']         = '11110014';
-////                                $data_search_item_jurnal['account_id']      = $item['ACCOUNT_ID'];
-////                                $data_gst_actual = $this->m_bill_item->get_item_bill($data_search_item_jurnal);
-////                                $item['gst_actual']     = $data_gst_actual;
-////                            endif;
-////
-////                            $item['jurnal']         = $data_jurnal;
-////                            $item['gst_actual']     = $data_gst_actual;
-////
-////                            $row['data_item'][]     = $item;
-////                        endforeach;
-////                        $data_report[] = $row;
-////                    endif;
-////                endforeach;
-////            endif;
-////            //        echo last_query();
-////            $data['data_gst']       = $data_report;
-////            $data['data_search']    = $data_search;
-//        else:
-//            $data['data_gst']       = array();
-//            $data['data_search']    = $data_search;
-//        endif;
-//
-////        pre($data);
-////        exit;
-////        pre($data_gst);
-////        exit;
-////        $links          = '/account/account_list';
-////        $uri_segment    = 3;
-////        $per_page       = 20;
-////        paging_config($links,$total,$per_page,$uri_segment);
-////
-////        $data_list              = $this->m_bill_master->get_highest_oustanding_bill($per_page,$search_segment,$data_search);
-////        $data['total_result']   = $total;
-////        $data['data_list']      = $data_list;
-//
-//        templates('/report/v_rental_gst_simple',$data);
-//    }
 
     function gst_rental_simple(){
 //        $this->auth->restrict_access($this->curuser,array(2001));
@@ -783,16 +619,22 @@ class Report extends CI_Controller
         $data['data_type']   = $this->m_type->get_a_type();
 
         if($_POST):
-            $data_report = $this->m_bill_item->report_rental_gst_simple($data_search);
-//            echo last_query();
-//            pre($data_report);
-//            exit;
-//            pre($data_report);
+            $data_report        = $this->m_bill_item->report_rental_gst_simple($data_search);
+           // var_dump($data);
+           pre($data_report);
+           die();
+           // echo last_query();
+           // pre($data_report);
+           // exit;
             $data_report_new = array();
 
 
             if($data_report):
                 foreach ($data_report as $row):
+                    $data_report_prv        = $this->m_bill_item->report_rental_gst_simple_prv($data_search,$row['CATEGORY_ID']);
+                    $row['data_report_prv'] = $data_report_prv;
+
+//                    pre($row);
                     $data_report_new[$row['TYPE_NAME']][] = $row;
                 endforeach;
             endif;

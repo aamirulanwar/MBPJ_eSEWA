@@ -159,17 +159,52 @@
                                         $total_amount_b_jurnal  = 0;
                                         $total_amount_r         = 0;
                                         $total_amount_r_jurnal  = 0;
+
+                                        $amount_b2   = 0;
+                                        $amount_r2   = 0;
+                                        $jurnal_b2   = 0;
+                                        $jurnal_r2   = 0;
+
+                                        if($row['prv_data']['BILL']>0 || $row['prv_data']['RESIT']>0 || $row['prv_data']['JOURNAL_B']>0 || $row['prv_data']['JOURNAL_R']>0):
+                                            echo '<tr>';
+
+                                            $amount_b2      = $row['prv_data']['BILL'];
+                                            $total_all_b    = $total_all_b+$amount_b2;
+                                            $total_amount_b = $total_amount_b+$amount_b2;
+
+                                            $amount_r2      = $row['prv_data']['RESIT'];
+                                            $total_all_r    = $total_all_r+$amount_r2;
+                                            $total_amount_r = $total_amount_r+$amount_r2;
+
+                                            $jurnal_b2              = $row['prv_data']['JOURNAL_B'];
+                                            $total_amount_b_jurnal  = $total_amount_b_jurnal+$jurnal_b2;
+                                            $total_all_jurnal_b     = $total_all_jurnal_b+$jurnal_b2;
+
+                                            $jurnal_r               = $row['prv_data']['JOURNAL_R'];
+                                            $total_amount_r_jurnal  = $total_amount_r_jurnal+$jurnal_r;
+                                            $total_all_jurnal_r     = $total_all_jurnal_r+$jurnal_r;
+
+                                            echo '<td>-</td>';
+                                            echo '<td>JUMLAH SEBELUM</td>';
+                                            echo '<td style="text-align: right">'.num($amount_b2,3).'</td>';
+                                            echo '<td style="text-align: right">'.num($amount_r2,3).'</td>';
+                                            echo '<td style="text-align: right">'.num($jurnal_b2,3).'</td>';
+                                            echo '<td style="text-align: right">'.num($jurnal_r2,3).'</td>';
+                                            echo '</tr>';
+                                        endif;
+
                                         foreach ($row['data_item'] as $data_item):
+
                                             echo '<tr>';
                                             $gst_actual = '-';
                                             if($data_item['gst_actual']):
                                                 $gst_actual = $data_item['gst_actual'][0]['AMOUNT'];
                                             endif;
 
-                                            $amount_b   = 0;
-                                            $amount_r   = 0;
-                                            $jurnal_b   = 0;
-                                            $jurnal_r   = 0;
+                                            $amount_b   = 0+$amount_b2;
+                                            $amount_r   = 0+$amount_r2;
+                                            $jurnal_b   = 0+$jurnal_b2;
+                                            $jurnal_r   = 0+$jurnal_r2;
                                             if($data_item['BILL_CATEGORY']=='B'):
                                                 $amount_b       = $data_item['AMOUNT'];
                                                 $total_all_b    = $total_all_b+$amount_b;
