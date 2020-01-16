@@ -62,10 +62,10 @@ class payment_process_lib{
                     $data_insert_master['bill_category']    = $b_category;
 
                     $bill_prev_year = $data_insert_master['bill_year'] - 1;
-                   // if (INSERT_BILL):
+//                    if (INSERT_BILL):
                     $bill_id = $this->insert_bill_master($data_insert_master);
                     echo 'Bill master insert for account id ' . $acc_no . '<br>';
-                   // endif;
+//                    endif;
                 endif;
 
                 #check tr_type
@@ -85,7 +85,7 @@ class payment_process_lib{
 
                 #check from admin table here ---------------
                 if (!empty($get_tr_code)):
-                   // $tr_id      = $get_tr_code['TR_ID'];
+//                    $tr_id      = $get_tr_code['TR_ID'];
                     $priority   = $get_tr_code['MCT_PRIORT'];
                     $mct_trdesc = $get_tr_code['MCT_TRDESC'];
                 endif;
@@ -105,7 +105,7 @@ class payment_process_lib{
 
                 //----INSERT INTO TABLE:B_ITEM----//
                 $data_insert_item['bill_id']        = $bill_id;
-               // $data_insert_item['account_id']     = $payment['ACCOUNT_NUMBER'];
+//                $data_insert_item['account_id']     = $payment['ACCOUNT_NUMBER'];
                 $data_insert_item['tr_code']        = $tr_code;
                 $data_insert_item['dt_added']       = $payment['DT_ADDED'];
                 $data_insert_item['bill_category']  = 'R';
@@ -163,8 +163,8 @@ class payment_process_lib{
                 #resit menjadi lebihan
                 if ($balance_amount != 0):
                     $pending_item = $this->get_pending_item($acc_id, '', '', date('m', strtotime($dt_bill)), date('Y', strtotime($dt_bill)), 0);
-                   // pre($pending_item);
-                   // die();
+//                    pre($pending_item);
+//                    die();
                     foreach ($pending_item as $item):
                         $balance_tobe_paid = ($item['AMOUNT'] - $item['TOTAL_PAID'] + $item['TOTAL_JOURNAL']);
                         if ($balance_tobe_paid > 0):
@@ -262,6 +262,7 @@ class payment_process_lib{
                     endforeach;
                 endif;
 
+//
             endforeach;
         endif;
     }

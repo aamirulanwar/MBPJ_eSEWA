@@ -620,12 +620,10 @@ class Report extends CI_Controller
 
         if($_POST):
             $data_report        = $this->m_bill_item->report_rental_gst_simple($data_search);
-           // var_dump($data);
-           pre($data_report);
-           die();
-           // echo last_query();
-           // pre($data_report);
-           // exit;
+//            echo last_query();
+//            pre($data_report);
+//            exit;
+//            pre($data_report);
             $data_report_new = array();
 
 
@@ -778,6 +776,7 @@ class Report extends CI_Controller
         $data['data_account']       = $this->m_acc_account->get_account();
         $data['data_code_object']   = $this->m_tran_code->get_tr_code_list();
 //        pre($data['data_account']);
+//        pre($data['data_account']);
 //        exit;
         $new_data_report = array();
 
@@ -785,8 +784,14 @@ class Report extends CI_Controller
             $data_report = $this->m_bill_item->record_transaction($data_search);
             $data['data_report'] = $data_report;
             $data['data_search'] = $data_search;
+
+            $data['acc_details'] = array();
+            if($data_search['account_id']):
+                $data['acc_details'] = $this->m_acc_account->get_account_details($data_search['account_id']);
+            endif;
         else:
             $data['data_report'] = array();
+            $data['acc_details'] = array();
             $data['data_search'] = $data_search;
         endif;
 
