@@ -11,9 +11,9 @@ class M_bill_item extends CI_Model
         db_select('i.*');
         db_select("to_char(i.dt_added, 'yyyy') as dt_added",false);
         db_from('b_item i');
-        db_join('admin.mctrancode t','i.tr_code=t.mct_trcodenew');
+        db_join('tr_code t','i.tr_id=t.tr_id');
         db_where('i.bill_id',$id);
-        db_order('t.mct_priort');
+        db_order('t.priority');
         $sql = db_get('');
         if($sql):
             return $sql->result_array();
@@ -142,6 +142,8 @@ class M_bill_item extends CI_Model
 
         if(isset($data_search['date_start']) && having_value($data_search['date_start'])):
             db_where("i.dt_added < to_date('".date('d-M-y',strtotime($data_search['date_start']))."')");
+        else:
+            db_where("i.dt_added < to_date('".date('d-M-y',strtotime('2013-01-01'))."')");
         endif;
 
 //        db_where('m.bill_month >= 4');
@@ -296,6 +298,8 @@ class M_bill_item extends CI_Model
 
         if(isset($data_search['date_start']) && having_value($data_search['date_start'])):
             db_where("m.dt_added < to_date('".date('d-M-y',strtotime($data_search['date_start']))."')");
+        else:
+            db_where("m.dt_added < to_date('".date('d-M-y',strtotime('2013-01-01'))."')");
         endif;
 
         if(isset($data_search['type_id']) && having_value($data_search['type_id'])):

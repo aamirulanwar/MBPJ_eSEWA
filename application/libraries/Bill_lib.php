@@ -149,20 +149,20 @@ class Bill_lib {
             if($code_category):
                 $insert_code['BILL_ID']     = $bill_id;
                 $insert_code['TR_CODE']     = $code_category['MCT_TRCODENEW'];
-               // $insert_code['TR_ID']       = $code_category['TR_ID'];
+//                $insert_code['TR_ID']       = $code_category['TR_ID'];
                 $insert_code['AMOUNT']      = $data_acc['RENTAL_CHARGE'];
                 $insert_code['PRIORITY']    = $code_category['MCT_PRIORT'];
-               // $insert_code['TR_TYPE']     = $code_category['TR_TYPE'];
+//                $insert_code['TR_TYPE']     = $code_category['TR_TYPE'];
                 $insert_code['ACCOUNT_ID']  = $account_id;
                 $insert_code['ITEM_DESC']   = $code_category['MCT_TRDESC'];
                 $insert_code['TR_CODE_OLD'] = $code_category['MCT_TRCODE'];
             else:
                 $insert_code['BILL_ID']     = $bill_id;
                 $insert_code['TR_CODE']     = $data_acc['TRCODE_CATEGORY'];
-               // $insert_code['TR_ID']       = $code_category['TR_ID'];
+//                $insert_code['TR_ID']       = $code_category['TR_ID'];
                 $insert_code['AMOUNT']      = $data_acc['RENTAL_CHARGE'];
                 $insert_code['PRIORITY']    = 1;
-               // $insert_code['TR_TYPE']     = $code_category['TR_TYPE'];
+//                $insert_code['TR_TYPE']     = $code_category['TR_TYPE'];
                 $insert_code['ACCOUNT_ID']  = $account_id;
                 $insert_code['ITEM_DESC']   = $data_acc['TRCODE_CATEGORY'];
                 $insert_code['TR_CODE_OLD'] = $data_acc['TRCODE_CATEGORY_OLD'];
@@ -187,13 +187,13 @@ class Bill_lib {
                 if($code_gst):
                     $insert_code['BILL_ID']     = $bill_id;
                     $insert_code['TR_CODE']     = $code_gst['MCT_TRCODENEW'];
-                   // $insert_code['TR_ID']       = $code_gst['TR_ID'];
-                   // $insert_code['AMOUNT']      = num(($code_gst['PERCENTAGE']*$data_acc['RENTAL_CHARGE'])/100,1);
+    //                $insert_code['TR_ID']       = $code_gst['TR_ID'];
+    //                $insert_code['AMOUNT']      = num(($code_gst['PERCENTAGE']*$data_acc['RENTAL_CHARGE'])/100,1);
                     #get percent
                     $perc_gst = get_perc_from_sentence($code_gst['MCT_TRDESC']);
                     $insert_code['AMOUNT']      = num(($perc_gst*$data_acc['RENTAL_CHARGE'])/100,1);
                     $insert_code['PRIORITY']    = $code_gst['MCT_PRIORT'];
-                   // $insert_code['TR_TYPE']     = $code_gst['TR_TYPE'];
+    //                $insert_code['TR_TYPE']     = $code_gst['TR_TYPE'];
                     $insert_code['ACCOUNT_ID']  = $account_id;
                     $insert_code['GST_TYPE']        = 1;
                     $insert_code['TR_GST_STATUS']   = 1;
@@ -220,10 +220,10 @@ class Bill_lib {
                 if($code_waste_management):
                     $insert_code['BILL_ID']     = $bill_id;
                     $insert_code['TR_CODE']     = $code_waste_management['MCT_TRCODENEW'];
-                   // $insert_code['TR_ID']       = $code_waste_management['TR_ID'];
+//                    $insert_code['TR_ID']       = $code_waste_management['TR_ID'];
                     $insert_code['AMOUNT']      = $data_acc['WASTE_MANAGEMENT_CHARGE'];
                     $insert_code['PRIORITY']    = $code_waste_management['MCT_PRIORT'];
-                   // $insert_code['TR_TYPE']     = $code_waste_management['TR_TYPE'];
+//                    $insert_code['TR_TYPE']     = $code_waste_management['TR_TYPE'];
                     $insert_code['ACCOUNT_ID']  = $account_id;
                     $insert_code['ITEM_DESC']   = $code_waste_management['MCT_TRDESC'];
                     $insert_code['GST_TYPE']        = 1;
@@ -249,12 +249,12 @@ class Bill_lib {
                     if($code_gst):
                         $insert_code['BILL_ID']     = $bill_id;
                         $insert_code['TR_CODE']     = $code_gst_waste['MCT_TRCODENEW'];
-                       // $insert_code['TR_ID']       = $code_gst_waste['TR_ID'];
-                       // $insert_code['AMOUNT']      = num(($code_gst_waste['PERCENTAGE']*$data_acc['WASTE_MANAGEMENT_CHARGE'])/100,1);
+    //                    $insert_code['TR_ID']       = $code_gst_waste['TR_ID'];
+    //                    $insert_code['AMOUNT']      = num(($code_gst_waste['PERCENTAGE']*$data_acc['WASTE_MANAGEMENT_CHARGE'])/100,1);
                         $perc_gst = get_perc_from_sentence($code_gst_waste['MCT_TRDESC']);
                         $insert_code['AMOUNT']      = num(($perc_gst*$data_acc['WASTE_MANAGEMENT_CHARGE'])/100,1);
                         $insert_code['PRIORITY']    = $code_gst_waste['MCT_PRIORT'];
-                       // $insert_code['TR_TYPE']     = $code_gst_waste['TR_TYPE'];
+    //                    $insert_code['TR_TYPE']     = $code_gst_waste['TR_TYPE'];
                         $insert_code['ACCOUNT_ID']  = $account_id;
                         $insert_code['ITEM_DESC']   = $code_gst_waste['MCT_TRDESC'];
                         $insert_code['TR_CODE_OLD'] = $code_gst_waste['MCT_TRCODE'];
@@ -283,10 +283,10 @@ class Bill_lib {
                 if($code_lms):
                     $insert_code['BILL_ID']     = $bill_id;
                     $insert_code['TR_CODE']     = $code_lms['MCT_TRCODENEW'];
-                   // $insert_code['TR_ID']       = $code_waste_management['TR_ID'];
+//                    $insert_code['TR_ID']       = $code_waste_management['TR_ID'];
                     $insert_code['AMOUNT']      = LMS_CHARGE;
                     $insert_code['PRIORITY']    = $code_lms['MCT_PRIORT'];
-                   // $insert_code['TR_TYPE']     = $code_waste_management['TR_TYPE'];
+//                    $insert_code['TR_TYPE']     = $code_waste_management['TR_TYPE'];
                     $insert_code['ACCOUNT_ID']  = $account_id;
                     $insert_code['ITEM_DESC']   = $code_lms['MCT_TRDESC'];
                     $insert_code['GST_TYPE']        = 0;
@@ -306,10 +306,10 @@ class Bill_lib {
                 endif;
             endif;
 
-           // pre($bill_item);
+//            pre($bill_item);
 
-           // pre($tunggakan_tahun_lepas);
-           // exit;
+//            pre($tunggakan_tahun_lepas);
+//            exit;
 
             #tunggakan tahun ini sum all group by
 
@@ -317,7 +317,7 @@ class Bill_lib {
             $data_update_master['total_amount'] = $total_sum['TOTAL_AMOUNT'];
             $this->update_bill_master($bill_id,$data_update_master);
 
-           // return $bill_id;
+//            return $bill_id;
         else:
 
             $data_bill_item = array();
@@ -343,13 +343,12 @@ class Bill_lib {
 
             if($data_bill_item):
                 foreach ($data_bill_item as $row_item):
-                   // pre($row_item);
                     $data_bill_cur = array();
 
                     $get_bill_sum   = $this->get_bill_sum($account_id,$row_item['TR_CODE'],'semasa');
                     $total_bil      = $get_bill_sum['BILL'] + ($get_bill_sum['JOURNAL']);
 
-                   // pre($get_bill_sum);
+//                    pre($get_bill_sum);
 
                     $total_paid = $total_paid-$total_bil;
 
@@ -359,11 +358,11 @@ class Bill_lib {
                     $get_resit_sum  = $this->get_bill_sum($account_id,$code_payment,'semasa');
                     $total_resit    = $get_resit_sum['RESIT'] + ($get_resit_sum['JOURNAL']);
 
-                   // pre($get_resit_sum);
+//                    pre($get_resit_sum);
 
                     $total_amount = $total_bil - $total_resit;
 
-                    if($total_amount>0 || $row_item['TR_GST_STATUS']==1):
+                    if($total_amount>0 || $row_item['TR_GST_STATUS']==1 || $total_amount==0):
                         $tr_code_details = $this->get_data_tr_code($row_item['TR_CODE']);
 
                         $data_bill_cur['tr_code_old']   = '';
@@ -388,8 +387,8 @@ class Bill_lib {
             endif;
         endif;
 
-       // pre($bill_item);
-       // exit;
+//        pre($bill_item);
+//        exit;
 
         $up_level_notice = false;
 
@@ -401,10 +400,10 @@ class Bill_lib {
             if($data_acc['BILL_TYPE']==BILL_TYPE_MONTHLY && ($today>$date_faedah) && $charge_faedah==false && $data_acc['STATUS_ACC']==STATUS_ACCOUNT_ACTIVE):
                 $insert_faedah['BILL_ID']     = $bill_id;
                 $insert_faedah['TR_CODE']     = TR_CODE_FAEDAH_8_PERC;
-                   // $insert_code['TR_ID']       = $code_category['TR_ID'];
+    //                $insert_code['TR_ID']       = $code_category['TR_ID'];
                 $insert_faedah['AMOUNT']      = round(CHARGE_FAEDAH_SEWAAN_PERC*$data_acc['RENTAL_CHARGE'], 2);
                 $insert_faedah['PRIORITY']    = CHARGE_FAEDAH_PRIORITY;
-                   // $insert_code['TR_TYPE']     = $code_category['TR_TYPE'];
+    //                $insert_code['TR_TYPE']     = $code_category['TR_TYPE'];
                 $insert_faedah['ACCOUNT_ID']  = $account_id;
                 $insert_faedah['ITEM_DESC']   = TR_CODE_DESC_FAEDAH_8_PERC;
                 $insert_faedah['TR_CODE_OLD'] = TR_CODE_FAEDAH_8_PERC_OLD;
@@ -678,6 +677,7 @@ class Bill_lib {
         if($data['bill_id']):
             db_where('bill_id',$data['bill_id']);
         endif;
+        db_where('bill_category','B');
 
         $sql = db_get();
         if($sql):
