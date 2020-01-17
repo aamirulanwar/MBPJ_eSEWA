@@ -396,6 +396,7 @@ class Generate_word {
     private function generate_agreement($id)
     {
         $get_details = $this->ci->m_acc_account->get_account_details($id);
+        $application_details = $this->ci->m_p_application->get_application_agreement_details($id);
 
         if($get_details['FORM_TYPE']==1):
             if($get_details['WASTE_MANAGEMENT_BILLS']==1):
@@ -427,6 +428,8 @@ class Generate_word {
         
         $templateProcessor->setValue('letter_date',date_display(timenow(),'d F Y','malay'));
         $templateProcessor->setValue('letter_date_hijri',date_display_hijri(timenow()));
+        $templateProcessor->setValue('letter_date1',$application_details['DATE_APPLICATION']);
+        $templateProcessor->setValue('file_number',$application_details['FILE_NUMBER']);
         $templateProcessor->setValue('file_number_juu',$get_details['FILE_NUMBER_JUU']);
         $templateProcessor->setValue('name',$get_details['NAME']);
         $templateProcessor->setValue('name_caps',strtoupper($get_details['NAME']));
