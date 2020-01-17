@@ -620,10 +620,12 @@ class Report extends CI_Controller
 
         if($_POST):
             $data_report        = $this->m_bill_item->report_rental_gst_simple($data_search);
+
            // echo last_query();
            // pre($data_report);
            // exit;
-            $data_report_new = array();
+
+      $data_report_new = array();
 
 
             if($data_report):
