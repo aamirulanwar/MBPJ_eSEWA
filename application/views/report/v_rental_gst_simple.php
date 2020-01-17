@@ -126,7 +126,7 @@
                                 echo '<td width="20%" style="padding-left: 10px;">'.$category['CATEGORY_NAME'].'</td>';
                                 echo '<td width="12%" style="text-align: right">';
                                     echo num($category['BILL'],3);
-                                    $bill +=$category['BILL'];
+                                    $bill += $category['BILL'];
                                 echo '</td>';
                                 echo '<td width="13%" style="text-align: right">';
                                     echo num($category['JOURNAL_B'],3);
@@ -144,8 +144,6 @@
                                     $total = 0;
                                     if($category['data_report_prv']):
                                         $total = ($category['data_report_prv']['BILL']+$category['data_report_prv']['JOURNAL_B'])-($category['data_report_prv']['RESIT']+$category['data_report_prv']['JOURNAL_R']);
-                                        echo num($total,3);
-                                    else:
                                         echo num($total,3);
                                     endif;
                                     $baki_tunggakan += $total;
