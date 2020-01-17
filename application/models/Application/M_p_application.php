@@ -143,6 +143,34 @@ class M_p_application extends CI_Model
         endif;
     }
 
+    //this function for agreement document
+
+    function get_application_agreement_details($id){
+        db_select('a.*,applicant.*,t.*,c.*,r.*,asset.asset_name');
+        db_select('a.rental_fee as rental_fee');
+        db_select('a.bill_type as bill_type');
+        db_select('applicant.address_1 as applicant_address');
+        db_select('a.remark as application_remark');
+        db_select("to_char(a.dt_added, 'yyyy-mm-dd hh24:mi:ss') as dt_added",false);
+        db_select("nvl(to_char(a.date_start, 'yyyy-mm-dd hh24:mi:ss'),'') as date_start",false);
+        db_select("nvl(to_char(a.date_end, 'yyyy-mm-dd hh24:mi:ss'),'') as date_end",false);
+        db_select("to_char(applicant.date_of_birth, 'dd-mm-yyyy') as date_of_birth",false);
+        db_select("nvl(to_char(applicant.starting_of_service_date, 'dd-mm-yyyy'),'') as starting_of_service_date",false);
+        db_join('p_applicant applicant','applicant.applicant_id = a.applicant_id');
+        db_join('a_type t','t.type_id = a.type_id');
+        db_join('a_category c','c.category_id = a.category_id');
+        db_join('a_asset asset','a.asset_id = asset.asset_id','left');
+        db_join('a_rental_use r','r.rental_use_id = a.rental_use_id','left');
+        db_from('p_application a');
+        db_where('a.account_id',$id);
+        db_where('a.soft_delete',SOFT_DELETE_FALSE);
+        $sql = db_get();
+        if($sql):
+            return $sql->row_array();
+        endif;
+    }
+
+
     function get_application_by_search($data_search=array()){
         db_select('a.*,applicant.*,t.*,c.*,r.*');
         db_select("to_char(a.dt_added, 'yyyy-mm-dd hh24:mi:ss') as dt_added",false);
