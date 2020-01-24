@@ -155,9 +155,9 @@ class Account extends CI_Controller
             validation_rules('address_3','<strong>alamat kediaman</strong>','required');
             validation_rules('postcode','<strong>poskod</strong>','required');
             validation_rules('address_state','<strong>alamat negeri</strong>','required');
-           // validation_rules('residence_information','<strong>maklumat kediaman</strong>','required');
-           // validation_rules('position','<strong>jawatan</strong>','required');
-           // validation_rules('department_id','<strong>bahagian/unit</strong>','required');
+//            validation_rules('residence_information','<strong>maklumat kediaman</strong>','required');
+//            validation_rules('position','<strong>jawatan</strong>','required');
+//            validation_rules('department_id','<strong>bahagian/unit</strong>','required');
             validation_rules('starting_of_service_date','<strong>tarikh mula berkhidmat</strong>','required');
             validation_rules('home_phone_number','<strong>no. telefon rumah</strong>','');
             validation_rules('mobile_phone_number','<strong>no. telefon bimbit</strong>','required');
@@ -441,7 +441,7 @@ class Account extends CI_Controller
                 endif;
 
                 load_library('Ref_number_lib');
-                $ref_number         = strtoupper($this->ref_number_lib->get_ref(REF_NUMBER_TYPE_ACCOUNT));
+                $ref_number         = strtoupper($this->ref_number_lib->get_ref(REF_NUMBER_TYPE_ACCOUNT,'','',$acc_id));
 
                 $data_update_acc['account_number'] = $ref_number;
                 $update_acc = $this->m_acc_account->update_account($data_update_acc,$acc_id);
@@ -531,9 +531,9 @@ class Account extends CI_Controller
             validation_rules('address_3','<strong>bandar</strong>','required');
             validation_rules('postcode','<strong>poskod</strong>','required');
             validation_rules('address_state','<strong>alamat negeri</strong>','required');
-           // validation_rules('mail_address_1','<strong>alamat surat menyurat</strong>','required');
-           // validation_rules('mail_postcode','<strong>poskod</strong>','required');
-           // validation_rules('mail_state','<strong>alamat negeri</strong>','required');
+//            validation_rules('mail_address_1','<strong>alamat surat menyurat</strong>','required');
+//            validation_rules('mail_postcode','<strong>poskod</strong>','required');
+//            validation_rules('mail_state','<strong>alamat negeri</strong>','required');
             validation_rules('mobile_phone_number','<strong>no. telefon bimbit</strong>','required');
             validation_rules('home_phone_number','<strong>no. telefon rumah</strong>');
             validation_rules('category_id','<strong>kod kategori harta sewaan yang dipohon </strong>','required');
@@ -930,7 +930,7 @@ class Account extends CI_Controller
             validation_rules('name','<strong>nama syarikat</strong>','required');
             validation_rules('company_registration_number','<strong>no. pendaftaran syarikat</strong>','required');
 
-           // validation_rules('address','<strong>alamat syarikat</strong>','required');
+//            validation_rules('address','<strong>alamat syarikat</strong>','required');
             validation_rules('address_1','<strong>alamat syarikat</strong>','required');
             validation_rules('address_3','<strong>bandar</strong>','required');
             validation_rules('postcode','<strong>poskod</strong>','required');
@@ -1065,7 +1065,7 @@ class Account extends CI_Controller
 
             endif;
 
-           // $data_update_acc['user_id']         = $user_id;
+//            $data_update_acc['user_id']         = $user_id;
             $data_update_acc['notice_level']             = input_data('notice_level');
 
             $data_update_acc['type_id']         = $data['data_details']['TYPE_ID'];
@@ -1140,8 +1140,8 @@ class Account extends CI_Controller
                 endif;
             endif;
 
-           // pre($data_update_acc);
-           // exit;
+//            pre($data_update_acc);
+//            exit;
             $acc_status = $this->m_acc_account->update_account($data_update_acc,$id);
 
             if($acc_status):
@@ -1163,7 +1163,7 @@ class Account extends CI_Controller
 
     function account_list(){
         $this->auth->restrict_access($this->curuser,array(5003));
-        
+
         $data['link_1']     = 'Akaun sewaan';
         $data['link_2']     = 'Senarai akaun';
         $data['link_3']     = '';
@@ -1288,14 +1288,14 @@ class Account extends CI_Controller
         $this->generate_word->word_document($id, DOC_AGREEMENT);
     }
 
-    function doc_signature(){    
+    function doc_signature(){
         $id = urlDecrypt(uri_segment(3));
-        if(!is_numeric($id)):   
-            return false; 
+        if(!is_numeric($id)):
+            return false;
         elseif(is_numeric($id)):
             // $this->m_c_document->get_record_exist($id,'DOC_SIGNATURE');
             echo $this->m_c_document->update_document_printed($id,'DOC_SIGNATURE');
-            load_library('Generate_word');  
+            load_library('Generate_word');
 
             $this->generate_word->word_document($id, DOC_SIGNATURE);
         endif;
@@ -1695,10 +1695,10 @@ class Account extends CI_Controller
                 set_notify('user',TEXT_DELETE_UNSUCCESSFUL,2);
                 echo TEXT_DELETE_UNSUCCESSFUL;
             endif;
-           // else:
-           //     set_notify('user','Data tidak boleh dipadam kerana terdapat pengguna menggunakan kumpulan pengguna ini',2);
-           // endif;
-           // echo 1;
+//            else:
+//                set_notify('user','Data tidak boleh dipadam kerana terdapat pengguna menggunakan kumpulan pengguna ini',2);
+//            endif;
+//            echo 1;
         endif;
     }
 

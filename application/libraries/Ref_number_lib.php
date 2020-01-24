@@ -22,7 +22,7 @@ class Ref_number_lib {
         load_model('Account/M_acc_running_number', 'm_acc_running_number');
     }
     
-    function get_ref($type=REF_NUMBER_TYPE_APPLICATION,$type_code='MM',$year=''){
+    function get_ref($type=REF_NUMBER_TYPE_APPLICATION,$type_code='MM',$year='',$id=0){
         if (empty($year)):
             $date = date('Y-m-d');
         endif;
@@ -37,7 +37,8 @@ class Ref_number_lib {
             $data_update['CUR_RUNNING_NUMBER']  = $cur_number['CUR_RUNNING_NUMBER']+1;
             $this->ci->m_acc_running_number->update($data_update,1);
 
-            $ref_number = 'B11'.sprintf('%07d', $cur_number['CUR_RUNNING_NUMBER']);
+//            $ref_number = 'B11'.sprintf('%07d', $cur_number['CUR_RUNNING_NUMBER']);
+            $ref_number = 'B11'.sprintf('%07d', $id);
             return $ref_number;
         endif;
     }

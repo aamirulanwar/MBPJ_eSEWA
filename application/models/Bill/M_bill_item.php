@@ -142,6 +142,8 @@ class M_bill_item extends CI_Model
 
         if(isset($data_search['date_start']) && having_value($data_search['date_start'])):
             db_where("i.dt_added < to_date('".date('d-M-y',strtotime($data_search['date_start']))."')");
+        else:
+            db_where("i.dt_added < to_date('".date('d-M-y',strtotime('2013-01-01'))."')");
         endif;
 
 //        db_where('m.bill_month >= 4');
@@ -296,6 +298,8 @@ class M_bill_item extends CI_Model
 
         if(isset($data_search['date_start']) && having_value($data_search['date_start'])):
             db_where("m.dt_added < to_date('".date('d-M-y',strtotime($data_search['date_start']))."')");
+        else:
+            db_where("m.dt_added < to_date('".date('d-M-y',strtotime('2013-01-01'))."')");
         endif;
 
         if(isset($data_search['type_id']) && having_value($data_search['type_id'])):
