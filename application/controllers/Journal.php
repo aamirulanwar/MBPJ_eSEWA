@@ -111,7 +111,7 @@ class Journal extends CI_Controller
                     $data_search['MCT_TRCODENEW'] = $row;
                     $tr_code = $this->m_tran_code->get_tr_code($data_search);
 
-                    pre($tr_code);
+//                    pre($tr_code);
                     $insert_code['BILL_ID']             = $bill_id;
                     $insert_code['TR_CODE']             = $tr_code['MCT_TRCODENEW'];
 //                    $insert_code['TR_ID']               = $tr_code['TR_ID'];

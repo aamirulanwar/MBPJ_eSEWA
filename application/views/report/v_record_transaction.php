@@ -9,10 +9,10 @@ endif;
         <div class="card-body">
             <h1 class="need-print" style="margin-bottom: 20px;"><?php echo $pagetitle?></h1>
             <div class="form-group row">
-                <div class="col-sm-4" style="display: none">
+                <div class="col-sm-4" style="display: block">
                     <label class="col-form-label">Akaun</label>
                     <select name="account_id" id="account_id" class="form-control js-example-basic-single">
-                        <option value=""> - Sila pilih - </option>
+                        <option value=""> - Semua - </option>
                         <?php
                         if($data_account):
                             foreach ($data_account as $row):
@@ -79,11 +79,11 @@ endif;
                 </div>
             </div>
             <?php
-            if(uri_segment(3) && uri_segment(3)!='post'):
+            if($acc_details):
                 ?>
                 <div class="form-group row">
                     <div class="col-sm-12">
-                        <h5>No akaun : <?php echo uri_segment(3)?></h5>
+                        <h5>No akaun : <?php echo $acc_details['ACCOUNT_NUMBER']?></h5>
 <!--                        <label class="col-form-label">No akaun</label>-->
 <!--                        <p class="form-control-plaintext">--><?php //echo uri_segment(3)?><!--</p>-->
                     </div>
@@ -92,11 +92,11 @@ endif;
             endif;
             ?>
             <?php
-                if(uri_segment(4) && uri_segment(3)!='post'):
+                if($acc_details):
             ?>
             <div class="form-group row">
                 <div class="col-sm-12">
-                    <h5>Nama : <?php echo urldecode(uri_segment(4))?></h5>
+                    <h5>Nama : <?php echo $acc_details['NAME']?></h5>
 <!--                    <label class="col-form-label">Nama</label>-->
 <!--                    <p class="form-control-plaintext">--><?php //echo urldecode(uri_segment(4))?><!--</p>-->
                 </div>

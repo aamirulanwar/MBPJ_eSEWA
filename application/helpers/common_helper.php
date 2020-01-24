@@ -246,7 +246,7 @@ function occupation_status($occupation_status){
 
 function num($num='',$currencyFormat=0,$decimal=2)
 {
-    if($num=='') return '0.00';
+    if($num=='' || empty($num)) return '0.00';
 
     if($currencyFormat==0):
         return number_format($num,$decimal,'.',',');

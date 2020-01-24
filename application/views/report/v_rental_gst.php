@@ -201,10 +201,10 @@
                                                 $gst_actual = $data_item['gst_actual'][0]['AMOUNT'];
                                             endif;
 
-                                            $amount_b   = 0+$amount_b2;
-                                            $amount_r   = 0+$amount_r2;
-                                            $jurnal_b   = 0+$jurnal_b2;
-                                            $jurnal_r   = 0+$jurnal_r2;
+                                            $amount_b   = 0;//+$amount_b2;
+                                            $amount_r   = 0;//+$amount_r2;
+                                            $jurnal_b   = 0;//+$jurnal_b2;
+                                            $jurnal_r   = 0;//+$jurnal_r2;
                                             if($data_item['BILL_CATEGORY']=='B'):
                                                 $amount_b       = $data_item['AMOUNT'];
                                                 $total_all_b    = $total_all_b+$amount_b;
