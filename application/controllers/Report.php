@@ -564,6 +564,12 @@ class Report extends CI_Controller
 
 //                        pre($data_report);
 //                        exit;
+                    elseif($data_item_prv):
+                        $row['data_item']       = array();
+                        $row['prv_data']        = $data_item_prv;
+                        $data_report[]          = $row;
+
+//                        pre($data_report);
                     endif;
                 endforeach;
             endif;
