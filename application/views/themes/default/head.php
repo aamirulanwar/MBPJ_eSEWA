@@ -18,6 +18,7 @@
     <meta name="keyword" content="Bootstrap,Admin,Template,Open,Source,jQuery,CSS,HTML,RWD,Dashboard">
     <title>Sistem Pengurusan Sewaan MPKj</title>
     <!-- Icons-->
+    <link rel="icon" href="<?=base_url()?>/favicon.ico" type="image/x-icon">
     <link href="/assets/node_modules/@coreui/icons/css/coreui-icons.min.css" rel="stylesheet">
     <link href="/assets/node_modules/flag-icon-css/css/flag-icon.min.css" rel="stylesheet">
     <link href="/assets/node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet">
