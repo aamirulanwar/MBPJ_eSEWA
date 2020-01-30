@@ -4,6 +4,7 @@ notify_msg('notify_msg');
 checking_validation(validation_errors());
 ?>
 <form action="/journal/generate_current_journal/<?php echo uri_segment(3)?>" method="post" class="form-horizontal">
+    <input type="hidden" name="account_id" value="<?=$account['ACCOUNT_ID']?>">
     <div class="card card-accent-info">
         <div class="card-header">
             <h3 class="box-title">Maklumat Akaun</h3>
@@ -92,11 +93,11 @@ checking_validation(validation_errors());
             </div>
             <hr>
 
-
             <?php
                 if($bill_item):
                     foreach ($bill_item as $item):
                         ?>
+                        <input type="hidden" name="item_id[<?=$item['ITEM_ID']?>]" value="<?=$item['AMOUNT']?>">
                         <div class="form-group row">
                             <label class="col-sm-6 col-form-label"><?php echo '<strong>'.$item['TR_CODE'] .'</strong> - '. $item['ITEM_DESC']?> </label>
                             <div class="col-sm-2">
@@ -118,7 +119,7 @@ checking_validation(validation_errors());
             <div class="form-group row">
                 <div class="col-sm-12">
 <!--                    <button type="button" onclick="add_transaction_code('B')" class="btn btn-primary pull-left btn-submit">Tambah kod transaksi bill</button>-->
-                    <button style="margin-left: 20px;" type="button" onclick="add_transaction_code('J')" class="btn btn-warning pull-left btn-submit">Tambah kod transaksi jurnal</button>
+                    <button style="margin-left: 20px;" type="button" onclick="chooseJournalCode()" class="btn btn-warning pull-left btn-submit">Tambah kod transaksi jurnal</button>
                 </div>
             </div>
         </div>
@@ -129,3 +130,42 @@ checking_validation(validation_errors());
         </div>
     </div>
 </form>
+
+<div class="modal fade" id="add_transaction_code_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Pilih Kod Jurnal</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <center>
+                    <div class="form-group">
+                        <input type="hidden" id="default_bill_category" value="<?=$bill_item[0]['BILL_CATEGORY']?>">
+                        <label>Sila pilih kod transaksi</label>
+                        <select name="choose_transaction_code" id="choose_transaction_code" class="form-control">
+                            <?php
+                                if($bill_item):
+                                    foreach ($bill_item as $item):
+                                        ?>
+                                        <option value="<?=$item['TR_CODE']?>" data-bill-amount="<?=$item['AMOUNT']?>" data-bill-category="<?=$item['BILL_CATEGORY']?>"><?php echo '<strong>'.$item['TR_CODE'] .'</strong> - '. $item['ITEM_DESC']?></option>
+                                        <?php
+                                    endforeach;
+                                endif;
+                            ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Sila pilih kod jurnal</label>
+                        <select name="choose_journal_code" id="choose_journal_code" class="form-control"></select>
+                    </div>
+                </center>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="confirmChooseJournalCode('#choose_journal_code','#choose_transaction_code')">Teruskan</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

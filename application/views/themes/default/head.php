@@ -447,14 +447,31 @@
                 <?php endif;?>
 
                 <?php if($this->auth->access_main_view($this->curuser,array(7000))):?>
-                <?php if($this->auth->access_view($this->curuser,array(7001))):?>
-                <li class="nav-item">
-                    <a class="nav-link <?php echo set_active_menu(uri_segment(1),array('journal'))?>" href="/journal/search">
-                        <i class="nav-icon icon-speedometer"></i> Pelarasan
+                <?php if($this->auth->access_view($this->curuser,array(7001))):?>    
+                      
+                <li class="nav-item nav-dropdown <?php echo set_active_dropdown(uri_segment(1),array('journal'))?>">
+                    <a class="nav-link nav-dropdown-toggle <?php echo set_active_menu(uri_segment(1),array('journal'))?>" href="#6">
+                        <i class="nav-icon icon-speedometer"></i> Pelarasan</a>
+                    <ul class="nav-dropdown-items"> 
+
+                        <li class="nav-item">
+                            <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('account_list','generate_current_bill','current_bill'))?>" href="/journal/search">
+                                <i class="nav-icon fa fa-circle fa-sm"></i>Senarai Pelarasan</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('account_list','generate_current_bill','current_bill'))?>" href="/journal/index">
+                                <i class="nav-icon fa fa-circle fa-sm"></i>Senarai Kelulusan</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('account_list','generate_current_bill','current_bill'))?>" href="/journal/entry">
+                                <i class="nav-icon fa fa-circle fa-sm"></i>Senarai Kemasukan</a>
+                        </li>
+                    </ul>
                     </a>
                 </li>
                 <?php endif;?>
                 <?php endif;?>
+
 <!--                <li class="nav-item nav-dropdown --><?php //echo set_active_dropdown(uri_segment(1),array('journal'))?><!--">-->
 <!--                    <a class="nav-link nav-dropdown-toggle --><?php //echo set_active_menu(uri_segment(1),array('journal'))?><!--" href="/journal/insert">-->
 <!--                        <i class="nav-icon icon-layers"></i> Penyelarasan</a>-->
