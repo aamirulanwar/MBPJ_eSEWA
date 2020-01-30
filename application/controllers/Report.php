@@ -502,7 +502,7 @@ class Report extends CI_Controller
                                 $data_search_item_jurnal['account_id']      = $item['ACCOUNT_ID'];
 //                                $data_search_item_jurnal['not_equal_last_year']  = 1;
     //                            pre($data_search_item_jurnal);
-                                $data_jurnal = $this->m_bill_item->get_item_jurnal($data_search_item_jurnal);
+//                                $data_jurnal = $this->m_bill_item->get_item_jurnal($data_search_item_jurnal);
                             elseif ($item['BILL_CATEGORY']=='R'):
                                 $data_search_item_jurnal['bill_month']      = $item['BILL_MONTH'];
                                 $data_search_item_jurnal['bill_year']       = $item['BILL_YEAR'];
@@ -510,7 +510,7 @@ class Report extends CI_Controller
                                 $data_search_item_jurnal['account_id']      = $item['ACCOUNT_ID'];
 //                                $data_search_item_jurnal['not_equal_last_year']  = 1;
     //                            pre($data_search_item_jurnal);
-                                $data_jurnal = $this->m_bill_item->get_item_jurnal($data_search_item_jurnal);
+//                                $data_jurnal = $this->m_bill_item->get_item_jurnal($data_search_item_jurnal);
                             endif;
 
                             if($item['GST_TYPE']==GST_TYPE_RENTAL):
@@ -553,7 +553,7 @@ class Report extends CI_Controller
                                 $item['gst_actual']     = $data_gst_actual;
                             endif;
 
-                            $item['jurnal']         = $data_jurnal;
+//                            $item['jurnal']         = $data_jurnal;
                             $row['prv_data']       = $data_item_prv;
 //                            pre($item['prv_data']);
 //                            $item['gst_actual']     = $data_gst_actual;
@@ -626,6 +626,14 @@ class Report extends CI_Controller
 
         if($_POST):
             $data_report        = $this->m_bill_item->report_rental_gst_simple($data_search);
+//            echo '<br>';
+//            echo '<br>';
+//            echo '<br>';
+//            echo '<br>';
+//            echo '<br>';
+//            echo '<br>';
+//            echo '<br>';
+//            echo '<br>';
 //            echo last_query();
 //            pre($data_report);
 //            exit;
@@ -636,6 +644,15 @@ class Report extends CI_Controller
             if($data_report):
                 foreach ($data_report as $row):
                     $data_report_prv        = $this->m_bill_item->report_rental_gst_simple_prv($data_search,$row['CATEGORY_ID']);
+//                    echo '<br>';
+//                    echo '<br>';
+//                    echo '<br>';
+//                    echo '<br>';
+//                    echo '<br>';
+//                    echo '<br>';
+//                    echo '<br>';
+//                    echo '<br>';
+//                    pre($data_report_prv);
                     $row['data_report_prv'] = $data_report_prv;
 
 //                    pre($row);
@@ -648,6 +665,8 @@ class Report extends CI_Controller
             $data['data_gst']       = array();
             $data['data_search']    = $data_search;
         endif;
+
+//        pre($data_report_new);
 
         templates('/report/v_rental_gst_simple',$data);
     }

@@ -95,6 +95,7 @@
                 $total_all_jurnal_r = 0;
                 $total_all_jurnal_b = 0;
                 $total_balance      = 0;
+                $z = 0;
 
 
                 $total_all_amount_b         = 0;
@@ -228,18 +229,22 @@
                                                 if(substr($data_item['TR_CODE'],0,1)==1):
                                                     $jurnal_b               = $data_item['AMOUNT'];
                                                     $total_amount_b_jurnal  = $total_amount_b_jurnal+$jurnal_b;
-                                                    $total_all_jurnal_b     = $total_all_jurnal_b+$total_amount_b_jurnal;
+                                                    $total_all_jurnal_b     = $total_all_jurnal_b+$jurnal_b;
                                                 elseif (substr($data_item['TR_CODE'],0,1)==2):
                                                     $jurnal_r               = $data_item['AMOUNT'];
                                                     $total_amount_r_jurnal  = $total_amount_r_jurnal+$jurnal_r;
-                                                    $total_all_jurnal_r     = $total_all_jurnal_r+$total_amount_r_jurnal;
+                                                    $total_all_jurnal_r     = $total_all_jurnal_r+$jurnal_r;
                                                 endif;
                                             endif;
 
                                             echo '<td>'.$data_item['BILL_NUMBER'].'<br>('.date_display($data_item['DT_BILL']).')</td>';
                                             echo '<td>'.$data_item['TR_CODE'].'&nbsp;-&nbsp;'.$data_item['ITEM_DESC'].'</td>';
                                             echo '<td style="text-align: right">'.num($amount_b,3).'</td>';
+                                            if($jurnal_b>0):
+                                                echo '<td style="text-align: right">'.num($jurnal_b,3).'zzzz</td>';
+                                            else:
                                             echo '<td style="text-align: right">'.num($jurnal_b,3).'</td>';
+                                            endif;
                                             echo '<td style="text-align: right">'.num($amount_r,3).'</td>';
                                             echo '<td style="text-align: right">'.num($jurnal_r,3).'</td>';
                                             echo '</tr>';
@@ -310,6 +315,9 @@
                             Jumlah Bayaran / Resit Pelarasan (RM)
                         </th>
                         <th>
+                            Baki Tunggakan (RM)
+                        </th>
+                        <th>
                             Baki Perlu Dibayar (RM)
                         </th>
                     </tr>
@@ -322,43 +330,48 @@
                         <td class="text-right">
                             <?php
                                 echo num($total_all_b,3);
-                                if($total_all_amount_b>0):
-                                    echo '+'.num($total_all_amount_b,3);
-                                    echo '<br>'.num($total_all_b+$total_all_amount_b,3);
-                                endif;
+//                                if($total_all_amount_b>0):
+//                                    echo '+'.num($total_all_amount_b,3);
+//                                    echo '<br>'.num($total_all_b+$total_all_amount_b,3);
+//                                endif;
                             ?>
                         </td>
                         <td class="text-right">
                             <?php
                                 echo num($total_all_jurnal_b,3);
-                                if($total_all_amount_b_jurnal>0):
-                                    echo '+'.num($total_all_amount_b_jurnal,3);
-                                    echo '<br>'.num($total_all_amount_b_jurnal+$total_all_jurnal_b,3);
-                                endif;
+//                                if($total_all_amount_b_jurnal>0):
+//                                    echo '+'.num($total_all_amount_b_jurnal,3);
+//                                    echo '<br>'.num($total_all_amount_b_jurnal+$total_all_jurnal_b,3);
+//                                endif;
                             ?>
                         </td>
                         <td class="text-right">
                             <?php
                                 echo num($total_all_r,3);
-                                if($total_all_amount_r>0):
-                                    echo '+'.num($total_all_amount_r,3);
-                                    echo '<br>'.num($total_all_amount_r+$total_all_r,3);
-                                endif;
+//                                if($total_all_amount_r>0):
+//                                    echo '+'.num($total_all_amount_r,3);
+//                                    echo '<br>'.num($total_all_amount_r+$total_all_r,3);
+//                                endif;
                             ?>
                         </td>
                         <td class="text-right">
                             <?php
                                 echo num($total_all_jurnal_r,3);
-                                if($total_all_amount_r_jurnal>0):
-                                    echo '+'.num($total_all_amount_r_jurnal,3);
-                                    echo '<br>'.num($total_all_amount_r_jurnal+$total_all_jurnal_r,3);
-                                endif;
+//                                if($total_all_amount_r_jurnal>0):
+//                                    echo '+'.num($total_all_amount_r_jurnal,3);
+//                                    echo '<br>'.num($total_all_amount_r_jurnal+$total_all_jurnal_r,3);
+//                                endif;
+                            ?>
+                        </td>
+                        <td class="text-right">
+                            <?php
+                                $baki_2 = ($total_all_amount_b+($total_all_amount_b_jurnal)) - ($total_all_amount_r+($total_all_amount_r_jurnal));
+                                echo num($baki_2,3);
                             ?>
                         </td>
                         <td class="text-right">
                             <?php
                                 $baki   = ($total_all_b+($total_all_jurnal_b)) - ($total_all_r+($total_all_jurnal_r));
-                                $baki_2 = ($total_all_jurnal_b+($total_all_amount_b)) - ($total_all_amount_r+($total_all_jurnal_r));
                                 echo num($baki,3);
                                 if($baki_2>0):
                                     echo '+'.num($baki_2,3);

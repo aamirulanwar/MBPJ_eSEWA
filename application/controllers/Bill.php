@@ -38,7 +38,8 @@ class Bill extends CI_Controller
             'add_transaction',
             'bill_history',
             'statement',
-            'generate_barcode'
+            'generate_barcode',
+            'add_journal_transaction'
         );
         #set pages data
         (in_array($method,$array)) ? $this->$method() : $this->account_list();
@@ -307,24 +308,19 @@ class Bill extends CI_Controller
                 endforeach;
             endif;
 
-            $add_minus_plus = '';
-            if($type=='J'):
-                $add_minus_plus = '<div class="col-sm-1">'.
-                    '<select class="form-control" name="add_minus[]">'.
-                    option_value('add','+','add_minus[]').
-                    option_value('minus','-','add_minus[]').
-                    '</select>'.
-                    '</div>';
-            endif;
-
             $data_insert =
                 '<div class="form-group row">'.
-                    '<div class="col-sm-4">'.
+                    '<div class="col-sm-5">'.
                         '<select class="form-control js-example-basic-single" name="MCT_TRCODENEW[]">'.
                             $data_option.
                         '</select>'.
                     '</div>'.
-                    $add_minus_plus.
+//                    '<div class="col-sm-1">'.
+//                        '<select class="form-control" name="add_minus[]">'.
+//                            option_value('add','+','add_minus[]').
+//                            option_value('minus','-','add_minus[]').
+//                        '</select>'.
+//                    '</div>'.
                     '<div class="col-sm-2">'.
                         '<input name="amount[]" onkeyup="currency_format(this)" class="form-control" value="0.00">'.
                     '</div>'.
@@ -338,6 +334,116 @@ class Bill extends CI_Controller
                         '<button type="button" onclick="remove_tr_code(this)" class="btn btn-danger">x</i></button>'.
                     '</div>'.
                 '</div>';
+
+            echo $data_insert;
+        endif;
+    }
+
+    function add_journal_transaction()
+    {
+        if(is_ajax()):
+            $type = input_data('type');
+            $journal_code = input_data('journal_code');
+            $journal_id = input_data('journal_id');
+            $tr_code = input_data('tr_code');
+            $bill_amount = input_data('bill_amount');
+
+            $data_search['MCT_TSTATS'] = 'B';
+            $data_transaction = $this->m_tr_code->get_tr_code_list($data_search);
+            
+            $data_option = '';
+
+            $is_changeable_trcode = false;
+            if($data_transaction):
+                foreach ($data_transaction as $row):
+
+                    if ($journal_code!='B03' || $journal_code !='R03') {
+                        
+                        if ($tr_code==$row['MCT_TRCODENEW']) {
+                            
+                            $data_option .= '<option value="'.$row['MCT_TRCODENEW'].'" selected>'.$row['MCT_TRCODENEW'].' - '.$row['MCT_TRDESC'].'</option>';
+                            $is_changeable_trcode = false;
+                        }
+                        else {
+
+                            $data_option .= '<option value="'.$row['MCT_TRCODENEW'].'">'.$row['MCT_TRCODENEW'].' - '.$row['MCT_TRDESC'].'</option>';
+                        }
+                    }
+                    else {
+
+                        $data_option .= '<option value="'.$row['MCT_TRCODENEW'].'">'.$row['MCT_TRCODENEW'].' - '.$row['MCT_TRDESC'].'</option>';
+                        $is_changeable_trcode = true;
+                    }
+                endforeach;
+            endif;
+
+            $unique_select_id = "select_trcode_".time();
+            $select_script = "";
+            $select_input_value = "";
+
+            $list_allowed_editable = ["B03","B04","R03","R04"];
+
+            if (in_array($journal_code, $list_allowed_editable)) {
+                
+                $select_script = '<script>$("#'.$unique_select_id.'").select2();</script>';
+                $select_input_value = '<input type="hidden" name="mct_trcodenew[]" id="'.$unique_select_id.'_input" value="">';
+            }
+            else {
+
+                $select_script = '<script>$("#'.$unique_select_id.'").select2({disabled:true});</script>';
+                $select_input_value = '<input type="hidden" name="mct_trcodenew[]" id="'.$unique_select_id.'_input" value="'.$tr_code.'">';
+            }
+            
+            // if ($journal_code!="B03" && $journal_code!="B04") {
+                
+            //     $select_script = '<script>$("#'.$unique_select_id.'").select2({disabled:true});</script>';
+            //     $select_input_value = '<input type="hidden" name="mct_trcodenew[]" id="'.$unique_select_id.'_input" value="'.$tr_code.'">';
+            // }
+            // elseif ($journal_code!="R03" && $journal_code!="B03" || $journal_code!="B04") {
+            //     $select_script = '<script>$("#'.$unique_select_id.'").select2({disabled:true});</script>';
+            //     $select_input_value = '<input type="hidden" name="mct_trcodenew[]" id="'.$unique_select_id.'_input" value="'.$tr_code.'">';
+            // }
+            // elseif ($journal_code=="B04") {
+            //     $select_script = '<script>$("#'.$unique_select_id.'").select2();</script>';
+            //     $select_input_value = '<input type="hidden" name="mct_trcodenew[]" id="'.$unique_select_id.'_input" value="">';
+            // }
+            // else {
+
+            //     $select_script = '<script>$("#'.$unique_select_id.'").select2();</script>';
+            //     $select_input_value = '<input type="hidden" name="mct_trcodenew[]" id="'.$unique_select_id.'_input" value="">';
+            // }
+
+            $data_insert =
+                '<div class="form-group row">'.
+                    '<div class="col-sm-4">'.
+                        '<select class="form-control js-example-basic-singlex" id="'.$unique_select_id.'" onchange="setSelectedTrcode(this,\'#'.$unique_select_id.'_input\')">'.
+                            $data_option.
+                        '</select>'.
+                    '</div>'.
+//                    '<div class="col-sm-1">'.
+//                        '<select class="form-control" name="add_minus[]">'.
+//                            option_value('add','+','add_minus[]').
+//                            option_value('minus','-','add_minus[]').
+//                        '</select>'.
+//                    '</div>'.
+                    '<div class="col-sm-2">'.
+                        '<input name="amount[]" onkeyup="currency_format(this)" class="form-control" value="'.($journal_code=="B01" || $journal_code=="R01" ? $bill_amount : '').'" '.($journal_code=="B01" || $journal_code=="R01" ? 'readonly' : '').'>'.
+                    '</div>'.
+                    '<div class="col-sm-1">'.
+                        '<input name="type[]" readonly="readonly" class="form-control" value="'.strtoupper($type).'">'.
+                    '</div>'.
+                    '<div class="col-sm-2">'.
+                        '<input name="journal_code[]" type="text" placeholder="Kod Jurnal" class="form-control" value="'.strtoupper($journal_code).'" readonly>'.
+                    '</div>'.
+                    '<div class="col-sm-2">'.
+                        '<input name="remark[]" type="text" placeholder="Remark" class="form-control" value="">'.
+                    '</div>'.
+                    '<div class="col-sm-1">'.
+                        '<button type="button" onclick="remove_tr_code(this)" class="btn btn-danger">x</i></button>'.
+                    '</div>'.
+                '</div>
+                <input type="hidden" name="journal_id[]" value="'.$journal_id.'">
+                '.$select_script.$select_input_value;
 
             echo $data_insert;
         endif;

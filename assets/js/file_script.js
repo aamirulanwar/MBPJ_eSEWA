@@ -334,7 +334,8 @@ function calculate_area_billboard() {
     $('#area_billboard').val(area)
 }
 
-function add_transaction_code(type) {
+function add_transaction_code(type='J') {
+
     $.ajax({
         url: '/bill/add_transaction',
         type: 'post', //the way you want to send data to your URL
@@ -358,6 +359,94 @@ function add_transaction_code(type) {
             ajax_err(jqXHR,error, errorThrown)
         }
     });
+}
+
+function add_journal_transaction(type='J',journal_code,tr_code,journal_id,bill_category,bill_amount) {
+    
+    $.ajax({
+        url: '/bill/add_journal_transaction',
+        type: 'post', //the way you want to send data to your URL
+        data: {
+            type:type,
+            journal_code:journal_code,
+            journal_id:journal_id,
+            tr_code:tr_code,
+            bill_category:bill_category,
+            bill_amount:bill_amount
+        },
+        beforeSend: function () {
+            $.LoadingOverlay("show",{
+                size : '40px'
+            });
+        },
+        success: function (data) { //probably this request will return anything, it'll be put in var "data"
+            $('#content_transaction').append(data);
+        },
+        complete: function () {
+            $.LoadingOverlay("hide");
+            if (journal_code!='B03' || journal_code!='R03') {
+
+                $('.js-example-basic-single').select2({disabled:true});
+            }
+            else {
+
+                $('.js-example-basic-single').select2();
+            }
+        },
+        error: function(jqXHR,error, errorThrown) {
+            ajax_err(jqXHR,error, errorThrown)
+        }
+    });
+}
+
+function chooseJournalCode() {
+    
+    $.ajax({
+        url: '/journal/journal_code_lists',
+        type: 'GET',
+        data:{
+            bill_category: $('#default_bill_category').val()
+        }
+    })
+    .done(function(r) {
+        
+        var $select = $('#choose_journal_code');
+        var select_option = '<option value="">Sila pilih satu</option>';
+        
+        $.each(r, function(index, obj) {
+            select_option+='<option value="'+obj.JOURNAL_ID+'" data-journal-code="'+obj.JOURNAL_CODE+'">'+obj.JOURNAL_DESC+' ('+obj.JOURNAL_CODE+') '+'</option>';
+        });
+
+        $select.html(select_option);
+        $('#add_transaction_code_modal').modal('show');
+    })
+    .fail(function(e) {
+        console.log("error");
+        console.log(e);
+        alert("Tiada data ditemui untuk senarai rekod kod jurnal");
+    });
+}
+
+function confirmChooseJournalCode(el,tr_code_el) {
+    
+    if ($(el).val()!="") {
+
+        var bill_category = $(tr_code_el).find(':selected').attr('data-bill-category');
+        var bill_amount = $(tr_code_el).find(':selected').attr('data-bill-amount');
+        console.log($(tr_code_el).val());
+        add_journal_transaction('J',$(el).find(':selected').attr('data-journal-code'),$(tr_code_el).val(),$(el).val(),bill_category,bill_amount);
+        $(el).val("");
+        $('#add_transaction_code_modal').modal('hide');
+    }
+    else {
+
+        alert("Sila pilih satu kod jurnal");
+    }
+}
+
+function setSelectedTrcode(select_el,target_el) {
+    
+    $(target_el).val($(select_el).val());
 }
 
 function remove_tr_code(obj) {

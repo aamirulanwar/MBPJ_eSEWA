@@ -15,17 +15,67 @@ class Journal extends CI_Controller
         load_model('Bill/M_bill_master', 'm_bill_master');
         load_model('Bill/M_bill_item', 'm_bill_item');
         load_model('Account/M_acc_account', 'm_acc_account');
-        load_model('TrCode/M_tran_code', 'm_tran_code');
+        load_model('Journal/M_journal', 'm_journal');
     }
 
     function _remap($method)
     {
         $array = array(
             'insert',
-            'generate_current_journal'
+            'generate_current_journal',
+            'index',
+            'journal_code_lists',
+            'entry',
+            'update'
         );
         #set pages data
         (in_array($method,$array)) ? $this->$method() : $this->search();
+    }
+
+    function index()
+    {
+        $data['link_1']     = 'Penyelarasan';
+        $data['link_2']     = '';
+        $data['link_3']     = '';
+        $data['pagetitle']  = '';
+
+        $post           = $this->input->post();
+        $filter_session = get_session('arr_filter_journal');
+        if(!empty($post)):
+            $this->session->set_userdata('arr_filter_journal',$post);
+            $data_search = $post;
+        else:
+            if(!empty($filter_session)):
+                $data_search = $filter_session;
+            else:
+                $data_search['account_number']  = '';
+                $data_search['bill_number']     = '';
+                $data_search['date_start']      = '';
+                $data_search['date_end']        = '';
+                $data_search['bill_category']   = '';
+            endif;
+        endif;
+
+        $data['data_search'] = $data_search;
+        $data['data'] = $this->m_journal->get_lists_temp_journal();
+
+        // echo json_encode($data['data']);
+        // die();
+        // var_dump();
+
+        templates('journal/v_journal_kelulusan',$data);
+    }
+
+    function entry()
+    {
+        $data['link_1']     = 'Penyelarasan';
+        $data['link_2']     = '';
+        $data['link_3']     = '';
+        $data['pagetitle']  = 'Senarai Kemasukan Jurnal';
+
+        $data['data'] = $this->m_journal->get_lists_temp_journal();
+
+        templates('journal/v_journal_entry',$data);
     }
 
     function search(){
@@ -80,8 +130,8 @@ class Journal extends CI_Controller
             return false;
         endif;
 
-        $data_bill_master   = $this->m_bill_master->get_bill_master($bill_id);
-        $get_details        = $this->m_acc_account->get_account_details($data_bill_master['ACCOUNT_ID']);
+        $data_bill_master = $this->m_bill_master->get_bill_master($bill_id);
+        $get_details = $this->m_acc_account->get_account_details($data_bill_master['ACCOUNT_ID']);
         if(!$get_details):
             return false;
         endif;
@@ -90,55 +140,88 @@ class Journal extends CI_Controller
 
         $bill_item = $this->m_bill_item->get_bill_item($bill_id);
 
+
         $data['account']        = $get_details;
         $data['statement_type'] = 'BIL';
         $data['bill_master']    = $data_bill_master;
         $data['bill_item']      = $bill_item;
 
-        validation_rules('MCT_TRCODENEW[]','<strong>kod transaksi</strong>','required');
+        validation_rules('journal_code[]','<strong>kod transaksi</strong>','required');
 
         if(validation_run()==false):
             templates('journal/v_generate_current_journal',$data);
         else:
-            if(input_data('MCT_TRCODENEW[]')):
-                $i = 0;
-                $amount_arr     = input_data('amount[]');
-                $add_minus_arr  = input_data('add_minus[]');
-                $type_arr       = input_data('type[]');
 
-                foreach (input_data('MCT_TRCODENEW[]') as $row):
+            $journal_code = $_POST['journal_code'];
+            $amount = $_POST['amount'];
+            $type = $_POST['type'];
+            $remark = $_POST['remark'];
+            $journal_id = $_POST['journal_id'];
+            $mct_trcodenew = $_POST['mct_trcodenew'];
 
-                    $data_search['MCT_TRCODENEW'] = $row;
-                    $tr_code = $this->m_tran_code->get_tr_code($data_search);
+            $bill_number = $this->m_journal->generate_running_billnumber();
 
-//                    pre($tr_code);
-                    $insert_code['BILL_ID']             = $bill_id;
-                    $insert_code['TR_CODE']             = $tr_code['MCT_TRCODENEW'];
-//                    $insert_code['TR_ID']               = $tr_code['TR_ID'];
-                    $insert_code['AMOUNT']              = (($add_minus_arr[$i]=='minus')?'-':'').currencyToDouble($amount_arr[$i]);
-                    $insert_code['PRIORITY']            = $tr_code['MCT_PRIORT'];
-//                    $insert_code['TR_TYPE']             = $tr_code['TR_TYPE'];
-                    $insert_code['ACCOUNT_ID']          = $data_bill_master['ACCOUNT_ID'];
-                    $insert_code['ITEM_DESC']           = $tr_code['MCT_TRDESC'];
-                    $insert_code['TR_CODE_OLD']         = $tr_code['MCT_TRCODE'];
-                    $insert_code['BILL_CATEGORY']       = "J";
-                    $insert_code['COMPLETE_PAYMENT']    = 0;
+            foreach ($_POST['journal_code'] as $i => $v) {
 
-                    $id_item = $this->m_bill_item->insert_bill_item($insert_code);
-                    $i = $i+1;
+                $this->m_journal->insert_journal_temp([
+                    'created_by' => $this->curuser["USER_ID"],
+                    'bill_number' => $bill_number,
+                    'bill_month' => date('m'),
+                    'bill_year' => date('Y'),
+                    'journal_id' => $journal_id[$i],
+                    'account_id' => input_data('account_id'),
+                    'amount' => $amount[$i],
+                    'bill_category' => 'J',
+                    'tr_code' => $mct_trcodenew[$i],
+                    'status_approval' => 0
+                ]);
+            }
 
-                    if($id_item>0):
-//                        $data_audit_trail['log_id']                  = 4002;
-//                        $data_audit_trail['remark']                  = $insert_code;
-//                        $data_audit_trail['status']                  = PROCESS_STATUS_SUCCEED;
-//                        $data_audit_trail['user_id']                 = $this->curuser['USER_ID'];
-//                        $data_audit_trail['refer_id']                = $id_item;
-//                        $this->audit_trail_lib->add($data_audit_trail);
-                    endif;
-                endforeach;
-            endif;
             set_notify('notify_msg',TEXT_SAVE_RECORD);
-            redirect('/journal/generate_current_journal/'.uri_segment(3));
+            templates('journal/v_generate_current_journal',$data);
         endif;
+    }
+
+    function journal_code_lists()
+    {
+        $data = $this->m_journal->journal_code_lists($_GET['bill_category']);
+
+        if ($data) {
+            
+            header("Content-Type: application/json");
+
+            echo json_encode($data);
+        }
+        else {
+
+            header("HTTP/1.1 404 Not Found");
+            // return null;
+        }
+    }
+
+    function update() {
+
+        $journal_id = uri_segment(3);
+
+        $updated_at = date('d-M-Y h:i:s');
+
+        $update = $this->m_journal->approveOrDeclineJurnal($journal_id,$_POST['approve'],$this->curuser["USER_ID"],$updated_at);
+
+        header("Content-Type: application/json");
+
+        if ($update) {
+            
+            echo json_encode([
+                'status' => true,
+                'message' => 'Rekod jurnal berjaya '.($_POST['approve']==1 ? "diluluskan" : "dibatalkan").'.'
+            ]);    
+        }
+        else {
+
+            echo json_encode([
+                'status' => true,
+                'message' => 'Rekod jurnal tidak berjaya '.($_POST['approve']==1 ? "diluluskan" : "dibatalkan").'.'
+            ]);  
+        }
     }
 }
