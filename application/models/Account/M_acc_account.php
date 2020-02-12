@@ -62,6 +62,16 @@ class M_acc_account extends CI_Model
         endif;
     }
 
+    function update_a_acc_account_by_asset_id($data_update,$id){
+        db_where('asset_id',$id);
+        db_update('acc_account',$data_update);
+        if(db_affected_rows()!=0):
+            return true;
+        else:
+            return false;
+        endif;
+    }
+
     function count_account($data_search=array()){
         db_select('a.*,acc.*,t.*,c.*,r.*');
         db_select("to_char(a.dt_added, 'yyyy-mm-dd hh24:mi:ss') as dt_create_acc",false);

@@ -18,7 +18,7 @@
     <meta name="keyword" content="Bootstrap,Admin,Template,Open,Source,jQuery,CSS,HTML,RWD,Dashboard">
     <title>Sistem Pengurusan Sewaan MPKj</title>
     <!-- Icons-->
-    <link rel="icon" href="<?=base_url()?>/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/assets/images/favicon.ico" type="image/x-icon">
     <link href="/assets/node_modules/@coreui/icons/css/coreui-icons.min.css" rel="stylesheet">
     <link href="/assets/node_modules/flag-icon-css/css/flag-icon.min.css" rel="stylesheet">
     <link href="/assets/node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet">
@@ -565,14 +565,18 @@
                             <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('adjustment_statement'))?>" href="/report/adjustment_statement">
                                 <i class="nav-icon fa fa-circle fa-sm"></i> Penyata Penyesuaian Terperinci</a>
                         </li>
-                            <li class="nav-item">
-                                <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('adjustment_statement_ringkasan'))?>" href="/report/adjustment_statement_ringkasan">
-                                    <i class="nav-icon fa fa-circle fa-sm"></i> Penyata Penyesuaian Ringkasan</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('payment'))?>" href="/report/payment">
-                                    <i class="nav-icon fa fa-circle fa-sm"></i> Laporan Pembayaran Penyewa</a>
-                            </li>
+                        <li class="nav-item">
+                            <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('adjustment_statement_ringkasan'))?>" href="/report/adjustment_statement_ringkasan">
+                                <i class="nav-icon fa fa-circle fa-sm"></i> Penyata Penyesuaian Ringkasan</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('payment'))?>" href="/report/payment">
+                                <i class="nav-icon fa fa-circle fa-sm"></i> Laporan Pembayaran Penyewa</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('journal'))?>" href="/report/journal">
+                                <i class="nav-icon fa fa-circle fa-sm"></i> Laporan Jurnal Sewaan</a>
+                        </li>
                         <?php endif;?>
                     </ul>
                 </li>

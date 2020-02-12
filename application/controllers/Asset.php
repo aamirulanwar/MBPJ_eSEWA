@@ -17,6 +17,7 @@ class Asset extends CI_Controller
         load_model('Asset/M_a_category', 'm_a_category');
         load_model('Asset/M_a_asset', 'm_a_asset');
         load_model('TrCode/M_tran_code', 'm_tran_code');
+        load_model('Account/M_acc_account', 'm_acc_account');
     }
 
     function _remap($method)
@@ -628,6 +629,7 @@ class Asset extends CI_Controller
 
         validation_rules('name_asset','<strong>nama kod harta</strong>','required');
         validation_rules('category_id','<strong>kod kategori</strong>','required');
+        validation_rules('harga_sewaan','<strong>harga_sewaan</strong>','');
         validation_rules('address','<strong>alamat</strong>');
 
         if(validation_run()==false):
@@ -636,9 +638,14 @@ class Asset extends CI_Controller
             $data_update['asset_name']      = ucfirst(input_data('name_asset'));
             $data_update['category_id']     = input_data('category_id');
             $data_update['active']          = (input_data('status'))?STATUS_ACTIVE:STATUS_INACTIVE;
+            $data_update['RENTAL_FEE']      = currencyToDouble(input_data('harga_sewaan'));
             $data_update['asset_add']       = input_data('address');
 
             $result_update = $this->m_a_asset->update_a_asset($data_update,$id);
+
+            $data_account_update['rental_charge'] = currencyToDouble(input_data('harga_sewaan'));
+            $this->m_acc_account->update_a_acc_account_by_asset_id($data_account_update,$id);
+
             if($result_update):
                 set_notify('notify_msg',TEXT_UPDATE_RECORD);
             else:

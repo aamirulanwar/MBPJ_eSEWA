@@ -94,6 +94,8 @@ checking_validation(validation_errors());
                                         echo 'Bil';
                                     elseif($row['BILL_CATEGORY']=='R'):
                                         echo 'Resit';
+                                    elseif($row['BILL_CATEGORY']=='J'):
+                                        echo 'Jurnal';
                                     endif;
                                 ?>
                             </td>

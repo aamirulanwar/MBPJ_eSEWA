@@ -11,8 +11,9 @@ class M_journal extends CI_Model
     {
         $model =& get_instance();
 
-        $query = $model->db->query("SELECT b.*,a.account_number,u.user_name FROM b_journal_temp b, acc_account a, users u WHERE b.account_id=a.account_id AND u.user_id=b.created_by");
+        $query = $model->db->query("SELECT b.*,a.account_number,u.user_name FROM b_journal_temp b, acc_account a, users u WHERE b.account_id=a.account_id AND u.user_id=b.CREATED_BY ORDER BY bill_number");
         $result = $query->result_array();
+        db_order('category_code');
 
         if ($result) {
             
@@ -46,10 +47,11 @@ class M_journal extends CI_Model
 
         $q_get_journal = $model->db->query("
             SELECT
-                *
+                b_journal_temp.*, admin.MCT_TRDESC as ITEM_DESC
             FROM
-                b_journal_temp
+                b_journal_temp,admin.mctrancode admin
             WHERE
+                b_journal_temp.tr_code=admin.mct_trcodenew and 
                 id = ?
         ",[$id]);
         $get_journal = $q_get_journal->result_array();
@@ -188,10 +190,14 @@ class M_journal extends CI_Model
                     ACCOUNT_ID, 
                     AMOUNT,
                     DT_ADDED,
-                    BILL_CATEGORY
+                    BILL_CATEGORY,
+                    TR_CODE,
+                    ITEM_DESC
                 )
                 VALUES
                 (
+                    ?,
+                    ?,
                     ?,
                     ?,
                     ?,
@@ -206,6 +212,8 @@ class M_journal extends CI_Model
                 $get_journal[0]['AMOUNT'],
                 date('d-M-Y h:i:s'),
                 'J',
+                $get_journal[0]['TR_CODE'],
+                $get_journal[0]['ITEM_DESC'],
             ]);
         }
 
@@ -274,5 +282,35 @@ class M_journal extends CI_Model
         }
 
         return $new_running_number;
+    }
+
+    function get_lists_temp_journal_report($data_search=array())
+    {
+        $model =& get_instance();
+
+        $query = $model->db->query("SELECT b.*,a.account_number,u.user_name,j.journal_code,j.journal_desc,c.category_name FROM b_journal_temp b, acc_account a, users u, a_journal j, a_category c WHERE b.account_id=a.account_id AND u.user_id=b.CREATED_BY AND b.journal_id=j.journal_id AND a.category_id=c.category_id ORDER BY bill_number");
+
+        if(isset($data_search['date_start']) && having_value($data_search['date_start'])):
+            db_where("b.dt_added >= to_date('".date('d-M-y',strtotime($data_search['date_start']))."')");
+        endif;
+
+        if(isset($data_search['date_end']) && having_value($data_search['date_end'])):
+            db_where("b.dt_added <= to_date('".date('d-M-y',strtotime($data_search['date_end']))."')");
+        endif;
+
+        if(isset($data_search['acc_status']) && having_value($data_search['acc_status'])):
+            db_where('a.status_acc',$data_search['acc_status']);
+        endif;
+
+        if(isset($data_search['category_id']) && having_value($data_search['category_id'])):
+            db_where('a.category_id',$data_search['category_id']);
+        endif;
+
+        db_group("a.category_id.ITEM_DESC");
+        $result = $query->result_array();
+        if ($result) {
+            
+            return $result;
+        }
     }
 }

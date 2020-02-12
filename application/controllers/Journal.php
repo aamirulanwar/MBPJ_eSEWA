@@ -159,6 +159,9 @@ class Journal extends CI_Controller
             $journal_id = $_POST['journal_id'];
             $mct_trcodenew = $_POST['mct_trcodenew'];
 
+            //echo "<script>console.log('".json_encode($_POST['mct_trcodenew'])."');</script>"; //var_dump($_POST['mct_trcodenew']);
+            // die();
+
             $bill_number = $this->m_journal->generate_running_billnumber();
 
             foreach ($_POST['journal_code'] as $i => $v) {
@@ -173,7 +176,8 @@ class Journal extends CI_Controller
                     'amount' => $amount[$i],
                     'bill_category' => 'J',
                     'tr_code' => $mct_trcodenew[$i],
-                    'status_approval' => 0
+                    'status_approval' => 0,
+                    'remark' => $remark[$i]
                 ]);
             }
 
@@ -204,6 +208,7 @@ class Journal extends CI_Controller
         $journal_id = uri_segment(3);
 
         $updated_at = date('d-M-Y h:i:s');
+        // echo "<script>console.log('".$updated_at."');</script>";
 
         $update = $this->m_journal->approveOrDeclineJurnal($journal_id,$_POST['approve'],$this->curuser["USER_ID"],$updated_at);
 

@@ -27,6 +27,7 @@ class Report extends CI_Controller
         load_model('application/M_p_application','m_p_application');
         load_model('audit_trail/M_audit_trail','m_audit_trail');
         load_model('asset/M_a_asset','m_asset');
+        load_model('journal/M_journal','m_journal');
     }
 
     function _remap($method){
@@ -46,7 +47,8 @@ class Report extends CI_Controller
             'category_aging_details',
             'adjustment_statement',
             'adjustment_statement_ringkasan',
-            'payment'
+            'payment',
+            'journal'
         );
         #set pages data
         (in_array($method,$array)) ? $this->$method() : $this->gl_summary();
@@ -1349,6 +1351,55 @@ class Report extends CI_Controller
 //        $data['data_list']      = $data_list;
 
         templates('/report/v_payment',$data);
+    }
+
+    function journal()
+    {
+        $data['link_1']     = 'Laporan';
+        $data['link_2']     = 'Jurnal Sewaan';
+        $data['link_3']     = '';
+        $data['pagetitle']  = 'Laporan Jurnal Sewaan';
+
+        // $data['data'] = $this->m_journal->get_lists_temp_journal_report();
+
+        $search_segment = uri_segment(3);
+
+        $post           = $this->input->post();
+        $filter_session = get_session('arr_filter_journal');
+        if(!empty($post)):
+            $this->session->set_userdata('arr_filter_journal',$post);
+            $data_search = $post;
+        else:
+            if(!empty($filter_session)):
+                $data_search = $filter_session;
+            else:
+                $data_search['date_start']  = date_display(timenow(),'d M Y');
+                $data_search['date_end']    = '';
+                $data_search['category_id'] = '';
+                $data_search['acc_status']  = '';
+            endif;
+        endif;
+        $data['data_search']    = $data_search;
+        $data['data_code_category']   = $this->m_category->get_a_category_all();
+        $data_report = $this->m_journal->get_lists_temp_journal_report($data_search);
+        $data['data_report']  = $data_report;
+
+    // pre($data_report);
+    // die();
+
+
+//         if($_POST):
+            
+
+// //            echo last_query();
+//         //     $data['data_report']    = $data_report;
+//             $data['data_search']    = $data_search;
+//         else:
+//         //     $data['data_report']    = array();
+//             $data['data_search']    = $data_search;
+//         endif;
+
+        templates('report/v_journal',$data);
     }
 }
 /* End of file modules/login/controllers/report.php */
