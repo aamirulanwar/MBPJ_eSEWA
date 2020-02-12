@@ -116,6 +116,8 @@ endif;
     <div class="card-body">
         <div class="table-responsive">
             <?php
+            // echo pre($data_report);
+            // die();
 //                pre($data_gst);
                 if($data_report):
                     ?>
@@ -147,6 +149,7 @@ endif;
                         echo '<tr>';
                         $bill_number    = '';
                         $resit_number   = '';
+                        $journal_number = '';
                         $bill_amaun     = 0;
                         $resit_amaun    = 0;
                         $type           = '';
@@ -162,7 +165,19 @@ endif;
                             $type           = 'Resit';
                         endif;
 
-                        echo '<td width="12%">'.$bill_number.$resit_number.'</td>';
+                        if($row['BILL_CATEGORY']=='J'):
+                            $journal_number    = $row['BILL_NUMBER'];
+                            $journal_amaun     = empty($row['AMOUNT'])?0:$row['AMOUNT'];
+                            $type              = 'Journal';
+
+                            if (substr($row['JOURNAL_CODE'],0,1)=='B'):
+                                $bill_amaun     = empty($row['AMOUNT'])?0:$row['AMOUNT'];
+                            elseif (substr($row['JOURNAL_CODE'],0,1)=='R'):
+                                $resit_amaun    = empty($row['AMOUNT'])?0:$row['AMOUNT'];
+                            endif;
+                        endif;
+
+                        echo '<td width="12%">'.$bill_number.$resit_number.$journal_number.'</td>';
                         echo '<td width="10%">'.date_display($row['DT_BILL']).'</td>';
 //                        echo '<td>'.$resit_number.'</td>';
                         echo '<td width="10%">'.$row['TR_CODE'].'</td>';
@@ -170,10 +185,16 @@ endif;
                         echo '<td width="15%">'.$row['ITEM_DESC'].'</td>';
                         echo '<td width="10%">'.$type.'</td>';
 
+                        // $amount = $amount+($bill_amaun-($resit_amaun));
+                        // echo '<td  width="10%" class="text-right">'.num($bill_amaun,3).'</td>';
+                        // echo '<td  width="10%" class="text-right">'.num($resit_amaun,3).'</td>';
+                        // echo '<td  width="12%" class="text-right">'.num($amount,3).'</td>';
+                        // echo '</tr>';
+
                         $amount = $amount+($bill_amaun-($resit_amaun));
-                        echo '<td  width="10%" class="text-right">'.num($bill_amaun,3).'</td>';
-                        echo '<td  width="10%" class="text-right">'.num($resit_amaun,3).'</td>';
-                        echo '<td  width="12%" class="text-right">'.num($amount,3).'</td>';
+                        echo '<td  width="10%" class="text-right">'.number_format(abs($bill_amaun),2).'</td>';
+                        echo '<td  width="10%" class="text-right">'.number_format(abs($resit_amaun),2).'</td>';
+                        echo '<td  width="12%" class="text-right">'.num($amount,4).'</td>';
                         echo '</tr>';
                     endforeach;
                     echo '</tbody>';

@@ -31,6 +31,13 @@ checking_validation(validation_errors());
                 </div>
             </div>
             <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Harga sewaan </label>
+                <div class="col-sm-5">
+                    <input type="input" name="harga_sewaan" onkeyup="currency_format(this)" class="form-control" placeholder="Harga sewaan" value="<?php echo set_value('harga_sewaan',($data['RENTAL_FEE'])?num($data['RENTAL_FEE']):num(0))?>">
+                    <?php echo form_error('harga_sewaan')?>
+                </div>
+            </div>
+            <div class="form-group row">
                 <label class="col-sm-3 col-form-label">Alamat</label>
                 <div class="col-sm-5">
                     <textarea class="form-control" name="address"><?php echo set_value('name_asset',$data['ASSET_ADD'])?></textarea>

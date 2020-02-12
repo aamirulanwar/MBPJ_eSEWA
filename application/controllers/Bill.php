@@ -349,7 +349,7 @@ class Bill extends CI_Controller
             $bill_amount = input_data('bill_amount');
 
             $data_search['MCT_TSTATS'] = 'B';
-            $data_transaction = $this->m_tr_code->get_tr_code_list($data_search);
+            $data_transaction = $this->m_tr_code->get_tr_code_list_journal($data_search);
             
             $data_option = '';
 
@@ -386,7 +386,7 @@ class Bill extends CI_Controller
             if (in_array($journal_code, $list_allowed_editable)) {
                 
                 $select_script = '<script>$("#'.$unique_select_id.'").select2();</script>';
-                $select_input_value = '<input type="hidden" name="mct_trcodenew[]" id="'.$unique_select_id.'_input" value="">';
+                $select_input_value = '<input type="hidden" name="mct_trcodenew[]" id="'.$unique_select_id.'_input" value="'.$tr_code.'">';
             }
             else {
 
@@ -427,7 +427,7 @@ class Bill extends CI_Controller
 //                        '</select>'.
 //                    '</div>'.
                     '<div class="col-sm-2">'.
-                        '<input name="amount[]" onkeyup="currency_format(this)" class="form-control" value="'.($journal_code=="B01" || $journal_code=="R01" ? $bill_amount : '').'" '.($journal_code=="B01" || $journal_code=="R01" ? 'readonly' : '').'>'.
+                        '<input name="amount[]" onkeyup="currency_format(this)" class="form-control" value="'.($journal_code=="B01" || $journal_code=="R01" ? '-'.$bill_amount : '').'" '.($journal_code=="B01" || $journal_code=="R01" ? 'readonly' : '').'>'.
                     '</div>'.
                     '<div class="col-sm-1">'.
                         '<input name="type[]" readonly="readonly" class="form-control" value="'.strtoupper($type).'">'.

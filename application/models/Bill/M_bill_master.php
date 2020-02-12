@@ -7,12 +7,15 @@ class M_bill_master extends CI_Model
         parent::__construct();
     }
 
-    function get_bill_history_list($per_page,$search_segment,$data_search=array()){
+    function get_bill_history_list($per_page,$search_segment,$data_search=array(),$bill_category=array('B','R')){
         db_select('m.*');
         db_select('a.*');
         db_select("to_char(m.dt_added, 'yyyy-mm-dd') as dt_added",false);
         db_from('b_master m');
         db_join('acc_account a','a.account_id=m.account_id');
+        db_in('BILL_CATEGORY', $bill_category);
+        // Produces: OR bill category IN ('B', 'R') without J
+        // db_where('m.bill_category','B''R');
         if(isset($data_search['account_id']) && having_value($data_search['account_id'])):
             db_where('m.account_id',$data_search['account_id']);
         endif;
@@ -39,8 +42,9 @@ class M_bill_master extends CI_Model
         endif;
     }
 
-    function count_bill_history ($data_search=array()){
+    function count_bill_history ($data_search=array(),$bill_category=array('B','R')){
         db_select('*');
+        db_in('BILL_CATEGORY', $bill_category);
         if(isset($data_search['account_id']) && having_value($data_search['account_id'])):
             db_where('m.account_id',$data_search['account_id']);
         endif;

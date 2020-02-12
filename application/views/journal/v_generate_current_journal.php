@@ -71,9 +71,13 @@ checking_validation(validation_errors());
                             $no     = 'No. bil';
                             $date   = 'Tarikh bil';
                         elseif ($bill_master['BILL_CATEGORY']=='R'):
-                            $title = 'Maklumat resit';
+                            $title  = 'Maklumat resit';
                             $no     = 'No. resit';
                             $date   = 'Tarikh resit';
+                        elseif ($bill_master['BILL_CATEGORY']=='J'):
+                            $title  = 'Maklumat jurnal';
+                            $no     = 'No. jurnal';
+                            $date   = 'Tarikh jurnal';
                         endif;
                     ?>
                     <h3 class="header-h1"><?php echo $title?> (<?php echo $bill_master['BILL_MONTH'].'/'.$bill_master['BILL_YEAR']?>)</h3>

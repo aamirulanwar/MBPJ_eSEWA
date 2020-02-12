@@ -256,6 +256,12 @@ function num($num='',$currencyFormat=0,$decimal=2)
         else:
             return number_format($num,$decimal,'.',',');
         endif;
+    elseif($currencyFormat==4):
+        if($num<0):
+            return '('.number_format(abs($num),2).')';
+        else:
+            return number_format($num,$decimal,'.',',');
+        endif;
     else:
         return number_format($num,$decimal,'.','');
     endif;

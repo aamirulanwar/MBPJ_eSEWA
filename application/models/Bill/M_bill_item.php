@@ -408,6 +408,7 @@ class M_bill_item extends CI_Model
     function record_transaction($data_search=array()){
         db_select('m.*');
         db_select('i.*');
+        db_select('(select journal_code from a_journal where a_journal.journal_id = i.journal_id) as journal_code');
         db_select('acc.ACCOUNT_NUMBER');
         db_select('usr.name');
         db_select("to_char(i.dt_added, 'yyyy-mm-dd hh24:mi:ss') as dt_bill",false);

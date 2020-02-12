@@ -29,6 +29,7 @@ notify_msg('user');
                     <th>No.</th>
                     <th>Kod Harta</th>
                     <th>Kod Kategori</th>
+                    <th>Harga Sewaan</th>
                     <th>Status</th>
                     <th>Status Sewaan</th>
                     <th class="text-center">Tindakan</th>
@@ -44,6 +45,7 @@ notify_msg('user');
                             <td><?php echo $i?></td>
                             <td><?php echo $row['ASSET_NAME']?></td>
                             <td><?php echo '<strong>'.$row['CATEGORY_CODE'].'</strong> - '.$row['CATEGORY_NAME']?></td>
+                            <td>RM <?=num($row['RENTAL_FEE'],2)?></td>
                             <td>
                                 <?php
                                 get_status_active($row['ACTIVE']);
