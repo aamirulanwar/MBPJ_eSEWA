@@ -24,44 +24,48 @@ checking_validation(validation_errors());
                 </thead>
                 <tbody>
                     <?php $i=0; ?>
-                    <?php foreach ($data as $d): ?>
-                        <?php $i++; ?>
-                        <tr>
-                            <td><?=$i?></td>
-                            <td><?=$d['ACCOUNT_NUMBER']?></td>
-                            <td><?=$d['BILL_NUMBER']?></td>
-                            <td><?=$d['BILL_MONTH']?>/<?=$d['BILL_YEAR']?></td>
-                            <td>RM <?=number_format($d['AMOUNT'],2)?></td>
-                            <td>
-                                <?php if($d['STATUS_APPROVAL']==0): ?>
-                                <span class="badge badge-warning">Pending</span>
-                                <?php elseif($d['STATUS_APPROVAL']==1): ?>
-                                <span class="badge badge-success">Lulus</span>
-                                <?php elseif($d['STATUS_APPROVAL']==2): ?>
-                                <span class="badge badge-danger">Batal</span>
-                                <?php endif; ?>
-                            </td>
-                            <td>
-                                <?php echo $d['USER_NAME']; ?>
-                                <br>
-                                <small><i>
-                                    <?php 
-                                    $date = DateTime::createFromFormat("d#M#y H#i#s*A",$d['CREATED_AT']);
-                                    $new_date = $date->format('Y-m-d H:i:s');
+                        <?php if (count($data) > 0): ?>
+                        <?php foreach ($data as $d): ?>
+                        <?php if ($d['STATUS_APPROVAL']==0): ?>
+                            <?php $i++; ?>
+                            <tr>
+                                <td><?=$i?></td>
+                                <td><?=$d['ACCOUNT_NUMBER']?></td>
+                                <td><?=$d['BILL_NUMBER']?></td>
+                                <td><?=$d['BILL_MONTH']?>/<?=$d['BILL_YEAR']?></td>
+                                <td>RM <?=number_format(abs($d['AMOUNT']),2)?></td>
+                                <td>
+                                    <?php if($d['STATUS_APPROVAL']==0): ?>
+                                    <span class="badge badge-warning">Pending</span>
+                                    <?php elseif($d['STATUS_APPROVAL']==1): ?>
+                                    <span class="badge badge-success">Lulus</span>
+                                    <?php elseif($d['STATUS_APPROVAL']==2): ?>
+                                    <span class="badge badge-danger">Batal</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td>
+                                    <?php echo $d['USER_NAME']; ?>
+                                    <br>
+                                    <small><i>
+                                        <?php 
+                                        $date = DateTime::createFromFormat("d#M#y H#i#s*A",$d['CREATED_AT']);
+                                        $new_date = $date->format('d-m-Y H:i:s');
 
-                                    echo $new_date;
-                                    // echo date('Y-m-d H:i:s',strtotime($new_date." +8 hours"));
-                                    ?>
-                                </i></small>
-                            </td>
-                            <td>
-                                <?php if($d['STATUS_APPROVAL']==0): ?>
-                                <button type="button" class="btn btn-success" onclick="showApprovalConfirmation(<?php echo $d['ID']; ?>)">Lulus <i class="fa fa-check-circle"></i></button>
-                                <button type="button" class="btn btn-danger" onclick="showDeclineConfirmation(<?php echo $d['ID']; ?>)">Batal <i class="fa fa-times-circle"></i></button>
-                                <?php endif; ?>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
+                                        echo $new_date;
+                                        // echo date('Y-m-d H:i:s',strtotime($new_date." +8 hours"));
+                                        ?>
+                                    </i></small>
+                                </td>
+                                <td>
+                                    <?php if($d['STATUS_APPROVAL']==0): ?>
+                                    <button type="button" class="btn btn-success" onclick="showApprovalConfirmation(<?php echo $d['ID']; ?>)">Lulus <i class="fa fa-check-circle"></i></button>
+                                    <button type="button" class="btn btn-danger" onclick="showDeclineConfirmation(<?php echo $d['ID']; ?>)">Batal <i class="fa fa-times-circle"></i></button>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>
