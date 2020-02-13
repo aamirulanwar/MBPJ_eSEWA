@@ -75,10 +75,11 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => '127.0.0.1',
+	// 'hostname' => '94.237.67.25:1521/mpkj',
+	'hostname' => '(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=94.237.67.25)(PORT=1521))(CONNECT_DATA=(SID=mpkj)))',
 	'username' => 'sewaan',
 	'password' => 'password1',
-	'database' => 'personaldb',
+	'database' => 'mpkj',
 	'dbdriver' => 'oci8',
 	'dbprefix' => '',
 	'pconnect' => TRUE,
@@ -97,10 +98,11 @@ $db['default'] = array(
 
 $db['admin'] = array(
     'dsn'	=> '',
-    'hostname' => '127.0.0.1',
+    // 'hostname' => '94.237.67.25',
+	'hostname' => '(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=94.237.67.25)(PORT=1521))(CONNECT_DATA=(SID=mpkj)))',
     'username' => 'admin',
 	'password' => 'password1',
-	'database' => 'personaldb',
+	'database' => 'mpkj',
     'dbdriver' => 'oci8',
     'dbprefix' => '',
     'pconnect' => TRUE,
@@ -119,10 +121,11 @@ $db['admin'] = array(
 
 $db['payroll'] = array(
     'dsn'	=> '',
-    'hostname' => '127.0.0.1',
+    // 'hostname' => '94.237.67.25',
+	'hostname' => '(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=94.237.67.25)(PORT=1521))(CONNECT_DATA=(SID=mpkj)))',
     'username' => 'sewaan',
 	'password' => 'password1',
-	'database' => 'personaldb',
+	'database' => 'mpkj',
     'dbdriver' => 'oci8',
     'dbprefix' => '',
     'pconnect' => TRUE,
