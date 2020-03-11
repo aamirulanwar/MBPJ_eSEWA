@@ -58,6 +58,29 @@ function currency_format(MyString){
     MyString.value=y;
 }
 
+function currency_format1(MyString){
+
+    var x = MyString.value;
+    y=x.replace(/[^\-\d.]/g,'');
+    // y=x.replace(/^(\-(\d*))$/,'');
+    var objRegex  = new RegExp('(-?[0-9]+)([0-9]{3})');
+
+    //Check For Criteria....
+    while(objRegex.test(y))
+    {
+        //Add Commas After Every Three Digits Of Number...
+        y = y.replace(objRegex, '$1,$2');
+    }
+    var n = y.indexOf(".");
+    if (n!=-1) {
+        if(y.length>n+2) {
+            y=y.substr(0,n+3);
+        }
+    }
+
+    MyString.value=y;
+}
+
 function one_decimal_point(MyString){
 
     var x = MyString.value;

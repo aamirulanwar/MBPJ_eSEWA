@@ -286,9 +286,15 @@ class M_journal extends CI_Model
 
     function get_lists_temp_journal_report($data_search=array())
     {
-        $model =& get_instance();
-
-        $query = $model->db->query("SELECT b.*,a.account_number,u.user_name,j.journal_code,j.journal_desc,c.category_name FROM b_journal_temp b, acc_account a, users u, a_journal j, a_category c WHERE b.account_id=a.account_id AND u.user_id=b.CREATED_BY AND b.journal_id=j.journal_id AND a.category_id=c.category_id ORDER BY bill_number");
+        db_select('b.*,a.account_number,u.user_name,j.journal_code,j.journal_desc,c.category_name');
+        db_from('b_journal_temp b');
+        db_join('acc_account a','b.account_id = a.account_id');
+        db_join('users u','u.user_id = b.CREATED_BY');
+        db_join('a_journal j','b.journal_id = j.journal_id'); 
+        db_join('a_category c','a.category_id = c.category_id','LEFT');
+        db_order('bill_number');
+         // $model =& get_instance();
+        //        $query = $model->db->query("SELECT b.*,a.account_number,u.user_name,j.journal_code,j.journal_desc,c.category_name FROM b_journal_temp b, acc_account a, users u, a_journal j, a_category c WHERE b.account_id=a.account_id AND u.user_id=b.CREATED_BY AND b.journal_id=j.journal_id AND a.category_id=c.category_id ORDER BY bill_number");
 
         if(isset($data_search['date_start']) && having_value($data_search['date_start'])):
             db_where("b.dt_added >= to_date('".date('d-M-y',strtotime($data_search['date_start']))."')");
@@ -306,11 +312,15 @@ class M_journal extends CI_Model
             db_where('a.category_id',$data_search['category_id']);
         endif;
 
-        db_group("a.category_id.ITEM_DESC");
-        $result = $query->result_array();
-        if ($result) {
+        // db_group("a.category_id.ITEM_DESC");
+        // $result = $query->result_array();
+        // if ($result) {
             
-            return $result;
-        }
+        //     return $result;
+        // }
+        $sql = db_get('');
+        if($sql):
+            return $sql->result_array('');
+        endif;
     }
 }

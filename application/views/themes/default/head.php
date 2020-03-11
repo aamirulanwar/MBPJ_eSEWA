@@ -18,7 +18,7 @@
     <meta name="keyword" content="Bootstrap,Admin,Template,Open,Source,jQuery,CSS,HTML,RWD,Dashboard">
     <title>Sistem Pengurusan Sewaan MPKj</title>
     <!-- Icons-->
-    <link rel="icon" href="/assets/images/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="<?=base_url()?>/favicon.ico" type="image/x-icon">
     <link href="/assets/node_modules/@coreui/icons/css/coreui-icons.min.css" rel="stylesheet">
     <link href="/assets/node_modules/flag-icon-css/css/flag-icon.min.css" rel="stylesheet">
     <link href="/assets/node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet">
@@ -211,7 +211,7 @@
         <li class="nav-item dropdown">
             <a class="nav-link" data-toggle="dropdown" href="/profile" role="button" aria-haspopup="true"
                aria-expanded="false">
-                <img class="img-avatar" src="/assets/images/user.png" alt="administrator">Administrator&nbsp;&nbsp;
+                <img class="img-avatar" src="/assets/images/user.png" alt="administrator"><?php echo $this->curuser['USER_NAME']?>&nbsp;&nbsp;
             </a>
             <div class="dropdown-menu dropdown-menu-right">
 <!--                <div class="dropdown-header text-center">-->
@@ -446,31 +446,34 @@
                 </li>
                 <?php endif;?>
 
-                <?php if($this->auth->access_main_view($this->curuser,array(7000))):?>
-                <?php if($this->auth->access_view($this->curuser,array(7001))):?>    
-                      
+                <?php if($this->auth->access_main_view($this->curuser,array(7000))):?>    
                 <li class="nav-item nav-dropdown <?php echo set_active_dropdown(uri_segment(1),array('journal'))?>">
                     <a class="nav-link nav-dropdown-toggle <?php echo set_active_menu(uri_segment(1),array('journal'))?>" href="#6">
                         <i class="nav-icon icon-speedometer"></i> Pelarasan</a>
                     <ul class="nav-dropdown-items"> 
-
+                        <?php if($this->auth->access_view($this->curuser,array(7001))):?> 
                         <li class="nav-item">
                             <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('account_list','generate_current_bill','current_bill'))?>" href="/journal/search">
                                 <i class="nav-icon fa fa-circle fa-sm"></i>Senarai Pelarasan</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('account_list','generate_current_bill','current_bill'))?>" href="/journal/index">
-                                <i class="nav-icon fa fa-circle fa-sm"></i>Senarai Kelulusan</a>
-                        </li>
+                        <?php endif;?>
+                        <?php if($this->auth->access_view($this->curuser,array(7002))):?> 
                         <li class="nav-item">
                             <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('account_list','generate_current_bill','current_bill'))?>" href="/journal/entry">
                                 <i class="nav-icon fa fa-circle fa-sm"></i>Senarai Kemasukan</a>
                         </li>
+                        <?php endif;?>
+                        <?php if($this->auth->access_view($this->curuser,array(7003))):?> 
+                        <li class="nav-item">
+                            <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('account_list','generate_current_bill','current_bill'))?>" href="/journal/index">
+                                <i class="nav-icon fa fa-circle fa-sm"></i>Senarai Kelulusan</a>
+                        </li>
+                        <?php endif;?>
                     </ul>
                     </a>
                 </li>
                 <?php endif;?>
-                <?php endif;?>
+
 
 <!--                <li class="nav-item nav-dropdown --><?php //echo set_active_dropdown(uri_segment(1),array('journal'))?><!--">-->
 <!--                    <a class="nav-link nav-dropdown-toggle --><?php //echo set_active_menu(uri_segment(1),array('journal'))?><!--" href="/journal/insert">-->

@@ -26,18 +26,20 @@ class Journal extends CI_Controller
             'index',
             'journal_code_lists',
             'entry',
-            'update'
+            'update',
+            'doc_journal'
         );
         #set pages data
         (in_array($method,$array)) ? $this->$method() : $this->search();
     }
 
-    function index()
-    {
+    function index(){
+        $this->auth->restrict_access($this->curuser,array(7003));
+
         $data['link_1']     = 'Penyelarasan';
         $data['link_2']     = '';
         $data['link_3']     = '';
-        $data['pagetitle']  = '';
+        $data['pagetitle']  = 'Senarai Kelulusan Jurnal';
 
         $post           = $this->input->post();
         $filter_session = get_session('arr_filter_journal');
@@ -66,8 +68,9 @@ class Journal extends CI_Controller
         templates('journal/v_journal_kelulusan',$data);
     }
 
-    function entry()
-    {
+    function entry(){
+        $this->auth->restrict_access($this->curuser,array(7002));
+
         $data['link_1']     = 'Penyelarasan';
         $data['link_2']     = '';
         $data['link_3']     = '';
@@ -84,7 +87,7 @@ class Journal extends CI_Controller
         $data['link_1']     = 'Penyelarasan';
         $data['link_2']     = '';
         $data['link_3']     = '';
-        $data['pagetitle']  = '';
+        $data['pagetitle']  = 'Senarai Pelarasan';
 
         $search_segment = uri_segment(3);
         $post           = $this->input->post();
@@ -229,4 +232,11 @@ class Journal extends CI_Controller
             ]);  
         }
     }
+
+    function doc_journal(){
+        
+        load_library('Generate_word');
+        $this->generate_word->word_document($id, DOC_JOURNAL);
+    }
+
 }
