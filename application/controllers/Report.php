@@ -1379,25 +1379,26 @@ class Report extends CI_Controller
                 $data_search['acc_status']  = '';
             endif;
         endif;
-        $data['data_search']    = $data_search;
-        $data['data_code_category']   = $this->m_category->get_a_category_all();
-        $data_report = $this->m_journal->get_lists_temp_journal_report($data_search);
-        $data['data_report']  = $data_report;
+        $data['data_code_category']   = $this->m_category->get_a_category('','');
+        // $data['data_search']    = $data_search;
+        
+        // $data_report = $this->m_journal->get_lists_temp_journal_report($data_search);
+        // $data['data_report']  = $data_report;
 
     // pre($data_report);
     // die();
 
 
-//         if($_POST):
-            
+        if($_POST):
 
-// //            echo last_query();
-//         //     $data['data_report']    = $data_report;
-//             $data['data_search']    = $data_search;
-//         else:
-//         //     $data['data_report']    = array();
-//             $data['data_search']    = $data_search;
-//         endif;
+            $data_report = $this->m_journal->get_lists_temp_journal_report($data_search);
+            //echo last_query();
+            $data['data_report']    = $data_report;
+            $data['data_search']    = $data_search;
+        else:
+            $data['data_report']    = array();
+            $data['data_search']    = $data_search;
+        endif;
 
         templates('report/v_journal',$data);
     }

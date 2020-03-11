@@ -374,12 +374,12 @@ class payment_process_lib{
     }
 
     function sewaan_tr_code($tr_code='',$tr_id=''){
-        $this->admin_trcode->from('TR_CODE');
+        $this->admin_trcode->from('MCTRANCODE');
         if(!empty($tr_code)):
-            $this->admin_trcode->where('MCT_TRCODE_OLD',$tr_code);
+            $this->admin_trcode->where('MCT_TRCODE',$tr_code);
         endif;
         if(!empty($tr_id)):
-            $this->admin_trcode->where('TR_ID',$tr_id);
+            // $this->admin_trcode->where('TR_ID',$tr_id);
         endif;
         $sql = $this->admin_trcode->get();
         if($sql):

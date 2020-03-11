@@ -153,6 +153,7 @@ endif;
                         $bill_amaun     = 0;
                         $resit_amaun    = 0;
                         $type           = '';
+                        
                         if($row['BILL_CATEGORY']=='B'):
                             $bill_number    = $row['BILL_NUMBER'];
                             $bill_amaun     = empty($row['AMOUNT'])?0:$row['AMOUNT'];
@@ -185,17 +186,23 @@ endif;
                         echo '<td width="15%">'.$row['ITEM_DESC'].'</td>';
                         echo '<td width="10%">'.$type.'</td>';
 
+                        $amount = $amount+($bill_amaun-($resit_amaun));
+                        echo '<td  width="10%" class="text-right">'.num($bill_amaun,4).'</td>';
+                        echo '<td  width="10%" class="text-right">'.num($resit_amaun,4).'</td>';
+                        echo '<td  width="12%" class="text-right">'.num($amount,4).'</td>';
+                        echo '</tr>';
+
                         // $amount = $amount+($bill_amaun-($resit_amaun));
                         // echo '<td  width="10%" class="text-right">'.num($bill_amaun,3).'</td>';
                         // echo '<td  width="10%" class="text-right">'.num($resit_amaun,3).'</td>';
                         // echo '<td  width="12%" class="text-right">'.num($amount,3).'</td>';
                         // echo '</tr>';
 
-                        $amount = $amount+($bill_amaun-($resit_amaun));
-                        echo '<td  width="10%" class="text-right">'.number_format(abs($bill_amaun),2).'</td>';
-                        echo '<td  width="10%" class="text-right">'.number_format(abs($resit_amaun),2).'</td>';
-                        echo '<td  width="12%" class="text-right">'.num($amount,4).'</td>';
-                        echo '</tr>';
+                        // $amount = $amount+($bill_amaun-($resit_amaun));
+                        // echo '<td  width="10%" class="text-right">'.number_format(abs($bill_amaun),2).'</td>';
+                        // echo '<td  width="10%" class="text-right">'.number_format(abs($resit_amaun),2).'</td>';
+                        // echo '<td  width="12%" class="text-right">'.num($amount,4).'</td>';
+                        // echo '</tr>';
                     endforeach;
                     echo '</tbody>';
                     echo '</table>';

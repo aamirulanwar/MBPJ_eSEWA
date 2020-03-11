@@ -353,6 +353,8 @@ class Bill extends CI_Controller
             
             $data_option = '';
 
+            // echo "<script>console.log(".json_encode($data_transaction)."); </script>";
+
             $is_changeable_trcode = false;
             if($data_transaction):
                 foreach ($data_transaction as $row):
@@ -381,7 +383,7 @@ class Bill extends CI_Controller
             $select_script = "";
             $select_input_value = "";
 
-            $list_allowed_editable = ["B03","B04","R03","R04"];
+            $list_allowed_editable = ["B02","B03","R02","R03"];
 
             if (in_array($journal_code, $list_allowed_editable)) {
                 
@@ -427,7 +429,7 @@ class Bill extends CI_Controller
 //                        '</select>'.
 //                    '</div>'.
                     '<div class="col-sm-2">'.
-                        '<input name="amount[]" onkeyup="currency_format(this)" class="form-control" value="'.($journal_code=="B01" || $journal_code=="R01" ? '-'.$bill_amount : '').'" '.($journal_code=="B01" || $journal_code=="R01" ? 'readonly' : '').'>'.
+                        '<input name="amount[]" onkeyup="currency_format1(this)" class="form-control" value="'.($journal_code=="B01" || $journal_code=="R01" ? '-'.$bill_amount : '').'" '.($journal_code=="B01" || $journal_code=="R01" ? 'readonly' : '').'>'.
                     '</div>'.
                     '<div class="col-sm-1">'.
                         '<input name="type[]" readonly="readonly" class="form-control" value="'.strtoupper($type).'">'.

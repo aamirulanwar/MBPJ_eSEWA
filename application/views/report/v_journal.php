@@ -161,6 +161,6 @@ checking_validation(validation_errors());
    <!--  <script>
     $( document ).ready(function() {
         var type_id = $('#type_id').val();
-        get_category_by_type('<?php echo search_default($data_search,'category_id')?>');
+        get_category_by_type('<?php //echo search_default($data_search,'category_id')?>');
     });
 </script> -->

@@ -319,7 +319,7 @@ class Generate_word {
         $templateProcessor->setValue('ic_number',display_ic_number($get_details['IC_NUMBER']));
         $templateProcessor->setValue('address',strtoupper($address));
         $templateProcessor->setValue('rental_use_name',strtoupper($rental_use_name));
-        $templateProcessor->setValue('rent',num($get_details['RENTAL_FEE']));
+        $templateProcessor->setValue('rent',num($get_details['RENTAL_FEE_DEFAULT']));
         $templateProcessor->setValue('tipping_fee',num($get_details['WASTE_MANAGEMENT_CHARGE']));
         $templateProcessor->setValue('deposit',num($get_details['DEPOSIT_RENTAL']));
         $templateProcessor->setValue('agree',num($get_details['RENTAL_AGREEMENT_COST']));
@@ -372,10 +372,16 @@ class Generate_word {
         
         $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($_SERVER['DOCUMENT_ROOT'].'/file_download/setuju_terima/'.$template);
         
+        $address = display_address($get_details['MAIL_ADDRESS_1'],$get_details['MAIL_ADDRESS_2'],$get_details['MAIL_ADDRESS_3'],$get_details['MAIL_POSTCODE'],strtolower($get_details['MAIL_STATE']));
+        if(empty($address)):
+            $address = display_address($get_details['ADDRESS_1'],$get_details['ADDRESS_2'],$get_details['ADDRESS_3'],$get_details['POSTCODE'],ucwords(strtolower($get_details['STATE'])));
+        endif;
+        $address = str_replace('<br>', ' ', $address);
+
         $templateProcessor->setValue('name',strtoupper($get_details['NAME']));
         $templateProcessor->setValue('ic_number',display_ic_number($get_details['IC_NUMBER']));
         $templateProcessor->setValue('position',strtoupper($get_details['POSITION']));
-        $templateProcessor->setValue('address',strtoupper($get_details['MAIL_ADDRESS']));
+        $templateProcessor->setValue('address',strtoupper($address));
         $templateProcessor->setValue('phone_number',display_mobile_number($get_details['MOBILE_PHONE_NUMBER']));
 
         ob_clean();
