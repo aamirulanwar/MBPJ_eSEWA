@@ -137,8 +137,8 @@ class M_acc_account extends CI_Model
             db_where('a.category_id',$data_search['category_id']);
         endif;
         if(isset($data_search['almost_expired']) && having_value($data_search['almost_expired'])):
-//            db_where("extract(year from a.date_end) = ".date('Y')."");
-//            db_where("extract(month from a.date_end) = ".date('m')."");
+            // db_where("extract(year from a.date_end) = ".date('Y')."");
+            // db_where("extract(month from a.date_end) = ".date('m')."");
             if($data_search['almost_expired']==1):
                 db_where("A.DATE_END IS NOT NULL");
                 db_where('a.STATUS_ACC',STATUS_ACCOUNT_ACTIVE);
@@ -157,9 +157,7 @@ class M_acc_account extends CI_Model
             db_where('a.STATUS_BILL',STATUS_BILL_ACTIVE);
         endif;
         if(isset($data_search['ic_number_company_reg']) && having_value($data_search['ic_number_company_reg'])):
-//            db_where('(acc.ic_number like "%'.$data_search['ic_number_company_reg'].'%" or acc.company_registration_number like "%'.$data_search['ic_number_company_reg'].'%")');
             db_where("(acc.ic_number like '%".$data_search['ic_number_company_reg']."%' or acc.company_registration_number like '%".$data_search['ic_number_company_reg']."%')");
-
         endif;
         if(isset($data_search['acc_start']) && having_value($data_search['acc_start'])):
             db_where("a.account_number >= '".$data_search['acc_start']."'");
@@ -203,7 +201,8 @@ class M_acc_account extends CI_Model
         db_from('acc_account a');
         db_where('a.notice_level != 0');
         if(isset($data_search['account_number']) && having_value($data_search['account_number'])):
-            db_where('a.account_number',$data_search['account_number']);
+            // db_where('a.account_number',$data_search['account_number']);
+            db_where("a.account_number like '%".$data_search['account_number']."%'");
         endif;
         if(isset($data_search['type_id']) && having_value($data_search['type_id'])):
             db_where('a.type_id',$data_search['type_id']);
@@ -226,7 +225,8 @@ class M_acc_account extends CI_Model
         db_from('acc_account a');
         db_where('a.notice_level != 0');
         if(isset($data_search['account_number']) && having_value($data_search['account_number'])):
-            db_where('a.account_number',$data_search['account_number']);
+            // db_where('a.account_number',$data_search['account_number']);
+        db_where("a.account_number like '%".$data_search['account_number']."%'");
         endif;
         if(isset($data_search['type_id']) && having_value($data_search['type_id'])):
             db_where('a.type_id',$data_search['type_id']);

@@ -592,7 +592,7 @@ class Generate_word {
         endif;
 
         $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($_SERVER['DOCUMENT_ROOT'].'/file_download/notis/'.$template);
-        
+
         $templateProcessor->setValue('name',strtoupper($get_details['NAME']));
         $templateProcessor->setValue('address',strtoupper($get_details['MAIL_ADDRESS']));
         $templateProcessor->setValue('ic_number',display_ic_number($get_details['IC_NUMBER']));
@@ -608,9 +608,10 @@ class Generate_word {
         $templateProcessor->setValue('total_overdue',num($notice_info['TOTAL_TUNGGAKAN']));
         $templateProcessor->setValue('total_overdue_lod',num($notice_info['TOTAL_TUNGGAKAN']));
 
-        ob_clean();
-        $filename = 'Notis '.notice_level($notice_level).' - '.$get_details['NAME'].'.docx';
-        $templateProcessor->saveAs($filename);
+        //Check and replace if symbol in name exist that might make the file to be corrupted or cant be named
+        $filename_replace = preg_replace("/[^A-Za-z0-9' ]/", "", $get_details['NAME']); 
+        $filename = 'Notis '.notice_level($notice_level).' - '.$filename_replace.'.docx';
+        $templateProcessor->saveAs($filename);       
 
         header('Content-Disposition: attachment; filename='.$filename);
         header('Content-Transfer-Encoding: binary');
@@ -618,6 +619,7 @@ class Generate_word {
         header('Expires: 0');
         header('Pragma: public');
         flush();
+        ob_clean();
         readfile($filename);
         unlink($filename);
         exit;

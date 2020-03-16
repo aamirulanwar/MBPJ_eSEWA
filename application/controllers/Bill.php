@@ -279,6 +279,8 @@ class Bill extends CI_Controller
             return false;
         endif;
 
+        // echo $notice_level;
+
         if($notice_level<=4):
             $get_all_notice = $this->m_notice_log->get_notice_level($id,$notice_level);
         else:
@@ -292,8 +294,8 @@ class Bill extends CI_Controller
     function add_transaction(){
         if(is_ajax()):
             $type = input_data('type');
-//            $data_search['TR_TYPE']         = 1;
-//            $data_search['AUTO_GENERATE']   = 0;
+            // $data_search['TR_TYPE']         = 1;
+            // $data_search['AUTO_GENERATE']   = 0;
             $data_search['MCT_TSTATS'] = 'B';
             $data_transaction = $this->m_tr_code->get_tr_code_list($data_search);
             
