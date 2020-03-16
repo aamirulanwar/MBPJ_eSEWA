@@ -279,6 +279,8 @@ class Bill extends CI_Controller
             return false;
         endif;
 
+        // echo $notice_level;
+
         if($notice_level<=4):
             $get_all_notice = $this->m_notice_log->get_notice_level($id,$notice_level);
         else:

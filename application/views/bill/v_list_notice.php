@@ -86,53 +86,30 @@ notify_msg('notify_msg');
                             </td>
                             <td class="text-right">
                                 <?php echo num($row['total_tunggakan'])?><br>
-<!--                                <strong>Aging : </strong> --><?php //echo $row['AGING']?>
                             </td>
                             <td class="text-center">
-                                <!-- <?php
-                                    // for($cnt=1;$cnt<=$row['NOTICE_LEVEL'];$cnt++):
-                                    //     if($row['NOTICE_LEVEL']==$cnt):
-                                    //         $btn_class  = 'btn btn-block btn-danger btn-sm active';
-                                    //         $arrow      = '<i class="fa fa-arrow-right"></i>';
-                                    //     else:
-                                    //         $btn_class  = 'btn btn-block btn-outline-danger btn-sm';
-                                    //         $arrow      = '';
-                                    //     endif;
+                            <?php
+                                for($cnt=1;$cnt<=$row['NOTICE_LEVEL'];$cnt++):
+                                    if ($cnt<=3):
+                                        $btn_class  = 'btn btn-block btn-yellow btn-sm active';
+                                        $arrow      = '<i class="fa fa-arrow-right"></i>';
+                                        echo '<a class="'.$btn_class.'" href="/bill/generate_notice/'.urlEncrypt($row['ACCOUNT_ID']).'/'.urlEncrypt($cnt).'"><span class="glyphicon glyphicon-edit"></span> <strong>'.notice_level($cnt).'</strong> </a>';
 
-                                    //     echo '<a class="'.$btn_class.'" href="/bill/generate_notice/'.urlEncrypt($row['ACCOUNT_ID']).'/'.urlEncrypt($cnt).'"><span class="glyphicon glyphicon-edit"></span> <strong>'.notice_level($cnt).'</strong> </a>';
-                                    // endfor;
+                                    elseif ($cnt==4):
+                                        $btn_class  = 'btn btn-block btn-orange btn-sm active';
+                                        $arrow      = '<i class="fa fa-arrow-right"></i>';
+                                        echo '<a class="'.$btn_class.'" href="/bill/generate_notice/'.urlEncrypt($row['ACCOUNT_ID']).'/'.urlEncrypt($cnt).'"><span class="glyphicon glyphicon-edit"></span> <strong>'.notice_level($cnt).'</strong> </a>';
 
-                                    // if($row['NOTICE_LEVEL']<=NOTICE_LEVEL_4):
-                                    //     echo '<br><a class="btn btn-block btn-info btn-sm" title="Jana Notis '.notice_level(NOTICE_LEVEL_5).'" href="/bill/generate_notice/'.urlEncrypt($row['ACCOUNT_ID']).'/'.urlEncrypt(NOTICE_LEVEL_5).'"><span class="glyphicon glyphicon-edit"></span><strong> '.notice_level(NOTICE_LEVEL_5).'</strong> </a>';
-                                    // endif;
-                                    // if($row['NOTICE_LEVEL']==NOTICE_LEVEL_4):
-                                    //     echo '<br><a class="btn btn-block btn-info btn-sm" title="Jana Notis '.notice_level(NOTICE_LEVEL_6).'" href="/bill/generate_notice/'.urlEncrypt($row['ACCOUNT_ID']).'/'.urlEncrypt(NOTICE_LEVEL_6).'"><span class="glyphicon glyphicon-edit"></span><strong> '.notice_level(NOTICE_LEVEL_6).'</strong> </a>';
-                                    // endif;
-                                ?>-->
-                                   <?php
-                                    for($cnt=1;$cnt<=$row['NOTICE_LEVEL'];$cnt++):
-
-                                        if ($cnt<=3):
-                                            $btn_class  = 'btn btn-block btn-yellow btn-sm active';
-                                            $arrow      = '<i class="fa fa-arrow-right"></i>';
-                                            echo '<a class="'.$btn_class.'" href="/bill/generate_notice/'.urlEncrypt($row['ACCOUNT_ID']).'/'.urlEncrypt($cnt).'"><span class="glyphicon glyphicon-edit"></span> <strong>'.notice_level($cnt).'</strong> </a>';
-
-                                        elseif ($cnt==4):
-                                            $btn_class  = 'btn btn-block btn-orange btn-sm active';
-                                            $arrow      = '<i class="fa fa-arrow-right"></i>';
-                                            echo '<a class="'.$btn_class.'" href="/bill/generate_notice/'.urlEncrypt($row['ACCOUNT_ID']).'/'.urlEncrypt($cnt).'"><span class="glyphicon glyphicon-edit"></span> <strong>'.notice_level($cnt).'</strong> </a>';
-
-                                        endif;
-
-                                    endfor;
-
-                                    if($row['NOTICE_LEVEL']<=NOTICE_LEVEL_6):
-                                        echo '<br><a class="btn btn-block btn-danger btn-sm active" title="Jana Notis '.notice_level(NOTICE_LEVEL_5).'" href="/bill/generate_notice/'.urlEncrypt($row['ACCOUNT_ID']).'/'.urlEncrypt(NOTICE_LEVEL_5).'"><span class="glyphicon glyphicon-edit"></span><strong> '.notice_level(NOTICE_LEVEL_5).'</strong> </a>';
                                     endif;
-                                    if($row['NOTICE_LEVEL']==NOTICE_LEVEL_5):
-                                        echo '<br><a class="btn btn-block btn-danger btn-sm active" title="Jana Notis '.notice_level(NOTICE_LEVEL_6).'" href="/bill/generate_notice/'.urlEncrypt($row['ACCOUNT_ID']).'/'.urlEncrypt(NOTICE_LEVEL_6).'" ><span class="glyphicon glyphicon-edit"></span><strong> '.notice_level(NOTICE_LEVEL_6).' </strong> </a>';
-                                    endif;
-                                    ?>
+                                endfor;
+
+                                if($row['NOTICE_LEVEL']<=NOTICE_LEVEL_6):
+                                    echo '<br><a class="btn btn-block btn-danger btn-sm active" title="Jana Notis '.notice_level(NOTICE_LEVEL_5).'" href="/bill/generate_notice/'.urlEncrypt($row['ACCOUNT_ID']).'/'.urlEncrypt(NOTICE_LEVEL_5).'"><span class="glyphicon glyphicon-edit"></span><strong> '.notice_level(NOTICE_LEVEL_5).'</strong> </a>';
+                                endif;
+                                if($row['NOTICE_LEVEL']==NOTICE_LEVEL_5):
+                                    echo '<br><a class="btn btn-block btn-danger btn-sm active" title="Jana Notis '.notice_level(NOTICE_LEVEL_6).'" href="/bill/generate_notice/'.urlEncrypt($row['ACCOUNT_ID']).'/'.urlEncrypt(NOTICE_LEVEL_6).'" ><span class="glyphicon glyphicon-edit"></span><strong> '.notice_level(NOTICE_LEVEL_6).' </strong> </a>';
+                                endif;
+                            ?>
                             </td>
                         </tr>
                     <?php
