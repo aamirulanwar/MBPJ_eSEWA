@@ -203,7 +203,8 @@ class M_acc_account extends CI_Model
         db_from('acc_account a');
         db_where('a.notice_level != 0');
         if(isset($data_search['account_number']) && having_value($data_search['account_number'])):
-            db_where('a.account_number',$data_search['account_number']);
+            // db_where('a.account_number',$data_search['account_number']);
+            db_where("a.account_number like '%".$data_search['account_number']."%'");
         endif;
         if(isset($data_search['type_id']) && having_value($data_search['type_id'])):
             db_where('a.type_id',$data_search['type_id']);
@@ -226,7 +227,8 @@ class M_acc_account extends CI_Model
         db_from('acc_account a');
         db_where('a.notice_level != 0');
         if(isset($data_search['account_number']) && having_value($data_search['account_number'])):
-            db_where('a.account_number',$data_search['account_number']);
+            // db_where('a.account_number',$data_search['account_number']);
+        db_where("a.account_number like '%".$data_search['account_number']."%'");
         endif;
         if(isset($data_search['type_id']) && having_value($data_search['type_id'])):
             db_where('a.type_id',$data_search['type_id']);
