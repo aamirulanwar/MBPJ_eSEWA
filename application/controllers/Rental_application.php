@@ -81,9 +81,9 @@ class Rental_application extends CI_Controller
             return false;
         endif;
 
-//        $data_result['application_id']  = 0;
-//        $data_result['applicant_id']    = 0;
-//        $data_result['ref_number']      = '';
+        //$data_result['application_id']  = 0;
+        //$data_result['applicant_id']    = 0;
+        //$data_result['ref_number']      = '';
 
         if($data_asset_type['FORM_TYPE']==1):
             $data_result = $this->form_1($data_asset_type,$data);
@@ -138,7 +138,7 @@ class Rental_application extends CI_Controller
         else:
             validation_rules('ic_number','<strong>no. kad pengenalan</strong>','required|min_length[7]|max_length[8]');
         endif;
-//        validation_rules('ic_number','<strong>no. kad pengenalan</strong>','required|exact_length[12]');
+        //validation_rules('ic_number','<strong>no. kad pengenalan</strong>','required|exact_length[12]');
         validation_rules('date_of_birth','<strong>tarikh lahir</strong>','required');
         validation_rules('address_1','<strong>alamat</strong>','required');
         validation_rules('address_3','<strong>bandar</strong>','required');
@@ -170,7 +170,7 @@ class Rental_application extends CI_Controller
             validation_rules('rental_use_remark','<strong>catatan jenis perniagaan</strong>','required');
         endif;
 
-        if(input_data('occupation_status')==OCCUPATION_STATUS_WORKING):   
+        if(input_data('occupation_status')==OCCUPATION_STATUS_WORKING):
             validation_rules('occupation','<strong>pekerjaan</strong>','required');
             validation_rules('total_earnings','<strong>jumlah pendapatan</strong>','required');
         endif;
@@ -276,10 +276,10 @@ class Rental_application extends CI_Controller
                     endforeach;
                 endif;
             endif;
-            //            $ref_number         = 'REF'.$application_id;
-//
-//            $data_update['ref_number'] = $ref_number;
-//            $update_application = $this->m_p_application->update_application($data_update,$application_id);
+            //$ref_number         = 'REF'.$application_id;
+            //
+            //$data_update['ref_number'] = $ref_number;
+            //$update_application = $this->m_p_application->update_application($data_update,$application_id);
 
             $data_return['application_id']  = $application_id;
             $data_return['applicant_id']    = $applicant_id;
@@ -310,7 +310,7 @@ class Rental_application extends CI_Controller
 
         validation_rules('date_application','<strong>tarikh permohonan</strong>','required');
         validation_rules('form_number','<strong>nombor borang</strong>','is_unique[P_APPLICATION.FORM_NUMBER]');
-//        validation_rules('ref_number','<strong>nombor Rujukan Permohonan</strong>','required|is_unique[P_APPLICATION.REF_NUMBER]');
+        //validation_rules('ref_number','<strong>nombor Rujukan Permohonan</strong>','required|is_unique[P_APPLICATION.REF_NUMBER]');
         validation_rules('name','<strong>nama syarikat</strong>','required');
         validation_rules('company_registration_number','<strong>no. pendaftaran syarikat</strong>','required');
         validation_rules('address_1','<strong>alamat syarikat</strong>','required');
@@ -334,7 +334,7 @@ class Rental_application extends CI_Controller
         validation_rules('app_ssm_file_status','<strong>carian SSM</strong>','required');
         validation_rules('structure_plan_status','<strong>pelan struktur</strong>','required');
         validation_rules('location_plan_file_status','<strong>pelan lokasi<strukt></strukt>ur</strong>','required');
-//        validation_rules('map_info_status','<strong>map info</strong>','required');
+        //validation_rules('map_info_status','<strong>map info</strong>','required');
 
         if(input_data('rental_use_id')==RENTAL_USE_OTHERS):
             validation_rules('rental_use_remark','<strong>catatan jenis perniagaan</strong>','required');
@@ -435,7 +435,7 @@ class Rental_application extends CI_Controller
 
         validation_rules('date_application','<strong>tarikh permohonan</strong>','required');
         validation_rules('form_number','<strong>nombor borang</strong>','is_unique[P_APPLICATION.FORM_NUMBER]');
-//        validation_rules('ref_number','<strong>nombor Rujukan Permohonan</strong>','required|is_unique[P_APPLICATION.REF_NUMBER]');
+        //validation_rules('ref_number','<strong>nombor Rujukan Permohonan</strong>','required|is_unique[P_APPLICATION.REF_NUMBER]');
         validation_rules('name','<strong>nama syarikat</strong>','required');
         validation_rules('company_registration_number','<strong>no. pendaftaran syarikat</strong>','required');
         validation_rules('address_1','<strong>alamat syarikat</strong>','required');
@@ -567,7 +567,7 @@ class Rental_application extends CI_Controller
         $data['department_arr'] = $department_arr;
 
         validation_rules('date_application','<strong>tarikh permohonan</strong>','required');
-//        validation_rules('ref_number','<strong>nombor Rujukan Permohonan</strong>','required|is_unique[P_APPLICATION.REF_NUMBER]');
+        //validation_rules('ref_number','<strong>nombor Rujukan Permohonan</strong>','required|is_unique[P_APPLICATION.REF_NUMBER]');
         validation_rules('form_number','<strong>nombor borang</strong>','is_unique[P_APPLICATION.FORM_NUMBER]');
         validation_rules('name','<strong>nama permohonan</strong>','required');
         validation_rules('ic_number','<strong>no. kad pengenalan</strong>','required|exact_length[12]');
@@ -604,7 +604,7 @@ class Rental_application extends CI_Controller
             $data_insert['address_2']           = input_data('address_2');
             $data_insert['address_3']           = input_data('address_3');
             $data_insert['postcode']            = input_data('postcode');
-//            $data_insert['mail_address']        = input_data('mail_address');
+            //$data_insert['mail_address']        = input_data('mail_address');
             $data_insert['residence_information']  = input_data('residence_information');
             $data_insert['position']            = input_data('position');
             $data_insert['staff_number']        = input_data('staff_number');
@@ -689,7 +689,7 @@ class Rental_application extends CI_Controller
         $search_segment = uri_segment(3);
 
         $post           = $this->input->post();
-//        pre($post);
+        //pre($post);
         $filter_session = get_session('arr_filter_application');
         if(!empty($post)):
             $this->session->set_userdata('arr_filter_application',$post);
@@ -707,8 +707,8 @@ class Rental_application extends CI_Controller
 
         $data['data_search'] = $data_search;
 
-//        pre($data_search);
-//        exit;
+        //pre($data_search);
+        //exit;
 
 
         $total = $this->m_p_application->count_application($data_search);
@@ -742,7 +742,7 @@ class Rental_application extends CI_Controller
         if(!$get_details):
             return false;
         endif;
-//        pre($get_details);
+        //pre($get_details);
         $data['data_details']   = $get_details;
         $data['dependent']      = $this->m_acc_dependent->get_dependent_by_applicant_id($get_details['APPLICANT_ID']);
         $data['asset']          = $this->m_a_asset->get_a_asset_active_available_by_category_id($get_details['CATEGORY_ID']);
@@ -1140,10 +1140,13 @@ class Rental_application extends CI_Controller
         $data_search['approval']        = true;
 
         if(empty($data_search['type_id'])):
-            $data['data_list']          = array();
+            $data_search['type_id']     = -1;
+            $data['data_list']          = $this->m_p_application->get_application_by_search($data_search);
+            // $data['data_list']          = array();
         else:
-            $data_list                  = $this->m_p_application->get_application_by_search($data_search);
-            $data['data_list']          = $data_list;
+            $data['data_list']          = $this->m_p_application->get_application_by_search($data_search);
+            // $data_list                  = $this->m_p_application->get_application_by_search($data_search);
+            // $data['data_list']          = $data_list;
         endif;
 
         $type_submit = input_data('submit');
@@ -1262,10 +1265,13 @@ class Rental_application extends CI_Controller
         $data_search['status_agree']    = STATUS_AGREE_DEFAULT;
 
         if(empty($data_search['type_id'])):
-            $data['data_list']          = array();
+            // $data['data_list']          = array();
+            $data_search['type_id']     = -1;
+            $data['data_list']          = $this->m_p_application->get_application_by_search($data_search);
         else:
-            $data_list                  = $this->m_p_application->get_application_by_search($data_search);
-            $data['data_list']          = $data_list;
+            $data['data_list']          = $this->m_p_application->get_application_by_search($data_search);
+            // $data_list                  = $this->m_p_application->get_application_by_search($data_search);
+            // $data['data_list']          = $data_list;
         endif;
 
         $type_submit = input_data('submit');
