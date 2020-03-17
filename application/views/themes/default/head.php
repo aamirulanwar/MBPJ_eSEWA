@@ -480,7 +480,8 @@
 <!--                        <i class="nav-icon icon-layers"></i> Penyelarasan</a>-->
 <!--                    <ul class="nav-dropdown-items">-->
 <!--                        <li class="nav-item">-->
-<!--                            <a class="nav-link --><?php //echo set_active_menu(uri_segment(2),array('account_list','generate_current_bill','current_bill'))?><!--" href="/bill/account_list">-->
+<!--                            <a class="nav-link --><?php //echo set_active_menu(uri_segment(2),array('account_list','generate_current_bill','current_bill'))?>
+                                    <!-- " href="/bill/account_list"> -->
 <!--                                <i class="nav-icon fa fa-circle fa-sm"></i> Akaun</a>-->
 <!--                        </li>-->
 <!--                        <li class="nav-item">-->
@@ -503,26 +504,29 @@
 <!--                            <a class="nav-link --><?php //echo set_active_menu(uri_segment(2),array('gl_summary'))?><!--" href="/report/gl_summary">-->
 <!--                                <i class="nav-icon fa fa-circle fa-sm"></i> Hasil Kod GL</a>-->
 <!--                        </li>-->
-                        <?php if($this->auth->access_view($this->curuser,array(8001))):?>
+                        
 <!--                        <li class="nav-item">-->
 <!--                            <a class="nav-link --><?php //echo set_active_menu(uri_segment(2),array('category_adjustment'))?><!--" href="/report/category_adjustment">-->
 <!--                                <i class="nav-icon fa fa-circle fa-sm"></i> Penyata Penyesuaian</a>-->
 <!--                        </li>-->
-                        <?php endif;?>
-                        <?php if($this->auth->access_view($this->curuser,array(8002))):?>
+                        
+                        
 <!--                        <li class="nav-item">-->
 <!--                            <a class="nav-link --><?php //echo set_active_menu(uri_segment(2),array('category_aging'))?><!--" href="/report/category_aging">-->
 <!--                                <i class="nav-icon fa fa-circle fa-sm"></i> Aging Sewaan</a>-->
 <!--                        </li>-->
-                        <?php endif;?>
+                        <?php if($this->auth->access_view($this->curuser,array(8001))):?>
                         <li class="nav-item">
                             <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('category_aging_details'))?>" href="/report/category_aging_details">
                                 <i class="nav-icon fa fa-circle fa-sm"></i> Aging Sewaan Terperinci</a>
                         </li>
+                        <?php endif;?>
+                        <?php if($this->auth->access_view($this->curuser,array(8002))):?>
                         <li class="nav-item">
                             <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('category_aging'))?>" href="/report/category_aging">
                                 <i class="nav-icon fa fa-circle fa-sm"></i> Aging Sewaan Ringkasan</a>
                         </li>
+                        <?php endif;?>
 <!--                        <li class="nav-item">-->
 <!--                            <a class="nav-link --><?php //echo set_active_menu(uri_segment(2),array('account_outstanding'))?><!--" href="/report/account_outstanding">-->
 <!--                                <i class="nav-icon fa fa-circle fa-sm"></i> Tunggakan Tertinggi</a>-->
@@ -564,18 +568,26 @@
                             <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('record_transaction'))?>" href="/report/record_transaction">
                                 <i class="nav-icon fa fa-circle fa-sm"></i> Rekod Transaksi</a>
                         </li>
+                        <?php endif;?>
+                        <?php if($this->auth->access_view($this->curuser,array(8008))):?>
                         <li class="nav-item">
                             <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('adjustment_statement'))?>" href="/report/adjustment_statement">
                                 <i class="nav-icon fa fa-circle fa-sm"></i> Penyata Penyesuaian Terperinci</a>
                         </li>
+                        <?php endif;?>
+                        <?php if($this->auth->access_view($this->curuser,array(8009))):?>
                         <li class="nav-item">
                             <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('adjustment_statement_ringkasan'))?>" href="/report/adjustment_statement_ringkasan">
                                 <i class="nav-icon fa fa-circle fa-sm"></i> Penyata Penyesuaian Ringkasan</a>
                         </li>
+                        <?php endif;?>
+                        <?php if($this->auth->access_view($this->curuser,array(8010))):?>
                         <li class="nav-item">
                             <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('payment'))?>" href="/report/payment">
                                 <i class="nav-icon fa fa-circle fa-sm"></i> Laporan Pembayaran Penyewa</a>
                         </li>
+                        <?php endif;?>
+                        <?php if($this->auth->access_view($this->curuser,array(8011))):?>
                         <li class="nav-item">
                             <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('journal'))?>" href="/report/journal">
                                 <i class="nav-icon fa fa-circle fa-sm"></i> Laporan Jurnal Sewaan</a>
