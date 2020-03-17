@@ -592,10 +592,17 @@ class Generate_word {
         endif;
 
         $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($_SERVER['DOCUMENT_ROOT'].'/file_download/notis/'.$template);
+
+        $address = display_address($get_details['MAIL_ADDRESS_1'],$get_details['MAIL_ADDRESS_2'],$get_details['MAIL_ADDRESS_3'],$get_details['MAIL_POSTCODE'],strtolower($get_details['MAIL_STATE']));
+        if(empty($address)):
+            $address = display_address($get_details['ADDRESS_1'],$get_details['ADDRESS_2'],$get_details['ADDRESS_3'],$get_details['POSTCODE'],ucwords(strtolower($get_details['STATE'])));
+        endif;
+        $address = str_replace('<br>', ' ', $address);
         
         $templateProcessor->setValue('name',strtoupper($get_details['NAME']));
-        $templateProcessor->setValue('address',strtoupper($get_details['MAIL_ADDRESS']));
+        $templateProcessor->setValue('address',strtoupper($address));
         $templateProcessor->setValue('ic_number',display_ic_number($get_details['IC_NUMBER']));
+        $templateProcessor->setValue('file_number_juu',$get_details['FILE_NUMBER_JUU']);
         $templateProcessor->setValue('account_number',$get_details['ACCOUNT_NUMBER']);
         $templateProcessor->setValue('letter_date',date_display(timenow(),'d F Y','malay'));
         $templateProcessor->setValue('asset_name',$get_details['ASSET_NAME']);

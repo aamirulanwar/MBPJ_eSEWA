@@ -643,6 +643,7 @@ class Asset extends CI_Controller
 
             $result_update = $this->m_a_asset->update_a_asset($data_update,$id);
 
+            $data_account_update['estimation_rental_charge'] = currencyToDouble(input_data('harga_sewaan')); 
             $data_account_update['rental_charge'] = currencyToDouble(input_data('harga_sewaan'));
             $this->m_acc_account->update_a_acc_account_by_asset_id($data_account_update,$id);
 
