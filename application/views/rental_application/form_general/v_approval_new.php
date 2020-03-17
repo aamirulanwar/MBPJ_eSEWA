@@ -12,17 +12,17 @@
                 <input onclick="status_approve_new()" class="form-check-input" type="radio" <?php echo set_radio('status_application',STATUS_APPLICATION_NEW,true)?> name="status_application" value="<?php echo STATUS_APPLICATION_NEW?>"> <?php echo status_application_label(STATUS_APPLICATION_NEW)?>
             </label>
         </div>
-        <div class="form-check form-check-inline">
+        <div class="form-check form-check-inline" style='display:none'>
             <label class="form-check-label">
                 <input onclick="status_approve_new()" class="form-check-input" type="radio" <?php echo set_radio('status_application',STATUS_APPLICATION_APPROVED)?> name="status_application" value="<?php echo STATUS_APPLICATION_APPROVED?>"> <?php echo status_application_label(STATUS_APPLICATION_APPROVED)?>
             </label>
         </div>
-        <div class="form-check form-check-inline">
+        <div class="form-check form-check-inline" style='display:none'>
             <label class="form-check-label">
                 <input onclick="status_approve_new()" class="form-check-input" type="radio" <?php echo set_radio('status_application',STATUS_APPLICATION_REJECTED,radio_default(STATUS_APPLICATION_REJECTED,input_data('status_application')))?> name="status_application" value="<?php echo STATUS_APPLICATION_REJECTED?>"> <?php echo status_application_label(STATUS_APPLICATION_REJECTED)?>
             </label>
         </div>
-        <div class="form-check form-check-inline">
+        <div class="form-check form-check-inline" style='display:none'>
             <label class="form-check-label">
                 <input onclick="status_approve_new()" class="form-check-input" type="radio" <?php echo set_radio('status_application',STATUS_APPLICATION_KIV,radio_default(STATUS_APPLICATION_KIV,input_data('status_application')))?> name="status_application" value="<?php echo STATUS_APPLICATION_KIV?>"> <?php echo status_application_label(STATUS_APPLICATION_KIV)?>
             </label>

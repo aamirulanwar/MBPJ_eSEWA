@@ -77,7 +77,7 @@ class M_p_application extends CI_Model
             db_where('a.status_create_account',$data_search['status_create_account']);
         endif;
         if(isset($data_search['ref_number']) && having_value($data_search['ref_number'])):
-//            db_where('((a.ref_number = "'.$data_search['ref_number'].'") or (applicant.ic_number = "'.$data_search['ref_number'].'") or (name like "%'.$data_search['ref_number'].'%"))');
+        //db_where('((a.ref_number = "'.$data_search['ref_number'].'") or (applicant.ic_number = "'.$data_search['ref_number'].'") or (name like "%'.$data_search['ref_number'].'%"))');
             db_where("((a.ref_number = '".$data_search['ref_number']."') or (applicant.ic_number = '".$data_search['ref_number']."') or (upper(name) like '%".strtoupper($data_search['ref_number'])."%'))");
         endif;
         if(isset($data_search['type_id']) && having_value($data_search['type_id'])):
@@ -109,7 +109,7 @@ class M_p_application extends CI_Model
             db_where('a.status_create_account',$data_search['status_create_account']);
         endif;
         if(isset($data_search['ref_number']) && having_value($data_search['ref_number'])):
-//            db_where('a.ref_number',$data_search['ref_number']);
+        //db_where('a.ref_number',$data_search['ref_number']);
             db_where("((a.ref_number = '".$data_search['ref_number']."') or (applicant.ic_number = '".$data_search['ref_number']."') or (upper(name) like '%".strtoupper($data_search['ref_number'])."%'))");
         endif;
         if(isset($data_search['type_id']) && having_value($data_search['type_id'])):
@@ -188,7 +188,10 @@ class M_p_application extends CI_Model
             db_where("a.ref_number <= '".$data_search['ref_end']."'");
         endif;
         if(isset($data_search['type_id']) && having_value($data_search['type_id'])):
-            db_where('a.type_id',$data_search['type_id']);
+            if($data_search['type_id'] > 0 )
+            {
+              db_where('a.type_id',$data_search['type_id']);
+            }
         endif;
         if(isset($data_search['approval']) && having_value($data_search['approval'])):
             if(is_numeric($data_search['approval'])):
@@ -209,7 +212,7 @@ class M_p_application extends CI_Model
     }
 
     function application_report_dashboard($data_search){
-//        db_select('a.*,applicant.*,t.*,c.*,r.*');
+        //db_select('a.*,applicant.*,t.*,c.*,r.*');
         db_select('count(a.application_id) as count_application');
         db_select('count(case when a.status_application = '.STATUS_APPLICATION_NEW.' then a.application_id end) as new_application');
         db_select('count(case when a.status_application = '.STATUS_APPLICATION_APPROVED.' then a.application_id end) as approved_application');
@@ -239,7 +242,7 @@ class M_p_application extends CI_Model
         db_where('a.soft_delete',SOFT_DELETE_FALSE);
         db_where("extract(year from a.dt_added) = ".date('Y')."");
         db_group('t.type_name');
-//        db_group("to_char(a.dt_added, 'YYYY-MM')");
+        //db_group("to_char(a.dt_added, 'YYYY-MM')");
         $sql = db_get();
         if($sql):
             return $sql->result_array();
