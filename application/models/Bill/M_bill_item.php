@@ -498,5 +498,62 @@ class M_bill_item extends CI_Model
         db_update('b_item',$data_update);
         return true;
     }
+
+    function rekodTransaksi($data_search=array())
+    {
+        db_select('i.*');
+        db_select('m.BILL_NUMBER');
+        db_select('m.DT_ADDED as TKH_BIL');
+        db_from('b_item i');
+        db_join('b_master m','m.bill_id = i.bill_id');
+        if(isset($data_search['date_start']) && having_value($data_search['date_start'])):
+            db_where("i.dt_added >= to_date('".date('d-M-y',strtotime($data_search['date_start']))."')");
+        endif;
+        if(isset($data_search['tr_code']) && having_value($data_search['tr_code'])):
+            db_where('i.tr_code',$data_search['tr_code']);
+        endif;
+        if(isset($data_search['date_end']) && having_value($data_search['date_end'])):
+            db_where("i.dt_added <= to_date('".date('d-M-y',strtotime($data_search['date_end']))."')");
+        endif;
+        if(isset($data_search['account_id']) && having_value($data_search['account_id'])):
+            db_where('m.account_id',$data_search['account_id']);
+        endif;
+        if(isset($data_search['order_by']) && having_value($data_search['order_by'])):
+            db_order($data_search['order_by']);
+        else:
+            db_order("TKH_BIL");
+        endif;
+        $sql = db_get('');
+        if($sql):
+            return $sql->result_array('');
+        endif;
+    }
+
+    function rekodTransaksiInfo($data_search=array())
+    {
+        if ( !empty($data_search) )
+        {
+            db_select('acc_account.account_id');
+            db_select('acc_account.account_number');
+            db_select('acc_user.name');
+            db_select('acc_account.estimation_rental_charge');
+            db_select('a_asset.asset_add');
+            db_select('a_category.category_name');
+            db_select('a_category.address');
+            db_from('acc_account');
+            db_join('a_asset','acc_account.asset_id = a_asset.asset_id');
+            db_join('a_category','acc_account.category_id = a_category.category_id');
+            db_join('acc_user','acc_account.user_id = acc_user.user_id');
+            db_where('acc_account.account_id',$data_search['account_id']);
+            $sql = db_get('');
+            if($sql):
+                return $sql->result_array('');
+            endif;
+        }
+        else
+        {
+            return array();
+        }
+    }
 }
 

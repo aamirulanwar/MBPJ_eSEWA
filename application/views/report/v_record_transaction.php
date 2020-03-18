@@ -46,25 +46,6 @@ endif;
                         ?>
                     </select>
                 </div>
-<!--                <div class="col-sm-4">-->
-<!--                    <label class="col-form-label">Jenis harta</label>-->
-<!--                    <select onchange="get_category_by_type('')" name="type_id" id="type_id" class="form-control">-->
-<!--                        <option value=""> - Semua - </option>-->
-<!--                        --><?php
-//                        if($data_type):
-//                            foreach ($data_type as $row):
-//                                echo option_value($row['TYPE_ID'],$row['TYPE_NAME'],'type_id',search_default($data_search,'type_id'));
-//                            endforeach;
-//                        endif;
-//                        ?>
-<!--                    </select>-->
-<!--                </div>-->
-<!--                <div class="col-sm-4">-->
-<!--                    <label class="col-form-label">Kod kategori</label>-->
-<!--                    <select name="category_id" id="category_id" class="form-control">-->
-<!--                        <option value=""> - Semua - </option>-->
-<!--                    </select>-->
-<!--                </div>-->
             </div>
             <div class="form-group row">
                 <div class="col-sm-4">
@@ -84,8 +65,6 @@ endif;
                 <div class="form-group row">
                     <div class="col-sm-12">
                         <h5>No akaun : <?php echo $acc_details['ACCOUNT_NUMBER']?></h5>
-<!--                        <label class="col-form-label">No akaun</label>-->
-<!--                        <p class="form-control-plaintext">--><?php //echo uri_segment(3)?><!--</p>-->
                     </div>
                 </div>
             <?php
@@ -97,8 +76,6 @@ endif;
             <div class="form-group row">
                 <div class="col-sm-12">
                     <h5>Nama : <?php echo $acc_details['NAME']?></h5>
-<!--                    <label class="col-form-label">Nama</label>-->
-<!--                    <p class="form-control-plaintext">--><?php //echo urldecode(uri_segment(4))?><!--</p>-->
                 </div>
             </div>
             <?php
@@ -114,108 +91,70 @@ endif;
 </form>
 <div class="card card-accent-info">
     <div class="card-body">
-        <div class="table-responsive">
-            <?php
-            // echo pre($data_report);
-            // die();
-//                pre($data_gst);
-                if($data_report):
-                    ?>
-                    <div class="pull-right">
-                        <button onclick="print_report()" class="btn btn-warning btn-sm pull-right">Print</button>
-                    </div>
-                    <br>
-                    <br>
-                    <?php
-                    echo '<table class="data-print table table-hover table-bordered table-scroll">';
-                    echo '<thead>';
-                    echo '<tr>';
-                    echo '<th width="12%">No. bill / no. resit</th>';
-                    echo '<th width="10%">Tarikh bill/resit</th>';
-                    echo '<th width="10%">Kod transaksi</th>';
-                    echo '<th width="11%">Maklumat penyewa</th>';
-                    echo '<th width="15%">Keterangan</th>';
-                    echo '<th width="10%">Jenis</th>';
-                    echo '<th width="10%">Amaun debit (RM)</th>';
-                    echo '<th width="10%">Amaun kredit (RM)</th>';
-                    echo '<th width="12%">Jumlah Amaun (RM)</th>';
-//                    echo '<th>No. bill</th>';
-                    echo '</tr>';
-                    echo '</thead>';
-                    echo '<tbody>';
-
-                    $amount = 0;
-                    foreach ($data_report as $row):
-                        echo '<tr>';
-                        $bill_number    = '';
-                        $resit_number   = '';
-                        $journal_number = '';
-                        $bill_amaun     = 0;
-                        $resit_amaun    = 0;
-                        $type           = '';
-                        
-                        if($row['BILL_CATEGORY']=='B'):
-                            $bill_number    = $row['BILL_NUMBER'];
-                            $bill_amaun     = empty($row['AMOUNT'])?0:$row['AMOUNT'];
-                            $type           = 'Bill';
-                        endif;
-
-                        if($row['BILL_CATEGORY']=='R'):
-                            $resit_number   = $row['BILL_NUMBER'];
-                            $resit_amaun    = empty($row['AMOUNT'])?0:$row['AMOUNT'];
-                            $type           = 'Resit';
-                        endif;
-
-                        if($row['BILL_CATEGORY']=='J'):
-                            $journal_number    = $row['BILL_NUMBER'];
-                            $journal_amaun     = empty($row['AMOUNT'])?0:$row['AMOUNT'];
-                            $type              = 'Journal';
-
-                            if (substr($row['JOURNAL_CODE'],0,1)=='B'):
-                                $bill_amaun     = empty($row['AMOUNT'])?0:$row['AMOUNT'];
-                            elseif (substr($row['JOURNAL_CODE'],0,1)=='R'):
-                                $resit_amaun    = empty($row['AMOUNT'])?0:$row['AMOUNT'];
-                            endif;
-                        endif;
-
-                        echo '<td width="12%">'.$bill_number.$resit_number.$journal_number.'</td>';
-                        echo '<td width="10%">'.date_display($row['DT_BILL']).'</td>';
-//                        echo '<td>'.$resit_number.'</td>';
-                        echo '<td width="10%">'.$row['TR_CODE'].'</td>';
-                        echo '<td width="11%"><strong>'.$row['ACCOUNT_NUMBER'].'</strong><br>'.$row['NAME'].'</td>';
-                        echo '<td width="15%">'.$row['ITEM_DESC'].'</td>';
-                        echo '<td width="10%">'.$type.'</td>';
-
-                        $amount = $amount+($bill_amaun-($resit_amaun));
-                        echo '<td  width="10%" class="text-right">'.num($bill_amaun,4).'</td>';
-                        echo '<td  width="10%" class="text-right">'.num($resit_amaun,4).'</td>';
-                        echo '<td  width="12%" class="text-right">'.num($amount,4).'</td>';
-                        echo '</tr>';
-
-                        // $amount = $amount+($bill_amaun-($resit_amaun));
-                        // echo '<td  width="10%" class="text-right">'.num($bill_amaun,3).'</td>';
-                        // echo '<td  width="10%" class="text-right">'.num($resit_amaun,3).'</td>';
-                        // echo '<td  width="12%" class="text-right">'.num($amount,3).'</td>';
-                        // echo '</tr>';
-
-                        // $amount = $amount+($bill_amaun-($resit_amaun));
-                        // echo '<td  width="10%" class="text-right">'.number_format(abs($bill_amaun),2).'</td>';
-                        // echo '<td  width="10%" class="text-right">'.number_format(abs($resit_amaun),2).'</td>';
-                        // echo '<td  width="12%" class="text-right">'.num($amount,4).'</td>';
-                        // echo '</tr>';
-                    endforeach;
-                    echo '</tbody>';
-                    echo '</table>';
-                else:
-                    if($_POST):
-                        echo '<div class="text-center"> - Tiada data - </div>';
-                    endif;
-                endif;
-            ?>
-        </div>
+        <!-- START development here -->
+        <?php 
+            $filterStartDate    = $data_search["date_start"];
+            $filterEndDate      = $data_search["date_end"];
+            $startYear          = DateTime::createFromFormat('d M Y', $filterStartDate)->format('Y');
+            $endYear            = DateTime::createFromFormat('d M Y', $filterEndDate)->format('Y');
+            $nextYear           = $endYear;
+            
+            while ($nextYear >= $startYear)
+            {
+                echo '<h5 class="card-title">REKOD TAHUN '.$nextYear.'</h5>';
+                echo '<div class="table-responsive">';
+                echo '  <table id="tablePenyataRekod'.$nextYear.'" class="table table-bordered test1" style="width:100%">';
+                echo '      <thead>';
+                echo '          <tr>';
+                echo '              <th>No. Bil/ No. Resit</th>';
+                echo '              <th>Tarikh Bil</th>';
+                echo '              <th>Kod Transaksi</th>';
+                echo '              <th>Maklumat Akaun</th>';
+                echo '              <th>Jenis</th>';
+                echo '              <th>Amaun Debit (RM)</th>';
+                echo '              <th>Amaun Kredit (RM)</th>';
+                echo '              <th>Jumlah Amaun (RM)</th>';
+                echo '          </tr>';
+                echo '      </thead>';
+                echo '      <tbody>';
+                $totalAmount = 0;
+                foreach ($data_report["$nextYear"] as $row)
+                {
+                    $totalAmount = ($row["BILL_CATEGORY"] == 'B' ? ($totalAmount + $row["AMOUNT"]) : ($totalAmount - $row["AMOUNT"]));
+                    // $totalAmount = $totalAmount + $row["AMOUNT"];
+                    echo '      <tr>';
+                    echo '          <td>'.$row["BILL_NUMBER"].'</td>';
+                    echo '          <td>'.$row["TKH_BIL"].'</td>';
+                    echo '          <td>'.$row["TR_CODE"].'</td>';
+                    echo '          <td>'.$row["ACCOUNT_ID"].'</td>';
+                    echo '          <td>'.$row["BILL_CATEGORY"].'</td>';
+                    echo '          <td>'.($row["BILL_CATEGORY"] == 'B' ? $row["AMOUNT"] : '').'</td>';
+                    echo '          <td>'.($row["BILL_CATEGORY"] == 'R' ? $row["AMOUNT"] : '').'</td>';
+                    echo '          <td>'.$totalAmount.'</td>';
+                    echo '      </tr>';
+                }
+                echo '      </tbody>';                
+                echo '  </table>';
+                echo '</div>';
+                $nextYear = $nextYear - 1;
+            }
+            
+            // echo "<pre>";
+            // var_dump($data_report);
+        ?>
+        <input type="hidden" id="account_number" value="" />
+        <input type="hidden" id="account_name" value="" />
+        <input type="hidden" id="account_address" value="" />
+        <!-- END development here -->
     </div>
 </div>
-
+<style type="text/css">
+    @page
+    {
+        size: landscape;
+        margin: 10mm;
+    }
+</style>
 <script>
     $( document ).ready(function() {
         <?php
@@ -230,7 +169,70 @@ endif;
             console.log("Printing completed...");
             $('.data-print').addClass('table-scroll')
         }
-        // var type_id = $('#type_id').val();
-        //get_category_by_type('<?php //echo search_default($data_search,'category_id')?>//');
     });
+
+    $(document).ready(function() 
+    {
+        var backupTitle = document.title;
+        // document.title =    "   <p style='font-size:13px'> No Akaun: "+"</br>"+
+        //                     "   <p style='font-size:13px'> Nama    : "+"</br>" +
+        //                     "   <p style='font-size:13px'> Alamat Harta    : "+"</p></br>";
+
+        $('.test1').DataTable( {
+            "scrollY": "200px",
+            "autoWidth" : true,
+            "pagingType": "full_numbers",
+            "ordering": false,
+            "paging": false,
+            "searching": false,
+            "info": false,
+            "dom": 'Bfrtip',
+            "buttons": [
+            {
+                extend: 'print',
+                text: 'CETAK',
+                customize: function ( win ) 
+                {
+                    $(win.document.body)
+                        .css( 'font-size', '10pt' )
+ 
+                    $(win.document.body).find( 'table' )
+                        .addClass( 'compact' )
+                        .css( 'font-size', 'inherit' );
+                },
+                action: function(e, dt, button, config) {
+                 
+                    // Add code to make changes to table here
+     
+                    // Call the original action function afterwards to
+                    // continue the action.
+                    // Otherwise you're just overriding it completely.
+                    document.title =    " </br><div class='container'><p style='font-size:13px'> No Akaun: "+"</br>"+
+                            "   <p style='font-size:13px'> Nama    : "+"</br>" +
+                            "   <p style='font-size:13px'> Alamat Harta    : "+"</p></br></div>";
+                    $.fn.dataTable.ext.buttons.print.action(e, dt, button, config);
+                    document.title = backupTitle;
+                }
+            }
+        ]
+        } );
+        // document.title = backupTitle;
+    });
+
+    $.ajax({
+            url: "/report/transactionReportHeader",
+            type: "POST",
+            data: {account_id:1,asset_code:1},
+            success: function(data){
+                data = JSON.parse(data);
+                // console.log("data"+data);
+                console.log(data);
+
+                $("#account_number").val(data.account_number);
+                $("#account_name").val(data.account_name);
+                $("#account_address").val(data.asset_add+"</br>"+data.category_name+"</br>"+data.address);
+            }
+        });
+
+
 </script>

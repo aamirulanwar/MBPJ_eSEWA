@@ -28,17 +28,22 @@
     <link href="/assets/css/style_extend.css" rel="stylesheet">
     <link href="/assets/node_modules/pace-progress/css/pace.min.css" rel="stylesheet">
     <!-- Global site tag (gtag.js) - Google Analytics-->
-<!--    <script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-118965717-3"></script>-->
+    <!-- <script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-118965717-3"></script> -->
     <!-- Date picker -->
     <link href="/assets/jquery-ui/jquery-ui.min.css" rel="stylesheet">
     <link href="/assets/jquery-ui/jquery-ui.structure.min.css" rel="stylesheet">
     <script src="/assets/node_modules/jquery/dist/jquery.min.js"></script>
-<!--    <script src="/assets/node_modules/chart.js/dist/Chart.js"></script>-->
+    <!-- <script src="/assets/node_modules/chart.js/dist/Chart.js"></script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.js" integrity="sha256-qSIshlknROr4J8GMHRlW3fGKrPki733tLq+qeMCR05Q=" crossorigin="anonymous"></script>
-
+    <!-- select2 -->
     <link href="/assets/select2/dist/css/select2.min.css" rel="stylesheet">
     <link href="/assets/select2/dist/css/bootstrap-select2.css" rel="stylesheet">
     <script src="/assets/select2/dist/js/select2.min.js"></script>
+    <!-- dataTables -->
+    <link href="/assets/dataTables/jquery.dataTables.min.css" rel="stylesheet">
+    <script src="/assets/dataTables/jquery.dataTables.min.js"></script>
+    <script src="/assets/dataTables/dataTables.buttons.min.js"></script>
+    <script src="/assets/dataTables/buttons.print.js"></script>
     <script>
         const DEPENDENT_LIST_ARR = '<?php echo json_encode(DEPENDENT_LIST_ARR)?>';
     </script>
