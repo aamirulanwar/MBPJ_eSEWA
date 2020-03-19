@@ -100,13 +100,8 @@ class M_bill_item extends CI_Model
         db_select("to_char(m.dt_added, 'yyyy-mm-dd hh24:mi:ss') as dt_bill",false);
         db_from('b_item i');
         db_join('b_master m','m.bill_id = i.bill_id');
-//        db_join('acc_account acc','acc.account_id = m.account_id');
-//        db_join('acc_user usr','acc.user_id = usr.user_id');
         db_where('tr_gst_status',1);
-//        db_where('tr_code != 12110025');
-//        db_where('PREV_YEAR_OUTSTANDING',0);
         db_where("(i.tr_code NOT LIKE '12%') ");
-
 
         if(isset($data_search['date_start']) && having_value($data_search['date_start'])):
             db_where("i.dt_added >= to_date('".date('d-M-y',strtotime($data_search['date_start']))."')");
@@ -115,7 +110,7 @@ class M_bill_item extends CI_Model
         if(isset($data_search['date_end']) && having_value($data_search['date_end'])):
             db_where("m.dt_added <= to_date('".date('d-M-y',strtotime($data_search['date_end']))."')");
         endif;
-//        db_where('m.bill_month >= 4');
+
         db_where("(i.item_desc NOT LIKE '%LEPAS%') ");
         db_where('m.bill_year >= 2015');
         db_where('i.amount > 0');
@@ -129,13 +124,10 @@ class M_bill_item extends CI_Model
 
     function report_rental_gst_prv($data_search=array()){
 
-//        db_select('i.*');
         db_select("SUM(CASE WHEN i.BILL_CATEGORY = 'B' THEN AMOUNT END) as BILL");
         db_select("SUM(CASE WHEN i.BILL_CATEGORY = 'R' THEN AMOUNT END) as RESIT");
         db_select("SUM(CASE WHEN i.BILL_CATEGORY = 'J' and substr(i.TR_CODE,0,1)=2 THEN AMOUNT END) as JOURNAL_R");
         db_select("SUM(CASE WHEN i.BILL_CATEGORY = 'J' and substr(i.TR_CODE,0,1)=1 THEN AMOUNT END) as JOURNAL_B");
-//        db_select('i.amount as amount');
-//        db_select("to_char(m.dt_added, 'yyyy-mm-dd hh24:mi:ss') as dt_bill",false);
         db_from('b_item i');
         db_join('b_master m','m.bill_id = i.bill_id');
         db_where('tr_gst_status',1);
@@ -147,12 +139,10 @@ class M_bill_item extends CI_Model
             db_where("i.dt_added < to_date('".date('d-M-y',strtotime('2013-01-01'))."')");
         endif;
 
-//        db_where('m.bill_month >= 4');
         db_where("(i.item_desc NOT LIKE '%LEPAS%') ");
         db_where('m.bill_year >= 2015');
         db_where('i.amount > 0');
         db_where('m.account_id',$data_search['account_id']);
-//        db_order('i.dt_added','asc');
         $sql = db_get('');
         if($sql):
             return $sql->row_array('');
@@ -199,41 +189,6 @@ class M_bill_item extends CI_Model
         endif;
     }
 
-//    function report_rental_gst_simple($data_search=array()){
-//        db_select('i.*,m.*,t.type_name,c.category_name,c.category_code');
-//        db_select('i.amount as amount');
-//        db_select("to_char(m.dt_added, 'yyyy-mm-dd hh24:mi:ss') as dt_bill",false);
-//        db_from('b_item i');
-//        db_join('b_master m','m.bill_id = i.bill_id');
-//        db_join('acc_account acc','acc.account_id = m.account_id');
-//        db_join('acc_user usr','acc.user_id = usr.user_id');
-//        db_join('a_type t','t.type_id = acc.type_id');
-//        db_join('a_category c','c.category_id = acc.category_id');
-//        db_where('tr_gst_status',1);
-//
-//        if(isset($data_search['date_start']) && having_value($data_search['date_start'])):
-//            db_where("m.dt_added >= to_date('".date('d-M-y',strtotime($data_search['date_start']))."')");
-//        endif;
-//
-//        if(isset($data_search['date_end']) && having_value($data_search['date_end'])):
-//            db_where("m.dt_added <= to_date('".date('d-M-y',strtotime($data_search['date_end']))."')");
-//        endif;
-//
-//        if(isset($data_search['type_id']) && having_value($data_search['type_id'])):
-//            db_where("acc.type_id",$data_search['type_id']);
-//        endif;
-//        if(isset($data_search['category_id']) && having_value($data_search['category_id'])):
-//            db_where("acc.category_id",$data_search['category_id']);
-//        endif;
-//        db_where('m.bill_year >= 2015');
-//        db_where('i.amount > 0');
-//        db_order('m.dt_added','asc');
-//        $sql = db_get('');
-//        if($sql):
-//            return $sql->result_array('');
-//        endif;
-//    }
-
     function report_rental_gst_simple($data_search=array()){
         db_select('count(i.ITEM_ID) as total_item,acc.CATEGORY_ID');
         db_select('c.CATEGORY_NAME');
@@ -249,7 +204,6 @@ class M_bill_item extends CI_Model
         db_join('a_type t','t.type_id = acc.type_id');
         db_join('a_category c','c.category_id = acc.category_id');
         db_where("(i.tr_code NOT LIKE '12%') ");
-//        db_where('PREV_YEAR_OUTSTANDING',0);
         db_where('tr_gst_status',1);
 
         if(isset($data_search['date_start']) && having_value($data_search['date_start'])):
@@ -294,7 +248,6 @@ class M_bill_item extends CI_Model
         db_join('a_type t','t.type_id = acc.type_id');
         db_join('a_category c','c.category_id = acc.category_id');
         db_where("(i.tr_code NOT LIKE '12%') ");
-//        db_where('PREV_YEAR_OUTSTANDING',0);
         db_where('tr_gst_status',1);
 
         if(isset($data_search['date_start']) && having_value($data_search['date_start'])):
@@ -416,7 +369,6 @@ class M_bill_item extends CI_Model
         db_join('b_master m','m.bill_id = i.bill_id');
         db_join('acc_account acc','acc.account_id = m.account_id');
         db_join('acc_user usr','acc.user_id = usr.user_id');
-//        db_where('i.PREV_YEAR_OUTSTANDING','0');
         db_where("(i.tr_code NOT LIKE '12%') ");
         if(isset($data_search['date_start']) && having_value($data_search['date_start'])):
             db_where("i.dt_added >= to_date('".date('d-M-y',strtotime($data_search['date_start']))."')");
@@ -452,8 +404,6 @@ class M_bill_item extends CI_Model
         db_where("i.dt_added <= to_date('".date('d-M-y',strtotime($date_calculate))."')");
         db_order('i.ITEM_ID');
         $sql = db_get('');
-//        echo last_query();
-//        exit;
         if($sql):
             return $sql->result_array('');
         endif;
@@ -461,7 +411,6 @@ class M_bill_item extends CI_Model
 
     function get_item_amount_not_equal_by_category($category_id,$date_calculate){
         db_select('i.*');
-//        db_select('acc.*');
         db_select('i.amount+(i.total_journal) as amount');
         db_select("to_char(i.dt_added, 'yyyy-mm-dd') as dt_added",false);
         db_from('b_item i');
@@ -474,15 +423,12 @@ class M_bill_item extends CI_Model
         db_where("i.dt_added <= to_date('".date('d-M-y',strtotime($date_calculate))."')");
         db_order('acc.account_id,i.ITEM_ID');
         $sql = db_get('');
-//        echo last_query();
-//        exit;
         if($sql):
             return $sql->result_array('');
         endif;
     }
 
     function get_bill_by_search($data_search=array()){
-//        db_select('sum(i.amount) as amount');
         if(isset($data_search['bill_category']) && having_value($data_search['bill_category'])):
             db_select("SUM(CASE WHEN i.BILL_CATEGORY = '".$data_search['bill_category']."' THEN AMOUNT END) as TUNGGAKAN");
         endif;
@@ -516,18 +462,6 @@ class M_bill_item extends CI_Model
             db_where("i.dt_added <= to_date('".date('d-M-y',strtotime($data_search['date_end']))."')");
         endif;
 
-//        if(!empty($bill_category)):
-//            db_where('i.bill_category',$bill_category);
-//        endif;
-//        if(!empty($category_id)):
-//            db_where('a.category_id',$category_id);
-//        endif;
-//        if(!empty($dt_start)):
-//            db_where("to_char(i.dt_added, 'dd-mm-yyyy') >='".$dt_start."'");
-//        endif;
-//        if(!empty($dt_end)):
-//            db_where("to_char(i.dt_added, 'dd-mm-yyyy') <='".$dt_end."'");
-//        endif;
         $sql = db_get('');
         if($sql):
             return $sql->row_array('');
@@ -563,6 +497,63 @@ class M_bill_item extends CI_Model
         db_where('item_id',$item_id);
         db_update('b_item',$data_update);
         return true;
+    }
+
+    function rekodTransaksi($data_search=array())
+    {
+        db_select('i.*');
+        db_select('m.BILL_NUMBER');
+        db_select('m.DT_ADDED as TKH_BIL');
+        db_from('b_item i');
+        db_join('b_master m','m.bill_id = i.bill_id');
+        if(isset($data_search['date_start']) && having_value($data_search['date_start'])):
+            db_where("i.dt_added >= to_date('".date('d-M-y',strtotime($data_search['date_start']))."')");
+        endif;
+        if(isset($data_search['tr_code']) && having_value($data_search['tr_code'])):
+            db_where('i.tr_code',$data_search['tr_code']);
+        endif;
+        if(isset($data_search['date_end']) && having_value($data_search['date_end'])):
+            db_where("i.dt_added <= to_date('".date('d-M-y',strtotime($data_search['date_end']))."')");
+        endif;
+        if(isset($data_search['account_id']) && having_value($data_search['account_id'])):
+            db_where('m.account_id',$data_search['account_id']);
+        endif;
+        if(isset($data_search['order_by']) && having_value($data_search['order_by'])):
+            db_order($data_search['order_by']);
+        else:
+            db_order("TKH_BIL");
+        endif;
+        $sql = db_get('');
+        if($sql):
+            return $sql->result_array('');
+        endif;
+    }
+
+    function rekodTransaksiInfo($data_search=array())
+    {
+        if ( !empty($data_search) )
+        {
+            db_select('acc_account.account_id');
+            db_select('acc_account.account_number');
+            db_select('acc_user.name');
+            db_select('acc_account.estimation_rental_charge');
+            db_select('a_asset.asset_add');
+            db_select('a_category.category_name');
+            db_select('a_category.address');
+            db_from('acc_account');
+            db_join('a_asset','acc_account.asset_id = a_asset.asset_id');
+            db_join('a_category','acc_account.category_id = a_category.category_id');
+            db_join('acc_user','acc_account.user_id = acc_user.user_id');
+            db_where('acc_account.account_id',$data_search['account_id']);
+            $sql = db_get('');
+            if($sql):
+                return $sql->result_array('');
+            endif;
+        }
+        else
+        {
+            return array();
+        }
     }
 }
 

@@ -28,30 +28,15 @@ checking_validation(validation_errors());
                 <div class="col-sm-5">
                     <select name="type_id" class="form-control">
                         <?php
-                        foreach($asset_type as $row):
+                            echo '<option value="-1" selected > SEMUA </option>';
+                          foreach($asset_type as $row):
                             echo option_value($row['TYPE_ID'],$row['TYPE_NAME'],'type_id');
-                        endforeach;
+                          endforeach;
                         ?>
                     </select>
                     <?php echo form_error('type_id')?>
                 </div>
             </div>
-
-<!--            <div class="form-group row">-->
-<!--                <label class="col-sm-3 col-form-label">No. fail mesyuarat/rujukan <span class="mandatory">*</span></label>-->
-<!--                <div class="col-sm-5">-->
-<!--                    <input type="input" name="ref_number" class="form-control" placeholder="Nombor Rujukan Permohonan" value="--><?php //echo set_value('ref_number')?><!--">-->
-<!--                    --><?php //echo form_error('ref_number')?>
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="form-group row">-->
-<!--                <label class="col-sm-3 col-form-label">Tarikh mesyuarat keputusan <span class="mandatory">*</span></label>-->
-<!--                <div class="col-sm-5">-->
-<!--                    <input type="input" name="date_application" class="form-control date_class" placeholder="Tarikh permohonan" value="--><?php //echo set_value('date_application',date_display(timenow()))?><!--">-->
-<!--                    --><?php //echo form_error('date_application')?>
-<!--                </div>-->
-<!--            </div>-->
-
         </div>
         <div class="card-footer">
             <div class="col-sm-12">
@@ -91,8 +76,8 @@ checking_validation(validation_errors());
                         <th>Status permohonan</th>
                         <th>Catatan</th>
                         <th>Lampiran</th>
-<!--                        <th>Jenis perniagaan</th>-->
-<!--                        <th>Status / Catatan</th>-->
+                        <!--<th>Jenis perniagaan</th>-->
+                        <!--<th>Status / Catatan</th>-->
                         <th class="text-center">Terperinci</th>
                     </tr>
                     <tbody>
@@ -161,35 +146,6 @@ checking_validation(validation_errors());
                                     </div>
                                     <input type="hidden" name="attachment_application_<?php echo $row['APPLICATION_ID']?>_status" id="attachment_application_<?php echo $row['APPLICATION_ID']?>_status" class="form-control" value="<?php echo set_value('attachment_application_'.$row['APPLICATION_ID'].'_status')?>">
                                 </td>
-<!--                                <td>-->
-<!--                                    --><?php //echo $row['RENTAL_USE_NAME'] ?>
-<!--                                </td>-->
-<!--                                <td>-->
-<!--                                    <strong>Status permohonan : </strong>-->
-<!--                                    --><?php
-//                                    echo status_application($row['STATUS_APPLICATION']).'<br>';
-//                                    if($row['REMARK']):
-//                                        echo 'Catatan : '.$row['REMARK'];
-//                                    endif;
-//                                    ?>
-<!--                                    <br>-->
-<!---->
-<!--                                    --><?php
-//                                    if($row['STATUS_APPLICATION']==STATUS_APPLICATION_APPROVED):
-//                                        ?>
-<!---->
-<!--                                        <strong>Status setuju terima : </strong>-->
-<!--                                        --><?php
-//                                        echo status_application_applicant($row['STATUS_AGREE']).'<br>';
-//                                        if($row['REMARK_AGREE']):
-//                                            echo 'Catatan : '.$row['REMARK_AGREE'];
-//                                        endif;
-//                                        ?>
-<!---->
-<!--                                    --><?php
-//                                    endif;
-//                                    ?>
-<!--                                </td>-->
                                 <td class="text-center">
                                     <a class="btn btn-block btn-info btn-display" target="_blank" href="/rental_application/application_process/<?php echo urlEncrypt($row['APPLICATION_ID'])?>"><span class="glyphicon glyphicon-edit"></span> Lihat </a>
                                 </td>

@@ -90,8 +90,8 @@ class M_acc_account extends CI_Model
             db_where('a.category_id',$data_search['category_id']);
         endif;
         if(isset($data_search['almost_expired']) && having_value($data_search['almost_expired'])):
-//            db_where("extract(year from a.date_end) = ".date('Y')."");
-//            db_where("extract(month from a.date_get_accountend) = ".date('m')."");
+           // db_where("extract(year from a.date_end) = ".date('Y')."");
+           // db_where("extract(month from a.date_get_accountend) = ".date('m')."");
             if($data_search['almost_expired']==1):
                 db_where("A.DATE_END IS NOT NULL");
                 db_where('a.STATUS_ACC',STATUS_ACCOUNT_ACTIVE);
@@ -269,7 +269,7 @@ class M_acc_account extends CI_Model
             db_where("acc.name like '%".$data_search['name']."%'");
         endif;
         if(isset($data_search['ic_number_company_reg']) && having_value($data_search['ic_number_company_reg'])):
-//            db_where('(acc.ic_number like "%'.$data_search['ic_number_company_reg'].'%" or acc.company_registration_number like "%'.$data_search['ic_number_company_reg'].'%")');
+           // db_where('(acc.ic_number like "%'.$data_search['ic_number_company_reg'].'%" or acc.company_registration_number like "%'.$data_search['ic_number_company_reg'].'%")');
             db_where("(acc.ic_number like '%".$data_search['ic_number_company_reg']."%' or acc.company_registration_number like '%".$data_search['ic_number_company_reg']."%')");
 
         endif;
@@ -292,11 +292,11 @@ class M_acc_account extends CI_Model
         db_join('a_type t','t.type_id = acc.type_id');
         db_join('a_category c','c.category_id = acc.category_id');
         db_from('acc_account acc');
-//        db_where('m.bill_month >= 4');
+        // db_where('m.bill_month >= 4');
         db_where('m.bill_year >= 2015');
         db_where('i.tr_gst_status',1);
-//        db_where('i.amount > 0');
-//        db_where('acc.account_id',6262);
+        // db_where('i.amount > 0');
+        // db_where('acc.account_id',6262);
         if(isset($data_search['type_id']) && having_value($data_search['type_id'])):
             db_where("acc.type_id",$data_search['type_id']);
         endif;
@@ -314,8 +314,8 @@ class M_acc_account extends CI_Model
     }
 
     function account_report_dashboard($per_page='',$search_segment='',$data_search=array()){
-//        db_select('a.*,acc.*,t.*,c.*,r.*');
-//        db_select("to_char(a.dt_added, 'yyyy-mm-dd hh24:mi:ss') as dt_create_acc",false);
+        // db_select('a.*,acc.*,t.*,c.*,r.*');
+        // db_select("to_char(a.dt_added, 'yyyy-mm-dd hh24:mi:ss') as dt_create_acc",false);
         db_select('count(account_id) as total_acc');
         db_select('t.type_name');
         db_join('acc_user acc','acc.user_id = a.user_id');
@@ -323,27 +323,6 @@ class M_acc_account extends CI_Model
         db_join('a_category c','c.category_id = a.category_id');
         db_join('a_rental_use r','r.rental_use_id = a.rental_use_id','LEFT');
         db_from('acc_account a');
-//        if(isset($data_search['account_number']) && having_value($data_search['account_number'])):
-//            db_where('a.account_number',$data_search['account_number']);
-//        endif;
-//        if(isset($data_search['type_id']) && having_value($data_search['type_id'])):
-//            db_where('a.type_id',$data_search['type_id']);
-//        endif;
-//        if(isset($data_search['name']) && having_value($data_search['name'])):
-//            db_where("acc.name like '%".$data_search['name']."%'");
-//        endif;
-//        if(isset($data_search['ic_number_company_reg']) && having_value($data_search['ic_number_company_reg'])):
-////            db_where('(acc.ic_number like "%'.$data_search['ic_number_company_reg'].'%" or acc.company_registration_number like "%'.$data_search['ic_number_company_reg'].'%")');
-//            db_where("(acc.ic_number like '%".$data_search['ic_number_company_reg']."%' or acc.company_registration_number like '%".$data_search['ic_number_company_reg']."%')");
-//
-//        endif;
-//        if(isset($data_search['acc_start']) && having_value($data_search['acc_start'])):
-//            db_where("a.account_number >= '".$data_search['acc_start']."'");
-//        endif;
-//        if(isset($data_search['acc_end']) && having_value($data_search['acc_end'])):
-//            db_where("a.account_number <= '".$data_search['acc_end']."'");
-//        endif;
-//        db_order('a.account_number');
         db_group('t.type_name');
         $sql = db_get();
         if($sql):
@@ -394,11 +373,11 @@ class M_acc_account extends CI_Model
 
     function get_account_cron($data_search=array()){
         db_select('a.account_id,a.bill_type');
-//        db_select("to_char(a.dt_added, 'yyyy-mm-dd hh24:mi:ss') as dt_create_acc",false);
+        // db_select("to_char(a.dt_added, 'yyyy-mm-dd hh24:mi:ss') as dt_create_acc",false);
         db_join('acc_user acc','acc.user_id = a.user_id');
         db_join('a_type t','t.type_id = a.type_id');
         db_join('a_category c','c.category_id = a.category_id');
-//        db_join('a_rental_use r','r.rental_use_id = a.rental_use_id','LEFT');
+        // db_join('a_rental_use r','r.rental_use_id = a.rental_use_id','LEFT');
         db_from('acc_account a');
         if(isset($data_search['status_bill']) && having_value($data_search['status_bill'])):
             db_where('a.STATUS_BILL',STATUS_BILL_ACTIVE);
