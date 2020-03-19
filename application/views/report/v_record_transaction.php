@@ -121,7 +121,6 @@ endif;
                 foreach ($data_report["$nextYear"] as $row)
                 {
                     $totalAmount = ($row["BILL_CATEGORY"] == 'B' ? ($totalAmount + $row["AMOUNT"]) : ($totalAmount - $row["AMOUNT"]));
-                    // $totalAmount = $totalAmount + $row["AMOUNT"];
                     echo '      <tr>';
                     echo '          <td>'.$row["BILL_NUMBER"].'</td>';
                     echo '          <td>'.$row["TKH_BIL"].'</td>';
