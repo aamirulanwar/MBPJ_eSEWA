@@ -234,7 +234,11 @@ class Journal extends CI_Controller
     }
 
     function doc_journal(){
-        
+        $id = $this->curuser;
+        // if(!is_numeric($id)):
+        //     return false;
+        // endif;
+
         load_library('Generate_word');
         $this->generate_word->word_document($id, DOC_JOURNAL);
     }

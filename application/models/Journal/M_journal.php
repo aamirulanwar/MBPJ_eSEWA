@@ -11,7 +11,7 @@ class M_journal extends CI_Model
     {
         $model =& get_instance();
 
-        $query = $model->db->query("SELECT b.*,a.account_number,u.user_name FROM b_journal_temp b, acc_account a, users u WHERE b.account_id=a.account_id AND u.user_id=b.CREATED_BY ORDER BY bill_number");
+        $query = $model->db->query("SELECT b.*,a.account_number,u.user_name,j.journal_code,j.journal_desc FROM b_journal_temp b, acc_account a, users u, a_journal j WHERE b.account_id=a.account_id AND u.user_id=b.CREATED_BY And b.journal_id=j.journal_id ORDER BY bill_number");
         $result = $query->result_array();
         db_order('category_code');
 
@@ -322,5 +322,19 @@ class M_journal extends CI_Model
         if($sql):
             return $sql->result_array('');
         endif;
+    }
+
+    function get_lists_temp_journal_print()
+    {
+        $model =& get_instance();
+
+        $query = $model->db->query("SELECT b.*,a.account_number,u.user_name,j.journal_code,j.journal_desc FROM b_journal_temp b, acc_account a, users u, a_journal j WHERE b.account_id=a.account_id AND u.user_id=b.CREATED_BY And b.journal_id=j.journal_id AND b.status_approval=0 ORDER BY bill_number");
+        $result = $query->result_array(); 
+        db_order('category_code');
+
+        if ($result) {
+            
+            return $result;
+        }
     }
 }

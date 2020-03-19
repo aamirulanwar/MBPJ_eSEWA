@@ -45,6 +45,8 @@ class Generate_word {
             $this->generate_notice($id, $doc_sub_type,$notice_info);
         elseif($doc_type==DOC_QUARTERS):
             $this->generate_quarters_doc($id, $doc_sub_type);
+        elseif($doc_type==DOC_JOURNAL):
+            $this->generate_report_journal($id);  
         endif;
     }
 
@@ -668,6 +670,99 @@ class Generate_word {
             $filename = 'Sijil Akuan Keluar Rumah - '.$get_details['NAME'].'.docx';
         endif;
         $templateProcessor->saveAs($filename);
+
+        header('Content-Disposition: attachment; filename='.$filename);
+        header('Content-Transfer-Encoding: binary');
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Expires: 0');
+        header('Pragma: public');
+        flush();
+        readfile($filename);
+        unlink($filename);
+        exit;
+    }
+
+     private function generate_report_journal()
+    {
+        $phpWord = new PhpOffice\PhpWord\PhpWord();
+        $phpWord->setDefaultFontName('Calibri');
+        $filename = 'Laporan Jurnal.docx';
+
+        $section = $phpWord->addSection(array('marginLeft' => 1000, 'marginRight' => 1000,
+                                            'marginTop' => 900, 'marginBottom' => 900));
+        $sectionStyle = $section->getStyle();
+        $sectionStyle->setOrientation($sectionStyle::ORIENTATION_LANDSCAPE);
+
+        /*
+        * Style: Text & Table
+        * ----------------------
+        */
+        $header = array(
+            'size' => 14,
+            'bold' => true,
+        );
+
+        $default_table = array(
+            'borderSize' => 6,
+            'borderColor' => '000000',
+        );
+
+        $result_table = array(
+            'spaceAfter' => 0
+        );
+
+        $cell_header = array(
+            'size' => 11,
+            'align' => 'center',
+            'valign' => 'center',
+            'bold' => true
+        );
+
+        $cell = array(
+            'size' => 11,
+            'spaceAfter' => 0
+        );
+
+        $font_default = array(
+            'align' => 'left',
+            'spaceAfter' => 0
+        );
+
+        $font_center = array(
+            'align' => 'center',
+            'spaceAfter' => 0
+        );
+
+
+        $font_align_left = array(
+            'align' => 'left',
+            'spaceAfter' => 0
+        );
+        /*
+        * ----------------------
+        */
+
+        $get_details = $this->ci->m_journal->get_lists_temp_journal_print();
+        $section->addText('LAPORAN JURNAL ', $header, $font_center);
+        $phpWord->addTableStyle('journal_list', $default_table); 
+        $table = $section->addTable('journal_list');
+        $table->addRow();
+        $table->addCell(500)->addText("NO", $cell_header, $font_center);
+        $table->addCell(2000)->addText("No.Akaun", $cell_header, $font_center);
+        $table->addCell(2000)->addText("No.Bil", $cell_header, $font_center);
+        $table->addCell(3000)->addText("AMAUN (RM)", $cell_header, $font_center);
+        $i=0;
+        foreach($get_details as $journal):
+            $i++;
+            $table->addRow();
+            $table->addCell(500)->addText($i, $cell, $font_center);
+            $table->addCell(2000)->addText($journal['ACCOUNT_NUMBER'], $cell, $font_center);
+            $table->addCell(2000)->addText($journal['BILL_NUMBER'], $cell, $font_center);
+            $table->addCell(3000)->addText(number_format(abs($journal['AMOUNT']),2), $cell, $font_center);
+        endforeach;
+         
+        $phpWord = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
+        $phpWord->save($filename);
 
         header('Content-Disposition: attachment; filename='.$filename);
         header('Content-Transfer-Encoding: binary');
