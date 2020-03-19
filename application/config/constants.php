@@ -159,6 +159,7 @@ define('DOC_AGREEMENT',5);
 define('DOC_NOTICE',6);
 define('DOC_QUARTERS',7);
 define('DOC_SIGNATURE',8);
+define('DOC_JOURNAL',9);
 
 define('HARTA_GAMBAR_LOKASI',1);
 define('HARTA_PANDANGAN_SATELIT',2);
