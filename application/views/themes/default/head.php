@@ -41,6 +41,7 @@
     <script src="/assets/select2/dist/js/select2.min.js"></script>
     <!-- dataTables -->
     <link href="/assets/dataTables/jquery.dataTables.min.css" rel="stylesheet">
+    <link href="/assets/dataTables/buttons.dataTables.min.css" rel="stylesheet">
     <script src="/assets/dataTables/jquery.dataTables.min.js"></script>
     <script src="/assets/dataTables/dataTables.buttons.min.js"></script>
     <script src="/assets/dataTables/buttons.print.js"></script>
