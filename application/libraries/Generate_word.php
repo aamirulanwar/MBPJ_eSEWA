@@ -682,44 +682,61 @@ class Generate_word {
         exit;
     }
 
-     private function generate_report_journal()
+      private function generate_report_journal()
     {
         $phpWord = new PhpOffice\PhpWord\PhpWord();
+        $phpWord->getProtection()->setEditing('readOnly');
         $phpWord->setDefaultFontName('Calibri');
         $filename = 'Laporan Jurnal.docx';
 
         $section = $phpWord->addSection(array('marginLeft' => 1000, 'marginRight' => 1000,
                                             'marginTop' => 900, 'marginBottom' => 900));
+        $src = base_url() . "/assets/images/logompkj.gif";
         $sectionStyle = $section->getStyle();
-        $sectionStyle->setOrientation($sectionStyle::ORIENTATION_LANDSCAPE);
+        // $sectionStyle->setOrientation($sectionStyle::ORIENTATION_LANDSCAPE);
 
         /*
         * Style: Text & Table
         * ----------------------
         */
-        $header = array(
-            'size' => 14,
+        $style = array(
+            'height' => 120,
+            'width' => 100,
+            'marginLeft' => -2500,
+            'wrappingStyle' => 'square',
+            'positioning' => 'absolute',
+        );
+        $h1 = array(
+            'size' => 24,
             'bold' => true,
         );
 
-        $default_table = array(
-            'borderSize' => 6,
-            'borderColor' => '000000',
+        $h2 = array(
+            'size' => 10,
         );
 
-        $result_table = array(
-            'spaceAfter' => 0
+        $default_table = array(
+            'borderTopColor' =>'FFFFFF',
+            'borderTopSize' => 9,
+            'borderRightColor' =>'FFFFFF',
+            'borderRightSize' => 9,
+            'borderBottomColor' =>'ff0000',
+            'borderBottomSize' => 9,
+            'borderLeftColor' =>'FFFFFF',
+            'borderLeftSize' => 9,
+            'width' =>  100
         );
 
         $cell_header = array(
-            'size' => 11,
+            'size' => 12,
             'align' => 'center',
             'valign' => 'center',
             'bold' => true
         );
 
         $cell = array(
-            'size' => 11,
+            'align' => 'center',
+            'size' => 10,
             'spaceAfter' => 0
         );
 
@@ -738,29 +755,56 @@ class Generate_word {
             'align' => 'left',
             'spaceAfter' => 0
         );
-        /*
-        * ----------------------
-        */
+        $styleCell = array(
+            'valign' => 'center',
+            'borderTopColor' =>'FFFFFF',
+            'borderTopSize' => 9,
+            'borderRightColor' =>'FFFFFF',
+            'borderRightSize' => 9,
+            'borderBottomColor' =>'000000',
+            'borderBottomSize' => 9,
+            'borderLeftColor' =>'FFFFFF',
+            'borderLeftSize' => 9,
+        );
+        $cellHCentered = array(
+            'align' => 'center'
+        );
+
+        // /*
+        // * ----------------------
+        // */
 
         $get_details = $this->ci->m_journal->get_lists_temp_journal_print();
-        $section->addText('LAPORAN JURNAL ', $header, $font_center);
+        $section->addImage($src, $style);
+        $section->addText('MAJLIS PERBANDARAN KAJANG', $h1, $font_center);
+        $section->addText('MENARA MPKj, JALAN CEMPAKA PUTIH, OFF JALAN SEMENYIH', $h2, $font_center);
+        $section->addText('43000 KAJANG, SELANGOR DARUL EHSAN,', $h2, $font_center);
+        $section->addText('TEL: 03-87377899 FAKS: 03-87377897', $h2, $font_center);
+        $section->addText('Laman web : www.mpkj.gov.my', $h2, $font_center);
+        $section->addText(null);
+        $section->addText('LAPORAN JURNAL ', $h1, $font_center);
+        $section->addText(null);
         $phpWord->addTableStyle('journal_list', $default_table); 
         $table = $section->addTable('journal_list');
         $table->addRow();
         $table->addCell(500)->addText("NO", $cell_header, $font_center);
         $table->addCell(2000)->addText("No.Akaun", $cell_header, $font_center);
         $table->addCell(2000)->addText("No.Bil", $cell_header, $font_center);
-        $table->addCell(3000)->addText("AMAUN (RM)", $cell_header, $font_center);
+        $table->addCell(3000)->addText("Kod Jurnal/Keterangan", $cell_header, $font_center);
+        $table->addCell(2000)->addText("AMAUN (RM)", $cell_header, $font_center);
         $i=0;
         foreach($get_details as $journal):
             $i++;
-            $table->addRow();
-            $table->addCell(500)->addText($i, $cell, $font_center);
-            $table->addCell(2000)->addText($journal['ACCOUNT_NUMBER'], $cell, $font_center);
-            $table->addCell(2000)->addText($journal['BILL_NUMBER'], $cell, $font_center);
-            $table->addCell(3000)->addText(number_format(abs($journal['AMOUNT']),2), $cell, $font_center);
+            $table->addRow(500);
+            $table->addCell(500, $styleCell)->addText($i, $cell, $font_center);
+            $table->addCell(2000, $styleCell)->addText($journal['ACCOUNT_NUMBER'], $cell, $font_center);
+            $table->addCell(2000, $styleCell)->addText($journal['BILL_NUMBER'], $cell, $font_center);
+            $table->addCell(3000, $styleCell)->addText($journal['JOURNAL_CODE']." ".$journal['JOURNAL_DESC'], $cell, $font_center);
+            $table->addCell(2000, $styleCell)->addText(number_format(abs($journal['AMOUNT']),2), $cell, $font_center);
         endforeach;
-         
+        $section->addText(null);
+        $section->addText("Disahkan Oleh");
+
         $phpWord = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
         $phpWord->save($filename);
 
