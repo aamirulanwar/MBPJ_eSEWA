@@ -284,7 +284,7 @@ class Bill_lib {
                     $insert_code['BILL_ID']     = $bill_id;
                     $insert_code['TR_CODE']     = $code_lms['MCT_TRCODENEW'];
 //                    $insert_code['TR_ID']       = $code_waste_management['TR_ID'];
-                    $insert_code['AMOUNT']      = LMS_CHARGE;
+                    $insert_code['AMOUNT']      = $data_acc['LMS_CHARGE'];
                     $insert_code['PRIORITY']    = $code_lms['MCT_PRIORT'];
 //                    $insert_code['TR_TYPE']     = $code_waste_management['TR_TYPE'];
                     $insert_code['ACCOUNT_ID']  = $account_id;

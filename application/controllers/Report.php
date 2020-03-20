@@ -151,8 +151,7 @@ class Report extends CI_Controller
     }
 
     function category_aging_details(){
-        // $this->auth->restrict_access($this->curuser,array(2001));
-
+        $this->auth->restrict_access($this->curuser,array(8001));
         $data['link_1']     = 'Laporan';
         $data['link_2']     = 'Aging Sewaan (Terperinci)';
         $data['link_3']     = '';
@@ -278,8 +277,7 @@ class Report extends CI_Controller
     }
 
     function category_aging(){
-        // $this->auth->restrict_access($this->curuser,array(2001));
-
+        $this->auth->restrict_access($this->curuser,array(8002));
         $data['link_1']     = 'Laporan';
         $data['link_2']     = 'Aging Sewaan (Ringkasan)';
         $data['link_3']     = '';
@@ -438,7 +436,7 @@ class Report extends CI_Controller
     }
 
     function gst_rental(){
-        // $this->auth->restrict_access($this->curuser,array(2001));
+        $this->auth->restrict_access($this->curuser,array(8003));
         $data['link_1']     = 'Laporan';
         $data['link_2']     = 'Bil gst';
         $data['link_3']     = '';
@@ -583,7 +581,7 @@ class Report extends CI_Controller
     }
 
     function gst_rental_simple(){
-        // $this->auth->restrict_access($this->curuser,array(2001));
+        $this->auth->restrict_access($this->curuser,array(8004));
         $data['link_1']     = 'Laporan';
         $data['link_2']     = 'Bil gst (Ringkasan)';
         $data['link_3']     = '';
@@ -657,7 +655,7 @@ class Report extends CI_Controller
     }
 
     function code_gl(){
-        // $this->auth->restrict_access($this->curuser,array(2001));
+        $this->auth->restrict_access($this->curuser,array(8005));
         $data['link_1']     = 'Laporan';
         $data['link_2']     = 'Kod Transaksi';
         $data['link_3']     = '';
@@ -699,7 +697,7 @@ class Report extends CI_Controller
     }
 
     function highest_overdue(){
-        // $this->auth->restrict_access($this->curuser,array(2001));
+        $this->auth->restrict_access($this->curuser,array(8006));
         $data['link_1']     = 'Laporan';
         $data['link_2']     = (uri_segment(3)=='two')?'Tunggakan Sewaan':'Tunggakan Sewaan Tertinggi';
         $data['link_3']     = '';
@@ -755,7 +753,7 @@ class Report extends CI_Controller
     }
 
     function record_transaction(){
-        // $this->auth->restrict_access($this->curuser,array(2001));
+        $this->auth->restrict_access($this->curuser,array(8007));
         $data['link_1'] = 'Laporan';
         $data['link_2'] = 'Rekod transaksi';
         $data['link_3'] = '';
@@ -941,7 +939,7 @@ class Report extends CI_Controller
     }
 
     function adjustment_statement(){
-        $this->auth->restrict_access($this->curuser,array(2001));
+        $this->auth->restrict_access($this->curuser,array(8008));
         $data['link_1']     = 'Laporan';
         $data['link_2']     = 'Penyata Penyesuaian Terperinci';
         $data['link_3']     = '';
@@ -1062,7 +1060,7 @@ class Report extends CI_Controller
     }
 
     function adjustment_statement_ringkasan(){
-        $this->auth->restrict_access($this->curuser,array(2001));
+        $this->auth->restrict_access($this->curuser,array(8009));
         $data['link_1']     = 'Laporan';
         $data['link_2']     = 'Penyata Penyesuaian Ringkasan';
         $data['link_3']     = '';
@@ -1219,6 +1217,7 @@ class Report extends CI_Controller
     }
 
     function payment(){
+        $this->auth->restrict_access($this->curuser,array(8010));
         $data['link_1']     = 'Laporan';
         $data['link_2']     = 'Pembayaran Penyewa';
         $data['link_3']     = '';
@@ -1281,8 +1280,8 @@ class Report extends CI_Controller
         templates('/report/v_payment',$data);
     }
 
-    function journal()
-    {
+    function journal(){
+        $this->auth->restrict_access($this->curuser,array(8011));
         $data['link_1']     = 'Laporan';
         $data['link_2']     = 'Jurnal Sewaan';
         $data['link_3']     = '';
@@ -1307,8 +1306,11 @@ class Report extends CI_Controller
                 $data_search['acc_status']  = '';
             endif;
         endif;
-        $data['data_code_category']   = $this->m_category->get_a_category('','');
+        $data['data_code_category']   = $this->m_category->get_a_category_all('','');
 
+        // pre($data_report);
+        // die();
+      
         if($_POST):
 
             $data_report = $this->m_journal->get_lists_temp_journal_report($data_search);
