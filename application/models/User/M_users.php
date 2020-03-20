@@ -5,6 +5,7 @@ class M_users extends CI_Model
     function __construct()
     {
         parent::__construct();
+        load_library('Audit_trail_lib');
     }
 
     function check_username($str)
@@ -61,7 +62,7 @@ class M_users extends CI_Model
 
             db_where('user_email',$username);
             db_where('profile_version',sha1((input_data('password')).$user_id));
-            
+
             $ttl2 = db_count_results('users');
         endif;
 
@@ -116,8 +117,14 @@ class M_users extends CI_Model
         db_set_date_time('dt_added',timenow());
 //        db_set_date_time('last_dt_update_password',timenow());
         db_insert('users',$data_insert);
-
-        return get_insert_id('users');
+        $user_id = get_insert_id('users');
+          $data_audit_trail['log_id']                  = 5007;
+          $data_audit_trail['remark']                  = "Tambah Akaun Pengguna";
+          $data_audit_trail['status']                  = PROCESS_STATUS_SUCCEED;
+          $data_audit_trail['user_id']                 = $this->curuser['USER_ID'];
+          $data_audit_trail['refer_id']                = $user_id; //refer to db_where
+          $this->audit_trail_lib->add($data_audit_trail);
+        return $user_id;
     }
 
     function update_user($data_update,$id_user){
@@ -127,11 +134,35 @@ class M_users extends CI_Model
         endif;
         db_where('user_id',$id_user);
         db_update('users',$data_update);
-        if(db_affected_rows()!=0):
-            return true;
-        else:
-            return false;
-        endif;
+        if ($data_update["soft_delete"] == 1)
+        {  // code...
+          if(db_affected_rows()!=0):
+                $data_audit_trail['log_id']                  = 5009;
+                $data_audit_trail['remark']                  = "Padam Akaun Pengguna";
+                $data_audit_trail['status']                  = PROCESS_STATUS_SUCCEED;
+                $data_audit_trail['user_id']                 = $this->curuser['USER_ID'];
+                $data_audit_trail['refer_id']                = $id_user; //refer to db_where
+                $this->audit_trail_lib->add($data_audit_trail);
+              return true;
+          else:
+              return false;
+          endif;
+        }
+        else
+        { // code...
+          if(db_affected_rows()!=0):
+                $data_audit_trail['log_id']                  = 5008;
+                $data_audit_trail['remark']                  = "Kemaskini Akaun Pengguna";
+                $data_audit_trail['status']                  = PROCESS_STATUS_SUCCEED;
+                $data_audit_trail['user_id']                 = $this->curuser['USER_ID'];
+                $data_audit_trail['refer_id']                = $id_user; //refer to db_where
+                $this->audit_trail_lib->add($data_audit_trail);
+              return true;
+          else:
+              return false;
+          endif;
+        }
+
     }
 
     function get_user_details($user_id){
@@ -188,4 +219,3 @@ class M_users extends CI_Model
 
 }
 /* End of file modules/login/controllers/m_pentadbir.php */
-

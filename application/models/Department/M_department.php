@@ -37,12 +37,12 @@ class M_department extends CI_Model
         db_insert('department',$data_insert);
         $dept_id = get_insert_id('department');
 
-        $data_audit_trail['log_id']                  = 5001;
-        $data_audit_trail['remark']                  = "Tambah Jabatan/Bahagian";
-        $data_audit_trail['status']                  = PROCESS_STATUS_SUCCEED;
-        $data_audit_trail['user_id']                 = $this->curuser['USER_ID'];
-        $data_audit_trail['refer_id']                = $dept_id;
-        $this->audit_trail_lib->add($data_audit_trail);
+          $data_audit_trail['log_id']                  = 5001;
+          $data_audit_trail['remark']                  = "Tambah Jabatan/Bahagian";
+          $data_audit_trail['status']                  = PROCESS_STATUS_SUCCEED;
+          $data_audit_trail['user_id']                 = $this->curuser['USER_ID'];
+          $data_audit_trail['refer_id']                = $dept_id;
+          $this->audit_trail_lib->add($data_audit_trail);
 
         return $dept_id ;
     }
@@ -61,12 +61,12 @@ class M_department extends CI_Model
         db_where('department_id',$dept_id);
         db_update('department',$data_update);
         if(db_affected_rows()!=0):
-          $data_audit_trail['log_id']                  = 5002;
-          $data_audit_trail['remark']                  = "Kemaskini Jabatan/Bahagian";
-          $data_audit_trail['status']                  = PROCESS_STATUS_SUCCEED;
-          $data_audit_trail['user_id']                 = $this->curuser['USER_ID'];
-          $data_audit_trail['refer_id']                = $dept_id;
-          $this->audit_trail_lib->add($data_audit_trail);
+            $data_audit_trail['log_id']                  = 5002;
+            $data_audit_trail['remark']                  = "Kemaskini Jabatan/Bahagian";
+            $data_audit_trail['status']                  = PROCESS_STATUS_SUCCEED;
+            $data_audit_trail['user_id']                 = $this->curuser['USER_ID'];
+            $data_audit_trail['refer_id']                = $dept_id;
+            $this->audit_trail_lib->add($data_audit_trail);
             return true;
         else:
 
@@ -78,12 +78,12 @@ class M_department extends CI_Model
         db_where('department_id',$dept_id);
         db_update('department',$data_update);
         if(db_affected_rows()!=0):
-          $data_audit_trail['log_id']                  = 5003;
-          $data_audit_trail['remark']                  = "Padam Jabatan/Bahagian";
-          $data_audit_trail['status']                  = PROCESS_STATUS_SUCCEED;
-          $data_audit_trail['user_id']                 = $this->curuser['USER_ID'];
-          $data_audit_trail['refer_id']                = $dept_id;
-          $this->audit_trail_lib->add($data_audit_trail);
+            $data_audit_trail['log_id']                  = 5003;
+            $data_audit_trail['remark']                  = "Padam Jabatan/Bahagian";
+            $data_audit_trail['status']                  = PROCESS_STATUS_SUCCEED;
+            $data_audit_trail['user_id']                 = $this->curuser['USER_ID'];
+            $data_audit_trail['refer_id']                = $dept_id;
+            $this->audit_trail_lib->add($data_audit_trail);
             return true;
         else:
             return false;
