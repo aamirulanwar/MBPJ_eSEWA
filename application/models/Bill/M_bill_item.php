@@ -529,9 +529,9 @@ class M_bill_item extends CI_Model
         endif;
     }
 
-    function rekodTransaksiInfo($data_search=array())
+    function rekodTransaksiInfo($account_id)
     {
-        if ( !empty($data_search) )
+        if ( !empty($account_id) )
         {
             db_select('acc_account.account_id');
             db_select('acc_account.account_number');
@@ -544,7 +544,7 @@ class M_bill_item extends CI_Model
             db_join('a_asset','acc_account.asset_id = a_asset.asset_id');
             db_join('a_category','acc_account.category_id = a_category.category_id');
             db_join('acc_user','acc_account.user_id = acc_user.user_id');
-            db_where('acc_account.account_id',$data_search['account_id']);
+            db_where('acc_account.account_id',$account_id);
             $sql = db_get('');
             if($sql):
                 return $sql->result_array('');

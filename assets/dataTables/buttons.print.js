@@ -184,7 +184,7 @@ DataTable.ext.buttons.print = {
 			autoPrint();
 		}
 		else {
-			win.setTimeout( autoPrint, 1000 );
+			win.setTimeout( autoPrint, 2000 );
 		}
 	},
 

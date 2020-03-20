@@ -186,88 +186,20 @@
     <button class="navbar-toggler sidebar-toggler d-md-down-none" type="button" data-toggle="sidebar-lg-show">
         <span class="navbar-toggler-icon"></span>
     </button>
-<!--    <ul class="nav navbar-nav d-md-down-none">-->
-<!--        <li class="nav-item px-3">-->
-<!--            <a class="nav-link" href="#">Dashboard</a>-->
-<!--        </li>-->
-<!--        <li class="nav-item px-3">-->
-<!--            <a class="nav-link" href="#">Users</a>-->
-<!--        </li>-->
-<!--        <li class="nav-item px-3">-->
-<!--            <a class="nav-link" href="#">Settings</a>-->
-<!--        </li>-->
-<!--    </ul>-->
     <ul class="nav navbar-nav ml-auto">
-<!--        <li class="nav-item d-md-down-none">-->
-<!--            <a class="nav-link" href="#">-->
-<!--                <i class="icon-bell"></i>-->
-<!--                <span class="badge badge-pill badge-danger">0</span>-->
-<!--            </a>-->
-<!--        </li>-->
-<!--        <li class="nav-item d-md-down-none">-->
-<!--            <a class="nav-link" href="#">-->
-<!--                <i class="icon-list"></i>-->
-<!--            </a>-->
-<!--        </li>-->
-<!--        <li class="nav-item d-md-down-none">-->
-<!--            <a class="nav-link" href="#">-->
-<!--                <i class="icon-location-pin"></i>-->
-<!--            </a>-->
-<!--        </li>-->
         <li class="nav-item dropdown">
             <a class="nav-link" data-toggle="dropdown" href="/profile" role="button" aria-haspopup="true"
                aria-expanded="false">
                 <img class="img-avatar" src="/assets/images/user.png" alt="administrator"><?php echo $this->curuser['USER_NAME']?>&nbsp;&nbsp;
             </a>
             <div class="dropdown-menu dropdown-menu-right">
-<!--                <div class="dropdown-header text-center">-->
-<!--                    <strong>Account</strong>-->
-<!--                </div>-->
-<!--                <a class="dropdown-item" href="#">-->
-<!--                    <i class="fa fa-bell-o"></i> Updates-->
-<!--                    <span class="badge badge-info">42</span>-->
-<!--                </a>-->
-<!--                <a class="dropdown-item" href="#">-->
-<!--                    <i class="fa fa-envelope-o"></i> Messages-->
-<!--                    <span class="badge badge-success">42</span>-->
-<!--                </a>-->
-<!--                <a class="dropdown-item" href="#">-->
-<!--                    <i class="fa fa-tasks"></i> Tasks-->
-<!--                    <span class="badge badge-danger">42</span>-->
-<!--                </a>-->
-<!--                <a class="dropdown-item" href="#">-->
-<!--                    <i class="fa fa-comments"></i> Comments-->
-<!--                    <span class="badge badge-warning">42</span>-->
-<!--                </a>-->
-<!--                <div class="dropdown-header text-center">-->
-<!--                    <strong>Settings</strong>-->
-<!--                </div>-->
                 <a class="dropdown-item" href="/profile">
                     <i class="fa fa-user"></i> Profil</a>
-<!--                <a class="dropdown-item" href="#">-->
-<!--                    <i class="fa fa-wrench"></i> Settings</a>-->
-<!--                <a class="dropdown-item" href="#">-->
-<!--                    <i class="fa fa-usd"></i> Payments-->
-<!--                    <span class="badge badge-secondary">42</span>-->
-<!--                </a>-->
-<!--                <a class="dropdown-item" href="#">-->
-<!--                    <i class="fa fa-file"></i> Projects-->
-<!--                    <span class="badge badge-primary">42</span>-->
-<!--                </a>-->
-<!--                <div class="divider"></div>-->
-<!--                <a class="dropdown-item" href="#">-->
-<!--                    <i class="fa fa-shield"></i> Lock Account</a>-->
                 <a class="dropdown-item" href="/logout">
-                    <i class="fa fa-lock"></i> Log keluar        </a>
+                    <i class="fa fa-lock"></i> Log keluar</a>
             </div>
         </li>
     </ul>
-<!--    <button class="navbar-toggler aside-menu-toggler d-md-down-none" type="button" data-toggle="aside-menu-lg-show">-->
-<!--        <span class="navbar-toggler-icon"></span>-->
-<!--    </button>-->
-<!--    <button class="navbar-toggler aside-menu-toggler d-lg-none" type="button" data-toggle="aside-menu-show">-->
-<!--        <span class="navbar-toggler-icon"></span>-->
-<!--    </button>-->
 </header>
 <div class="app-body">
     <div class="sidebar">
@@ -351,10 +283,6 @@
                         <li class="nav-item">
                             <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('tenant_type','add_asset_tenant_type','edit_asset_tenant_type'))?>" href="/asset/tenant_type">
                                 <i class="nav-icon fa fa-circle fa-sm"></i> Jenis Penyewa</a>
-<!--                            <a class="nav-link" href="/asset/tenant_type">-->
-<!--                                <i class="nav-icon icon-puzzle"></i> Kod Dokumen</a>-->
-<!--                            <a class="nav-link" href="/code_utility">-->
-<!--                                <i class="nav-icon icon-puzzle"></i> Kod Utiliti</a>-->
                         </li>
                         <?php endif;?>
                     </ul>
@@ -423,12 +351,12 @@
                                 <i class="nav-icon fa fa-circle fa-sm"></i> Lanjutan Sewaan</a>
                         </li>
                         <?php endif;?>
-<!--                        --><?php //if($this->auth->access_view($this->curuser,array(5005))):?>
+                        <?php //if($this->auth->access_view($this->curuser,array(5005))):?>
                             <li class="nav-item">
                                 <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('kuarters_list','kuarters_add','kuarters_detais'))?>" href="/account/kuarters_list">
                                     <i class="nav-icon fa fa-circle fa-sm"></i> Laporan Kerosakan Kuarters</a>
                             </li>
-<!--                        --><?php //endif;?>
+                        <?php //endif;?>
                     </ul>
                 </li>
                 <?php endif;?>
@@ -479,47 +407,14 @@
                     </a>
                 </li>
                 <?php endif;?>
-
-
-<!--                <li class="nav-item nav-dropdown --><?php //echo set_active_dropdown(uri_segment(1),array('journal'))?><!--">-->
-<!--                    <a class="nav-link nav-dropdown-toggle --><?php //echo set_active_menu(uri_segment(1),array('journal'))?><!--" href="/journal/insert">-->
-<!--                        <i class="nav-icon icon-layers"></i> Penyelarasan</a>-->
-<!--                    <ul class="nav-dropdown-items">-->
-<!--                        <li class="nav-item">-->
-<!--                            <a class="nav-link --><?php //echo set_active_menu(uri_segment(2),array('account_list','generate_current_bill','current_bill'))?><!--" href="/bill/account_list">-->
-<!--                                <i class="nav-icon fa fa-circle fa-sm"></i> Akaun</a>-->
-<!--                        </li>-->
-<!--                        <li class="nav-item">-->
-<!--                            <a class="nav-link --><?php //echo set_active_menu(uri_segment(2),array('notice_list'))?><!--" href="/bill/notice_list">-->
-<!--                                <i class="nav-icon fa fa-circle fa-sm"></i> Tunggakan</a>-->
-<!--                        </li>-->
-<!--                    </ul>-->
-<!--                </li>-->
-
                 <?php if($this->auth->access_main_view($this->curuser,array(8000))):?>
                 <li class="nav-item nav-dropdown <?php echo set_active_dropdown(uri_segment(1),array('report'))?>">
                     <a class="nav-link nav-dropdown-toggle <?php echo set_active_menu(uri_segment(1),array('report'))?>" href="#5">
                         <i class="nav-icon icon-chart"></i> Laporan</a>
                     <ul class="nav-dropdown-items">
-                        <!-- <li class="nav-item">
-                            <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('rent_summary'))?>" href="/report/rent_summary">
-                                <i class="nav-icon fa fa-circle fa-sm"></i> Ringkasan Sewaan</a>
-                        </li> -->
-<!--                        <li class="nav-item">-->
-<!--                            <a class="nav-link --><?php //echo set_active_menu(uri_segment(2),array('gl_summary'))?><!--" href="/report/gl_summary">-->
-<!--                                <i class="nav-icon fa fa-circle fa-sm"></i> Hasil Kod GL</a>-->
-<!--                        </li>-->
                         <?php if($this->auth->access_view($this->curuser,array(8001))):?>
-<!--                        <li class="nav-item">-->
-<!--                            <a class="nav-link --><?php //echo set_active_menu(uri_segment(2),array('category_adjustment'))?><!--" href="/report/category_adjustment">-->
-<!--                                <i class="nav-icon fa fa-circle fa-sm"></i> Penyata Penyesuaian</a>-->
-<!--                        </li>-->
                         <?php endif;?>
                         <?php if($this->auth->access_view($this->curuser,array(8002))):?>
-<!--                        <li class="nav-item">-->
-<!--                            <a class="nav-link --><?php //echo set_active_menu(uri_segment(2),array('category_aging'))?><!--" href="/report/category_aging">-->
-<!--                                <i class="nav-icon fa fa-circle fa-sm"></i> Aging Sewaan</a>-->
-<!--                        </li>-->
                         <?php endif;?>
                         <li class="nav-item">
                             <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('category_aging_details'))?>" href="/report/category_aging_details">
@@ -529,14 +424,6 @@
                             <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('category_aging'))?>" href="/report/category_aging">
                                 <i class="nav-icon fa fa-circle fa-sm"></i> Aging Sewaan Ringkasan</a>
                         </li>
-<!--                        <li class="nav-item">-->
-<!--                            <a class="nav-link --><?php //echo set_active_menu(uri_segment(2),array('account_outstanding'))?><!--" href="/report/account_outstanding">-->
-<!--                                <i class="nav-icon fa fa-circle fa-sm"></i> Tunggakan Tertinggi</a>-->
-<!--                        </li>-->
-                        <!-- <li class="nav-item">
-                            <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('account_adjustment'))?>" href="/report/account_adjustment">
-                                <i class="nav-icon fa fa-RFcircle fa-sm"></i> Penyesuaian Akaun</a>
-                        </li> -->
                         <?php if($this->auth->access_view($this->curuser,array(8003))):?>
                         <li class="nav-item">
                             <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('gst_rental'))?>" href="/report/gst_rental">
@@ -590,217 +477,6 @@
                     </ul>
                 </li>
                 <?php endif;?>
-
-
-<!--                <li class="nav-title">Kod Fail</li>-->
-<!--                <li class="nav-item">-->
-<!--                    <a class="nav-link" href="/department">-->
-<!--                        <i class="nav-icon icon-drop"></i> Jabatan/Bahagian</a>-->
-<!--                </li>-->
-<!--                <li class="nav-item">-->
-<!--                    <a class="nav-link" href="/user_group">-->
-<!--                        <i class="nav-icon icon-puzzle"></i> Kumpulan Pengguna</a>-->
-<!--                </li>-->
-<!--                <li class="nav-item">-->
-<!--                    <a class="nav-link" href="/user">-->
-<!--                        <i class="nav-icon icon-puzzle"></i> Pengguna</a>-->
-<!--                </li>-->
-<!--                <li class="nav-item">-->
-<!--                    <a class="nav-link" href="/audit_trail">-->
-<!--                        <i class="nav-icon icon-puzzle"></i> Audit Trail</a>-->
-<!--                </li>-->
-<!--                <li class="nav-item nav-dropdown">-->
-<!--                    <a class="nav-link nav-dropdown-toggle" href="typography.html"><i class="nav-icon icon-pencil"></i> User</a>-->
-<!--                    <ul class="nav-dropdown-items">-->
-<!--                        <li class="nav-item">-->
-<!--                            <a class="nav-link" href="/user/user_groups/">-->
-<!--                                <i class="nav-icon icon-puzzle"></i> User Group</a>-->
-<!--                            <a class="nav-link" href="base/breadcrumb.html">-->
-<!--                                <i class="nav-icon icon-puzzle"></i> Position                                                  </a>-->
-<!--                            <a class="nav-link" href="base/breadcrumb.html">-->
-<!--                                <i class="nav-icon icon-puzzle"></i> User Account</a>-->
-<!--                        </li>-->
-<!--                    </ul>-->
-<!--                </li>-->
-<!--                <li class="nav-title">Components</li>-->
-<!--                <li class="nav-item nav-dropdown">-->
-<!--                    <a class="nav-link nav-dropdown-toggle" href="#">-->
-<!--                        <i class="nav-icon icon-puzzle"></i> Base</a>-->
-<!--                    <ul class="nav-dropdown-items">-->
-<!--                        <li class="nav-item">-->
-<!--                            <a class="nav-link" href="base/breadcrumb.html">-->
-<!--                                <i class="nav-icon icon-puzzle"></i> Breadcrumb</a>-->
-<!--                        </li>-->
-<!--                        <li class="nav-item">-->
-<!--                            <a class="nav-link" href="base/cards.html">-->
-<!--                                <i class="nav-icon icon-puzzle"></i> Cards</a>-->
-<!--                        </li>-->
-<!--                        <li class="nav-item">-->
-<!--                            <a class="nav-link" href="base/carousel.html">-->
-<!--                                <i class="nav-icon icon-puzzle"></i> Carousel</a>-->
-<!--                        </li>-->
-<!--                        <li class="nav-item">-->
-<!--                            <a class="nav-link" href="base/collapse.html">-->
-<!--                                <i class="nav-icon icon-puzzle"></i> Collapse</a>-->
-<!--                        </li>-->
-<!--                        <li class="nav-item">-->
-<!--                            <a class="nav-link" href="base/forms.html">-->
-<!--                                <i class="nav-icon icon-puzzle"></i> Forms</a>-->
-<!--                        </li>-->
-<!--                        <li class="nav-item">-->
-<!--                            <a class="nav-link" href="base/jumbotron.html">-->
-<!--                                <i class="nav-icon icon-puzzle"></i> Jumbotron</a>-->
-<!--                        </li>-->
-<!--                        <li class="nav-item">-->
-<!--                            <a class="nav-link" href="base/list-group.html">-->
-<!--                                <i class="nav-icon icon-puzzle"></i> List group</a>-->
-<!--                        </li>-->
-<!--                        <li class="nav-item">-->
-<!--                            <a class="nav-link" href="base/navs.html">-->
-<!--                                <i class="nav-icon icon-puzzle"></i> Navs</a>-->
-<!--                        </li>-->
-<!--                        <li class="nav-item">-->
-<!--                            <a class="nav-link" href="base/pagination.html">-->
-<!--                                <i class="nav-icon icon-puzzle"></i> Pagination</a>-->
-<!--                        </li>-->
-<!--                        <li class="nav-item">-->
-<!--                            <a class="nav-link" href="base/popovers.html">-->
-<!--                                <i class="nav-icon icon-puzzle"></i> Popovers</a>-->
-<!--                        </li>-->
-<!--                        <li class="nav-item">-->
-<!--                            <a class="nav-link" href="base/progress.html">-->
-<!--                                <i class="nav-icon icon-puzzle"></i> Progress</a>-->
-<!--                        </li>-->
-<!--                        <li class="nav-item">-->
-<!--                            <a class="nav-link" href="base/scrollspy.html">-->
-<!--                                <i class="nav-icon icon-puzzle"></i> Scrollspy</a>-->
-<!--                        </li>-->
-<!--                        <li class="nav-item">-->
-<!--                            <a class="nav-link" href="base/switches.html">-->
-<!--                                <i class="nav-icon icon-puzzle"></i> Switches</a>-->
-<!--                        </li>-->
-<!--                        <li class="nav-item">-->
-<!--                            <a class="nav-link" href="base/tables.html">-->
-<!--                                <i class="nav-icon icon-puzzle"></i> Tables</a>-->
-<!--                        </li>-->
-<!--                        <li class="nav-item">-->
-<!--                            <a class="nav-link" href="base/tabs.html">-->
-<!--                                <i class="nav-icon icon-puzzle"></i> Tabs</a>-->
-<!--                        </li>-->
-<!--                        <li class="nav-item">-->
-<!--                            <a class="nav-link" href="base/tooltips.html">-->
-<!--                                <i class="nav-icon icon-puzzle"></i> Tooltips</a>-->
-<!--                        </li>-->
-<!--                    </ul>-->
-<!--                </li>-->
-<!--                <li class="nav-item nav-dropdown">-->
-<!--                    <a class="nav-link nav-dropdown-toggle" href="#">-->
-<!--                        <i class="nav-icon icon-cursor"></i> Buttons</a>-->
-<!--                    <ul class="nav-dropdown-items">-->
-<!--                        <li class="nav-item">-->
-<!--                            <a class="nav-link" href="buttons/buttons.html">-->
-<!--                                <i class="nav-icon icon-cursor"></i> Buttons</a>-->
-<!--                        </li>-->
-<!--                        <li class="nav-item">-->
-<!--                            <a class="nav-link" href="buttons/button-group.html">-->
-<!--                                <i class="nav-icon icon-cursor"></i> Buttons Group</a>-->
-<!--                        </li>-->
-<!--                        <li class="nav-item">-->
-<!--                            <a class="nav-link" href="buttons/dropdowns.html">-->
-<!--                                <i class="nav-icon icon-cursor"></i> Dropdowns</a>-->
-<!--                        </li>-->
-<!--                        <li class="nav-item">-->
-<!--                            <a class="nav-link" href="buttons/brand-buttons.html">-->
-<!--                                <i class="nav-icon icon-cursor"></i> Brand Buttons</a>-->
-<!--                        </li>-->
-<!--                    </ul>-->
-<!--                </li>-->
-<!--                <li class="nav-item">-->
-<!--                    <a class="nav-link" href="charts.html">-->
-<!--                        <i class="nav-icon icon-pie-chart"></i> Charts</a>-->
-<!--                </li>-->
-<!--                <li class="nav-item nav-dropdown">-->
-<!--                    <a class="nav-link nav-dropdown-toggle" href="#">-->
-<!--                        <i class="nav-icon icon-star"></i> Icons</a>-->
-<!--                    <ul class="nav-dropdown-items">-->
-<!--                        <li class="nav-item">-->
-<!--                            <a class="nav-link" href="icons/coreui-icons.html">-->
-<!--                                <i class="nav-icon icon-star"></i> CoreUI Icons-->
-<!--                                <span class="badge badge-success">NEW</span>-->
-<!--                            </a>-->
-<!--                            <a class="nav-link" href="icons/flags.html">-->
-<!--                                <i class="nav-icon icon-star"></i> Flags</a>-->
-<!--                        </li>-->
-<!--                        <li class="nav-item">-->
-<!--                            <a class="nav-link" href="icons/font-awesome.html">-->
-<!--                                <i class="nav-icon icon-star"></i> Font Awesome-->
-<!--                                <span class="badge badge-secondary">4.7</span>-->
-<!--                            </a>-->
-<!--                        </li>-->
-<!--                        <li class="nav-item">-->
-<!--                            <a class="nav-link" href="icons/simple-line-icons.html">-->
-<!--                                <i class="nav-icon icon-star"></i> Simple Line Icons</a>-->
-<!--                        </li>-->
-<!--                    </ul>-->
-<!--                </li>-->
-<!--                <li class="nav-item nav-dropdown">-->
-<!--                    <a class="nav-link nav-dropdown-toggle" href="#">-->
-<!--                        <i class="nav-icon icon-bell"></i> Notifications</a>-->
-<!--                    <ul class="nav-dropdown-items">-->
-<!--                        <li class="nav-item">-->
-<!--                            <a class="nav-link" href="notifications/alerts.html">-->
-<!--                                <i class="nav-icon icon-bell"></i> Alerts</a>-->
-<!--                        </li>-->
-<!--                        <li class="nav-item">-->
-<!--                            <a class="nav-link" href="notifications/badge.html">-->
-<!--                                <i class="nav-icon icon-bell"></i> Badge</a>-->
-<!--                        </li>-->
-<!--                        <li class="nav-item">-->
-<!--                            <a class="nav-link" href="notifications/modals.html">-->
-<!--                                <i class="nav-icon icon-bell"></i> Modals</a>-->
-<!--                        </li>-->
-<!--                    </ul>-->
-<!--                </li>-->
-<!--                <li class="nav-item">-->
-<!--                    <a class="nav-link" href="widgets.html">-->
-<!--                        <i class="nav-icon icon-calculator"></i> Widgets-->
-<!--                        <span class="badge badge-primary">NEW</span>-->
-<!--                    </a>-->
-<!--                </li>-->
-<!--                <li class="divider"></li>-->
-<!--                <li class="nav-title">Extras</li>-->
-<!--                <li class="nav-item nav-dropdown">-->
-<!--                    <a class="nav-link nav-dropdown-toggle" href="#">-->
-<!--                        <i class="nav-icon icon-star"></i> Pages</a>-->
-<!--                    <ul class="nav-dropdown-items">-->
-<!--                        <li class="nav-item">-->
-<!--                            <a class="nav-link" href="login.html" target="_top">-->
-<!--                                <i class="nav-icon icon-star"></i> Login</a>-->
-<!--                        </li>-->
-<!--                        <li class="nav-item">-->
-<!--                            <a class="nav-link" href="register.html" target="_top">-->
-<!--                                <i class="nav-icon icon-star"></i> Register</a>-->
-<!--                        </li>-->
-<!--                        <li class="nav-item">-->
-<!--                            <a class="nav-link" href="404.html" target="_top">-->
-<!--                                <i class="nav-icon icon-star"></i> Error 404</a>-->
-<!--                        </li>-->
-<!--                        <li class="nav-item">-->
-<!--                            <a class="nav-link" href="500.html" target="_top">-->
-<!--                                <i class="nav-icon icon-star"></i> Error 500</a>-->
-<!--                        </li>-->
-<!--                    </ul>-->
-<!--                </li>-->
-<!--                <li class="nav-item mt-auto">-->
-<!--                    <a class="nav-link nav-link-success" href="https://coreui.io" target="_top">-->
-<!--                        <i class="nav-icon icon-cloud-download"></i> Download CoreUI</a>-->
-<!--                </li>-->
-<!--                <li class="nav-item">-->
-<!--                    <a class="nav-link nav-link-danger" href="https://coreui.io/pro/" target="_top">-->
-<!--                        <i class="nav-icon icon-layers"></i> Try CoreUI-->
-<!--                        <strong>PRO</strong>-->
-<!--                    </a>-->
-<!--                </li>-->
             </ul>
         </nav>
         <button class="sidebar-minimizer brand-minimizer" type="button"></button>
