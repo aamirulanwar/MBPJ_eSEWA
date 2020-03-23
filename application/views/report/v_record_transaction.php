@@ -126,7 +126,7 @@ endif;
                         echo '      <tr>';
                         echo '          <td>'.$row["BILL_NUMBER"].'</td>';
                         echo '          <td>'.$row["TKH_BIL"].'</td>';
-                        echo '          <td>'.$row["TR_CODE"].'</td>';
+                        echo '          <td>'.$row["TR_CODE"].'-'.$row["ITEM_DESC"].'</td>';
                         echo '          <td>'.$row["ACCOUNT_ID"].'</td>';
                         echo '          <td>'.$row["BILL_CATEGORY"].'</td>';
                         echo '          <td>'.($row["BILL_CATEGORY"] == 'B' ? $row["AMOUNT"] : '').'</td>';

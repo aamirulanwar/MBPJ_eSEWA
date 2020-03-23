@@ -503,7 +503,7 @@ class M_bill_item extends CI_Model
     {
         db_select('i.*');
         db_select('m.BILL_NUMBER');
-        db_select('m.DT_ADDED as TKH_BIL');
+        db_select("to_char(m.DT_ADDED,'dd/mm/yyyy') as TKH_BIL");
         db_from('b_item i');
         db_join('b_master m','m.bill_id = i.bill_id');
         if(isset($data_search['date_start']) && having_value($data_search['date_start'])):
