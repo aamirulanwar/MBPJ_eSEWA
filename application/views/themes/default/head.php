@@ -33,8 +33,8 @@
     <link href="/assets/jquery-ui/jquery-ui.min.css" rel="stylesheet">
     <link href="/assets/jquery-ui/jquery-ui.structure.min.css" rel="stylesheet">
     <script src="/assets/node_modules/jquery/dist/jquery.min.js"></script>
-    <!-- <script src="/assets/node_modules/chart.js/dist/Chart.js"></script> -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.js" integrity="sha256-qSIshlknROr4J8GMHRlW3fGKrPki733tLq+qeMCR05Q=" crossorigin="anonymous"></script>
+    <script src="/assets/Chart.bundle.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.js" integrity="sha256-qSIshlknROr4J8GMHRlW3fGKrPki733tLq+qeMCR05Q=" crossorigin="anonymous"></script> -->
     <!-- select2 -->
     <link href="/assets/select2/dist/css/select2.min.css" rel="stylesheet">
     <link href="/assets/select2/dist/css/bootstrap-select2.css" rel="stylesheet">
