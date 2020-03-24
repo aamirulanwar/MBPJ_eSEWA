@@ -501,7 +501,12 @@ class M_bill_item extends CI_Model
 
     function rekodTransaksi($data_search=array())
     {
-        db_select('i.*');
+        db_select('i.ITEM_ID');
+        db_select('i.TR_CODE');
+        db_select('i.ITEM_DESC');
+        db_select('i.ACCOUNT_ID');
+        db_select('i.BILL_CATEGORY');
+        db_select('i.AMOUNT');
         db_select('m.BILL_NUMBER');
         db_select("to_char(m.DT_ADDED,'dd/mm/yyyy') as TKH_BIL");
         db_from('b_item i');
