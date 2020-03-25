@@ -5,6 +5,34 @@ else:
     echo '<form id="my_form" method="post" action="/report/record_transaction/'.uri_segment(3).'/'.uri_segment(4).'">';
 endif;
 ?>
+<script type="text/javascript">
+    function closePopup()
+    {
+        $('#loadMe').modal('hide');
+        console.log("enter");
+    }
+    function openPopup()
+    {
+        $('#loadMe').modal('show');
+        console.log("test");
+    }
+</script>
+    <!-- Modal -->
+    <div class="modal fade" id="loadMe" tabindex="-1" role="dialog" data-toggle="modal" aria-labelledby="loadMeLabel" >
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+          <div class="modal-body text-center">
+            <div style="align:center">
+                <img class="navbar-brand-full" src="/assets/images/waiting.gif" width="120" alt="MPKj">
+            </div>
+            <div clas="loader-txt">
+              <p>Laporan Rekod Transaksi Sedang Dijana<br><br><small>Sila tunggu sementara rekod sedang dijana</small></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="card card-accent-info">
         <div class="card-body">
             <h1 class="need-print" style="margin-bottom: 20px;"><?php echo $pagetitle?></h1>
@@ -90,7 +118,8 @@ endif;
     </div>
 </form>
 <div class="card card-accent-info">
-    <div class="card-body">
+    <div id="reportContainer" class="card-body" >
+        <script>openPopup();</script>
         <!-- START development here -->
         <?php 
             $filterStartDate    = $data_search["date_start"];
@@ -98,6 +127,8 @@ endif;
             $startYear          = DateTime::createFromFormat('d M Y', $filterStartDate)->format('Y');
             $endYear            = DateTime::createFromFormat('d M Y', $filterEndDate)->format('Y');
             $nextYear           = $endYear;
+
+            echo "<script>openPopup();</script>";
             
             while ($nextYear >= $startYear)
             {
@@ -153,7 +184,9 @@ endif;
                 $account_details['CATEGORY_NAME']="";
                 $account_details['ADDRESS']="";
             }
-        ?>
+
+            echo "<script>closePopup();</script>";
+        ?>        
         <input type="hidden" id="account_number" value="<?=$account_details['ACCOUNT_NUMBER'];?>" />
         <input type="hidden" id="account_name" value="<?=$account_details['NAME'];?>" />
         <input type="hidden" id="account_address1" value="<?=$account_details['ASSET_ADD'];?>" />
@@ -169,6 +202,7 @@ endif;
         margin: 10mm;
     }
 </style>
+
 <script>
     $( document ).ready(function() {
         <?php
@@ -211,9 +245,6 @@ endif;
                 },
                 action: function(e, dt, button, config) 
                 {
-                 
-                    console.log( "export_info: " );
-                    console.log( config);
                     // config.messageTop = "test top";
                     // config.messageBottom = "test bottom";
 
@@ -279,8 +310,5 @@ endif;
         } );
         // document.title = backupTitle;
     });
-
     
-
-
 </script>

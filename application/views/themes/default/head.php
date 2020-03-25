@@ -45,11 +45,16 @@
     <script src="/assets/dataTables/jquery.dataTables.min.js"></script>
     <script src="/assets/dataTables/dataTables.buttons.min.js"></script>
     <script src="/assets/dataTables/buttons.print.js"></script>
+
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"> -->
+    <!-- <link href="/assets/node_modules/bootstrap/dist/css/bootstrap.css" > -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
     <script>
         const DEPENDENT_LIST_ARR = '<?php echo json_encode(DEPENDENT_LIST_ARR)?>';
     </script>
-
     <style>
+        
         .need-print{
             display: none;
         }
