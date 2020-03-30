@@ -604,6 +604,10 @@
                                 <i class="nav-icon fa fa-circle fa-sm"></i> Laporan Jurnal Sewaan</a>
                         </li>
                         <?php endif;?>
+                        <li class="nav-item">
+                            <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('hartanah'))?>" href="/report/hartanah">
+                                <i class="nav-icon fa fa-circle fa-sm"></i> Laporan Perjanjian Sewa Hartanah</a>
+                        </li>
                     </ul>
                 </li>
                 <?php endif;?>

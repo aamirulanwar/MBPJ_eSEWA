@@ -219,7 +219,8 @@ class M_p_application extends CI_Model
         db_select('count(case when a.status_application = '.STATUS_APPLICATION_REJECTED.' then a.application_id end) as rejected_application');
         db_select('count(case when a.status_application = '.STATUS_APPLICATION_KIV.' then a.application_id end) as kiv_application');
         db_select('count(case when a.status_agree = '.STATUS_AGREE_ACCEPTED.' then a.application_id end) as setuju_terima');
-        db_select('count(case when a.status_agree = '.STATUS_AGREE_ACCEPTED.' and status_create_account = '.STATUS_CREATE_ACCOUNT_NO.' then a.application_id end) as not_registered');
+        // db_select('count(case when a.status_agree = '.STATUS_AGREE_ACCEPTED.' and status_create_account = '.STATUS_CREATE_ACCOUNT_NO.' then a.application_id end) as not_registered');
+        db_select('count(case when a.status_application = '.STATUS_APPLICATION_APPROVED.' and status_create_account = '.STATUS_CREATE_ACCOUNT_NO.' then a.application_id end) as not_registered');
         db_join('p_applicant applicant','applicant.applicant_id = a.applicant_id');
         db_join('a_type t','t.type_id = a.type_id');
         db_join('a_category c','c.category_id = a.category_id');

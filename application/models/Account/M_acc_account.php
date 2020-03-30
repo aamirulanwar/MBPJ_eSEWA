@@ -334,8 +334,11 @@ class M_acc_account extends CI_Model
         db_select('*');
         db_from('acc_account a');
         db_where('STATUS_ACC',STATUS_ACCOUNT_ACTIVE);
-        db_where("extract(year from a.date_end) = ".date('Y')."");
-        db_where("extract(month from a.date_end) = ".date('m')."");
+        // db_where("extract(year from a.date_end) = ".date('Y')."");
+        // db_where("extract(month from a.date_end) = ".date('m')."");
+        db_where("A.DATE_END IS NOT NULL");
+        db_where("A.DATE_END > TO_DATE('".date('Y-m-d')."','YYYY-MM-DD')");
+        db_where("( A.DATE_END - TO_DATE('".date('Y-m-d')."','YYYY-MM-DD')) <= 60");
         return db_count_results();
     }
 
@@ -402,6 +405,19 @@ class M_acc_account extends CI_Model
         db_join('acc_user au','au.user_id=a.user_id');
         db_where('a.type_id',8);
         db_order('ass.asset_name');
+        $sql = db_get();
+        if($sql):
+            return $sql->result_array();
+        endif;
+    }
+
+    public function sewaan_hartanah(){
+        db_select ('COUNT(*) AS BIL,TYPE_ID,EXTRACT(MONTH FROM A.DATE_START) AS BULAN');
+        db_from('ACC_ACCOUNT A');
+        db_where("EXTRACT(YEAR FROM A.DATE_START)= 2019");
+        db_where("A.TYPE_ID IN (1,2,3,4,5)");
+        db_group('TYPE_ID,EXTRACT(MONTH FROM A.DATE_START)');
+        db_order('BULAN');
         $sql = db_get();
         if($sql):
             return $sql->result_array();
