@@ -50,7 +50,8 @@ class Report extends CI_Controller
             'payment',
             'journal',
             'dataTable4RekodTransaksi',
-            'transactionReportHeader'
+            'transactionReportHeader',
+            'hartanah'
         );
         #set pages data
         (in_array($method,$array)) ? $this->$method() : $this->gl_summary();
@@ -1370,6 +1371,19 @@ class Report extends CI_Controller
         $data_search["asset_code"] = $assetCode;
 
         echo json_encode($this->m_bill_item->rekodTransaksiInfo($data_search));
+    }
+
+    function hartanah(){
+        // $this->auth->restrict_access($this->curuser,array(8011));
+        $data['link_1']     = 'Laporan';
+        $data['link_2']     = 'Perjanian Sewaan Hartanah';
+        $data['link_3']     = '';
+        $data['pagetitle']  = 'Laporan Perjanian Sewaan Hartanah';
+
+        $data['data'] = $this->m_acc_account->sewaan_hartanah();
+
+
+        templates('report/v_hartanah',$data);
     }
 }
 /* End of file modules/login/controllers/report.php */
