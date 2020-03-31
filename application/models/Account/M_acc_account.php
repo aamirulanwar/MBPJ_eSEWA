@@ -411,13 +411,17 @@ class M_acc_account extends CI_Model
         endif;
     }
 
-    public function sewaan_hartanah(){
-        db_select ('COUNT(*) AS BIL,TYPE_ID,EXTRACT(MONTH FROM A.DATE_START) AS BULAN');
-        db_from('ACC_ACCOUNT A');
-        db_where("EXTRACT(YEAR FROM A.DATE_START)= 2019");
+    public function sewaan_hartanah($year,$month){
+        db_select ('a.type_id');
+        db_select ('b.type_name');
+        db_select ('count(account_id) as bil');
+        db_from('acc_account A');
+        db_join('a_type B','A.type_id = B.type_id');
         db_where("A.TYPE_ID IN (1,2,3,4,5)");
-        db_group('TYPE_ID,EXTRACT(MONTH FROM A.DATE_START)');
-        db_order('BULAN');
+        db_where("EXTRACT(YEAR FROM A.DATE_START) = ",$year);
+        db_where("EXTRACT(MONTH FROM A.DATE_START) = ",$month);
+        db_group('A.type_id,b.type_name,EXTRACT(YEAR FROM A.DATE_START),EXTRACT(MONTH FROM A.DATE_START)');
+        db_order('TYPE_ID');
         $sql = db_get();
         if($sql):
             return $sql->result_array();
