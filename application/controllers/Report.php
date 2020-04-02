@@ -843,11 +843,14 @@ class Report extends CI_Controller
             $data['data_report'] = $data_year;
             // Added for filter data by yearly record [END]
 
+            $data["account_details"] = $this->transactionReportHeader($data_search['account_id']); // added for print header
+
             $data['acc_details'] = array();
             if($data_search['account_id']):
                 $data['acc_details'] = $this->m_acc_account->get_account_details($data_search['account_id']);
             endif;
         else:
+            $data['account_details'] = array();
             $data['data_report'] = array();
             $data['acc_details'] = array();
             $data['data_search'] = $data_search;
@@ -1364,14 +1367,13 @@ class Report extends CI_Controller
         );
     }
 
-    function transactionReportHeader($data_search=array())
+    function transactionReportHeader($account_id)
     {
-        $accountId = $this->input->post('account_id');
-        $assetCode = $this->input->post('asset_code');
-        $data_search["account_id"] = $accountId;
-        $data_search["asset_code"] = $assetCode;
+        // $accountId = $this->input->post('account_id');
+        // $data_search["account_id"] = $accountId;
 
-        echo json_encode($this->m_bill_item->rekodTransaksiInfo($data_search));
+        // echo json_encode($this->m_bill_item->rekodTransaksiInfo($account_id));
+        return $this->m_bill_item->rekodTransaksiInfo($account_id);
     }
 
     function hartanah(){
@@ -1382,6 +1384,7 @@ class Report extends CI_Controller
         $data['pagetitle']  = 'Laporan Perjanian Sewaan Hartanah';
 
         //$data['data'] = $this->m_acc_account->sewaan_hartanah();
+
         $data['data_jan'] = $this->m_acc_account->sewaan_hartanah(2019,1);
         $data['data_feb'] = $this->m_acc_account->sewaan_hartanah(2019,2);
         $data['data_mar'] = $this->m_acc_account->sewaan_hartanah(2019,3);

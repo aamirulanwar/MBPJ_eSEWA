@@ -561,6 +561,7 @@ checking_validation(validation_errors());
                             <tr style="background-color: #adaaaa;font-weight: bold">
                                 <td colspan="6" style="text-align: right">Jumlah Keseluruhan</td>
                                 <td style="text-align: center"><?php echo $totalCount; ?></td> -->
+                            </tr>
                         </table>
                         <script>
                         $(document).ready(function(){

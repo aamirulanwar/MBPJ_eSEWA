@@ -501,9 +501,14 @@ class M_bill_item extends CI_Model
 
     function rekodTransaksi($data_search=array())
     {
-        db_select('i.*');
+        db_select('i.ITEM_ID');
+        db_select('i.TR_CODE');
+        db_select('i.ITEM_DESC');
+        db_select('i.ACCOUNT_ID');
+        db_select('i.BILL_CATEGORY');
+        db_select('i.AMOUNT');
         db_select('m.BILL_NUMBER');
-        db_select('m.DT_ADDED as TKH_BIL');
+        db_select("to_char(m.DT_ADDED,'dd/mm/yyyy') as TKH_BIL");
         db_from('b_item i');
         db_join('b_master m','m.bill_id = i.bill_id');
         if(isset($data_search['date_start']) && having_value($data_search['date_start'])):
@@ -529,9 +534,9 @@ class M_bill_item extends CI_Model
         endif;
     }
 
-    function rekodTransaksiInfo($data_search=array())
+    function rekodTransaksiInfo($account_id)
     {
-        if ( !empty($data_search) )
+        if ( !empty($account_id) )
         {
             db_select('acc_account.account_id');
             db_select('acc_account.account_number');
@@ -544,7 +549,7 @@ class M_bill_item extends CI_Model
             db_join('a_asset','acc_account.asset_id = a_asset.asset_id');
             db_join('a_category','acc_account.category_id = a_category.category_id');
             db_join('acc_user','acc_account.user_id = acc_user.user_id');
-            db_where('acc_account.account_id',$data_search['account_id']);
+            db_where('acc_account.account_id',$account_id);
             $sql = db_get('');
             if($sql):
                 return $sql->result_array('');
