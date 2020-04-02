@@ -427,4 +427,25 @@ class M_acc_account extends CI_Model
             return $sql->result_array();
         endif;
     }
+
+     // public function sewaan_papaniklan($year,$month){
+    public function sewaan_papaniklan(){
+        db_select ('A.BILLBOARD_TYPE');
+        db_select ('COUNT(account_id) as bil');
+        db_select ("EXTRACT(MONTH FROM A.DATE_START)AS BULAN");
+        db_from('acc_account A');
+        db_where("A.TYPE_ID = 6");
+        db_where("A.BILLBOARD_TYPE in (1,2)");
+        //db_where("EXTRACT(YEAR FROM A.DATE_START) = ",$year);
+        // if(isset($data_search['year']) && having_value($data_search['year'])):
+        //     db_where('EXTRACT(YEAR FROM A.DATE_START) = '.$data_search['year'].'');
+        // endif;
+        db_where("EXTRACT(MONTH FROM A.DATE_START) in (1,2,3,4,5,6,7,8,9,10,12)");
+        db_group('A.BILLBOARD_TYPE,EXTRACT(YEAR FROM A.DATE_START),EXTRACT(MONTH FROM A.DATE_START)');
+        db_order('A.BILLBOARD_TYPE');
+        $sql = db_get();
+        if($sql):
+            return $sql->result_array();
+        endif;
+    }
 }

@@ -3,10 +3,41 @@
         text-align: center;
     }
 </style>
- <form method="post" action="/report/hartnah/">
+ <form method="post" action="/report/hartanah/">
     <div class="card card-accent-info">
         <div class="card-body">
             <h1 class="need-print" style="margin-bottom: 20px;"><?php echo $pagetitle?></h1>
+                <div class="form-group row">
+                    <div class="col-sm-4">
+                        <label class="col-form-label">TAHUN</label>
+                        <select name="year" class="form-control">
+                            <option value=""> - Pilih Tahun - </option>
+                            <?php
+                            echo option_value(2019,2019,'year',search_default($data_search,'year'));
+                            echo option_value(2018,2018,'year',search_default($data_search,'year'));
+                            echo option_value(2017,2017,'year',search_default($data_search,'year'));
+                            echo option_value(2016,2016,'year',search_default($data_search,'year'));
+                            echo option_value(2015,2015,'year',search_default($data_search,'year'));
+                            echo option_value(2014,2014,'year',search_default($data_search,'year'));
+                            echo option_value(2013,2013,'year',search_default($data_search,'year'));
+                            echo option_value(2012,2012,'year',search_default($data_search,'year'));
+                            echo option_value(2011,2011,'year',search_default($data_search,'year'));
+                            echo option_value(2010,2010,'year',search_default($data_search,'year'));
+                            echo option_value(2009,2009,'year',search_default($data_search,'year'));
+                            echo option_value(2008,2008,'year',search_default($data_search,'year'));
+                            ?>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+            <div class="card-footer">
+                <div class="col-sm-12">
+                    <button type="submit" class="btn btn-primary pull-right btn-submit">Cari</button>
+                </div>
+            </div>
+        </div>
+    </form> 
 
 <?php
 notify_msg('notify_msg');
@@ -33,7 +64,7 @@ checking_validation(validation_errors());
                                 <th width="7%">KIOSK MIKRO-MARA</th>
                             </tr>
                             <tr>
-                                <td>January</td>
+                                <th>January</th>
                                 <?php
                                     $januaryCount = 0;
                                     $plb = 0;
@@ -74,7 +105,7 @@ checking_validation(validation_errors());
                                 ?>                                
                             </tr>
                             <tr>
-                                <td>February</td>
+                                <th>February</th>
                                 <?php
                                     $februaryCount = 0;
                                     $plb = 0;
@@ -115,7 +146,7 @@ checking_validation(validation_errors());
                                 ?>                                
                             </tr>
                             <tr>
-                                <td>March</td>
+                                <th>March</th>
                                 <?php
                                     $marchCount = 0;
                                     $plb = 0;
@@ -156,7 +187,7 @@ checking_validation(validation_errors());
                                 ?>                                
                             </tr>
                             <tr>
-                                <td>April</td>
+                                <th>April</th>
                                 <?php
                                     $aprilCount = 0;
                                     $plb = 0;
@@ -197,7 +228,7 @@ checking_validation(validation_errors());
                                 ?>                                
                             </tr>
                             <tr>
-                                <td>May</td>
+                                <th>May</th>
                                 <?php
                                     $mayCount = 0;
                                     $plb = 0;
@@ -238,7 +269,7 @@ checking_validation(validation_errors());
                                 ?>                                
                             </tr>
                             <tr>
-                                <td>Jun</td>
+                                <th>Jun</th>
                                 <?php
                                     $junCount = 0;
                                     $plb = 0;
@@ -279,7 +310,7 @@ checking_validation(validation_errors());
                                 ?>                                
                             </tr>
                             <tr>
-                                <td>July</td>
+                                <th>July</th>
                                 <?php
                                     $julyCount = 0;
                                     $plb = 0;
@@ -320,7 +351,7 @@ checking_validation(validation_errors());
                                 ?>                                
                             </tr>
                             <tr>
-                                <td>August</td>
+                                <th>August</th>
                                 <?php
                                     $augustCount = 0;
                                     $plb = 0;
@@ -361,7 +392,7 @@ checking_validation(validation_errors());
                                 ?>                                
                             </tr>
                             <tr>
-                                <td>September</td>
+                                <th>September</th>
                                 <?php
                                     $septemberCount = 0;
                                     $plb = 0;
@@ -402,7 +433,7 @@ checking_validation(validation_errors());
                                 ?>                                
                             </tr>
                             <tr>
-                                <td>October</td>
+                                <th>October</th>
                                 <?php
                                     $octoberCount = 0;
                                     $plb = 0;
@@ -443,7 +474,7 @@ checking_validation(validation_errors());
                                 ?>                                
                             </tr>
                             <tr>
-                                <td>November</td>
+                                <th>November</th>
                                 <?php
                                     $novemberCount = 0;
                                     $plb = 0;
@@ -484,7 +515,7 @@ checking_validation(validation_errors());
                                 ?>                                
                             </tr>
                             <tr>
-                                <td>December</td>
+                                <th>December</th>
                                 <?php
                                     $decemberCount = 0;
                                     $plb = 0;
@@ -524,14 +555,31 @@ checking_validation(validation_errors());
                                     echo "<td style='text-align:center'>".$decemberCount."</td>";
                                 ?>                                
                             </tr>
-                            <?php 
+                            <!-- <?php 
                             $totalCount = $januaryCount + $februaryCount + $marchCount + $aprilCount + $mayCount + $junCount + $julyCount + $augustCount + $septemberCount + $octoberCount + $novemberCount + $decemberCount;
                             ?>
                             <tr style="background-color: #adaaaa;font-weight: bold">
                                 <td colspan="6" style="text-align: right">Jumlah Keseluruhan</td>
-                                <td style="text-align: center"><?php echo $totalCount; ?></td>
+                                <td style="text-align: center"><?php echo $totalCount; ?></td> -->
                             </tr>
                         </table>
+                        <script>
+                        $(document).ready(function(){
+                          var result = [];
+                          $('table tr').each(function(){
+                            $('td', this).each(function(index, val){
+                                if(!result[index]) result[index] = 0;
+                              result[index] += parseInt($(val).text());
+                            });
+                          });
+
+                          $('table').append('<tr style="background-color: #adaaaa;font-weight: bold"></tr>');
+                          $('table tr').last().append('<td style=text-align:center>Jumlah Keseluruhan</td>')
+                          $(result).each(function(){
+                            $('table tr').last().append('<td style=text-align:center>'+this+'</td>')
+                          });
+                        });
+                    </script>
                     </div>
                 <!-- </div> -->
             </div>
