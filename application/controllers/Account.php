@@ -370,9 +370,9 @@ class Account extends CI_Controller
                 if($data['data_details']['TYPE_ID']==6):
                     $data_insert_acc['billboard_type']          = input_data('billboard_type');
                     if(input_data('billboard_type')==BILLBOARD_TYPE_SUBLESEN):
-                        $data_insert_acc['lms_bills']          = 2;
-                    else:
                         $data_insert_acc['lms_bills']          = 1;
+                    else:
+                        $data_insert_acc['lms_bills']          = 0;
                     endif;
                 endif;
 
@@ -1132,10 +1132,10 @@ class Account extends CI_Controller
             if($data['data_details']['TYPE_ID']==6):
                 $data_update_acc['billboard_type']          = input_data('billboard_type');
                 if(input_data('billboard_type')==BILLBOARD_TYPE_SUBLESEN):
-                    $data_update_acc['lms_bills']          = 2;
+                    $data_update_acc['lms_bills']          = 1;
                     $data_update_acc['LMS_CHARGE']         = currencyToDouble(input_data('amount_lms'));
                 else:
-                    $data_update_acc['lms_bills']          = 1;
+                    $data_update_acc['lms_bills']          = 0;
                     $data_update_acc['LMS_CHARGE']         = 0;
                 endif;
             endif;
@@ -1550,12 +1550,12 @@ class Account extends CI_Controller
                                 mkdir("file_upload/kuarters/".$folder_ext."/", 0777, true);
                             endif;
 
-                            $config['upload_path']      = "./file_upload/kuarters/".$folder_ext."/" ;
+                            $config['upload_path'] 	    = "./file_upload/kuarters/".$folder_ext."/" ;
                             $config['allowed_types']    = '*';
                             $config['max_size']         = '15120';
                             $config['max_width']        = '4000';
                             $config['max_height']       = '4000';
-                            $config['encrypt_name']     = false;
+                            $config['encrypt_name']	    = false;
                             $config['overwrite']        = false;
                            // $config['file_name']        = $_FILES['upload_name_'.$i]['name'].'_'.date('YmdHis');
                            // $filename = $data_file_ext['name'][$i];
@@ -1637,12 +1637,12 @@ class Account extends CI_Controller
                                 mkdir("file_upload/kuarters/".$folder_ext."/", 0777, true);
                             endif;
 
-                            $config['upload_path']      = "./file_upload/kuarters/".$folder_ext."/" ;
+                            $config['upload_path'] 	    = "./file_upload/kuarters/".$folder_ext."/" ;
                             $config['allowed_types']    = '*';
                             $config['max_size']         = '15120';
                             $config['max_width']        = '4000';
                             $config['max_height']       = '4000';
-                            $config['encrypt_name']     = false;
+                            $config['encrypt_name']	    = false;
                             $config['overwrite']        = false;
                            // $config['file_name']        = $_FILES['upload_name_'.$i]['name'].'_'.date('YmdHis');
                            // $filename = $data_file_ext['name'][$i];

@@ -277,7 +277,7 @@ class Bill_lib {
             endif;
 
             #insert LMS
-            if($data_acc['LMS_BILLS']==2):
+            if($data_acc['LMS_BILLS']==1):
                 $code_lms = $this->get_data_tr_code(TR_CODE_LMS); #LMS
                 $insert_code    = array();
                 if($code_lms):
