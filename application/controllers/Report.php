@@ -51,7 +51,8 @@ class Report extends CI_Controller
             'journal',
             'dataTable4RekodTransaksi',
             'transactionReportHeader',
-            'hartanah'
+            'hartanah',
+            'papaniklan'
         );
         #set pages data
         (in_array($method,$array)) ? $this->$method() : $this->gl_summary();
@@ -1380,10 +1381,36 @@ class Report extends CI_Controller
         $data['link_3']     = '';
         $data['pagetitle']  = 'Laporan Perjanian Sewaan Hartanah';
 
-        $data['data'] = $this->m_acc_account->sewaan_hartanah();
-
+        //$data['data'] = $this->m_acc_account->sewaan_hartanah();
+        $data['data_jan'] = $this->m_acc_account->sewaan_hartanah(2019,1);
+        $data['data_feb'] = $this->m_acc_account->sewaan_hartanah(2019,2);
+        $data['data_mar'] = $this->m_acc_account->sewaan_hartanah(2019,3);
+        $data['data_apr'] = $this->m_acc_account->sewaan_hartanah(2019,4);
+        $data['data_may'] = $this->m_acc_account->sewaan_hartanah(2019,5);
+        $data['data_jun'] = $this->m_acc_account->sewaan_hartanah(2019,6);
+        $data['data_jul'] = $this->m_acc_account->sewaan_hartanah(2019,7);
+        $data['data_aug'] = $this->m_acc_account->sewaan_hartanah(2019,8);
+        $data['data_sep'] = $this->m_acc_account->sewaan_hartanah(2019,9);
+        $data['data_oct'] = $this->m_acc_account->sewaan_hartanah(2019,10);
+        $data['data_nov'] = $this->m_acc_account->sewaan_hartanah(2019,11);
+        $data['data_dec'] = $this->m_acc_account->sewaan_hartanah(2019,12);
 
         templates('report/v_hartanah',$data);
+    }
+
+    function papaniklan(){
+        // $this->auth->restrict_access($this->curuser,array(8011));
+        $data['link_1']     = 'Laporan';
+        $data['link_2']     = 'Perjanian Sewa';
+        $data['link_3']     = '';
+        $data['pagetitle']  = 'Laporan Perjanian Sewa';
+
+
+        $data['data'] = $this->m_acc_account->sewaan_papaniklan();
+        
+
+        templates('report/v_papaniklan',$data);
+
     }
 }
 /* End of file modules/login/controllers/report.php */

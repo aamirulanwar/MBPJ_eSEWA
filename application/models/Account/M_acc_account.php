@@ -411,13 +411,38 @@ class M_acc_account extends CI_Model
         endif;
     }
 
-    public function sewaan_hartanah(){
-        db_select ('COUNT(*) AS BIL,TYPE_ID,EXTRACT(MONTH FROM A.DATE_START) AS BULAN');
-        db_from('ACC_ACCOUNT A');
-        db_where("EXTRACT(YEAR FROM A.DATE_START)= 2019");
+    public function sewaan_hartanah($year,$month){
+        db_select ('a.type_id');
+        db_select ('b.type_name');
+        db_select ('count(account_id) as bil');
+        db_from('acc_account A');
+        db_join('a_type B','A.type_id = B.type_id');
         db_where("A.TYPE_ID IN (1,2,3,4,5)");
-        db_group('TYPE_ID,EXTRACT(MONTH FROM A.DATE_START)');
-        db_order('BULAN');
+        db_where("EXTRACT(YEAR FROM A.DATE_START) = ",$year);
+        db_where("EXTRACT(MONTH FROM A.DATE_START) = ",$month);
+        db_group('A.type_id,b.type_name,EXTRACT(YEAR FROM A.DATE_START),EXTRACT(MONTH FROM A.DATE_START)');
+        db_order('TYPE_ID');
+        $sql = db_get();
+        if($sql):
+            return $sql->result_array();
+        endif;
+    }
+
+     // public function sewaan_papaniklan($year,$month){
+    public function sewaan_papaniklan(){
+        db_select ('A.BILLBOARD_TYPE');
+        db_select ('COUNT(account_id) as bil');
+        db_select ("EXTRACT(MONTH FROM A.DATE_START)AS BULAN");
+        db_from('acc_account A');
+        db_where("A.TYPE_ID = 6");
+        db_where("A.BILLBOARD_TYPE in (1,2)");
+        //db_where("EXTRACT(YEAR FROM A.DATE_START) = ",$year);
+        // if(isset($data_search['year']) && having_value($data_search['year'])):
+        //     db_where('EXTRACT(YEAR FROM A.DATE_START) = '.$data_search['year'].'');
+        // endif;
+        db_where("EXTRACT(MONTH FROM A.DATE_START) in (1,2,3,4,5,6,7,8,9,10,12)");
+        db_group('A.BILLBOARD_TYPE,EXTRACT(YEAR FROM A.DATE_START),EXTRACT(MONTH FROM A.DATE_START)');
+        db_order('A.BILLBOARD_TYPE');
         $sql = db_get();
         if($sql):
             return $sql->result_array();
