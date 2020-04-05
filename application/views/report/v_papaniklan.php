@@ -3,7 +3,7 @@
         text-align: center;
     }
 </style>
- <form method="post" action="/report/hartanah/">
+ <form method="post" action="/report/papaniklan/">
     <div class="card card-accent-info">
         <div class="card-body">
             <h1 class="need-print" style="margin-bottom: 20px;"><?php echo $pagetitle?></h1>
@@ -54,7 +54,7 @@ checking_validation(validation_errors());
                             <tr>
                                 <th width="12%" rowspan="2" style="text-align:center">JENIS PERJANJIAN</th>
                                 <th colspan="12" width="7%" style="text-align:center">BULAN</th>
-                                <th width="5%" rowspan="2" style="text-align:center">JUMLAH</th>
+                                <th width="5%" rowspan="2" style="text-align:center">JUMLAH PERJANJIAN</th>
                             </tr>
                             <tr>
                                 <th width="3%">1</th>
@@ -87,7 +87,7 @@ checking_validation(validation_errors());
                                     $nov = 0;
                                     $dec = 0;
                                     
-                                    foreach ($data as $d)
+                                    foreach ($data_report as $d)
                                     {
                                         if( $d["BILLBOARD_TYPE"] == 1 && $d["BULAN"] == 1)
                                         {
@@ -171,7 +171,7 @@ checking_validation(validation_errors());
                                     $nov = 0;
                                     $dec = 0;
                                     
-                                    foreach ($data as $d)
+                                    foreach ($data_report as $d)
                                     {
                                         if( $d["BILLBOARD_TYPE"] == 2 && $d["BULAN"] == 1)
                                         {
