@@ -72,25 +72,25 @@ checking_validation(validation_errors());
                                     $medan_selera = 0;
                                     $upen = 0;
                                     $kiosk = 0;
-                                    foreach ($data_jan as $data)
+                                    foreach ($data_report as $data)
                                     {
-                                        if( $data["TYPE_ID"] == 3 && $data["BIL"] > 0)
+                                        if( $data["TYPE_ID"] == 3 && $data["BULAN"] == 1)
                                         {
                                             $plb = $data["BIL"];
                                         }
-                                        else if( $data["TYPE_ID"] == 1 && $data["BIL"] > 0)
+                                        else if( $data["TYPE_ID"] == 1 && $data["BULAN"] == 1)
                                         {
                                             $pasar = $data["BIL"];
                                         }
-                                        else if( $data["TYPE_ID"] == 2 && $data["BIL"] > 0)
+                                        else if( $data["TYPE_ID"] == 2 && $data["BULAN"] == 1)
                                         {
                                             $medan_selera = $data["BIL"];
                                         }
-                                        else if( $data["TYPE_ID"] == 4 && $data["BIL"] > 0)
+                                        else if( $data["TYPE_ID"] == 4 && $data["BULAN"] == 1)
                                         {
                                             $upen = $data["BIL"];
                                         }
-                                        else if( $data["TYPE_ID"] == 5 && $data["BIL"] > 0)
+                                        else if( $data["TYPE_ID"] == 5 && $data["BULAN"] == 1)
                                         {
                                             $kiosk = $data["BIL"];
                                         }
@@ -113,25 +113,25 @@ checking_validation(validation_errors());
                                     $medan_selera = 0;
                                     $upen = 0;
                                     $kiosk = 0;
-                                    foreach ($data_feb as $data)
+                                    foreach ($data_report as $data)
                                     {
-                                        if( $data["TYPE_ID"] == 3 && $data["BIL"] > 0)
+                                        if( $data["TYPE_ID"] == 3 && $data["BULAN"] == 2)
                                         {
                                             $plb = $data["BIL"];
                                         }
-                                        else if( $data["TYPE_ID"] == 1 && $data["BIL"] > 0)
+                                        else if( $data["TYPE_ID"] == 1 && $data["BULAN"] == 2)
                                         {
                                             $pasar = $data["BIL"];
                                         }
-                                        else if( $data["TYPE_ID"] == 2 && $data["BIL"] > 0)
+                                        else if( $data["TYPE_ID"] == 2 && $data["BULAN"] == 2)
                                         {
                                             $medan_selera = $data["BIL"];
                                         }
-                                        else if( $data["TYPE_ID"] == 4 && $data["BIL"] > 0)
+                                        else if( $data["TYPE_ID"] == 4 && $data["BULAN"] == 2)
                                         {
                                             $upen = $data["BIL"];
                                         }
-                                        else if( $data["TYPE_ID"] == 5 && $data["BIL"] > 0)
+                                        else if( $data["TYPE_ID"] == 5 && $data["BULAN"] == 2)
                                         {
                                             $kiosk = $data["BIL"];
                                         }
@@ -154,25 +154,25 @@ checking_validation(validation_errors());
                                     $medan_selera = 0;
                                     $upen = 0;
                                     $kiosk = 0;
-                                    foreach ($data_mar as $data)
+                                    foreach ($data_report as $data)
                                     {
-                                        if( $data["TYPE_ID"] == 3 && $data["BIL"] > 0)
+                                        if( $data["TYPE_ID"] == 3 && $data["BULAN"] == 3)
                                         {
                                             $plb = $data["BIL"];
                                         }
-                                        else if( $data["TYPE_ID"] == 1 && $data["BIL"] > 0)
+                                        else if( $data["TYPE_ID"] == 1 && $data["BULAN"] == 3)
                                         {
                                             $pasar = $data["BIL"];
                                         }
-                                        else if( $data["TYPE_ID"] == 2 && $data["BIL"] > 0)
+                                        else if( $data["TYPE_ID"] == 2 && $data["BULAN"] == 3)
                                         {
                                             $medan_selera = $data["BIL"];
                                         }
-                                        else if( $data["TYPE_ID"] == 4 && $data["BIL"] > 0)
+                                        else if( $data["TYPE_ID"] == 4 && $data["BULAN"] == 3)
                                         {
                                             $upen = $data["BIL"];
                                         }
-                                        else if( $data["TYPE_ID"] == 5 && $data["BIL"] > 0)
+                                        else if( $data["TYPE_ID"] == 5 && $data["BULAN"] == 3)
                                         {
                                             $kiosk = $data["BIL"];
                                         }
@@ -195,25 +195,25 @@ checking_validation(validation_errors());
                                     $medan_selera = 0;
                                     $upen = 0;
                                     $kiosk = 0;
-                                    foreach ($data_apr as $data)
+                                    foreach ($data_report as $data)
                                     {
-                                        if( $data["TYPE_ID"] == 3 && $data["BIL"] > 0)
+                                        if( $data["TYPE_ID"] == 3 && $data["BULAN"] == 4)
                                         {
                                             $plb = $data["BIL"];
                                         }
-                                        else if( $data["TYPE_ID"] == 1 && $data["BIL"] > 0)
+                                        else if( $data["TYPE_ID"] == 1 && $data["BULAN"] == 4)
                                         {
                                             $pasar = $data["BIL"];
                                         }
-                                        else if( $data["TYPE_ID"] == 2 && $data["BIL"] > 0)
+                                        else if( $data["TYPE_ID"] == 2 && $data["BULAN"] == 4)
                                         {
                                             $medan_selera = $data["BIL"];
                                         }
-                                        else if( $data["TYPE_ID"] == 4 && $data["BIL"] > 0)
+                                        else if( $data["TYPE_ID"] == 4 && $data["BULAN"] == 4)
                                         {
                                             $upen = $data["BIL"];
                                         }
-                                        else if( $data["TYPE_ID"] == 5 && $data["BIL"] > 0)
+                                        else if( $data["TYPE_ID"] == 5 && $data["BULAN"] == 4)
                                         {
                                             $kiosk = $data["BIL"];
                                         }
@@ -236,25 +236,25 @@ checking_validation(validation_errors());
                                     $medan_selera = 0;
                                     $upen = 0;
                                     $kiosk = 0;
-                                    foreach ($data_may as $data)
+                                    foreach ($data_report as $data)
                                     {
-                                        if( $data["TYPE_ID"] == 3 && $data["BIL"] > 0)
+                                        if( $data["TYPE_ID"] == 3 && $data["BULAN"] == 5)
                                         {
                                             $plb = $data["BIL"];
                                         }
-                                        else if( $data["TYPE_ID"] == 1 && $data["BIL"] > 0)
+                                        else if( $data["TYPE_ID"] == 1 && $data["BULAN"] == 5)
                                         {
                                             $pasar = $data["BIL"];
                                         }
-                                        else if( $data["TYPE_ID"] == 2 && $data["BIL"] > 0)
+                                        else if( $data["TYPE_ID"] == 2 && $data["BULAN"] == 5)
                                         {
                                             $medan_selera = $data["BIL"];
                                         }
-                                        else if( $data["TYPE_ID"] == 4 && $data["BIL"] > 0)
+                                        else if( $data["TYPE_ID"] == 4 && $data["BULAN"] == 5)
                                         {
                                             $upen = $data["BIL"];
                                         }
-                                        else if( $data["TYPE_ID"] == 5 && $data["BIL"] > 0)
+                                        else if( $data["TYPE_ID"] == 5 && $data["BULAN"] == 5)
                                         {
                                             $kiosk = $data["BIL"];
                                         }
@@ -277,25 +277,25 @@ checking_validation(validation_errors());
                                     $medan_selera = 0;
                                     $upen = 0;
                                     $kiosk = 0;
-                                    foreach ($data_jun as $data)
+                                    foreach ($data_report as $data)
                                     {
-                                        if( $data["TYPE_ID"] == 3 && $data["BIL"] > 0)
+                                        if( $data["TYPE_ID"] == 3 && $data["BULAN"] == 6)
                                         {
                                             $plb = $data["BIL"];
                                         }
-                                        else if( $data["TYPE_ID"] == 1 && $data["BIL"] > 0)
+                                        else if( $data["TYPE_ID"] == 1 && $data["BULAN"] == 6)
                                         {
                                             $pasar = $data["BIL"];
                                         }
-                                        else if( $data["TYPE_ID"] == 2 && $data["BIL"] > 0)
+                                        else if( $data["TYPE_ID"] == 2 && $data["BULAN"] == 6)
                                         {
                                             $medan_selera = $data["BIL"];
                                         }
-                                        else if( $data["TYPE_ID"] == 4 && $data["BIL"] > 0)
+                                        else if( $data["TYPE_ID"] == 4 && $data["BULAN"] == 6)
                                         {
                                             $upen = $data["BIL"];
                                         }
-                                        else if( $data["TYPE_ID"] == 5 && $data["BIL"] > 0)
+                                        else if( $data["TYPE_ID"] == 5 && $data["BULAN"] == 6)
                                         {
                                             $kiosk = $data["BIL"];
                                         }
@@ -318,25 +318,25 @@ checking_validation(validation_errors());
                                     $medan_selera = 0;
                                     $upen = 0;
                                     $kiosk = 0;
-                                    foreach ($data_jul as $data)
+                                    foreach ($data_report as $data)
                                     {
-                                        if( $data["TYPE_ID"] == 3 && $data["BIL"] > 0)
+                                        if( $data["TYPE_ID"] == 3 && $data["BULAN"] == 7)
                                         {
                                             $plb = $data["BIL"];
                                         }
-                                        else if( $data["TYPE_ID"] == 1 && $data["BIL"] > 0)
+                                        else if( $data["TYPE_ID"] == 1 && $data["BULAN"] == 7)
                                         {
                                             $pasar = $data["BIL"];
                                         }
-                                        else if( $data["TYPE_ID"] == 2 && $data["BIL"] > 0)
+                                        else if( $data["TYPE_ID"] == 2 && $data["BULAN"] == 7)
                                         {
                                             $medan_selera = $data["BIL"];
                                         }
-                                        else if( $data["TYPE_ID"] == 4 && $data["BIL"] > 0)
+                                        else if( $data["TYPE_ID"] == 4 && $data["BULAN"] == 7)
                                         {
                                             $upen = $data["BIL"];
                                         }
-                                        else if( $data["TYPE_ID"] == 5 && $data["BIL"] > 0)
+                                        else if( $data["TYPE_ID"] == 5 && $data["BULAN"] == 7)
                                         {
                                             $kiosk = $data["BIL"];
                                         }
@@ -359,25 +359,25 @@ checking_validation(validation_errors());
                                     $medan_selera = 0;
                                     $upen = 0;
                                     $kiosk = 0;
-                                    foreach ($data_aug as $data)
+                                    foreach ($data_report as $data)
                                     {
-                                        if( $data["TYPE_ID"] == 3 && $data["BIL"] > 0)
+                                        if( $data["TYPE_ID"] == 3 && $data["BULAN"] == 8)
                                         {
                                             $plb = $data["BIL"];
                                         }
-                                        else if( $data["TYPE_ID"] == 1 && $data["BIL"] > 0)
+                                        else if( $data["TYPE_ID"] == 1 && $data["BULAN"] == 8)
                                         {
                                             $pasar = $data["BIL"];
                                         }
-                                        else if( $data["TYPE_ID"] == 2 && $data["BIL"] > 0)
+                                        else if( $data["TYPE_ID"] == 2 && $data["BULAN"] == 8)
                                         {
                                             $medan_selera = $data["BIL"];
                                         }
-                                        else if( $data["TYPE_ID"] == 4 && $data["BIL"] > 0)
+                                        else if( $data["TYPE_ID"] == 4 && $data["BULAN"] == 8)
                                         {
                                             $upen = $data["BIL"];
                                         }
-                                        else if( $data["TYPE_ID"] == 5 && $data["BIL"] > 0)
+                                        else if( $data["TYPE_ID"] == 5 && $data["BULAN"] == 8)
                                         {
                                             $kiosk = $data["BIL"];
                                         }
@@ -400,25 +400,25 @@ checking_validation(validation_errors());
                                     $medan_selera = 0;
                                     $upen = 0;
                                     $kiosk = 0;
-                                    foreach ($data_sep as $data)
+                                    foreach ($data_report as $data)
                                     {
-                                        if( $data["TYPE_ID"] == 3 && $data["BIL"] > 0)
+                                        if( $data["TYPE_ID"] == 3 && $data["BULAN"] == 9)
                                         {
                                             $plb = $data["BIL"];
                                         }
-                                        else if( $data["TYPE_ID"] == 1 && $data["BIL"] > 0)
+                                        else if( $data["TYPE_ID"] == 1 && $data["BULAN"] == 9)
                                         {
                                             $pasar = $data["BIL"];
                                         }
-                                        else if( $data["TYPE_ID"] == 2 && $data["BIL"] > 0)
+                                        else if( $data["TYPE_ID"] == 2 && $data["BULAN"] == 9)
                                         {
                                             $medan_selera = $data["BIL"];
                                         }
-                                        else if( $data["TYPE_ID"] == 4 && $data["BIL"] > 0)
+                                        else if( $data["TYPE_ID"] == 4 && $data["BULAN"] == 9)
                                         {
                                             $upen = $data["BIL"];
                                         }
-                                        else if( $data["TYPE_ID"] == 5 && $data["BIL"] > 0)
+                                        else if( $data["TYPE_ID"] == 5 && $data["BULAN"] == 9)
                                         {
                                             $kiosk = $data["BIL"];
                                         }
@@ -441,25 +441,25 @@ checking_validation(validation_errors());
                                     $medan_selera = 0;
                                     $upen = 0;
                                     $kiosk = 0;
-                                    foreach ($data_oct as $data)
+                                    foreach ($data_report as $data)
                                     {
-                                        if( $data["TYPE_ID"] == 3 && $data["BIL"] > 0)
+                                        if( $data["TYPE_ID"] == 3 && $data["BULAN"] == 10)
                                         {
                                             $plb = $data["BIL"];
                                         }
-                                        else if( $data["TYPE_ID"] == 1 && $data["BIL"] > 0)
+                                        else if( $data["TYPE_ID"] == 1 && $data["BULAN"] == 10)
                                         {
                                             $pasar = $data["BIL"];
                                         }
-                                        else if( $data["TYPE_ID"] == 2 && $data["BIL"] > 0)
+                                        else if( $data["TYPE_ID"] == 2 && $data["BULAN"] == 10)
                                         {
                                             $medan_selera = $data["BIL"];
                                         }
-                                        else if( $data["TYPE_ID"] == 4 && $data["BIL"] > 0)
+                                        else if( $data["TYPE_ID"] == 4 && $data["BULAN"] == 10)
                                         {
                                             $upen = $data["BIL"];
                                         }
-                                        else if( $data["TYPE_ID"] == 5 && $data["BIL"] > 0)
+                                        else if( $data["TYPE_ID"] == 5 && $data["BULAN"] == 10)
                                         {
                                             $kiosk = $data["BIL"];
                                         }
@@ -482,25 +482,25 @@ checking_validation(validation_errors());
                                     $medan_selera = 0;
                                     $upen = 0;
                                     $kiosk = 0;
-                                    foreach ($data_nov as $data)
+                                    foreach ($data_report as $data)
                                     {
-                                        if( $data["TYPE_ID"] == 3 && $data["BIL"] > 0)
+                                        if( $data["TYPE_ID"] == 3 && $data["BULAN"] == 11)
                                         {
                                             $plb = $data["BIL"];
                                         }
-                                        else if( $data["TYPE_ID"] == 1 && $data["BIL"] > 0)
+                                        else if( $data["TYPE_ID"] == 1 && $data["BULAN"] == 11)
                                         {
                                             $pasar = $data["BIL"];
                                         }
-                                        else if( $data["TYPE_ID"] == 2 && $data["BIL"] > 0)
+                                        else if( $data["TYPE_ID"] == 2 && $data["BULAN"] == 11)
                                         {
                                             $medan_selera = $data["BIL"];
                                         }
-                                        else if( $data["TYPE_ID"] == 4 && $data["BIL"] > 0)
+                                        else if( $data["TYPE_ID"] == 4 && $data["BULAN"] == 11)
                                         {
                                             $upen = $data["BIL"];
                                         }
-                                        else if( $data["TYPE_ID"] == 5 && $data["BIL"] > 0)
+                                        else if( $data["TYPE_ID"] == 5 && $data["BULAN"] == 11)
                                         {
                                             $kiosk = $data["BIL"];
                                         }
@@ -523,25 +523,25 @@ checking_validation(validation_errors());
                                     $medan_selera = 0;
                                     $upen = 0;
                                     $kiosk = 0;
-                                    foreach ($data_dec as $data)
+                                    foreach ($data_report as $data)
                                     {
-                                        if( $data["TYPE_ID"] == 3 && $data["BIL"] > 0)
+                                        if( $data["TYPE_ID"] == 3 && $data["BULAN"] == 12)
                                         {
                                             $plb = $data["BIL"];
                                         }
-                                        else if( $data["TYPE_ID"] == 1 && $data["BIL"] > 0)
+                                        else if( $data["TYPE_ID"] == 1 && $data["BULAN"] == 12)
                                         {
                                             $pasar = $data["BIL"];
                                         }
-                                        else if( $data["TYPE_ID"] == 2 && $data["BIL"] > 0)
+                                        else if( $data["TYPE_ID"] == 2 && $data["BULAN"] == 12)
                                         {
                                             $medan_selera = $data["BIL"];
                                         }
-                                        else if( $data["TYPE_ID"] == 4 && $data["BIL"] > 0)
+                                        else if( $data["TYPE_ID"] == 4 && $data["BULAN"] == 12)
                                         {
                                             $upen = $data["BIL"];
                                         }
-                                        else if( $data["TYPE_ID"] == 5 && $data["BIL"] > 0)
+                                        else if( $data["TYPE_ID"] == 5 && $data["BULAN"] == 12)
                                         {
                                             $kiosk = $data["BIL"];
                                         }

@@ -1383,21 +1383,48 @@ class Report extends CI_Controller
         $data['link_3']     = '';
         $data['pagetitle']  = 'Laporan Perjanian Sewaan Hartanah';
 
-        //$data['data'] = $this->m_acc_account->sewaan_hartanah();
+        $search_segment = uri_segment(3);
 
-        $data['data_jan'] = $this->m_acc_account->sewaan_hartanah(2019,1);
-        $data['data_feb'] = $this->m_acc_account->sewaan_hartanah(2019,2);
-        $data['data_mar'] = $this->m_acc_account->sewaan_hartanah(2019,3);
-        $data['data_apr'] = $this->m_acc_account->sewaan_hartanah(2019,4);
-        $data['data_may'] = $this->m_acc_account->sewaan_hartanah(2019,5);
-        $data['data_jun'] = $this->m_acc_account->sewaan_hartanah(2019,6);
-        $data['data_jul'] = $this->m_acc_account->sewaan_hartanah(2019,7);
-        $data['data_aug'] = $this->m_acc_account->sewaan_hartanah(2019,8);
-        $data['data_sep'] = $this->m_acc_account->sewaan_hartanah(2019,9);
-        $data['data_oct'] = $this->m_acc_account->sewaan_hartanah(2019,10);
-        $data['data_nov'] = $this->m_acc_account->sewaan_hartanah(2019,11);
-        $data['data_dec'] = $this->m_acc_account->sewaan_hartanah(2019,12);
+        $post           = $this->input->post();
+        $filter_session = get_session('arr_filter_hartanah');
+        if(!empty($post)):
+            $this->session->set_userdata('arr_filter_hartanah',$post);
+            $data_search = $post;
+        else:
+            if(!empty($filter_session)):
+                $data_search = $filter_session;
+            else:
+                $data_search['year']  = '';
+            endif;
+        endif;
+        // pre($data_search);
+        // die();
+      
+        if($_POST):
 
+        $data_report = $this->m_acc_account->sewaan_hartanah($data_search);
+        // $data['data_jan'] = $this->m_acc_account->sewaan_hartanah(2019,1);
+        // $data['data_feb'] = $this->m_acc_account->sewaan_hartanah(2019,2);
+        // $data['data_mar'] = $this->m_acc_account->sewaan_hartanah(2019,3);
+        // $data['data_apr'] = $this->m_acc_account->sewaan_hartanah(2019,4);
+        // $data['data_may'] = $this->m_acc_account->sewaan_hartanah(2019,5);
+        // $data['data_jun'] = $this->m_acc_account->sewaan_hartanah(2019,6);
+        // $data['data_jul'] = $this->m_acc_account->sewaan_hartanah(2019,7);
+        // $data['data_aug'] = $this->m_acc_account->sewaan_hartanah(2019,8);
+        // $data['data_sep'] = $this->m_acc_account->sewaan_hartanah(2019,9);
+        // $data['data_oct'] = $this->m_acc_account->sewaan_hartanah(2019,10);
+        // $data['data_nov'] = $this->m_acc_account->sewaan_hartanah(2019,11);
+        // $data['data_dec'] = $this->m_acc_account->sewaan_hartanah(2019,12);
+
+            //echo last_query();
+        
+            $data['data_report']    = $data_report;
+            $data['data_search']    = $data_search;
+        else:
+            $data['data_report']    = array();
+            $data['data_search']    = $data_search;
+        endif;
+        
         templates('report/v_hartanah',$data);
     }
 
@@ -1408,9 +1435,33 @@ class Report extends CI_Controller
         $data['link_3']     = '';
         $data['pagetitle']  = 'Laporan Perjanian Sewa';
 
+        $search_segment = uri_segment(3);
 
-        $data['data'] = $this->m_acc_account->sewaan_papaniklan();
-        
+        $post           = $this->input->post();
+        $filter_session = get_session('arr_filter_papaniklan');
+        if(!empty($post)):
+            $this->session->set_userdata('arr_filter_papaniklan',$post);
+            $data_search = $post;
+        else:
+            if(!empty($filter_session)):
+                $data_search = $filter_session;
+            else:
+                $data_search['year']  = '';
+            endif;
+        endif;
+        // pre($data_search);
+        // die();
+      
+        if($_POST):
+
+        $data_report = $this->m_acc_account->sewaan_papaniklan($data_search);
+
+            $data['data_report']    = $data_report;
+            $data['data_search']    = $data_search;
+        else:
+            $data['data_report']    = array();
+            $data['data_search']    = $data_search;
+        endif;
 
         templates('report/v_papaniklan',$data);
 
