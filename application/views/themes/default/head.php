@@ -33,8 +33,8 @@
     <link href="/assets/jquery-ui/jquery-ui.min.css" rel="stylesheet">
     <link href="/assets/jquery-ui/jquery-ui.structure.min.css" rel="stylesheet">
     <script src="/assets/node_modules/jquery/dist/jquery.min.js"></script>
-    <!-- <script src="/assets/node_modules/chart.js/dist/Chart.js"></script> -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.js" integrity="sha256-qSIshlknROr4J8GMHRlW3fGKrPki733tLq+qeMCR05Q=" crossorigin="anonymous"></script>
+    <script src="/assets/Chart.bundle.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.js" integrity="sha256-qSIshlknROr4J8GMHRlW3fGKrPki733tLq+qeMCR05Q=" crossorigin="anonymous"></script> -->
     <!-- select2 -->
     <link href="/assets/select2/dist/css/select2.min.css" rel="stylesheet">
     <link href="/assets/select2/dist/css/bootstrap-select2.css" rel="stylesheet">
@@ -45,11 +45,16 @@
     <script src="/assets/dataTables/jquery.dataTables.min.js"></script>
     <script src="/assets/dataTables/dataTables.buttons.min.js"></script>
     <script src="/assets/dataTables/buttons.print.js"></script>
+
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"> -->
+    <!-- <link href="/assets/node_modules/bootstrap/dist/css/bootstrap.css" > -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
     <script>
         const DEPENDENT_LIST_ARR = '<?php echo json_encode(DEPENDENT_LIST_ARR)?>';
     </script>
-
     <style>
+        
         .need-print{
             display: none;
         }
@@ -452,24 +457,24 @@
                 </li>
                 <?php endif;?>
 
-                <?php if($this->auth->access_main_view($this->curuser,array(7000))):?>    
+                <?php if($this->auth->access_main_view($this->curuser,array(7000))):?>
                 <li class="nav-item nav-dropdown <?php echo set_active_dropdown(uri_segment(1),array('journal'))?>">
                     <a class="nav-link nav-dropdown-toggle <?php echo set_active_menu(uri_segment(1),array('journal'))?>" href="#6">
                         <i class="nav-icon icon-speedometer"></i> Pelarasan</a>
-                    <ul class="nav-dropdown-items"> 
-                        <?php if($this->auth->access_view($this->curuser,array(7001))):?> 
+                    <ul class="nav-dropdown-items">
+                        <?php if($this->auth->access_view($this->curuser,array(7001))):?>
                         <li class="nav-item">
                             <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('account_list','generate_current_bill','current_bill'))?>" href="/journal/search">
                                 <i class="nav-icon fa fa-circle fa-sm"></i>Senarai Pelarasan</a>
                         </li>
                         <?php endif;?>
-                        <?php if($this->auth->access_view($this->curuser,array(7002))):?> 
+                        <?php if($this->auth->access_view($this->curuser,array(7002))):?>
                         <li class="nav-item">
                             <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('account_list','generate_current_bill','current_bill'))?>" href="/journal/entry">
                                 <i class="nav-icon fa fa-circle fa-sm"></i>Senarai Kemasukan</a>
                         </li>
                         <?php endif;?>
-                        <?php if($this->auth->access_view($this->curuser,array(7003))):?> 
+                        <?php if($this->auth->access_view($this->curuser,array(7003))):?>
                         <li class="nav-item">
                             <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('account_list','generate_current_bill','current_bill'))?>" href="/journal/index">
                                 <i class="nav-icon fa fa-circle fa-sm"></i>Senarai Kelulusan</a>
@@ -510,13 +515,13 @@
 <!--                            <a class="nav-link --><?php //echo set_active_menu(uri_segment(2),array('gl_summary'))?><!--" href="/report/gl_summary">-->
 <!--                                <i class="nav-icon fa fa-circle fa-sm"></i> Hasil Kod GL</a>-->
 <!--                        </li>-->
-                        
+
 <!--                        <li class="nav-item">-->
 <!--                            <a class="nav-link --><?php //echo set_active_menu(uri_segment(2),array('category_adjustment'))?><!--" href="/report/category_adjustment">-->
 <!--                                <i class="nav-icon fa fa-circle fa-sm"></i> Penyata Penyesuaian</a>-->
 <!--                        </li>-->
-                        
-                        
+
+
 <!--                        <li class="nav-item">-->
 <!--                            <a class="nav-link --><?php //echo set_active_menu(uri_segment(2),array('category_aging'))?><!--" href="/report/category_aging">-->
 <!--                                <i class="nav-icon fa fa-circle fa-sm"></i> Aging Sewaan</a>-->
