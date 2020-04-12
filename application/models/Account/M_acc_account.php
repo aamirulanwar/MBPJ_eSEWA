@@ -451,4 +451,32 @@ class M_acc_account extends CI_Model
             return $sql->result_array();
         endif;
     }
+
+    public function perjanjian_kutipan($data_search){
+        db_select ('COUNT(A.ACCOUNT_ID) as bil');
+        db_select ('SUM(A.RENTAL_CHARGE) AS RM');
+        db_select ("EXTRACT(YEAR FROM A.DATE_START)AS YEAR");
+        db_select ('A.TYPE_ID');
+        db_from('acc_account A');
+        // if(isset($data_search['year']) && having_value($data_search['year'])):
+        //     db_where("EXTRACT(YEAR FROM A.DATE_START) IN(".$data_search['year'].",".$data_search['year2'].",".$data_search['year3'].")");
+        // endif;
+
+        if(isset($data_search['year']) && having_value($data_search['year'])):
+            db_where("EXTRACT(YEAR FROM A.DATE_START) >= ".$data_search['year']."");
+        endif;
+
+        if(isset($data_search['year2']) && having_value($data_search['year2'])):
+            db_where("EXTRACT(YEAR FROM A.DATE_START) <= ".$data_search['year2']."");
+        endif;
+        // db_where("A.TYPE_ID NOT IN (6)");
+        //db_where("A.BILLBOARD_TYPE in (1,2)");
+        // db_where("EXTRACT(YEAR FROM A.DATE_START) =2017");
+        db_group('EXTRACT(YEAR FROM A.DATE_START),A.TYPE_ID');
+        db_order('YEAR');
+        $sql = db_get();
+        if($sql):
+            return $sql->result_array();
+        endif;
+    }
 }

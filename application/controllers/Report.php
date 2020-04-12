@@ -52,7 +52,8 @@ class Report extends CI_Controller
             'dataTable4RekodTransaksi',
             'transactionReportHeader',
             'hartanah',
-            'papaniklan'
+            'papaniklan',
+            'perjanjian_kutipan'
         );
         #set pages data
         (in_array($method,$array)) ? $this->$method() : $this->gl_summary();
@@ -1463,6 +1464,48 @@ class Report extends CI_Controller
         endif;
 
         templates('report/v_papaniklan',$data);
+
+    }
+
+    function perjanjian_kutipan(){
+        // $this->auth->restrict_access($this->curuser,array(8011));
+        $data['link_1']     = 'Laporan';
+        $data['link_2']     = 'Perbandingan';
+        $data['link_3']     = '';
+        $data['pagetitle']  = 'Laporan Perbandingan Jumlah Perjanjian & Kutipan';
+
+        // $data['data'] = $this->m_acc_account->perjanjian_kutipan();
+
+        $search_segment = uri_segment(3);
+
+        $post           = $this->input->post();
+        $filter_session = get_session('arr_filter_perjanjian');
+        if(!empty($post)):
+            $this->session->set_userdata('arr_filter_perjanjian',$post);
+            $data_search = $post;
+        else:
+            if(!empty($filter_session)):
+                $data_search = $filter_session;
+            else:
+                $data_search['year']  = '';
+                $data_search['year2']  = '';
+            endif;
+        endif;
+        // pre($data_search);
+        // die();
+      
+        if($_POST):
+
+        $data_report = $this->m_acc_account->perjanjian_kutipan($data_search);
+
+            $data['data_report']    = $data_report;
+            $data['data_search']    = $data_search;
+        else:
+            $data['data_report']    = array();
+            $data['data_search']    = $data_search;
+        endif;
+
+        templates('report/v_perjanjian',$data);
 
     }
 }
