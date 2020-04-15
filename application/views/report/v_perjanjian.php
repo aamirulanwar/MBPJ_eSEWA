@@ -75,49 +75,61 @@ checking_validation(validation_errors());
                     <tr>
                         <th width="3%" rowspan="2" style="text-align:center">BIL</th>
                         <th width="12%" rowspan="2" style="text-align:center">JENIS PERJANJIAN</th>
-                        <?php foreach ($data_report as $d):
+                        <?php foreach ($data_report[1] as $d):
                             $year = $d['YEAR'] ;
                             echo "<th colspan='3' width='7%'' style='text-align:center'>".$year."</th>";
-                            ?>
-                            <?php endforeach; ?>
+                        ?>
+                        <?php endforeach; ?>
                     </tr>
                     <tr>
-                        <th width="3%">BIL</th>
-                        <th width="3%">RM</th>
-                        <th width="3%">%</th>
-                        <th width="3%">BIL</th>
-                        <th width="3%">RM</th>
-                        <th width="3%">%</th>
-                        <th width="3%">BIL</th>
-                        <th width="3%">RM</th>
-                        <th width="3%">%</th>   
+                        <?php
+                            foreach ($data_report[1] as $d) 
+                            {
+                                echo "
+                                    <th width='3%'>BIL</th>
+                                    <th width='3%'>RM</th>
+                                    <th width='3%'>%</th>
+                                    ";
+                            }
+                        ?>
                     </tr>
                     <tr>
                         <th>1.</th>
                         <th>SEWA</th>
                         <?php
-                                $bil = 0 ;
-                                $rm  = 0 ;
-                                $year = $d['YEAR'] ;
-                             foreach ($data_report as $d):
-                                {
-                                        if( $d["TYPE_ID"] != 6 && $d['YEAR'] == $year)
-                                        {
-                                            $bil += $d["BIL"]; 
-                                            $rm += $d["RM"];
-                                        }elseif ($d["TYPE_ID"] != 6 && $d['YEAR'] == $year)
-                                        {
-                                            $bil += $d["BIL"]; 
-                                            $rm += $d["RM"];
-                                        }
-                                    }
-                                    ?>
-                            <?php endforeach; 
-                                    // $total = array_sum($bil);
-                                    echo "<td style='text-align:center'>".$bil."</td>";
-                                    echo "<td style='text-align:center'>".num($rm,2)."</td>";
-                                    echo "<td style='text-align:center'>".$year."</td>";
-                            ?>
+                            $bil = 0 ;
+                            // $rm  = 0 ;
+                            foreach ($data_report[1] as $d):
+                            {
+                                $bil = $d["BIL"]; 
+                                // $rm = $d["RM"];
+                                  
+                            }
+                            $total = $bil * 100;
+                            echo "<td style='text-align:center'>".$bil."</td>";
+                            echo "<td style='text-align:center'>".num($total,2)."</td>";
+                            echo "<td style='text-align:center'></td>";
+                        ?>
+                        <?php endforeach;?>                          
+                    </tr>
+                    <tr>
+                        <th>2.</th>
+                        <th>BILLBOARD</th>
+                        <?php
+                            $bil = 0 ;
+                            // $rm  = 0 ;
+                            foreach ($data_report[2] as $d):
+                            {
+                                $bil = $d["BIL"]; 
+                                // $rm = $d["RM"];
+                                  
+                            }
+                            $total = $bil * 100;
+                            echo "<td style='text-align:center'>".$bil."</td>";
+                            echo "<td style='text-align:center'>".num($total,2)."</td>";
+                            echo "<td style='text-align:center'></td>";
+                        ?>
+                        <?php endforeach;?>                          
                     </tr>
                 </table>
             </div>

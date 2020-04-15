@@ -1496,7 +1496,8 @@ class Report extends CI_Controller
       
         if($_POST):
 
-        $data_report = $this->m_acc_account->perjanjian_kutipan($data_search);
+        $data_report[1] = $this->m_acc_account->perjanjian_kutipan($data_search);
+        $data_report[2] = $this->m_acc_account->perjanjian_kutipan_billboard($data_search);
 
             $data['data_report']    = $data_report;
             $data['data_search']    = $data_search;
