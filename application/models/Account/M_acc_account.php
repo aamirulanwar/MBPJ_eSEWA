@@ -505,6 +505,17 @@ class M_acc_account extends CI_Model
         $sql = db_get();
         if($sql):
             return $sql->result_array();
+      endif;
+    }
+
+    function getAccountNoticeLevel($account_id)
+    {
+        db_select ('notice_level');
+        db_from('acc_account');
+        db_where("account_id",$account_id);
+        $sql = db_get();
+        if($sql):
+            return $sql->row_array();
         endif;
     }
 }

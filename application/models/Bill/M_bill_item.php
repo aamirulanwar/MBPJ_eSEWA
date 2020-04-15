@@ -493,7 +493,8 @@ class M_bill_item extends CI_Model
         endif;
     }
 
-    function update_bill_item($item_id,$data_update){
+    function update_bill_item($item_id,$data_update)
+    {
         db_where('item_id',$item_id);
         db_update('b_item',$data_update);
         return true;
@@ -501,9 +502,14 @@ class M_bill_item extends CI_Model
 
     function rekodTransaksi($data_search=array())
     {
-        db_select('i.*');
+        db_select('i.ITEM_ID');
+        db_select('i.TR_CODE');
+        db_select('i.ITEM_DESC');
+        db_select('i.ACCOUNT_ID');
+        db_select('i.BILL_CATEGORY');
+        db_select('i.AMOUNT');
         db_select('m.BILL_NUMBER');
-        db_select('m.DT_ADDED as TKH_BIL');
+        db_select("to_char(m.DT_ADDED,'dd/mm/yyyy') as TKH_BIL");
         db_from('b_item i');
         db_join('b_master m','m.bill_id = i.bill_id');
         if(isset($data_search['date_start']) && having_value($data_search['date_start'])):
@@ -529,9 +535,9 @@ class M_bill_item extends CI_Model
         endif;
     }
 
-    function rekodTransaksiInfo($data_search=array())
+    function rekodTransaksiInfo($account_id)
     {
-        if ( !empty($data_search) )
+        if ( !empty($account_id) )
         {
             db_select('acc_account.account_id');
             db_select('acc_account.account_number');
@@ -544,7 +550,7 @@ class M_bill_item extends CI_Model
             db_join('a_asset','acc_account.asset_id = a_asset.asset_id');
             db_join('a_category','acc_account.category_id = a_category.category_id');
             db_join('acc_user','acc_account.user_id = acc_user.user_id');
-            db_where('acc_account.account_id',$data_search['account_id']);
+            db_where('acc_account.account_id',$account_id);
             $sql = db_get('');
             if($sql):
                 return $sql->result_array('');
@@ -554,6 +560,58 @@ class M_bill_item extends CI_Model
         {
             return array();
         }
+    }
+
+    function getNoticeChargeTransaction($account_id,$month,$year)
+    {
+        if ( !empty($account_id) )
+        {
+            db_select("b_master.account_id");
+            db_select("b_master.bill_month");
+            db_select("b_master.bill_year");
+            db_select("b_item.ITEM_ID");
+            db_select("b_item.TR_CODE");
+            db_select("b_item.ITEM_DESC");
+            db_from("b_item");
+            db_join("b_master","b_master.bill_id = b_item.bill_id");
+            db_where("b_master.account_id",$account_id);
+            db_where("b_master.bill_month",$month);
+            db_where("b_master.bill_year",$year);
+            db_where("b_item.TR_CODE in ('11110020')");
+            $sql = db_get('');
+            if($sql):
+                return $sql->result_array('');
+            endif;
+        }
+        else
+        {
+            return array();
+        }
+    }
+
+    function getBillItemTotalAmount($master_bill_id)
+    {
+        db_select('sum(b_item.amount) as total_amount');
+        db_from('b_item');
+        db_where('bill_id',$master_bill_id);
+
+        $sql = db_get('');
+        if($sql)
+        {
+            return $sql->row_array('');
+        }
+        else
+        {
+            return array();
+        }
+    }
+
+    function deleteLODCharge($item_id)
+    {
+        $ci =& get_instance();
+        $ci->db->where('ITEM_ID', $item_id);
+        $ci->db->delete('B_ITEM'); 
+        return true;
     }
 }
 
