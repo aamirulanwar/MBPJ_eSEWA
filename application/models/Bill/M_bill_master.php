@@ -95,5 +95,36 @@ class M_bill_master extends CI_Model
             return $sql->result_array();
         endif;
     }
+
+    function getBillId($account_id,$month,$year)
+    {
+        if ( !empty($account_id) && !empty($month) && !empty($year) )
+        {
+            db_select("bill_id");
+            db_select("account_id");
+            db_select("bill_month");
+            db_select("bill_year");
+            db_from("b_master");
+            db_where("account_id",$account_id);
+            db_where("bill_month",$month);
+            db_where("bill_year",$year);
+            $sql = db_get('');
+            if($sql):
+                return $sql->row_array('');
+            endif;
+        }
+        else
+        {
+            return array();
+        }
+    }
+
+    function updateBillMasterTotalAmount($bill_id,$account_id,$data_update)
+    {
+        db_where('bill_id',$bill_id);
+        db_where('account_id',$account_id);
+        db_update('b_master',$data_update);
+        return true;
+    }
 }
 
