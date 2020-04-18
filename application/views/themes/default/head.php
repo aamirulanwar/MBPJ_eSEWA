@@ -611,6 +611,10 @@
                             <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('perjanjian'))?>" href="/report/perjanjian_kutipan">
                                 <i class="nav-icon fa fa-circle fa-sm"></i> Laporan Perbandingan</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('hasil'))?>" href="/report/hasil">
+                                <i class="nav-icon fa fa-circle fa-sm"></i> Laporan Hasil Perjanjian Sewa</a>
+                        </li>
                     </ul>
                 </li>
                 <?php endif;?>
