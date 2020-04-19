@@ -518,4 +518,25 @@ class M_acc_account extends CI_Model
             return $sql->row_array();
         endif;
     }
+
+    public function hasil($data_search){
+        db_select ('SUM(B.AMOUNT) AS RM');
+        db_select ("EXTRACT(MONTH FROM B.DT_ADDED) AS BULAN");
+        db_select ('A.TYPE_ID');
+        db_from('B_ITEM B');
+        db_join('ACC_ACCOUNT A','A.ACCOUNT_ID = B.ACCOUNT_ID');
+        if(isset($data_search['year']) && having_value($data_search['year'])):
+            db_where("EXTRACT(YEAR FROM B.DT_ADDED) = ".$data_search['year']."");
+        endif;
+        // db_where("A.TYPE_ID = 6");
+        db_where("B.BILL_CATEGORY = 'R'");
+        db_where("B.GST_TYPE = 1");
+        // db_where("EXTRACT(YEAR FROM B.DT_ADDED) =2015");
+        db_group('EXTRACT(MONTH FROM B.DT_ADDED),A.TYPE_ID');
+        db_order('BULAN');
+        $sql = db_get();
+        if($sql):
+            return $sql->result_array();
+      endif;
+    }
 }
