@@ -48,7 +48,7 @@ class Account extends CI_Controller
             'kuarters_add',
             'kuarters_detais',
             'delete_kuarters',
-            'delete_item'
+            'delete_item',
         );
         #set pages data
         (in_array($method,$array)) ? $this->$method() : $this->create_acc();
@@ -836,7 +836,8 @@ class Account extends CI_Controller
         if($data_copy):
             $data_insert['FILENAME']    = $data_copy['FILENAME'];
             $data_insert['EXTENSION']   = $data_copy['EXTENSION'];
-            $data_insert['PATH']        = $data_copy['PATH'];
+            // $data_insert['PATH']        = $data_copy['PATH'];
+            $data_insert['PATH']        = "file_upload/Account/".$acc_id."/";
             $data_insert['REF_ID']      = $acc_id;
             $data_insert['FILE_TYPE']   = $file_type;
             $data_insert['MODULE_TYPE'] = FILE_MODULE_TYPE_ACCOUNT;
@@ -930,7 +931,7 @@ class Account extends CI_Controller
             validation_rules('name','<strong>nama syarikat</strong>','required');
             validation_rules('company_registration_number','<strong>no. pendaftaran syarikat</strong>','required');
 
-//            validation_rules('address','<strong>alamat syarikat</strong>','required');
+            // validation_rules('address','<strong>alamat syarikat</strong>','required');
             validation_rules('address_1','<strong>alamat syarikat</strong>','required');
             validation_rules('address_3','<strong>bandar</strong>','required');
             validation_rules('postcode','<strong>poskod</strong>','required');
@@ -973,9 +974,9 @@ class Account extends CI_Controller
             validation_rules('postcode','<strong>poskod</strong>','required');
             validation_rules('address_state','<strong>alamat negeri</strong>','required');
 
-           // validation_rules('residence_information','<strong>maklumat kediaman</strong>','required');
-           // validation_rules('position','<strong>jawatan</strong>','required');
-           // validation_rules('department_id','<strong>bahagian/unit</strong>','required');
+            // validation_rules('residence_information','<strong>maklumat kediaman</strong>','required');
+            // validation_rules('position','<strong>jawatan</strong>','required');
+            // validation_rules('department_id','<strong>bahagian/unit</strong>','required');
             validation_rules('starting_of_service_date','<strong>tarikh mula berkhidmat</strong>','required');
             validation_rules('home_phone_number','<strong>no. telefon rumah</strong>','');
             validation_rules('mobile_phone_number','<strong>no. telefon bimbit</strong>','required');
@@ -998,10 +999,10 @@ class Account extends CI_Controller
         if(input_data('freezer_management_bills')==1):
             validation_rules('freezer_management_charge','<strong>caj simpanan sejuk beku</strong>','required');
         endif;
-       // validation_rules('lms_charge');
+        // validation_rules('lms_charge');
         validation_rules('collateral_rental');
         validation_rules('fee_agreement');
-       // validation_rules('bill_type','<strong>jenis bil</strong>','required');
+        // validation_rules('bill_type','<strong>jenis bil</strong>','required');
         validation_rules('status_acc','<strong>status akaun</strong>','required');
         validation_rules('notice_level','<strong>notice level</strong>','required');
 
@@ -1015,7 +1016,7 @@ class Account extends CI_Controller
                 #update applicant
                 $data_update['name']                = input_data('name');
                 $data_update['ic_number']           = str_replace(array('-',' '),'',input_data('ic_number'));
-               // $data_update['date_of_birth']       = input_data('date_of_birth');
+                // $data_update['date_of_birth']       = input_data('date_of_birth');
 
                 $data_update['address_1']           = input_data('address_1');
                 $data_update['address_2']           = input_data('address_2');
@@ -1028,8 +1029,8 @@ class Account extends CI_Controller
                 $data_update['mail_postcode']       = input_data('mail_postcode');
                 $data_update['mail_state']          = input_data('mail_state');
 
-               // $data_update['address']             = input_data('address');
-               // $data_update['mail_address']        = input_data('mail_address');
+                // $data_update['address']             = input_data('address');
+                // $data_update['mail_address']        = input_data('mail_address');
                 $data_update['race']                = $data['data_details']['RACE'];
                 $data_update['marital_status']      = $data['data_details']['MARITAL_STATUS'];
                 $data_update['home_phone_number']   = input_data('home_phone_number');
@@ -1050,7 +1051,7 @@ class Account extends CI_Controller
                 #update applicant
                 $data_update['name']                        = input_data('name');
                 $data_update['COMPANY_REGISTRATION_NUMBER'] = strtoupper(input_data('company_registration_number'));
-               // $data_update['address']                     = input_data('address');
+                // $data_update['address']                     = input_data('address');
                 $data_update['address_1']                   = input_data('address_1');
                 $data_update['address_2']                   = input_data('address_2');
                 $data_update['address_3']                   = input_data('address_3');
@@ -1065,7 +1066,7 @@ class Account extends CI_Controller
 
             endif;
 
-//            $data_update_acc['user_id']         = $user_id;
+            // $data_update_acc['user_id']         = $user_id;
             $data_update_acc['notice_level']             = input_data('notice_level');
 
             $data_update_acc['type_id']         = $data['data_details']['TYPE_ID'];
@@ -1119,7 +1120,7 @@ class Account extends CI_Controller
             else:
                 $data_update_acc['freezer_management_charge']    = 0.00;
             endif;
-           // $data_update_acc['lms_charge']                  = currencyToDouble(input_data('lms_charge'));
+            // $data_update_acc['lms_charge']                  = currencyToDouble(input_data('lms_charge'));
             $data_update_acc['collateral_rental']           = currencyToDouble(input_data('collateral_rental'));
             $data_update_acc['collateral_water']            = currencyToDouble(input_data('collateral_water'));
             $data_update_acc['agreement_fee']               = currencyToDouble(input_data('agreement_fee'));
@@ -1140,8 +1141,6 @@ class Account extends CI_Controller
                 endif;
             endif;
 
-//            pre($data_update_acc);
-//            exit;
             $acc_status = $this->m_acc_account->update_account($data_update_acc,$id);
 
             if($acc_status):
