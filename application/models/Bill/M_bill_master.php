@@ -104,6 +104,7 @@ class M_bill_master extends CI_Model
             db_select("account_id");
             db_select("bill_month");
             db_select("bill_year");
+            db_select("total_amount");
             db_from("b_master");
             db_where("account_id",$account_id);
             db_where("bill_month",$month);
@@ -125,6 +126,13 @@ class M_bill_master extends CI_Model
         db_where('account_id',$account_id);
         db_update('b_master',$data_update);
         return true;
+    }
+
+    function insertBillMaster($data_insert)
+    {
+        db_set_date_time('dt_added',timenow());
+        db_insert('bill_master',$data_insert);
+        return get_insert_id('bill_master');
     }
 }
 

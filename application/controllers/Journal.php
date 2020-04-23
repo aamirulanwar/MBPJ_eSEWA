@@ -167,8 +167,8 @@ class Journal extends CI_Controller
 
             $bill_number = $this->m_journal->generate_running_billnumber();
 
-            foreach ($_POST['journal_code'] as $i => $v) {
-
+            foreach ($_POST['journal_code'] as $i => $v) 
+            {
                 $this->m_journal->insert_journal_temp([
                     'created_by' => $this->curuser["USER_ID"],
                     'bill_number' => $bill_number,
@@ -206,26 +206,93 @@ class Journal extends CI_Controller
         }
     }
 
-    function update() {
+    function approveOrDeclineJurnal($id,$status_approval,$updated_by,$updated_at)
+    {
+        $journalDetail = $this->m_journal->get_journal_by_id($id);         
 
-        $journal_id = uri_segment(3);
+        if ($status_approval==1) 
+        {
+            $account_id = $journalDetail["ACCOUNT_ID"];
+            $bill_number = $journalDetail["BILL_NUMBER"];
+            $bill_month = $journalDetail["BILL_MONTH"];
+            $bill_year = $journalDetail["BILL_YEAR"];
+            $bill_amount = $journalDetail["AMOUNT"];
+            $journal_id = $journalDetail["JOURNAL_ID"];
+            $journal_trcode = $journalDetail["TR_CODE"];
+            $journal_trdesc = $journalDetail["ITEM_DESC"];
+            $journal_trcode_old = $journalDetail["TR_CODE_OLD"];
 
+            $existingBill = $this->m_bill_master->getBillId($account_id,$bill_month,$bill_year);
+
+            // Get Total Existing bill number
+            if ( count($existingBill) > 0 && $existingBill["BILL_ID"] != "" )
+            {
+                $bill_id = $existingBill["BILL_ID"];
+                $bill_master_update["TOTAL_AMOUNT"] = $existingBill["TOTAL_AMOUNT"] + $bill_amount;
+
+                $this->m_bill_master->updateBillMasterTotalAmount($bill_id,$account_id,$bill_master_update);
+            }
+            else
+            {
+                $accountDetail = $this->m_acc_account->getAccountDetailOnlyById($account_id);
+                $bill_type = $accountDetail["BILL_TYPE"];
+
+                $bill_master_insert["ACCOUNT_ID"] = $account_id;
+                $bill_master_insert["BILL_NUMBER"] = $bill_number;
+                $bill_master_insert["BILL_MONTH"] = $bill_month;
+                $bill_master_insert["BILL_YEAR"] = $bill_year;
+                $bill_master_insert["TOTAL_AMOUNT"] = $bill_amount;
+                $bill_master_insert["BILL_TYPE"] = $bill_type;
+                $bill_master_insert["BILL_CATEGORY"] = 'J';
+
+                $bill_id = $this->m_bill_master->insertBillMaster($bill_master_insert);
+            }
+
+            // Insert journal item into bill_item
+            $bill_item_insert["BILL_ID"]        = $bill_id;
+            $bill_item_insert["JOURNAL_ID"]     = $journal_id;
+            $bill_item_insert["ACCOUNT_ID"]     = $account_id;
+            $bill_item_insert["AMOUNT"]         = $bill_amount;
+            $bill_item_insert["BILL_CATEGORY"]  = 'J';
+            $bill_item_insert["TR_CODE"]        = $journal_trcode;
+            $bill_item_insert["ITEM_DESC"]      = $journal_trdesc;
+            $bill_item_insert["TR_CODE_OLD"]      = $journal_trcode_old;
+
+            $this->m_bill_item->insert_bill_item($bill_item_insert);
+        }
+
+        $journal_update["STATUS_APPROVAL"] = $status_approval;
+        $journal_update["UPDATED_BY"] = $updated_by;
+        $journal_update["UPDATED_AT"] = $updated_at;
+
+        $updateJurnalStatus = $this->m_journal->update_journal($id,$journal_update);
+
+        return $updateJurnalStatus;
+    }
+
+    function update() 
+    {
+        $journal_temp_id = uri_segment(3);
+        $status_approval = $_POST['approve'];
+        $updated_by = $this->curuser["USER_ID"];
         $updated_at = date('d-M-Y h:i:s');
+
         // echo "<script>console.log('".$updated_at."');</script>";
 
-        $update = $this->m_journal->approveOrDeclineJurnal($journal_id,$_POST['approve'],$this->curuser["USER_ID"],$updated_at);
+        // $update = $this->m_journal->approveOrDeclineJurnal($journal_temp_id,$_POST['approve'],$this->curuser["USER_ID"],$updated_at);
+        $update = $this->approveOrDeclineJurnal($journal_temp_id,$status_approval,$updated_by,$updated_at);
 
         header("Content-Type: application/json");
 
-        if ($update) {
-            
+        if ($update) 
+        {            
             echo json_encode([
                 'status' => true,
                 'message' => 'Rekod jurnal berjaya '.($_POST['approve']==1 ? "diluluskan" : "dibatalkan").'.'
             ]);    
         }
-        else {
-
+        else 
+        {
             echo json_encode([
                 'status' => true,
                 'message' => 'Rekod jurnal tidak berjaya '.($_POST['approve']==1 ? "diluluskan" : "dibatalkan").'.'
@@ -233,7 +300,8 @@ class Journal extends CI_Controller
         }
     }
 
-    function doc_journal(){
+    function doc_journal()
+    {
         $id = $this->curuser;
         // if(!is_numeric($id)):
         //     return false;
@@ -242,5 +310,5 @@ class Journal extends CI_Controller
         load_library('Generate_word');
         $this->generate_word->word_document($id, DOC_JOURNAL);
     }
-
+    
 }
