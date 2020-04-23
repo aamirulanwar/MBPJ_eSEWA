@@ -125,6 +125,13 @@ checking_validation(validation_errors());
 <!--                    <button type="button" onclick="add_transaction_code('B')" class="btn btn-primary pull-left btn-submit">Tambah kod transaksi bill</button>-->
                     <button style="margin-left: 20px;" type="button" onclick="chooseJournalCode()" class="btn btn-warning pull-left btn-submit">Tambah kod transaksi jurnal</button>
                 </div>
+                <?php if ($bill_master['BILL_CATEGORY']=='R'): ?>
+                    
+                <div class="col-sm-3">
+<!--                    <button type="button" onclick="add_transaction_code('B')" class="btn btn-primary pull-left btn-submit">Tambah kod transaksi bill</button>-->
+                    <button style="margin-left: 20px;" type="button" onclick="addNewReceipt()" class="btn btn-info pull-left btn-submit">Tambah resit jurnal</button>
+                </div>
+                <?php endif ?>
             </div>
         </div>
         <div class="card-footer">

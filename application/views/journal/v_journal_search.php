@@ -49,6 +49,9 @@ checking_validation(validation_errors());
         <div class="pull-left">
             <strong>Jumlah Rekod : <?php echo $total_result?></strong>
         </div>
+        <div class="pull-right">
+            <button class="btn btn-success" id="add-new-receipt">Tambah Resit</button>
+        </div>
         <!--        --><?php //if($this->auth->access_view($this->curuser,array(2018))):?>
         <!--        <div class="pull-right">-->
         <!--            <a href="/asset/add_asset" class="add-new"><span style="color: green" class="glyphicon glyphicon-plus-sign"></span> Tambah</a>-->
@@ -57,7 +60,7 @@ checking_validation(validation_errors());
     </div>
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-hover table-bordered">
+            <table class="table table-hover table-bordered" id="senarai-pelarasan">
                 <tr>
                     <th>No.</th>
                     <th>Tarikh</th>

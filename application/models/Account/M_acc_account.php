@@ -391,6 +391,7 @@ class M_acc_account extends CI_Model
         if(isset($data_search['not_added_this_year']) && having_value($data_search['not_added_this_year'])):
             db_where("extract(year from a.dt_added) < ".date('Y')."");
         endif;
+        db_where("a.type_id NOT IN (6,8)");
         db_order('a.account_id','asc');
         $sql = db_get('');
         if($sql):
