@@ -30,7 +30,7 @@ class Upload_file extends CI_Controller
         if (!file_exists(FILE_UPLOAD_TEMP)):
             mkdir(FILE_UPLOAD_TEMP, 0777, true);
         endif;
-//
+
         $error_upload = array();
         $if_have_error = 0;
 
@@ -62,7 +62,7 @@ class Upload_file extends CI_Controller
         if (!$result_upload):
             $error = $this->upload->display_errors();
             $data['error_remark']   =  $error;
-//            $error_upload[] = $data_err;
+            // $error_upload[] = $data_err;
             $if_have_error = 1;
         else:
             $info_upload = $this->upload->data();
@@ -80,41 +80,41 @@ class Upload_file extends CI_Controller
             $data['display_path']   =  "/".FILE_UPLOAD_TEMP.$info_upload['file_name'] ;
             $data['id_upload']      =  $id_upload ;
 
-//            // check EXIF and autorotate if needed
-//            $full_path =  $config['upload_path'].$info_upload['file_name'];
-//            $this->load->library('image_autorotate');
-//            $this->image_autorotate->autorotate($full_path);
-//            $this->image_lib->clear();
-//
-//            $config_resize['image_library']     = 'gd2';
-//            $config_resize['source_image']	    = "./".PROJECT_CONTENT_BASED_UPLOAD_PATH. "/".$info_upload['file_name'] ;
-//            $config_resize['create_thumb']      = FALSE;
-//            $config_resize['maintain_ratio']    = TRUE;
-//            $config_resize['quality']           = '80';
-//            $config_resize['width']	            = 800;
-//            $config_resize['height']	        = 800;
-//
-//            $this->image_lib->initialize($config_resize);
+            // // check EXIF and autorotate if needed
+            // $full_path =  $config['upload_path'].$info_upload['file_name'];
+            // $this->load->library('image_autorotate');
+            // $this->image_autorotate->autorotate($full_path);
+            // $this->image_lib->clear();
 
-//            if (!$this->image_lib->resize()):
-//                echo $this->image_lib->display_errors();
-//            else:
-//                $this->image_lib->clear();
-//
-//                $data_insert['project_id']  = $project_id;
-//                $data_insert['image_name']  = $info_upload['file_name'];
-//                $data_insert['remark']      = input_data('remark_image_'.$i);
-//                $data_insert['date_effected'] = display_date(input_data('date_image_'.$i),'Y-m-d');
-//                $data_insert['dt_added']    = timenow();
-//                $data_insert['user_id']     = $this->curuser['user_id'];
-//
-//                $this->m_progress->insert_image_project($data_insert);
-//            endif;
+            // $config_resize['image_library']     = 'gd2';
+            // $config_resize['source_image']	    = "./".PROJECT_CONTENT_BASED_UPLOAD_PATH. "/".$info_upload['file_name'] ;
+            // $config_resize['create_thumb']      = FALSE;
+            // $config_resize['maintain_ratio']    = TRUE;
+            // $config_resize['quality']           = '80';
+            // $config_resize['width']	            = 800;
+            // $config_resize['height']	        = 800;
+
+            // $this->image_lib->initialize($config_resize);
+
+            // if (!$this->image_lib->resize()):
+            //    echo $this->image_lib->display_errors();
+            // else:
+            //    $this->image_lib->clear();
+
+            //    $data_insert['project_id']  = $project_id;
+            //    $data_insert['image_name']  = $info_upload['file_name'];
+            //    $data_insert['remark']      = input_data('remark_image_'.$i);
+            //    $data_insert['date_effected'] = display_date(input_data('date_image_'.$i),'Y-m-d');
+            //    $data_insert['dt_added']    = timenow();
+            //    $data_insert['user_id']     = $this->curuser['user_id'];
+
+            //    $this->m_progress->insert_image_project($data_insert);
+            // endif;
         endif;
 
         $data['status_upload']  = $if_have_error;
         echo json_encode($data);
-//        echo $if_have_error;
+        // echo $if_have_error;
     }
 
     public function remove_temp(){
@@ -126,6 +126,6 @@ class Upload_file extends CI_Controller
         unlink(FILE_UPLOAD_TEMP.$data_delete['FILE_NAME']);
         $delete         = $this->m_file_upload_temp->delete_by_id($id);
         echo $delete;
-//        unlink('file_upload/temp/passport_pic_20181209160455.PNG');
+        // unlink('file_upload/temp/passport_pic_20181209160455.PNG');
     }
 }

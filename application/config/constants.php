@@ -86,7 +86,7 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 
 define('FILE_UPLOAD_TEMP', 'file_upload/temp/');
 define('FILE_APPLICATION', 'file_upload/application/');
-define('FILE_ACCOUNT', 'file_upload/account/');
+define('FILE_ACCOUNT', 'file_upload/Account/');
 
 define('STATUS_ACTIVE',1);
 define('STATUS_INACTIVE',2);
@@ -193,6 +193,7 @@ define('AKAUN_CARIAN_SSM',28);
 define('AKAUN_LAMPIRAN_PERMOHONAN',29);
 define('AKAUN_LAMPIRAN_SETUJU_TERIMA',30);
 define('AKAUN_LAMPIRAN_PENGESAHAN_KOS_BINAAN',31);
+define('AKAUN_DOKUMEN_TAMBAHAN',32);
 
 define('NOTICE_LEVEL_1',1);
 define('NOTICE_LEVEL_2',2);
