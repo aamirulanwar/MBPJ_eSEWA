@@ -52,7 +52,8 @@ class Rental_application extends CI_Controller
         (in_array($method,$array)) ? $this->$method() : $this->form();
     }
 
-    function application_type(){
+    function application_type()
+    {
         $this->auth->restrict_access($this->curuser,array(4001));
 
         $data['link_1']     = 'Permohonan Sewaan';
@@ -65,7 +66,8 @@ class Rental_application extends CI_Controller
         templates('/rental_application/v_application_type',$data);
     }
 
-    function form(){
+    function form()
+    {
         $data['link_1']     = 'Permohonan Sewaan';
         $data['link_2']     = 'Borang Permohonan';
         $data['link_3']     = '';
@@ -114,7 +116,8 @@ class Rental_application extends CI_Controller
         endif;
     }
 
-    private function form_1($data_asset_type,$data){
+    private function form_1($data_asset_type,$data)
+    {
         $form_session   = input_data('form_session');
         $random_number  = rand(1,1000);
         if(empty($form_session)):
@@ -289,7 +292,8 @@ class Rental_application extends CI_Controller
         endif;
     }
 
-    private function form_2($data_asset_type,$data){
+    private function form_2($data_asset_type,$data)
+    {
 
         $form_session   = input_data('form_session');
         $random_number  = rand(1,1000);
@@ -413,7 +417,8 @@ class Rental_application extends CI_Controller
         endif;
     }
 
-    private function form_3($data_asset_type,$data){
+    private function form_3($data_asset_type,$data)
+    {
 
         $form_session   = input_data('form_session');
         $random_number  = rand(1,1000);
@@ -539,7 +544,8 @@ class Rental_application extends CI_Controller
         endif;
     }
 
-    private function form_4($data_asset_type,$data){
+    private function form_4($data_asset_type,$data)
+    {
         $form_session   = input_data('form_session');
         $random_number  = rand(1,1000);
         if(empty($form_session)):
@@ -678,7 +684,8 @@ class Rental_application extends CI_Controller
         endif;
     }
 
-    function application(){
+    function application()
+    {
         $this->auth->restrict_access($this->curuser,array(4002));
 
         $data['link_1']     = 'Permohonan Sewaan';
@@ -725,7 +732,8 @@ class Rental_application extends CI_Controller
         templates('rental_application/v_list_application',$data);
     }
 
-    function application_process(){
+    function application_process()
+    {
         $this->auth->restrict_access($this->curuser,array(4003));
 
         $data['link_1']     = 'Permohonan Sewaan';
@@ -1090,7 +1098,8 @@ class Rental_application extends CI_Controller
         endif;
     }
 
-    function get_data_category_by_type(){
+    function get_data_category_by_type()
+    {
         if(is_ajax()):
             $asset_id   = input_data('category_id');
             $type_id    = input_data('type_id');
@@ -1106,7 +1115,8 @@ class Rental_application extends CI_Controller
         endif;
     }
 
-    function application_approval(){
+    function application_approval()
+    {
         $this->auth->restrict_access($this->curuser,array(4009));
 
         $data['link_1']     = 'Permohonan Sewaan';
@@ -1230,7 +1240,8 @@ class Rental_application extends CI_Controller
         endif;
     }
 
-    function application_agree(){
+    function application_agree()
+    {
         $this->auth->restrict_access($this->curuser,array(4010));
 
         $data['link_1']     = 'Permohonan Sewaan';
@@ -1358,7 +1369,8 @@ class Rental_application extends CI_Controller
         endif;
     }
 
-    function doc_offer_letter(){
+    function doc_offer_letter()
+    {
         $id = urlDecrypt(uri_segment(3));
         if(!is_numeric($id)):
             return false;
@@ -1368,7 +1380,8 @@ class Rental_application extends CI_Controller
         $this->generate_word->word_document($id,DOC_OFFER_LETTER);
     }
 
-    function doc_acceptance_letter(){
+    function doc_acceptance_letter()
+    {
         $id = urlDecrypt(uri_segment(3));
         if(!is_numeric($id)):
             return false;
@@ -1378,7 +1391,8 @@ class Rental_application extends CI_Controller
         $this->generate_word->word_document($id,DOC_ACCEPTANCE_LETTER);
     }
 
-    function get_asset_by_id(){
+    function get_asset_by_id()
+    {
         if(is_ajax()):
             $asset_id   = input_data('asset_id');
             $data_asset = $this->m_a_asset->get_a_asset_by_id($asset_id);
