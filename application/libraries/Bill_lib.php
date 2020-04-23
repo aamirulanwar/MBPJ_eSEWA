@@ -313,11 +313,6 @@ class Bill_lib {
                 endif;
             endif;
 
-            // pre($bill_item);
-
-            // pre($tunggakan_tahun_lepas);
-            // exit;
-
             #tunggakan tahun ini sum all group by
 
             $total_sum = $this->sum_amount_item($bill_id);
@@ -352,7 +347,7 @@ class Bill_lib {
                 foreach ($data_bill_item as $row_item):
                     $data_bill_cur = array();
 
-                    $get_bill_sum   = $this->get_bill_sum($account_id,$row_item['TR_CODE'],'semasa');
+                    $get_bill_sum   = $this->get_bill_sum($account_id,$row_item['TR_CODE'],'semasa',false);
                     $total_bil      = $get_bill_sum['BILL'] + ($get_bill_sum['JOURNAL']);
 
                     // pre($get_bill_sum);
@@ -391,6 +386,7 @@ class Bill_lib {
                         }
                         $data_bill_cur['gst_status']    = $row_item['TR_GST_STATUS'];
                         $data_bill_cur['item_id']       = $row_item['ITEM_ID'];
+                        $data_bill_cur['bill_category']       = $row_item['BILL_CATEGORY'];
 
                         $bill_item[]                    = $data_bill_cur;
                     endif;
@@ -401,9 +397,6 @@ class Bill_lib {
                 endforeach;
             endif;
         endif;
-
-        // pre($bill_item);
-        // exit;
 
         $up_level_notice = false;
 
@@ -481,8 +474,10 @@ class Bill_lib {
             endforeach;
         endif;
 
-        #tunggakan semasa
-        $tunggakan_semasa = $this->get_item_tunggakan_semasa($account_id,'B');
+        #tunggakan semasa bil
+        // $tunggakan_semasa = $this->get_item_tunggakan_semasa($account_id,'B');
+
+        $tunggakan_semasa = $this->get_item_tunggakan_semasa( $account_id,array("B","J") );
 
         if($tunggakan_semasa):
             foreach ($tunggakan_semasa as $row):
@@ -501,24 +496,28 @@ class Bill_lib {
 
                 $total_amount = $total_bil - $total_resit;
 
-                if($total_amount>0):
+                if($total_amount>0)
+                {
                     $tr_code_details = $this->get_data_tr_code($row['TR_CODE']);
-
-                    $data_bill_row2['tr_code_old']  = $row['TR_CODE_OLD'];
-                    $data_bill_row2['priority']     = 99;
-                    if($tr_code_details):
+                    
+                    if($tr_code_details)
+                    {
+                        $data_bill_row2['tr_code_old']  = $tr_code_details['MCT_TRCODE'];
                         $data_bill_row2['priority']     = $tr_code_details['MCT_PRIORT'];
-                    endif;
+                    }
 
+                    $data_bill_row2['priority']     = 99;
                     $data_bill_row2['tr_code']      = $row['TR_CODE'];
                     $data_bill_row2['amount']       = $total_amount;
                     $data_bill_row2['item_desc']    = 'TUNGGAKAN '.$row['ITEM_DESC'];
-                    $data_bill_row2['gst_status']   = $row['TR_GST_STATUS'];
+                    // $data_bill_row2['gst_status']   = $row['TR_GST_STATUS'];
+                    $data_bill_row2['gst_status']   = NULL;
                     $data_bill_row2['item_id']      = 0;
+                    $data_bill_row2['bill_category']      = "B";
 
                     $this->tunggakan_notice_up  = true;
                     $bill_item[]                = $data_bill_row2;
-                endif;
+                }
             endforeach;
         endif;
 
@@ -547,8 +546,25 @@ class Bill_lib {
             {
                 $trcode                 = $item['tr_code'];
                 $trcode_old             = $item['tr_code_old'];
-                $item['tr_code']        = "12".substr($trcode,2,strlen($trcode));
-                $item['tr_code_old']    = "12".substr($trcode_old,2,strlen($trcode_old));
+
+                // Handle for null value on trcode & trcode_old
+                if ($trcode != '' || $trcode != NULL)
+                {
+                    $item['tr_code']        = "12".substr($trcode,2,strlen($trcode));
+                }
+                else
+                {
+                    $item['tr_code'] = ' ';
+                }
+
+                if ($trcode_old != '' || $trcode_old != NULL)
+                {
+                    $item['tr_code_old']    = "12".substr($trcode_old,2,strlen($trcode_old));
+                }
+                else
+                {
+                    $item['tr_code_old'] = ' ';
+                }  
             }
             $bill_item[] = $item;
         }
@@ -652,7 +668,7 @@ class Bill_lib {
         db_join('a_rental_use r','r.rental_use_id = a.rental_use_id','left');
         db_from('acc_account a');
         db_where('account_id',$id);
-//        db_where('status_acc',STATUS_ACCOUNT_ACTIVE);
+        // db_where('status_acc',STATUS_ACCOUNT_ACTIVE);
         $sql = db_get();
         if($sql):
             return $sql->row_array();
@@ -714,7 +730,7 @@ class Bill_lib {
         if($data['bill_id']):
             db_where('bill_id',$data['bill_id']);
         endif;
-        db_where('bill_category','B');
+        // db_where('bill_category','B'); // This line commented to support adding jurnal transaction to billing item. Any effect to other coding must be observe strictly
 
         $sql = db_get();
         if($sql):
@@ -761,7 +777,8 @@ class Bill_lib {
         db_select("SUM(i.AMOUNT) as TOTAL_AMOUNT");
         db_select("SUM(i.TOTAL_PAID) as TOTAL_PAID");
         db_select("SUM(i.TOTAL_JOURNAL) as TOTAL_JOURNAL");
-        db_select("TR_CODE,ITEM_DESC,TR_GST_STATUS,TR_CODE_OLD");
+        db_select("TR_CODE,ITEM_DESC,TR_CODE_OLD");
+        // db_select("TR_GST_STATUS");
         // db_select('sum(AMOUNT) as total_amount,TR_CODE,ITEM_DESC,i.GST_TYPE');
         db_from('B_ITEM i');
         db_join('b_master m','m.bill_id = i.bill_id');
@@ -769,9 +786,11 @@ class Bill_lib {
         db_where('m.bill_year',$this->cur_year);
         db_where('m.bill_month < '.$this->cur_month);
         db_where('m.account_id',$account_id);
-        db_where('i.bill_category',$type);
+        // db_where('i.bill_category',$type);
+        db_in('I.BILL_CATEGORY ',$type);
         db_where("i.PREV_YEAR_OUTSTANDING",0);
-        db_group('TR_CODE,TR_CODE_OLD,ITEM_DESC,TR_GST_STATUS');
+        // db_group('TR_CODE,TR_CODE_OLD,ITEM_DESC,TR_GST_STATUS');
+        db_group('TR_CODE,TR_CODE_OLD,ITEM_DESC');
 
         $sql = db_get();
         if($sql):
@@ -846,7 +865,7 @@ class Bill_lib {
         db_select('*');
         db_from('b_item i');
         db_join('b_master m','i.bill_id=m.bill_id');
-//        db_where('i.account_id',$account_id);
+        // db_where('i.account_id',$account_id);
         db_where('m.bill_year',date('Y'));
         db_where('m.account_id',$account_id);
         $sql = db_get();
@@ -870,18 +889,8 @@ class Bill_lib {
                         $total_paid     = $item['AMOUNT'] + $item['TOTAL_JOURNAL'];
                         $balance_amount = $balance_amount - $balance_tobe_paid;
                     endif;
-
-//                    if($item['ITEM_ID_PAYMENT']==''):
-//                        $data_update_item['item_id_payment'] = $insert_item_id;
-//                    else:
-//                        $data_update_item['item_id_payment'] = $item['ITEM_ID_PAYMENT'].','.$insert_item_id;
-//                    endif;
                     $data_update_item['total_paid'] = $total_paid;
                     $update_status = $this->update_bill_item($data_update_item,$item['ITEM_ID']);
-
-                    //update total_used of payment item
-//                    $data_payment_item['total_used'] = $amount - $balance_amount;
-//                    $update_status = $this->update_bill_item($data_payment_item,$insert_item_id);
 
                     if($balance_amount == 0):
                         break;
@@ -892,7 +901,8 @@ class Bill_lib {
         endif;
     }
 
-    function get_pending_item($account_id, $tr_code = '', $tr_code_overdue = '', $current_month = '', $current_year = '', $goto_prev_year = 0){
+    function get_pending_item($account_id, $tr_code = '', $tr_code_overdue = '', $current_month = '', $current_year = '', $goto_prev_year = 0)
+    {
         $sql = "SELECT M.BILL_MONTH,M.BILL_YEAR,I.*,TO_CHAR(I.DT_ADDED, 'yyyy-mm-dd') as DT_ADDED_ITEM FROM B_ITEM I " .
             " INNER JOIN B_MASTER M ON I.BILL_ID=M.BILL_ID" .
             " WHERE M.ACCOUNT_ID =" . $account_id .
@@ -922,8 +932,8 @@ class Bill_lib {
         return true;
     }
 
-    function add($data){
-//
+    function add($data)
+    {
         $data_log = $this->get_log_desc($data['log_id']);
 
         $data_insert['LOG_ID']      = $data['log_id'];
@@ -1077,7 +1087,7 @@ class Bill_lib {
                 $data_bill_row['amount']        = 0;
                 $data_bill_row['item_desc']     = $row['ITEM_DESC'];
                 $data_bill_row['gst_status']    = 0;
-//                $data_bill_row['item_id']       = $row['ITEM_ID'];
+                // $data_bill_row['item_id']       = $row['ITEM_ID'];
 
                 $bill_item[]                    = $data_bill_row;
             endforeach;

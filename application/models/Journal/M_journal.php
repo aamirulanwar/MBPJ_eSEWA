@@ -41,141 +41,168 @@ class M_journal extends CI_Model
         return $insert;
     }
 
+    function get_journal_by_id($id)
+    {
+        db_select('journal.*');
+        db_select('admin.MCT_TRDESC as ITEM_DESC');
+        db_join('admin.mctrancode admin','admin.mct_trcodenew = journal.tr_code');
+        db_from('b_journal_temp journal');
+        db_where('journal.id',$id);
+        $sql = db_get();
+        if($sql):
+            return $sql->row_array();
+        endif;
+    }
+
+    function update_journal($journal_id,$data_update)
+    {
+        db_where('id',$journal_id);
+        db_update('b_journal_temp',$data_update);
+        return true;
+    }
+
     function approveOrDeclineJurnal($id,$status_approval,$updated_by,$updated_at)
     {
         $model =& get_instance();
 
-        $q_get_journal = $model->db->query("
-            SELECT
-                b_journal_temp.*, admin.MCT_TRDESC as ITEM_DESC
-            FROM
-                b_journal_temp,admin.mctrancode admin
-            WHERE
-                b_journal_temp.tr_code=admin.mct_trcodenew and 
-                id = ?
-        ",[$id]);
-        $get_journal = $q_get_journal->result_array();
+        // $q_get_journal = $model->db->query("
+            //                                     SELECT
+            //                                         b_journal_temp.*, admin.MCT_TRDESC as ITEM_DESC
+            //                                     FROM
+            //                                         b_journal_temp,admin.mctrancode admin
+            //                                     WHERE
+            //                                         b_journal_temp.tr_code=admin.mct_trcodenew and 
+            //                                         id = ?
+            //                                 ",[$id]);
 
-        $q_acc_account = $model->db->query("
-            SELECT
-                BILL_TYPE
-            FROM
-                acc_account
-            WHERE
-                account_id = ?
-        ",[$get_journal[0]["ACCOUNT_ID"]]);
+            // $get_journal = $q_get_journal->result_array();
 
-        $acc_account = $q_acc_account->result_array();
-        $bill_type = $acc_account[0]["BILL_TYPE"];
+            // $q_acc_account = $model->db->query( "
+            //                                         SELECT
+            //                                             BILL_TYPE
+            //                                         FROM
+            //                                             acc_account
+            //                                         WHERE
+            //                                             account_id = ?
+            //                                     ",[$get_journal[0]["ACCOUNT_ID"]]);
 
+            // $acc_account = $q_acc_account->result_array();
+            // $bill_type = $acc_account[0]["BILL_TYPE"];
 
-        $update_journal = $model->db->query("
-            UPDATE
-                b_journal_temp
-            SET
-                STATUS_APPROVAL = ?,
-                UPDATED_BY = ?,
-                UPDATED_AT = ?
-            WHERE
-                id = ?
-        ",[
-            $status_approval,
-            $updated_by,
-            $updated_at,
-            $id
-        ]);
+        // $update_journal = $model->db->query("
+            //                                         UPDATE
+            //                                             b_journal_temp
+            //                                         SET
+            //                                             STATUS_APPROVAL = ?,
+            //                                             UPDATED_BY = ?,
+            //                                             UPDATED_AT = ?
+            //                                         WHERE
+            //                                             id = ?
+            //                                     ",[
+            //                                         $status_approval,
+            //                                         $updated_by,
+            //                                         $updated_at,
+            //                                         $id
+            //                                     ]);
 
-        if ($status_approval==1) {
+        $journal_update["STATUS_APPROVAL"] = $status_approval;
+        $journal_update["UPDATED_BY"] = $updated_by;
+        $journal_update["UPDATED_AT"] = $updated_at;
+
+        $this->update_journal($id,$journal_update);
+
+        if ($status_approval==1) 
+        {
             
             $q1 = $model->db->query("
-                SELECT
-                    COUNT(*) AS TOTAL
-                FROM
-                    b_master
-                WHERE
-                    BILL_NUMBER = ?
-            ",[$get_journal[0]['BILL_NUMBER']]);
+                                        SELECT
+                                            COUNT(*) AS TOTAL
+                                        FROM
+                                            b_master
+                                        WHERE
+                                            BILL_NUMBER = ?
+                                    ",[$get_journal[0]['BILL_NUMBER']]);
 
             $exist_in_b_master = $q1->result_array();
 
             $bill_id="";
 
-            if ($exist_in_b_master[0]["TOTAL"] > 0) {
-                
+            if ($exist_in_b_master[0]["TOTAL"] > 0) 
+            {
                 $q2 = $model->db->query("
-                    SELECT
-                        BILL_ID,
-                        TOTAL_AMOUNT
-                    FROM
-                        b_master
-                    WHERE
-                        BILL_NUMBER = ?
-                ",[
-                    $get_journal[0]['BILL_NUMBER']
-                ]);
+                                            SELECT
+                                                BILL_ID,
+                                                TOTAL_AMOUNT
+                                            FROM
+                                                b_master
+                                            WHERE
+                                                BILL_NUMBER = ?
+                                        ",[
+                                            $get_journal[0]['BILL_NUMBER']
+                                        ]);
 
                 $b_master = $q2->result_array();
 
                 $bill_id = $b_master[0]["BILL_ID"];
 
                 $update_b_master = $model->db->query("
-                    UPDATE
-                        b_master
-                    SET
-                        TOTAL_AMOUNT = ?
-                    WHERE
-                        BILL_ID = ?
-                ",[
-                    ($b_master[0]["TOTAL_AMOUNT"]+$get_journal[0]['AMOUNT']),
-                    $bill_id
-                ]);
+                                                        UPDATE
+                                                            b_master
+                                                        SET
+                                                            TOTAL_AMOUNT = ?
+                                                        WHERE
+                                                            BILL_ID = ?
+                                                    ",[
+                                                        ($b_master[0]["TOTAL_AMOUNT"]+$get_journal[0]['AMOUNT']),
+                                                        $bill_id
+                                                    ]);
             }
-            else {
-
+            else 
+            {
                 $insert_b_master = $model->db->query("
-                    INSERT INTO b_master
-                    (
-                        DT_ADDED,
-                        ACCOUNT_ID,
-                        BILL_NUMBER,
-                        BILL_MONTH,
-                        BILL_YEAR,
-                        TOTAL_AMOUNT,
-                        BILL_TYPE,
-                        BILL_CATEGORY
-                    )
-                    VALUES
-                    (
-                        ?,
-                        ?,
-                        ?,
-                        ?,
-                        ?,
-                        ?,
-                        ?,
-                        ?
-                    )
-                ",[
-                    date('d-M-Y h:i:s'),
-                    $get_journal[0]['ACCOUNT_ID'],
-                    $get_journal[0]['BILL_NUMBER'],
-                    $get_journal[0]['BILL_MONTH'],
-                    $get_journal[0]['BILL_YEAR'],
-                    $get_journal[0]['AMOUNT'],
-                    $bill_type,
-                    'J'
-                ]);
+                                                        INSERT INTO b_master
+                                                        (
+                                                            DT_ADDED,
+                                                            ACCOUNT_ID,
+                                                            BILL_NUMBER,
+                                                            BILL_MONTH,
+                                                            BILL_YEAR,
+                                                            TOTAL_AMOUNT,
+                                                            BILL_TYPE,
+                                                            BILL_CATEGORY
+                                                        )
+                                                        VALUES
+                                                        (
+                                                            ?,
+                                                            ?,
+                                                            ?,
+                                                            ?,
+                                                            ?,
+                                                            ?,
+                                                            ?,
+                                                            ?
+                                                        )
+                                                    ",[
+                                                        date('d-M-Y h:i:s'),
+                                                        $get_journal[0]['ACCOUNT_ID'],
+                                                        $get_journal[0]['BILL_NUMBER'],
+                                                        $get_journal[0]['BILL_MONTH'],
+                                                        $get_journal[0]['BILL_YEAR'],
+                                                        $get_journal[0]['AMOUNT'],
+                                                        $bill_type,
+                                                        'J'
+                                                    ]);
                 
                 $q2 = $model->db->query("
-                    SELECT
-                        BILL_ID
-                    FROM
-                        b_master
-                    WHERE
-                        BILL_NUMBER = ?
-                ",[
-                    $get_journal[0]['BILL_NUMBER']
-                ]);
+                                            SELECT
+                                                BILL_ID
+                                            FROM
+                                                b_master
+                                            WHERE
+                                                BILL_NUMBER = ?
+                                        ",[
+                                            $get_journal[0]['BILL_NUMBER']
+                                        ]);
 
                 $b_master = $q2->result_array();
 

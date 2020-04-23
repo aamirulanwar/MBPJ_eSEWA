@@ -79,7 +79,7 @@ checking_validation(validation_errors());
                                 <p class="form-control-plaintext">RM<?php echo num($item['amount'])?></p>
                             </div>
                             <div class="col-sm-1">
-<!--                                <p class="form-control-plaintext"> --><?php //echo ($item['BILL_CATEGORY'])?><!--</p>-->
+                               <p class="form-control-plaintext"><?php echo ($item['bill_category'])?></p>
                             </div>
                         </div>
                         <?php
@@ -94,7 +94,7 @@ checking_validation(validation_errors());
             <div class="form-group row">
                 <div class="col-sm-12">
                     <button type="button" onclick="add_transaction_code('B')" class="btn btn-primary pull-left btn-submit">Tambah kod transaksi bill</button>
-<!--                    <button style="margin-left: 20px;" type="button" onclick="add_transaction_code('J')" class="btn btn-warning pull-left btn-submit">Tambah kod transaksi jurnal</button>-->
+                    <!-- <button style="margin-left: 20px;" type="button" onclick="add_transaction_code('J')" class="btn btn-warning pull-left btn-submit">Tambah kod transaksi jurnal</button> -->
                 </div>
             </div>
         </div>
