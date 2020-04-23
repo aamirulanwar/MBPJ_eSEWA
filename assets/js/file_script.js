@@ -1,5 +1,15 @@
 var dependent_no = 0;
 
+$('#add-new-receipt').click(function(event) {
+    var row = "<tr><form><td>0</td><td><input type='text' class='form-control tarikh' name='tarikh'></td><td><input type='text' class='form-control' name='no_akaun'></td><td><input type='text' class='form-control' name='bulantahun'></td><td>Resit</td><td><input type='submit' name='submit' value='Teruskan' class='btn btn-primary'></td></form></tr>";
+
+    $("#senarai-pelarasan tr:first").after(row);
+});
+
+function addNewReceipt(argument) {
+    // body...
+}
+
 function ajax_err(jqXHR,error, errorThrown) {
     if(jqXHR.status&&jqXHR.status==400){
         alert(jqXHR.responseText);
