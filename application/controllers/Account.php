@@ -49,12 +49,16 @@ class Account extends CI_Controller
             'kuarters_detais',
             'delete_kuarters',
             'delete_item',
+            'upload_dokumen_tandatangan',
+            'delete_dokumen_temp',
+            'delete_all_temp_file',
         );
         #set pages data
         (in_array($method,$array)) ? $this->$method() : $this->create_acc();
     }
 
-    function create_acc(){
+    function create_acc()
+    {
         $data['link_1']     = 'Akaun Sewaan';
         $data['link_2']     = 'Pendaftaran akaun';
         $data['link_3']     = '';
@@ -155,9 +159,6 @@ class Account extends CI_Controller
             validation_rules('address_3','<strong>alamat kediaman</strong>','required');
             validation_rules('postcode','<strong>poskod</strong>','required');
             validation_rules('address_state','<strong>alamat negeri</strong>','required');
-//            validation_rules('residence_information','<strong>maklumat kediaman</strong>','required');
-//            validation_rules('position','<strong>jawatan</strong>','required');
-//            validation_rules('department_id','<strong>bahagian/unit</strong>','required');
             validation_rules('starting_of_service_date','<strong>tarikh mula berkhidmat</strong>','required');
             validation_rules('home_phone_number','<strong>no. telefon rumah</strong>','');
             validation_rules('mobile_phone_number','<strong>no. telefon bimbit</strong>','required');
@@ -182,7 +183,7 @@ class Account extends CI_Controller
         if(input_data('freezer_management_bills')==1):
             validation_rules('freezer_management_charge','<strong>caj simpanan sejuk beku</strong>','required');
         endif;
-       // validation_rules('lms_charge');
+        // validation_rules('lms_charge');
         validation_rules('collateral_rental');
         validation_rules('fee_agreement');
         validation_rules('bill_type','<strong>jenis bil</strong>','required');
@@ -376,8 +377,8 @@ class Account extends CI_Controller
                     endif;
                 endif;
 
-               // $data_insert_acc['TR_ID_CATEGORY']              = $data_category['TR_ID_CATEGORY'];
-               // $data_insert_acc['TR_ID_GST']                   = $data_category['TR_ID_GST'];
+                // $data_insert_acc['TR_ID_CATEGORY']              = $data_category['TR_ID_CATEGORY'];
+                // $data_insert_acc['TR_ID_GST']                   = $data_category['TR_ID_GST'];
 
                 $acc_id = $this->m_acc_account->insert_account($data_insert_acc);
 
@@ -486,7 +487,8 @@ class Account extends CI_Controller
         endif;
     }
 
-    function create_acc_direct(){
+    function create_acc_direct()
+    {
         $data['link_1']     = 'Akaun Sewaan';
         $data['link_2']     = 'Pendaftaran akaun';
         $data['link_3']     = '';
@@ -499,90 +501,20 @@ class Account extends CI_Controller
 
         $data['data_asset']     = $this->m_a_asset->get_a_asset_active_by_category_id($type_id);
         $data['data_type']      = $this->m_a_type->get_a_type_details($type_id);
-        $data['data_category']  = $this->m_a_category->get_data_category_by_type($type_id);
+        $data['data_category']  = $this->m_a_category->get_data_category_by_type($type_id);    
 
-       // if($get_details['FORM_TYPE']==1):
-       //     $data['ic_number_pic']  = $this->m_file_gallery->get_file($id,PERMOHONAN_SALINAN_KAD_PENGENALAN);
-       //     $data['passport_pic']   = $this->m_file_gallery->get_file($id,PERMOHONAN_GAMBAR_PASPORT);
-       //     $data['ssm_pic']        = $this->m_file_gallery->get_file($id,PERMOHONAN_SALINAN_PENDAFTARAN_PERNIAGAAN_SSM);
-       //     $data['passport_pic']   = $this->m_file_gallery->get_file($id,PERMOHONAN_GAMBAR_PASPORT);
-       // elseif ($get_details['FORM_TYPE']==2):
-       //     $data['map_info']           = $this->m_file_gallery->get_file($id,PERMOHONAN_MAP_INFO);
-       //     $data['location_plan_file'] = $this->m_file_gallery->get_file($id,PERMOHONAN_PELAN_LOKASI);
-       //     $data['structure_plan']     = $this->m_file_gallery->get_file($id,PERMOHONAN_PELAN_STRUKTUR);
-       //     $data['app_ssm_file']       = $this->m_file_gallery->get_file($id,PERMOHONAN_CARIAN_SSM);
-       //     $data['cost_validation']    = $this->m_file_gallery->get_file($id,PERMOHONAN_LAMPIRAN_PENGESAHAN_KOS_BINAAN);
-       // elseif ($get_details['FORM_TYPE']==3):
-       //     $data['letter_application'] = $this->m_file_gallery->get_file($id,PERMOHONAN_SURAT_PERMOHONAN);
-       //     $data['ic_number_pic']      = $this->m_file_gallery->get_file($id,PERMOHONAN_SALINAN_KAD_PENGENALAN);
-       //     $data['location_plan']      = $this->m_file_gallery->get_file($id,PERMOHONAN_PELAN_LOKASI);
-       //     $data['photo_location']     = $this->m_file_gallery->get_file($id,PERMOHONAN_LAMPIRAN_PERMOHONAN);
-       //     $data['structure_plan']     = $this->m_file_gallery->get_file($id,PERMOHONAN_LAMPIRAN_SETUJU_TERIMA);
-       //     $data['ssm']                = $this->m_file_gallery->get_file($id,PERMOHONAN_CARIAN_SSM);
-       // elseif ($get_details['FORM_TYPE']==4):
-       //     $data['ic_number_pic']  = $this->m_file_gallery->get_file($id,PERMOHONAN_SALINAN_KAD_PENGENALAN);
-       // endif;
-
-       // if($get_details['FORM_TYPE']==1):
-
-            validation_rules('name','<strong>nama</strong>','required');
-            validation_rules('ic_number','<strong>no. kad pengenalan</strong>','required|exact_length[12]');
-            validation_rules('address_1','<strong>alamat kediaman</strong>','required');
-            validation_rules('address_3','<strong>bandar</strong>','required');
-            validation_rules('postcode','<strong>poskod</strong>','required');
-            validation_rules('address_state','<strong>alamat negeri</strong>','required');
-//            validation_rules('mail_address_1','<strong>alamat surat menyurat</strong>','required');
-//            validation_rules('mail_postcode','<strong>poskod</strong>','required');
-//            validation_rules('mail_state','<strong>alamat negeri</strong>','required');
-            validation_rules('mobile_phone_number','<strong>no. telefon bimbit</strong>','required');
-            validation_rules('home_phone_number','<strong>no. telefon rumah</strong>');
-            validation_rules('category_id','<strong>kod kategori harta sewaan yang dipohon </strong>','required');
-
-            // elseif ($get_details['FORM_TYPE']==2):
-
-            //    validation_rules('name','<strong>nama syarikat</strong>','required');
-            //    validation_rules('company_registration_number','<strong>no. pendaftaran syarikat</strong>','required');
-            //    validation_rules('address_1','<strong>alamat syarikat</strong>','required');
-            //    validation_rules('postcode','<strong>poskod</strong>','required');
-            //    validation_rules('address_state','<strong>alamat negeri</strong>','required');
-            //    validation_rules('home_phone_number','<strong>no. telefon syarikat</strong>','required');
-            //    validation_rules('fax_number','<strong>no. faks</strong>');
-            //    validation_rules('director_name','<strong>nama pengarah/pegawai</strong>','required');
-            //    validation_rules('mobile_phone_number','<strong>no. telefon pengarah/pegawai</strong>','required');
-            //    validation_rules('billboard_type','<strong>jenis</strong>','required');
-
-            // elseif ($get_details['FORM_TYPE']==3):
-
-            //    validation_rules('name','<strong>nama syarikat</strong>','required');
-            //    validation_rules('company_registration_number','<strong>no. pendaftaran syarikat</strong>','required');
-            //    validation_rules('address_1','<strong>alamat syarikat</strong>','required');
-            //    validation_rules('postcode','<strong>poskod</strong>','required');
-            //    validation_rules('address_state','<strong>alamat negeri</strong>','required');
-            //    validation_rules('home_phone_number','<strong>no. telefon syarikat</strong>','required');
-            //    validation_rules('fax_number','<strong>no. faks</strong>');
-            //    validation_rules('director_name','<strong>nama pengarah/pegawai</strong>','required');
-            //    validation_rules('mobile_phone_number','<strong>no. telefon pengarah/pegawai</strong>','required');
-
-            // elseif ($get_details['FORM_TYPE']==4):
-
-            //    validation_rules('name','<strong>nama permohonan</strong>','required');
-            //    validation_rules('ic_number','<strong>no. kad pengenalan</strong>','required');
-            //    validation_rules('date_of_birth','<strong>tarikh lahir</strong>','required');
-            //    validation_rules('place_of_birth','<strong>tempat lahir</strong>','required');
-            //    validation_rules('address_1','<strong>alamat kediaman</strong>','required');
-            //    validation_rules('postcode','<strong>poskod</strong>','required');
-            //    validation_rules('address_state','<strong>alamat negeri</strong>','required');
-            //    validation_rules('residence_information','<strong>maklumat kediaman</strong>','required');
-            //    validation_rules('position','<strong>jawatan</strong>','required');
-            //    validation_rules('department_id','<strong>bahagian/unit</strong>','required');
-            //    validation_rules('starting_of_service_date','<strong>tarikh mula berkhidmat</strong>','required');
-            //    validation_rules('home_phone_number','<strong>no. telefon rumah</strong>','');
-            //    validation_rules('mobile_phone_number','<strong>no. telefon bimbit</strong>','required');
-            // endif;
-
+        validation_rules('name','<strong>nama</strong>','required');
+        validation_rules('ic_number','<strong>no. kad pengenalan</strong>','required|exact_length[12]');
+        validation_rules('address_1','<strong>alamat kediaman</strong>','required');
+        validation_rules('address_3','<strong>bandar</strong>','required');
+        validation_rules('postcode','<strong>poskod</strong>','required');
+        validation_rules('address_state','<strong>alamat negeri</strong>','required');
+        validation_rules('mobile_phone_number','<strong>no. telefon bimbit</strong>','required');
+        validation_rules('home_phone_number','<strong>no. telefon rumah</strong>');
+        validation_rules('category_id','<strong>kod kategori harta sewaan yang dipohon </strong>','required');
 
         validation_rules('date_start','<strong>tarikh mula sewaan</strong>','required');
-       // validation_rules('asset_id','<strong>kod harta</strong>','required');
+        // validation_rules('asset_id','<strong>kod harta</strong>','required');
         validation_rules('date_end','<strong>tarikh tamat sewaan</strong>','required');
         validation_rules('rental_duration','<strong>tempoh sewaan & bil</strong>','required|numeric');
         validation_rules('water_bills','<strong>dikenakan bil air</strong>','required');
@@ -599,7 +531,7 @@ class Account extends CI_Controller
         if(input_data('freezer_management_bills')==1):
             validation_rules('freezer_management_charge','<strong>caj simpanan sejuk beku</strong>','required');
         endif;
-       // validation_rules('lms_charge');
+        // validation_rules('lms_charge');
         validation_rules('collateral_rental');
         validation_rules('fee_agreement');
         validation_rules('bill_type','<strong>jenis bil</strong>','required');
@@ -727,8 +659,8 @@ class Account extends CI_Controller
                 endif;
 
                 $data_category  = $this->m_a_category->get_a_category_details(input_data('category_id'));
-               // $data_insert_acc['TR_ID_CATEGORY']              = $data_category['TR_ID_CATEGORY'];
-               // $data_insert_acc['TR_ID_GST']                   = $data_category['TR_ID_GST'];
+                // $data_insert_acc['TR_ID_CATEGORY']              = $data_category['TR_ID_CATEGORY'];
+                // $data_insert_acc['TR_ID_GST']                   = $data_category['TR_ID_GST'];
 
                 $acc_id = $this->m_acc_account->insert_account($data_insert_acc);
 
@@ -739,71 +671,11 @@ class Account extends CI_Controller
                 $data_rental_status['rental_status']    = RENTAL_STATUS_YES;
                 $this->unit_category_lib->set_rental_status($data_rental_status);
 
-               // if($get_details['FORM_TYPE']==1):
-               //     $ic_number_pic  = $this->m_file_gallery->get_file($id,PERMOHONAN_SALINAN_KAD_PENGENALAN);
-               //     $this->copy_img_to_acc($ic_number_pic,$acc_id,AKAUN_SALINAN_KAD_PENGENALAN);
-
-               //     $passport_pic   = $this->m_file_gallery->get_file($id,PERMOHONAN_GAMBAR_PASPORT);
-               //     $this->copy_img_to_acc($passport_pic,$acc_id,AKAUN_GAMBAR_PASPORT);
-
-               //     $ssm_pic        = $this->m_file_gallery->get_file($id,PERMOHONAN_SALINAN_PENDAFTARAN_PERNIAGAAN_SSM);
-               //     $this->copy_img_to_acc($ssm_pic,$acc_id,AKAUN_SALINAN_PENDAFTARAN_PERNIAGAAN_SSM);
-
-               //     $passport_pic   = $this->m_file_gallery->get_file($id,PERMOHONAN_GAMBAR_PASPORT);
-               //     $this->copy_img_to_acc($passport_pic,$acc_id,AKAUN_GAMBAR_PASPORT);
-
-               // elseif ($get_details['FORM_TYPE']==2):
-               //     $map_info           = $this->m_file_gallery->get_file($id,PERMOHONAN_MAP_INFO);
-               //     $this->copy_img_to_acc($map_info,$acc_id,AKAUN_MAP_INFO);
-
-               //     $location_plan_file = $this->m_file_gallery->get_file($id,PERMOHONAN_PELAN_LOKASI);
-               //     $this->copy_img_to_acc($location_plan_file,$acc_id,AKAUN_PELAN_LOKASI);
-
-               //     $structure_plan     = $this->m_file_gallery->get_file($id,PERMOHONAN_PELAN_STRUKTUR);
-               //     $this->copy_img_to_acc($structure_plan,$acc_id,AKAUN_PELAN_STRUKTUR);
-
-               //     $app_ssm_file       = $this->m_file_gallery->get_file($id,PERMOHONAN_CARIAN_SSM);
-               //     $this->copy_img_to_acc($app_ssm_file,$acc_id,AKAUN_CARIAN_SSM);
-
-               //     $cost_validation    = $this->m_file_gallery->get_file($id,PERMOHONAN_LAMPIRAN_PENGESAHAN_KOS_BINAAN);
-               //     $this->copy_img_to_acc($cost_validation,$acc_id,AKAUN_LAMPIRAN_PENGESAHAN_KOS_BINAAN);
-               // elseif ($get_details['FORM_TYPE']==3):
-               //     $letter_application = $this->m_file_gallery->get_file($id,PERMOHONAN_SURAT_PERMOHONAN);
-               //     $this->copy_img_to_acc($letter_application,$acc_id,AKAUN_SURAT_PERMOHONAN);
-
-               //     $ic_number_pic      = $this->m_file_gallery->get_file($id,PERMOHONAN_SALINAN_KAD_PENGENALAN);
-               //     $this->copy_img_to_acc($ic_number_pic,$acc_id,AKAUN_SALINAN_KAD_PENGENALAN);
-
-               //     $location_plan      = $this->m_file_gallery->get_file($id,PERMOHONAN_PELAN_LOKASI);
-               //     $this->copy_img_to_acc($location_plan,$acc_id,AKAUN_PELAN_LOKASI);
-
-               //     $photo_location     = $this->m_file_gallery->get_file($id,PERMOHONAN_LAMPIRAN_PERMOHONAN);
-               //     $this->copy_img_to_acc($photo_location,$acc_id,AKAUN_LAMPIRAN_PERMOHONAN);
-
-               //     $structure_plan     = $this->m_file_gallery->get_file($id,PERMOHONAN_LAMPIRAN_SETUJU_TERIMA);
-               //     $this->copy_img_to_acc($structure_plan,$acc_id,AKAUN_LAMPIRAN_SETUJU_TERIMA);
-
-               //     $ssm                = $this->m_file_gallery->get_file($id,PERMOHONAN_CARIAN_SSM);
-               //     $this->copy_img_to_acc($ssm,$acc_id,AKAUN_CARIAN_SSM);
-
-               // elseif ($get_details['FORM_TYPE']==4):
-               //     $ic_number_pic  = $this->m_file_gallery->get_file($id,PERMOHONAN_SALINAN_KAD_PENGENALAN);
-               //     $this->copy_img_to_acc($ic_number_pic,$acc_id,AKAUN_SALINAN_KAD_PENGENALAN);
-               // endif;
-
                 load_library('Ref_number_lib');
                 $ref_number         = strtoupper($this->ref_number_lib->get_ref(REF_NUMBER_TYPE_ACCOUNT));
 
                 $data_update_acc['account_number'] = $ref_number;
                 $update_acc = $this->m_acc_account->update_account($data_update_acc,$acc_id);
-
-               // pre($update_acc);
-
-               // if($data_type['APPLICANT_TYPE']==APPLICANT_TYPE_INDIVIDUAL):
-               //     #update dependent
-               //     $update_dependent['ACC_ID'] = $acc_id;
-               //     $this->m_acc_dependent->update_dependent_by_applicant_id($update_dependent,$id);
-               // endif;
 
                 if($update_acc>0):
                     #update application
@@ -832,7 +704,8 @@ class Account extends CI_Controller
         endif;
     }
 
-    private function copy_img_to_acc($data_copy,$acc_id,$file_type){
+    private function copy_img_to_acc($data_copy,$acc_id,$file_type)
+    {
         if($data_copy):
             $data_insert['FILENAME']    = $data_copy['FILENAME'];
             $data_insert['EXTENSION']   = $data_copy['EXTENSION'];
@@ -841,7 +714,7 @@ class Account extends CI_Controller
             $data_insert['REF_ID']      = $acc_id;
             $data_insert['FILE_TYPE']   = $file_type;
             $data_insert['MODULE_TYPE'] = FILE_MODULE_TYPE_ACCOUNT;
-           // $data_insert['DT_ADDED']    = timenow();
+            // $data_insert['DT_ADDED']    = timenow();
 
             $id = $this->m_file_gallery->insert($data_insert);
 
@@ -856,7 +729,8 @@ class Account extends CI_Controller
         endif;
     }
 
-    function update_acc(){
+    function update_acc()
+    {
         $this->auth->restrict_access($this->curuser,array(5004));
 
         $data['link_1']     = 'Akaun Sewaan';
@@ -874,10 +748,12 @@ class Account extends CI_Controller
             return false;
         endif;
 
+        $account_id = $get_details['ACCOUNT_ID'];
 
-       // if($get_details['STATUS_CREATE_ACCOUNT']>STATUS_CREATE_ACCOUNT_NO):
-       //     return false;
-       // endif;
+        // if($get_details['STATUS_CREATE_ACCOUNT']>STATUS_CREATE_ACCOUNT_NO):
+        //     return false;
+        // endif;
+
         if($get_details['FORM_TYPE']==0):
             $get_details['FORM_TYPE'] = 1;
         endif;
@@ -909,6 +785,8 @@ class Account extends CI_Controller
         elseif ($get_details['FORM_TYPE']==4):
             $data['ic_number_pic']  = $this->m_file_gallery->get_file($id,AKAUN_SALINAN_KAD_PENGENALAN);
         endif;
+
+        $data['support_documents'] = $this->m_file_gallery->get_all_file_list($id,AKAUN_DOKUMEN_TAMBAHAN);
 
         if($get_details['FORM_TYPE']==1):
 
@@ -1006,13 +884,17 @@ class Account extends CI_Controller
         validation_rules('status_acc','<strong>status akaun</strong>','required');
         validation_rules('notice_level','<strong>notice level</strong>','required');
 
-        if(validation_run()==false):
+        if(validation_run()==false)
+        {
+            $this->delete_all_temp_file($account_id);
             templates('/account/v_update_account',$data);
-        else:
+        }
+        else
+        {
             $data_type  = $this->m_a_type->get_a_type_details($data['data_details']['TYPE_ID']);
 
-            if($data_type['APPLICANT_TYPE']==APPLICANT_TYPE_INDIVIDUAL):
-
+            if($data_type['APPLICANT_TYPE']==APPLICANT_TYPE_INDIVIDUAL)
+            {
                 #update applicant
                 $data_update['name']                = input_data('name');
                 $data_update['ic_number']           = str_replace(array('-',' '),'',input_data('ic_number'));
@@ -1040,14 +922,21 @@ class Account extends CI_Controller
                 $data_update['business_experience'] = $data['data_details']['BUSINESS_EXPERIENCE'];
                 $data_update['residence_information'] = $data['data_details']['RESIDENCE_INFORMATION'];
                 $data_update['position']            = $data['data_details']['POSITION'];
-                $data_update['STARTING_OF_SERVICE_DATE'] = $data['data_details']['STARTING_OF_SERVICE_DATE'];
+                if ( input_data('starting_of_service_date') )
+                {
+                    $data_update['STARTING_OF_SERVICE_DATE'] = input_data('starting_of_service_date');
+                }
+                else
+                {
+                    $data_update['STARTING_OF_SERVICE_DATE'] = $data['data_details']['STARTING_OF_SERVICE_DATE'];  
+                }
                 $data_update['PLACE_OF_BIRTH']      = input_data('place_of_birth');
                 $data_update['applicant_type']      = APPLICANT_TYPE_INDIVIDUAL;
 
                 $this->m_acc_user->update_user($data_update,$get_details['USER_ID']);
-
-            elseif ($data_type['APPLICANT_TYPE']==APPLICANT_TYPE_COMPANY):
-
+            }
+            elseif ($data_type['APPLICANT_TYPE']==APPLICANT_TYPE_COMPANY)
+            {
                 #update applicant
                 $data_update['name']                        = input_data('name');
                 $data_update['COMPANY_REGISTRATION_NUMBER'] = strtoupper(input_data('company_registration_number'));
@@ -1063,8 +952,7 @@ class Account extends CI_Controller
                 $data_update['mobile_phone_number']         = input_data('mobile_phone_number');
 
                 $this->m_acc_user->update_user($data_update,$get_details['USER_ID']);
-
-            endif;
+            }
 
             // $data_update_acc['user_id']         = $user_id;
             $data_update_acc['notice_level']             = input_data('notice_level');
@@ -1108,42 +996,62 @@ class Account extends CI_Controller
             $data_update_acc['difference_rental_charge']    = currencyToDouble(input_data('difference_rental_charge'));
             $data_update_acc['difference_rental_charge_type'] = (input_data('difference_rental_charge_type'));
             $data_update_acc['waste_management_bills']      = input_data('waste_management_bills');
-            if(input_data('waste_management_bills')==1):
+            if(input_data('waste_management_bills')==1)
+            {
                 $data_update_acc['waste_management_charge']     = currencyToDouble(input_data('waste_management_charge'));
-            else:
+            }
+            else
+            {
                 $data_update_acc['waste_management_charge']     = 0.00;
-            endif;
+            }
 
             $data_update_acc['freezer_management_bills']     = input_data('freezer_management_bills');
-            if(input_data('freezer_management_bills')==1):
+
+            if(input_data('freezer_management_bills')==1)
+            {
                 $data_update_acc['freezer_management_charge']    = currencyToDouble(input_data('freezer_management_charge'));
-            else:
+            }
+            else
+            {
                 $data_update_acc['freezer_management_charge']    = 0.00;
-            endif;
+            }
+
             // $data_update_acc['lms_charge']                  = currencyToDouble(input_data('lms_charge'));
             $data_update_acc['collateral_rental']           = currencyToDouble(input_data('collateral_rental'));
             $data_update_acc['collateral_water']            = currencyToDouble(input_data('collateral_water'));
             $data_update_acc['agreement_fee']               = currencyToDouble(input_data('agreement_fee'));
             $data_update_acc['bill_type']                   = $get_details['BILL_TYPE'];
             $data_update_acc['status_acc']                  = input_data('status_acc');
-            if(input_data('status_acc')==STATUS_ACCOUNT_ACTIVE):
+            
+            if(input_data('status_acc')==STATUS_ACCOUNT_ACTIVE)
+            {
                 $data_update_acc['status_bill'] = STATUS_BILL_ACTIVE;
-            endif;
+            }
 
-            if($data['data_details']['TYPE_ID']==6):
+            if($data['data_details']['TYPE_ID']==6)
+            {
                 $data_update_acc['billboard_type']          = input_data('billboard_type');
-                if(input_data('billboard_type')==BILLBOARD_TYPE_SUBLESEN):
+                if(input_data('billboard_type')==BILLBOARD_TYPE_SUBLESEN)
+                {
                     $data_update_acc['lms_bills']          = 1;
                     $data_update_acc['LMS_CHARGE']         = currencyToDouble(input_data('amount_lms'));
-                else:
+                }
+                else
+                {
                     $data_update_acc['lms_bills']          = 0;
                     $data_update_acc['LMS_CHARGE']         = 0;
-                endif;
-            endif;
+                }
+            }
 
             $acc_status = $this->m_acc_account->update_account($data_update_acc,$id);
+            $data = [];
 
-            if($acc_status):
+
+            // This function is to copy image from temp folder to account folder
+            $this->copy_img_temp_to_acc($account_id);
+
+            if($acc_status)
+            {
                 $data_audit_trail['log_id']                  = 3002;
                 $data_audit_trail['remark']                  = $this->input->post();
                 $data_audit_trail['status']                  = PROCESS_STATUS_SUCCEED;
@@ -1153,14 +1061,17 @@ class Account extends CI_Controller
 
                 set_notify('notify_msg',TEXT_UPDATE_RECORD);
                 redirect('/account/update_acc/'.uri_segment(3));
-            else:
+            }
+            else
+            {
                 set_notify('notify_msg',TEXT_UPDATE_UNSUCCESSFUL,2);
                 redirect('/account/create_acc/'.uri_segment(3));
-            endif;
-        endif;
+            }
+        }
     }
 
-    function account_list(){
+    function account_list()
+    {
         $this->auth->restrict_access($this->curuser,array(5003));
 
         $data['link_1']     = 'Akaun sewaan';
@@ -1549,12 +1460,12 @@ class Account extends CI_Controller
                                 mkdir("file_upload/kuarters/".$folder_ext."/", 0777, true);
                             endif;
 
-                            $config['upload_path'] 	    = "./file_upload/kuarters/".$folder_ext."/" ;
+                            $config['upload_path']      = "./file_upload/kuarters/".$folder_ext."/" ;
                             $config['allowed_types']    = '*';
                             $config['max_size']         = '15120';
                             $config['max_width']        = '4000';
                             $config['max_height']       = '4000';
-                            $config['encrypt_name']	    = false;
+                            $config['encrypt_name']     = false;
                             $config['overwrite']        = false;
                            // $config['file_name']        = $_FILES['upload_name_'.$i]['name'].'_'.date('YmdHis');
                            // $filename = $data_file_ext['name'][$i];
@@ -1636,12 +1547,12 @@ class Account extends CI_Controller
                                 mkdir("file_upload/kuarters/".$folder_ext."/", 0777, true);
                             endif;
 
-                            $config['upload_path'] 	    = "./file_upload/kuarters/".$folder_ext."/" ;
+                            $config['upload_path']      = "./file_upload/kuarters/".$folder_ext."/" ;
                             $config['allowed_types']    = '*';
                             $config['max_size']         = '15120';
                             $config['max_width']        = '4000';
                             $config['max_height']       = '4000';
-                            $config['encrypt_name']	    = false;
+                            $config['encrypt_name']     = false;
                             $config['overwrite']        = false;
                            // $config['file_name']        = $_FILES['upload_name_'.$i]['name'].'_'.date('YmdHis');
                            // $filename = $data_file_ext['name'][$i];
@@ -1694,10 +1605,10 @@ class Account extends CI_Controller
                 set_notify('user',TEXT_DELETE_UNSUCCESSFUL,2);
                 echo TEXT_DELETE_UNSUCCESSFUL;
             endif;
-//            else:
-//                set_notify('user','Data tidak boleh dipadam kerana terdapat pengguna menggunakan kumpulan pengguna ini',2);
-//            endif;
-//            echo 1;
+            // else:
+            //    set_notify('user','Data tidak boleh dipadam kerana terdapat pengguna menggunakan kumpulan pengguna ini',2);
+            // endif;
+            // echo 1;
         endif;
     }
 
@@ -1721,4 +1632,186 @@ class Account extends CI_Controller
            // echo 1;
         endif;
     }
+
+    function upload_dokumen_tandatangan()
+    {
+        $account_id = $_POST["account_id"];
+        $fileName = $_FILES['fileUploaded']['name'];
+        // $fileName = str_replace(' ', '_', $fileName);
+        $fileType = $_FILES['fileUploaded']['type'];
+        $fileTmpName = $_FILES['fileUploaded']['tmp_name'];
+        $fileError = $_FILES['fileUploaded']['error'];
+        $fileSize = $_FILES['fileUploaded']['size'];
+
+        $_FILES['file']['name'] = $fileName;
+        $_FILES['file']['type'] = $fileType;
+        $_FILES['file']['tmp_name'] = $fileTmpName;
+        $_FILES['file']['error'] = $fileError;
+        $_FILES['file']['size'] = $fileSize;
+
+
+        // ############ FOR FILE UPLOAD ###############
+        $name= $fileName;
+        $tmp_name= $fileTmpName;
+        $position= strrpos($name, ".");
+        $fileExtension= substr($name, $position + 1);
+        $fileExtension= strtolower($fileExtension);
+
+        if (isset($name))
+        {
+            $path = 'file_upload/temp/'.$account_id;
+            // echo 'dir => '.$path;
+            // echo "status dir is :-> ";var_dump(is_dir($path));
+            if (!is_dir($path))
+            {
+                mkdir($path, 0777, true);
+                $newPath = $path;
+            }
+            else
+            {
+                $newPath = $path;
+            }
+
+            if (move_uploaded_file($tmp_name, $path."/".$name))
+            {
+                $data_insert['FILE_NAME']   = $fileName;
+                $data_insert['SESSION_ID']  = $account_id;
+                $data_insert['INPUT_NAME']  = "Dokumen tambahan (FILE_TYPE_ID = 32)";
+                $data_insert['IMAGE_TYPE']  = "32";
+                $data_insert['FILE_TYPE']   = $fileExtension;
+                // $data_insert['FILE_TYPE']   = "32"; // 32 is the FILE_TYPE_ID for Dokumen Tandatangan dan lampiran proses hasil.
+                $data_insert['MODULE_TYPE'] = FILE_MODULE_TYPE_ACCOUNT;
+
+                $id = $this->m_file_upload_temp->insert_file_upload($data_insert);
+
+                $fileUnit = "Bytes";
+                $fileSizeConvert = 0;
+                if ( $fileSize > 0 && $fileSize <= 1024 )
+                {
+                    $fileSizeConvert = round($fileSize);
+                    $fileUnit = "Bytes";
+                }
+                else if ($fileSize > 1024 && $fileSize <= (1024*1024) )
+                {
+                    $fileSizeConvert = round($fileSize / 1024);
+                    $fileUnit = "KB";
+                }
+                else if ($fileSize > (1024*1024) && $fileSize <= (1024*1024*1024) )
+                {
+                    $fileSizeConvert = round($fileSize / 1024 / 1024);
+                    $fileUnit = "MB";
+                }
+                else if ($fileSize > (1024*1024*1024) && $fileSize <= (1024*1024*1024*1024) )
+                {
+                    $fileSizeConvert = round($fileSize / 1024 / 1024 / 1024);
+                    $fileUnit = "GB";
+                }
+
+                $status = array( 
+                                "status" => true, 
+                                "message" => $fileName." (".$fileSizeConvert." ".$fileUnit.")",
+                                "detail" => $id
+                            );
+                // echo $fileName." (".$fileSize." Bytes)";
+            }
+        }
+        else
+        {
+            $status = array ( 
+                                "status" => false, 
+                                "message" => "",
+                                "detail" => "Unknown error. Please refer system admin"
+                            );
+        }
+
+        echo json_encode($status);
+        // ############ FOR FILE UPLOAD ###############
+    }
+
+    function delete_dokumen_temp()
+    {
+        $file_temp_id = $_POST["temp_id"];
+        $temp_file = $this->m_file_upload_temp->get_file_by_id($file_temp_id);
+        $delete = $this->m_file_upload_temp->delete_by_id($file_temp_id);
+        if($delete)
+        {
+
+            $status = array( 
+                                "status" => true, 
+                                "message" => "DELETED",
+                            );
+        }
+        else
+        {
+            $status = array( 
+                                "status" => false, 
+                                "message" => "FAIL TO DELETE",
+                                "detail" => $delete,
+                            );
+        }
+        $resetSequnce = $this->m_file_upload_temp->reset_sequence();
+
+        // Delete the physical file
+        unlink( "file_upload/temp/".$temp_file["SESSION_ID"]."/".$temp_file["FILE_NAME"] );
+        echo json_encode($status);
+    }
+
+    function delete_all_temp_file($account_id)
+    {
+        $session_id = $account_id;
+        $temp_file = $this->m_file_upload_temp->get_file_by_session_id($account_id);
+        $delete = $this->m_file_upload_temp->delete_by_session($session_id);
+        $resetSequnce = $this->m_file_upload_temp->reset_sequence();
+
+
+        // echo "<pre>";
+        // var_dump($temp_file);
+
+        // Delete the physical file
+        if (count($temp_file) > 0)
+        {
+            foreach ($temp_file as $file) 
+            {
+                # code...
+                unlink( "file_upload/temp/".$file["SESSION_ID"]."/".$file["FILE_NAME"] );
+            }
+        }
+
+        // die();
+
+        return true;
+    }
+
+    private function copy_img_temp_to_acc($account_id)
+    {
+        $listImgTemp = $this->m_file_upload_temp->get_file_by_session_id($account_id);
+
+        $totalImageTemp = count($listImgTemp);
+        if($totalImageTemp > 0)
+        {
+            foreach ($listImgTemp as $imgTemp) 
+            {
+                # code...
+                $data_insert['FILENAME']    = $imgTemp['FILE_NAME'];
+                $data_insert['EXTENSION']   = $imgTemp['FILE_TYPE'];
+                $data_insert['PATH']        = "file_upload/Account/".$account_id."/";
+                $data_insert['REF_ID']      = $account_id;
+                $data_insert['FILE_TYPE']   = $imgTemp['IMAGE_TYPE'];
+                $data_insert['MODULE_TYPE'] = FILE_MODULE_TYPE_ACCOUNT;
+
+                $id = $this->m_file_gallery->insert($data_insert);
+
+                if(!empty($id))
+                {
+                    if (!file_exists(FILE_ACCOUNT.$account_id.'/'))
+                    {
+                        mkdir(FILE_ACCOUNT.$account_id.'/', 0777, true);
+                    }
+
+                    copy("file_upload/temp/".$account_id."/".$imgTemp['FILE_NAME'], FILE_ACCOUNT.$account_id."/".$imgTemp['FILE_NAME']);
+                }
+            }
+        }
+    }
+
 }

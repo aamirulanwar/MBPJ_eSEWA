@@ -34,6 +34,17 @@ class M_file_gallery extends CI_Model
             return $sql->row_array();
         endif;
     }
+
+    function get_all_file_list($ref_id,$file_type){
+        db_select('*');
+        db_from('file_gallery');
+        db_where('ref_id',$ref_id);
+        db_where('file_type',$file_type);
+        $sql = db_get();
+        if($sql):
+            return $sql->result_array();
+        endif;
+    }
 //
 //    function get_file_by_session_id($session_id){
 //        db_select('*');
