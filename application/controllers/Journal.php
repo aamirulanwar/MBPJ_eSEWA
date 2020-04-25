@@ -199,15 +199,22 @@ class Journal extends CI_Controller
             //echo "<script>console.log('".json_encode($_POST['mct_trcodenew'])."');</script>"; //var_dump($_POST['mct_trcodenew']);
             // die();
 
-            $bill_number = $this->m_journal->generate_running_billnumber();
+            if ( $bill_id == -999 && input_data("bill_number") != "" || input_data("bill_number") != NULL)
+            {
+                $bill_number = input_data("bill_number");
+            }
+            else
+            {
+                $bill_number = $this->m_journal->generate_running_billnumber();
+            }
 
             foreach ($_POST['journal_code'] as $i => $v) 
             {
                 $this->m_journal->insert_journal_temp([
                     'created_by' => $this->curuser["USER_ID"],
                     'bill_number' => $bill_number,
-                    'bill_month' => date('m'),
-                    'bill_year' => date('Y'),
+                    'bill_month' => input_data('journal_month'),
+                    'bill_year' => input_data('journal_year'),
                     'journal_id' => $journal_id[$i],
                     'account_id' => input_data('account_id'),
                     'amount' => $amount[$i],
