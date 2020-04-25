@@ -3,7 +3,7 @@
 notify_msg('notify_msg');
 checking_validation(validation_errors());
 ?>
-<form action="/journal/generate_current_journal/<?php echo uri_segment(3)?>" method="post" class="form-horizontal">
+<form action="/journal/generate_current_journal/<?php echo uri_segment(3)?>/<?php echo uri_segment(4)?>" method="post" class="form-horizontal">
     <input type="hidden" name="account_id" value="<?=$account['ACCOUNT_ID']?>">
     <div class="card card-accent-info">
         <div class="card-header">
@@ -84,7 +84,16 @@ checking_validation(validation_errors());
                     <div class="form-group row">
                         <label class="col-sm-4 col-form-label"><?php echo $no?> </label>
                         <div class="col-sm-2">
-                            <p class="form-control-plaintext"><?php echo ($bill_master['BILL_NUMBER'])?></p>
+                            <?php
+                                if ( $bill_master['BILL_NUMBER'] == "NEW_RESIT_JOURNAL_R02")
+                                {
+                                    echo '<p class="form-control-plaintext"><input class="form-control" style="width:310px" type="text" id="bill_number" value="" placeholder="Sila masukkan no resit bagi transaksi bulan ini"</p>';
+                                }
+                                else
+                                {
+                                    echo '<p class="form-control-plaintext">'.$bill_master['BILL_NUMBER'].'</p>';
+                                }
+                            ?>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -92,6 +101,7 @@ checking_validation(validation_errors());
                         <div class="col-sm-2">
                             <p class="form-control-plaintext"><?php echo (date_display($bill_master['DT_ADDED']))?></p>
                         </div>
+                        <input type="hidden" id="b_master_bill_category" name="b_master_bill_category" value="<?=$bill_master['BILL_CATEGORY']?>">
                     </div>
                 </div>
             </div>
@@ -122,16 +132,9 @@ checking_validation(validation_errors());
 
             <div class="form-group row">
                 <div class="col-sm-12">
-<!--                    <button type="button" onclick="add_transaction_code('B')" class="btn btn-primary pull-left btn-submit">Tambah kod transaksi bill</button>-->
+                    <!-- <button type="button" onclick="add_transaction_code('B')" class="btn btn-primary pull-left btn-submit">Tambah kod transaksi bill</button> -->
                     <button style="margin-left: 20px;" type="button" onclick="chooseJournalCode()" class="btn btn-warning pull-left btn-submit">Tambah kod transaksi jurnal</button>
                 </div>
-                <?php if ($bill_master['BILL_CATEGORY']=='R'): ?>
-                    
-                <div class="col-sm-3">
-<!--                    <button type="button" onclick="add_transaction_code('B')" class="btn btn-primary pull-left btn-submit">Tambah kod transaksi bill</button>-->
-                    <button style="margin-left: 20px;" type="button" onclick="addNewReceipt()" class="btn btn-info pull-left btn-submit">Tambah resit jurnal</button>
-                </div>
-                <?php endif ?>
             </div>
         </div>
         <div class="card-footer">
@@ -154,7 +157,7 @@ checking_validation(validation_errors());
             <div class="modal-body">
                 <center>
                     <div class="form-group">
-                        <input type="hidden" id="default_bill_category" value="<?=$bill_item[0]['BILL_CATEGORY']?>">
+                        <input type="hidden" id="default_bill_category" value="<?=( $bill_master['BILL_NUMBER'] == "NEW_RESIT_JOURNAL_R02") ? 'R' : $bill_item[0]['BILL_CATEGORY']?>">
                         <label>Sila pilih kod transaksi</label>
                         <select name="choose_transaction_code" id="choose_transaction_code" class="form-control">
                             <?php

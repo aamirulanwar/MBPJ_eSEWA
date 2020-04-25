@@ -14,7 +14,7 @@ checking_validation(validation_errors());
             <div class="row">
                 <div class="form-group col-4">
                     <label class="col-form-label">No. akaun</label>
-                    <input type="text" class="form-control" value="<?php echo set_value('account_number')?>" name="account_number" placeholder="No. akaun">
+                    <input type="text" class="form-control" value="<?php echo set_value('account_number')?>" id="account_number" name="account_number" placeholder="No. akaun">
                 </div>
                 <div class="form-group col-4">
                     <label class="col-form-label">No. bill/ No. resit</label>
@@ -52,11 +52,6 @@ checking_validation(validation_errors());
         <div class="pull-right">
             <button class="btn btn-success" id="add-new-receipt">Tambah Resit</button>
         </div>
-        <!--        --><?php //if($this->auth->access_view($this->curuser,array(2018))):?>
-        <!--        <div class="pull-right">-->
-        <!--            <a href="/asset/add_asset" class="add-new"><span style="color: green" class="glyphicon glyphicon-plus-sign"></span> Tambah</a>-->
-        <!--        </div>-->
-        <!--        --><?php //endif;?>
     </div>
     <div class="card-body">
         <div class="table-responsive">
@@ -65,7 +60,7 @@ checking_validation(validation_errors());
                     <th>No.</th>
                     <th>Tarikh</th>
                     <th>No. akaun</th>
-<!--                    <th>No. bill / resit</th>-->
+                    <!-- <th>No. bill / resit</th> -->
                     <th>Bulan / Tahun</th>
                     <th>Jenis</th>
                     <th class="text-center">Tindakan</th>
@@ -83,9 +78,6 @@ checking_validation(validation_errors());
                             <td>
                                 <strong><?php echo $row['ACCOUNT_NUMBER']?></strong>
                             </td>
-<!--                            <td>-->
-<!--                                <strong>--><?php //echo $row['BILL_NUMBER']?><!--</strong><br>-->
-<!--                            </td>-->
                             <td>
                                 <?php
                                 echo $row['BILL_MONTH'].'/'.$row['BILL_YEAR']
@@ -103,10 +95,7 @@ checking_validation(validation_errors());
                                 ?>
                             </td>
                             <td class="text-center">
-                                <!--                        --><?php //if($this->auth->access_view($this->curuser,array(2019))):?>
                                 <a class="btn btn-block btn-primary btn-display" href="/journal/generate_current_journal/<?php echo urlEncrypt($row['BILL_ID'])?>"><span class="glyphicon glyphicon-edit"></span> Pelarasan </a>
-
-                                <!--                        --><?php //endif;?>
                             </td>
                         </tr>
                     <?php
@@ -123,3 +112,80 @@ checking_validation(validation_errors());
         </div>
     </div>
 </div>
+
+<!-- Add datepicker library for journal only -->
+<link href="/assets/date_picker/css/gijgo.min.css" rel="stylesheet">
+<script src="/assets/date_picker/js/gijgo.min.js"></script>
+
+<!-- Add momentjs library -->
+<script src="/assets/moment.min.js"></script>
+
+<script type="text/javascript">
+    
+    $(document).ready(function($) 
+    {
+        $('#add-new-receipt').click(function(event) 
+        {
+            console.log("clicked");
+            var account_no_search = $("#account_number").val();
+
+            var html =  "<tr>" + 
+                        "   <form method='POST' action='/journal/customAdd'>" + 
+                        "       <td>0</td>" + 
+                        "       <td><input type='text' class='form-control datepicker' id='tarikh' name='tarikh' required></td>" +
+                        "       <td><input type='text' class='form-control' id='no_akaun' name='no_akaun' required></td>" +
+                        "       <td><input type='text' class='form-control' id='bulantahun' name='bulantahun' required></td>" +
+                        "       <td>Resit</td>" +
+                        "       <td class='text-center'>" +
+                        // "           <a class='btn btn-block btn-primary btn-display' href='/journal/generate_current_journal/LTk5OQ%3D%3D' >" +
+                        "           <a class='btn btn-block btn-primary btn-display' href='javascript:;' onclick='addNewReceipt()' >" +
+                        "               <span class='glyphicon glyphicon-edit'></span> Pelarasan" +
+                        "           </a>" +
+                        "       </td>" +
+                        "   </form>" +
+                        "</tr>" ;
+
+            $("#senarai-pelarasan tr:first").after(html);
+            $("#no_akaun").val(account_no_search);
+            $('.datepicker').datepicker({ dateFormat: 'dd M yy' });
+        });        
+
+    });
+
+    $(document).on('change', '#tarikh', function() 
+    {
+        // Does some stuff and logs the event to the console
+        // Check input( $( this ).val() ) for validity here
+        moment.locale('en');
+        var input_tarikh = $( this ).val();
+        var bulantahun = moment(input_tarikh, "DD MMM YYYY");
+        $("#bulantahun").val( bulantahun.format("M/YYYY") );
+
+        // console.log( input_tarikh );
+        // console.log(moment().format("DD MMM YYYY"));
+        // console.log("bulantahun => ");
+        // console.log(bulantahun.format("M/YYYY"));
+    });
+
+    function addNewReceipt() 
+    {
+        // body...
+        var account_no = $("#no_akaun").val();
+        var tarikh_resit = $("#tarikh").val();
+        var bulantahun_resit = $("#bulantahun").val();
+
+        var formData = account_no + ":" + tarikh_resit + ":" + bulantahun_resit;
+
+        $.ajax({
+            url: '/journal/encrypt/',
+            type: 'POST',
+            data: {"formData" : formData},
+            success: function(data)
+            {
+                console.log(data);
+                window.location.href = "/journal/generate_current_journal/LTk5OQ%3D%3D/" + data;
+            }
+        });
+        
+    }
+</script>

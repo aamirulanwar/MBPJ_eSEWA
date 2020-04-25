@@ -192,6 +192,26 @@ class M_acc_account extends CI_Model
         endif;
     }
 
+    function get_account_details_by_accountNo($account_number){
+        db_select('a.*,acc.*,t.*,c.*,r.*,asset.asset_name,asset.asset_add');
+        db_select('a.bill_type as bill_type');
+        db_select("to_char(a.dt_added, 'yyyy-mm-dd hh24:mi:ss') as dt_create_acc",false);
+        db_select("to_char(acc.date_of_birth, 'dd-mm-yyyy') as date_of_birth",false);
+        db_select('acc.address as user_address');
+        db_select('acc.department_id as department_id');
+        db_join('acc_user acc','acc.user_id = a.user_id');
+        db_join('a_type t','t.type_id = a.type_id');
+        db_join('a_category c','c.category_id = a.category_id');
+        db_join('a_asset asset','a.asset_id=asset.asset_id','left');
+        db_join('a_rental_use r','r.rental_use_id = a.rental_use_id','left');
+        db_from('acc_account a');
+        db_where('ACCOUNT_NUMBER',$account_number);
+        $sql = db_get();
+        if($sql):
+            return $sql->row_array();
+        endif;
+    }
+
     function count_account_outstanding($data_search=array()){
         db_select('a.*,acc.*,t.*,c.*,r.*');
         db_join('acc_user acc','acc.user_id = a.user_id');

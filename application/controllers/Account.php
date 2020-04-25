@@ -52,9 +52,30 @@ class Account extends CI_Controller
             'upload_dokumen_tandatangan',
             'delete_dokumen_temp',
             'delete_all_temp_file',
+            'decrypt',
+            'encrypt'
         );
         #set pages data
         (in_array($method,$array)) ? $this->$method() : $this->create_acc();
+    }
+
+    function encrypt($string=NULL)
+    {
+        if (empty($string) || $string == NULL)
+        {
+            $string = uri_segment(3);            
+        }
+        $key = 'abg_kacak';
+        echo urlencode(base64_encode($string));
+    }
+
+    function decrypt($string=NULL)
+    {
+        if (empty($string) || $string == NULL)
+        {
+            $string = uri_segment(3);            
+        }
+        echo base64_decode(urldecode($string));
     }
 
     function create_acc()
