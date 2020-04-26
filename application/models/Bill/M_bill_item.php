@@ -506,12 +506,16 @@ class M_bill_item extends CI_Model
         db_select('i.TR_CODE');
         db_select('i.ITEM_DESC');
         db_select('i.ACCOUNT_ID');
+        db_select('a.ACCOUNT_NUMBER');
         db_select('i.BILL_CATEGORY');
+        db_select('m.BILL_CATEGORY as master_bill_category');
         db_select('i.AMOUNT');
         db_select('m.BILL_NUMBER');
         db_select("to_char(m.DT_ADDED,'dd/mm/yyyy') as TKH_BIL");
         db_from('b_item i');
         db_join('b_master m','m.bill_id = i.bill_id');
+        db_join('acc_account a','a.ACCOUNT_ID = m.ACCOUNT_ID');
+
         if(isset($data_search['date_start']) && having_value($data_search['date_start'])):
             db_where("i.dt_added >= to_date('".date('d-M-y',strtotime($data_search['date_start']))."')");
         endif;

@@ -1,34 +1,23 @@
 <?php
-if(uri_segment(3)=='post'):
-    echo '<form id="my_form" method="post" action="/report/record_transaction/'.uri_segment(4).'/'.uri_segment(5).'">';
-else:
-    echo '<form id="my_form" method="post" action="/report/record_transaction/'.uri_segment(3).'/'.uri_segment(4).'">';
-endif;
-?>
-<script type="text/javascript">
-    function closePopup()
-    {
-        $('#loadMe').modal('hide');
-        console.log("enter");
-    }
-    function openPopup()
-    {
-        $('#loadMe').modal('show');
-        console.log("test");
-    }
-</script>
+    if(uri_segment(3)=='post'):
+        echo '<form id="my_form" method="post" action="/report/record_transaction/'.uri_segment(4).'/'.uri_segment(5).'">';
+    else:
+        echo '<form id="my_form" method="post" action="/report/record_transaction/'.uri_segment(3).'/'.uri_segment(4).'">';
+    endif;
+?>    
     <!-- Modal -->
     <div class="modal fade" id="loadMe" tabindex="-1" role="dialog" data-toggle="modal" aria-labelledby="loadMeLabel" >
       <div class="modal-dialog modal-sm">
         <div class="modal-content">
-          <div class="modal-body text-center">
-            <div style="align:center">
-                <img class="navbar-brand-full" src="/assets/images/waiting.gif" width="120" alt="MPKj">
+            <div class="modal-body text-center">
+                <div style="align:center">
+                    <img class="navbar-brand-full" src="/assets/images/waiting.gif" width="120" alt="MPKj">
+                </div>
+                <div clas="loader-txt">
+                  <p>Laporan Rekod Transaksi Sedang Dijana<br><br><small>Sila tunggu sementara rekod sedang dijana</small></p>
+                </div>
             </div>
-            <div clas="loader-txt">
-              <p>Laporan Rekod Transaksi Sedang Dijana<br><br><small>Sila tunggu sementara rekod sedang dijana</small></p>
-            </div>
-          </div>
+            <a href="#" id="ClosePopup" style="display:none" data-dismiss="modal"> </a>
         </div>
       </div>
     </div>
@@ -116,10 +105,22 @@ endif;
             </div>
         </div>
     </div>
+
 </form>
+<script type="text/javascript">
+    function closePopup()
+    {
+        $('#loadMe').modal('hide');
+        // console.log("enter");
+    }
+    function openPopup()
+    {
+        $('#loadMe').modal('show');
+        // console.log("test");
+    }
+</script>
 <div class="card card-accent-info">
     <div id="reportContainer" class="card-body" >
-        <script>openPopup();</script>
         <!-- START development here -->
         <?php 
             $filterStartDate    = $data_search["date_start"];
@@ -128,7 +129,7 @@ endif;
             $endYear            = DateTime::createFromFormat('d M Y', $filterEndDate)->format('Y');
             $nextYear           = $endYear;
 
-            echo "<script>openPopup();</script>";
+            // echo "<script>openPopup();</script>";
             
             while ($nextYear >= $startYear)
             {
@@ -137,14 +138,14 @@ endif;
                 echo '  <table id="tablePenyataRekod'.$nextYear.'" class="table test1" style="width:100%">';
                 echo '      <thead>';
                 echo '          <tr>';
-                echo '              <th>No. Bil/ No. Resit</th>';
-                echo '              <th>Tarikh Bil</th>';
-                echo '              <th>Kod Transaksi</th>';
-                echo '              <th>Maklumat Akaun</th>';
-                echo '              <th>Jenis</th>';
-                echo '              <th>Amaun Debit (RM)</th>';
-                echo '              <th>Amaun Kredit (RM)</th>';
-                echo '              <th>Jumlah Amaun (RM)</th>';
+                echo '              <th align="center">No. Bil/ No. Resit</th>';
+                echo '              <th align="center">Tarikh Bil</th>';
+                echo '              <th align="center">Kod Transaksi</th>';
+                echo '              <th align="center">Maklumat Akaun</th>';
+                echo '              <th align="center">Jenis</th>';
+                echo '              <th align="center">Amaun Debit (RM)</th>';
+                echo '              <th align="center">Amaun Kredit (RM)</th>';
+                echo '              <th align="center">Jumlah Amaun (RM)</th>';
                 echo '          </tr>';
                 echo '      </thead>';
                 echo '      <tbody>';
@@ -153,22 +154,52 @@ endif;
                 {
                     foreach ($data_report["$nextYear"] as $row)
                     {
-                        $totalAmount = ($row["BILL_CATEGORY"] == 'B' ? ($totalAmount + $row["AMOUNT"]) : ($totalAmount - $row["AMOUNT"]));
+                        $debitAmount = 0;
+                        $creditAmount = 0;
+
+                        if ( $row["MASTER_BILL_CATEGORY"] == 'B' && $row["BILL_CATEGORY"] == 'B' )
+                        {
+                            $totalAmount = $totalAmount + $row["AMOUNT"];
+                            $debitAmount = $row["AMOUNT"];
+                            $creditAmount = NULL;
+                        }
+                        else if ( $row["MASTER_BILL_CATEGORY"] == 'B' && $row["BILL_CATEGORY"] == 'J' )
+                        {
+                            $totalAmount = $totalAmount + $row["AMOUNT"];
+                            $debitAmount = $row["AMOUNT"];
+                            $creditAmount = NULL;
+                        }
+                        else if ( $row["MASTER_BILL_CATEGORY"] == 'R' && $row["BILL_CATEGORY"] == 'R' )
+                        {
+                            $totalAmount = $totalAmount - $row["AMOUNT"];
+                            $debitAmount = NULL;
+                            $creditAmount = $row["AMOUNT"];
+                        }
+                        else if ( $row["MASTER_BILL_CATEGORY"] == 'R' && $row["BILL_CATEGORY"] == 'J' )
+                        {
+                            $totalAmount = $totalAmount - $row["AMOUNT"];
+                            $debitAmount = NULL;
+                            $creditAmount = $row["AMOUNT"];
+                        }
+
+                        // $totalAmount = ($row["BILL_CATEGORY"] == 'B' ? ($totalAmount + $row["AMOUNT"]) : ($totalAmount - $row["AMOUNT"]));
+
                         echo '      <tr>';
-                        echo '          <td>'.$row["BILL_NUMBER"].'</td>';
-                        echo '          <td>'.$row["TKH_BIL"].'</td>';
+                        echo '          <td align="center">'.$row["BILL_NUMBER"].'</td>';
+                        echo '          <td align="center">'.$row["TKH_BIL"].'</td>';
                         echo '          <td>'.$row["TR_CODE"].'-'.$row["ITEM_DESC"].'</td>';
-                        echo '          <td>'.$row["ACCOUNT_ID"].'</td>';
-                        echo '          <td>'.$row["BILL_CATEGORY"].'</td>';
-                        echo '          <td>'.($row["BILL_CATEGORY"] == 'B' ? $row["AMOUNT"] : '').'</td>';
-                        echo '          <td>'.($row["BILL_CATEGORY"] == 'R' ? $row["AMOUNT"] : '').'</td>';
-                        echo '          <td>'.$totalAmount.'</td>';
+                        echo '          <td align="center">'.$row["ACCOUNT_NUMBER"].'</td>';
+                        echo '          <td align="center">'.$row["BILL_CATEGORY"].'</td>';
+                        echo '          <td align="center">'.$debitAmount.'</td>';
+                        echo '          <td align="center">'.$creditAmount.'</td>';
+                        echo '          <td align="center">'.$totalAmount.'</td>';
                         echo '      </tr>';
                     }
-                }                
+                }
                 echo '      </tbody>';                
                 echo '  </table>';
                 echo '</div>';
+                echo '</br>';
                 $nextYear = $nextYear - 1;
             }
             
@@ -185,7 +216,7 @@ endif;
                 $account_details['ADDRESS']="";
             }
 
-            echo "<script>closePopup();</script>";
+            // echo "<script>closePopup();</script>";
         ?>        
         <input type="hidden" id="account_number" value="<?=$account_details['ACCOUNT_NUMBER'];?>" />
         <input type="hidden" id="account_name" value="<?=$account_details['NAME'];?>" />
@@ -203,7 +234,7 @@ endif;
     }
 </style>
 
-<script>
+<script async >
     $( document ).ready(function() {
         <?php
             if(uri_segment(3)=='post'):
@@ -219,7 +250,7 @@ endif;
         }
     });
 
-    $(document).ready(function() 
+    $(document).ready(function()
     {
         $('.test1').DataTable( {
             "scrollY": "200px",
@@ -230,6 +261,17 @@ endif;
             "searching": false,
             "info": false,
             "dom": 'Bfrtip',
+            "initComplete": function () 
+            {
+                console.log("load finish");
+                closePopup();
+                $("#modal .close").click();
+                $("#ClosePopup").trigger("click");
+            },
+            "drawCallback": function( settings ) {
+                console.log("drawCallback finish");
+                openPopup();
+            },
             "buttons": [
             {
                 extend: 'print',
@@ -305,8 +347,7 @@ endif;
          
                     $.fn.dataTable.ext.buttons.print.action(e, dt, button, config);
                 }
-            }
-        ]
+            }]
         } );
         // document.title = backupTitle;
     });
