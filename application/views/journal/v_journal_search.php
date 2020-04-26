@@ -132,9 +132,18 @@ checking_validation(validation_errors());
             var html =  "<tr>" + 
                         "   <form method='POST' action='/journal/customAdd'>" + 
                         "       <td>0</td>" + 
-                        "       <td><input type='text' class='form-control datepicker' id='tarikh' name='tarikh' required></td>" +
-                        "       <td><input type='text' class='form-control' id='no_akaun' name='no_akaun' required></td>" +
-                        "       <td><input type='text' class='form-control' id='bulantahun' name='bulantahun' required></td>" +
+                        "       <td>" +
+                        "           <input type='text' class='form-control datepicker' id='tarikh' name='tarikh' required>" +
+                        "           <p id='tkh_status' class='valError'></p>" +
+                        "       </td>" +
+                        "       <td>" +
+                        "           <input type='text' class='form-control' id='no_akaun' name='no_akaun' required>" +
+                        "           <p id='acc_status' class='valError'></p>" +
+                        "       </td>" +
+                        "       <td>"+
+                        "           <input type='text' class='form-control' id='bulantahun' name='bulantahun' required>" +
+                        "           <p id='bulanresit_status' class='valError'></p>" +
+                        "       </td>" +
                         "       <td>Resit</td>" +
                         "       <td class='text-center'>" +
                         // "           <a class='btn btn-block btn-primary btn-display' href='/journal/generate_current_journal/LTk5OQ%3D%3D' >" +
@@ -161,31 +170,100 @@ checking_validation(validation_errors());
         var bulantahun = moment(input_tarikh, "DD MMM YYYY");
         $("#bulantahun").val( bulantahun.format("M/YYYY") );
 
-        // console.log( input_tarikh );
-        // console.log(moment().format("DD MMM YYYY"));
-        // console.log("bulantahun => ");
-        // console.log(bulantahun.format("M/YYYY"));
     });
 
     function addNewReceipt() 
     {
         // body...
-        var account_no = $("#no_akaun").val();
-        var tarikh_resit = $("#tarikh").val();
-        var bulantahun_resit = $("#bulantahun").val();
+        var acc_status              = false;
+        var tkh_status              = false;
+        var bulanresit_status       = false;
+
+        var account_no              = $("#no_akaun").val();
+        var tarikh_resit            = $("#tarikh").val();
+        var tarikh_resit_converted  = moment(tarikh_resit, "DD MMM YYYY").format("DD/MM/YYYY");
+        var bulantahun_resit        = $("#bulantahun").val();
 
         var formData = account_no + ":" + tarikh_resit + ":" + bulantahun_resit;
 
         $.ajax({
-            url: '/journal/encrypt/',
+            url: '/journal/checkDataValidity/',
             type: 'POST',
-            data: {"formData" : formData},
+            data: {
+                    "account_no" : account_no,
+                    "tarikh_resit" : tarikh_resit_converted,
+                    "bulantahun_resit" : bulantahun_resit,
+            },
             success: function(data)
             {
+                data = JSON.parse(data);
                 console.log(data);
-                window.location.href = "/journal/generate_current_journal/LTk5OQ%3D%3D/" + data;
+                console.log(data["acc_status"]);
+                console.log(data["tkh_status"]);
+                console.log(data["bulantahun_status"]);
+
+                if ( data["acc_status"]["status"] == false )
+                {
+                    $("#acc_status").html(" **No akaun tidak wujud");                    
+                }
+                else if ( data["acc_status"]["status"] == true )
+                {
+                    $("#acc_status").html("");
+                    acc_status = true;
+                }
+
+                if ( data["tkh_status"]["status"] == false )
+                {                  
+                    $("#tkh_status").html(" **Tarikh tidak sah");
+                }
+                else if ( data["tkh_status"]["status"] == true )
+                {                  
+                    $("#tkh_status").html("");
+                    tkh_status = true;
+                }
+
+                var bulan_status = data["bulantahun_status"]["bulan_status"];
+                var tahun_status = data["bulantahun_status"]["tahun_status"];
+
+                if ( bulan_status["status"] == false && tahun_status["status"] == false )
+                {
+                    $("#bulanresit_status").html(" **Nilai bulan dan tahun tidak sah.");
+                }
+                else if ( bulan_status["status"] == false && tahun_status["status"] == true )
+                {
+                    $("#bulanresit_status").html(" **Nilai bulan tidak sah.");
+                }
+                else if ( bulan_status["status"] == true && tahun_status["status"] == false )
+                {
+                    $("#bulanresit_status").html(" **Nilai tahun tidak sah.");
+                }
+                else if ( bulan_status["status"] == true && tahun_status["status"] == true )
+                {
+                    $("#bulanresit_status").html("");
+                    bulanresit_status = true;
+                }
+
+                console.log(acc_status);
+                console.log(tkh_status);
+                console.log(bulanresit_status);
+                
+                if (acc_status == true && tkh_status == true && bulanresit_status == true) 
+                {
+                    $.ajax({
+                        url: '/journal/encrypt/',
+                        type: 'POST',
+                        data: {"formData" : formData},
+                        success: function(data)
+                        {
+                            console.log(data);
+                            window.location.href = "/journal/generate_current_journal/LTk5OQ%3D%3D/" + data;
+                        }
+                    });            
+                }
             }
         });
+
         
+
     }
 </script>
