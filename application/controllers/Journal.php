@@ -212,19 +212,29 @@ class Journal extends CI_Controller
 
             foreach ($_POST['journal_code'] as $i => $v) 
             {
-                $this->m_journal->insert_journal_temp([
-                    'created_by' => $this->curuser["USER_ID"],
-                    'bill_number' => $bill_number,
-                    'bill_month' => input_data('journal_month'),
-                    'bill_year' => input_data('journal_year'),
-                    'journal_id' => $journal_id[$i],
-                    'account_id' => input_data('account_id'),
-                    'amount' => str_replace(",","",$amount[$i]),
-                    'bill_category' => input_data('b_master_bill_category'),
-                    'tr_code' => $mct_trcodenew[$i],
-                    'status_approval' => 0,
-                    'remark' => $remark[$i]
-                ]);
+                if ($mct_trcodenew[$i] == "" || $mct_trcodenew[$i] == NULL || $mct_trcodenew[$i] == -1)
+                {
+                    // return false;
+                    set_notify('notify_msg',"Sila pilih kod transaksi");
+                    templates('journal/v_generate_current_journal',$data);
+                    return false;
+                }
+                else
+                {
+                    $this->m_journal->insert_journal_temp([
+                        'created_by' => $this->curuser["USER_ID"],
+                        'bill_number' => $bill_number,
+                        'bill_month' => input_data('journal_month'),
+                        'bill_year' => input_data('journal_year'),
+                        'journal_id' => $journal_id[$i],
+                        'account_id' => input_data('account_id'),
+                        'amount' => str_replace(",","",$amount[$i]),
+                        'bill_category' => input_data('b_master_bill_category'),
+                        'tr_code' => $mct_trcodenew[$i],
+                        'status_approval' => 0,
+                        'remark' => $remark[$i]
+                    ]);
+                }
             }
 
             set_notify('notify_msg',TEXT_SAVE_RECORD);

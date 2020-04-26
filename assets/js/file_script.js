@@ -472,8 +472,11 @@ function setSelectedTrcode(select_el,target_el) {
     $(target_el).val($(select_el).val());
 }
 
-function remove_tr_code(obj) {
-    $(obj).parent().parent().remove();
+function remove_tr_code(obj) 
+{
+    console.log(obj);
+    $( "#"+obj ).remove();
+    // $(obj).parent().parent().remove();
 }
 
 function status_approve_new() {

@@ -404,11 +404,13 @@ class Bill extends CI_Controller
             }
 
             $data_insert =
-                '<div class="form-group row">'.
+            '<div class="" id="'.$unique_select_id.'_row">'.
+                '<div class="form-group row" >'.
                     '<div class="col-sm-4">'.
-                        '<select class="form-control js-example-basic-singlex" id="'.$unique_select_id.'" onchange="setSelectedTrcode(this,\'#'.$unique_select_id.'_input\')">'.
+                        '<select class="form-control js-example-basic-singlex select2" id="'.$unique_select_id.'" onchange="setSelectedTrcode(this,\'#'.$unique_select_id.'_input\')" ><option value="-1" selected >-Sila Pilih - </option>'.
                             $data_option.
                         '</select>'.
+                        '<p id="'.$unique_select_id.'_input_error" class="valError"></p>'.
                     '</div>'.
                     '<div class="col-sm-2">'.
                         '<input name="amount[]" onkeyup="currency_format1(this)" class="form-control" value="'.($journal_code=="B01" || $journal_code=="R01" ? '-'.$bill_amount : '').'" '.($journal_code=="B01" || $journal_code=="R01" ? 'readonly' : '').'>'.
@@ -423,11 +425,12 @@ class Bill extends CI_Controller
                         '<input name="remark[]" type="text" placeholder="Remark" class="form-control" value="">'.
                     '</div>'.
                     '<div class="col-sm-1">'.
-                        '<button type="button" onclick="remove_tr_code(this)" class="btn btn-danger">x</i></button>'.
+                        '<button type="button" onclick="remove_tr_code('."'".$unique_select_id."_row'".')" class="btn btn-danger">x</i></button>'.
                     '</div>'.
                 '</div>
                 <input type="hidden" name="journal_id[]" value="'.$journal_id.'">
-                '.$select_script.$select_input_value;
+                '.$select_script.$select_input_value
+            .'</div>';
 
             echo $data_insert;
         endif;

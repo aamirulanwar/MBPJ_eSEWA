@@ -3,7 +3,7 @@
 notify_msg('notify_msg');
 checking_validation(validation_errors());
 ?>
-<form action="/journal/generate_current_journal/<?php echo uri_segment(3)?>/<?php echo uri_segment(4)?>" method="post" class="form-horizontal">
+<form id="journalForm" action="/journal/generate_current_journal/<?php echo uri_segment(3)?>/<?php echo uri_segment(4)?>" method="post" class="form-horizontal" >
     <input type="hidden" name="account_id" value="<?=$account['ACCOUNT_ID']?>">
     <div class="card card-accent-info">
         <div class="card-header">
@@ -185,3 +185,50 @@ checking_validation(validation_errors());
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+<script type="text/javascript">
+
+    $('#journalForm').submit(function(event) 
+    {
+        var proceedStatus = [];        
+        var i = 0;
+        $.each( $("input[name='mct_trcodenew[]']"), function (key,value)
+        {
+            var selectedTrCode = $("#"+value.id).val();
+            console.log(value.id);
+            if (selectedTrCode == "" || selectedTrCode == -1 || selectedTrCode == " ")
+            {
+                proceedStatus[i] = false;
+                $("#"+value.id+"_error").html("**Sila pilih kod transaksi");
+            }
+            else if (selectedTrCode != "" || selectedTrCode != -1 || selectedTrCode != " ")
+            {
+                proceedStatus[i] = true;
+                $("#"+value.id+"_error").html("");
+            }
+
+            i = i + 1;
+        });
+
+        console.log(proceedStatus);
+        var check = true;
+        $.each(proceedStatus, function(index, val) 
+        {
+            /* iterate through array or object */
+            console.log(val);
+            if (val == false)
+            {
+                check = false;
+            }
+        });
+
+        if (check == true)
+        {
+            $(this).unbind('submit').submit();
+        }
+        else if (check == false)
+        {
+            event.preventDefault();
+        }
+    });
+</script>
