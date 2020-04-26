@@ -27,7 +27,10 @@ class Journal extends CI_Controller
             'journal_code_lists',
             'entry',
             'update',
-            'doc_journal'
+            'doc_journal',
+            'generate_new_receipt_journal',
+            'encrypt',
+            'checkDataValidity',
         );
         #set pages data
         (in_array($method,$array)) ? $this->$method() : $this->search();
@@ -122,7 +125,8 @@ class Journal extends CI_Controller
         templates('journal/v_journal_search',$data);
     }
 
-    function generate_current_journal(){
+    function generate_current_journal()
+    {
         $data['link_1']     = 'Journal';
         $data['link_2']     = '<a href="/journal/search">Carian</a>';
         $data['link_3']     = '';
@@ -133,21 +137,53 @@ class Journal extends CI_Controller
             return false;
         endif;
 
-        $data_bill_master = $this->m_bill_master->get_bill_master($bill_id);
-        $get_details = $this->m_acc_account->get_account_details($data_bill_master['ACCOUNT_ID']);
-        if(!$get_details):
-            return false;
-        endif;
+        if ($bill_id != -999)
+        {            
+            $data_bill_master = $this->m_bill_master->get_bill_master($bill_id);
+            $get_details = $this->m_acc_account->get_account_details($data_bill_master['ACCOUNT_ID']);
+            if(!$get_details):
+                return false;
+            endif;
 
-        $data['account'] = $get_details;
+            $data['account'] = $get_details;
 
-        $bill_item = $this->m_bill_item->get_bill_item($bill_id);
+            $bill_item = $this->m_bill_item->get_bill_item($bill_id);
 
 
-        $data['account']        = $get_details;
-        $data['statement_type'] = 'BIL';
-        $data['bill_master']    = $data_bill_master;
-        $data['bill_item']      = $bill_item;
+            $data['account']        = $get_details;
+            $data['statement_type'] = 'BIL';
+            $data['bill_master']    = $data_bill_master;
+            $data['bill_item']      = $bill_item;
+        }
+        else if ($bill_id == -999) 
+        {
+            # code...
+            $formData           = urlDecrypt(uri_segment(4));
+            $formDataItem       = explode( ':', $formData );
+            $account_number     = $formDataItem[0];
+            $tarikh_resit       = $formDataItem[1];
+            $bulantahun_resit   = $formDataItem[2];
+            $bulan_resit        = explode( '/', $bulantahun_resit )[0];
+            $tahun_resit        = explode( '/', $bulantahun_resit )[1];
+
+            $get_details = $this->m_acc_account->get_account_details_by_accountNo($account_number);
+            // var_dump($get_details);
+
+            if(!$get_details):
+                return false;
+            endif;
+
+            $data['account'] = $get_details;
+            $data['statement_type'] = 'RESIT';
+            $data['bill_master'] = array( 
+                                            "BILL_CATEGORY" => "R", 
+                                            "BILL_MONTH"    => $bulan_resit, 
+                                            "BILL_YEAR"     => $tahun_resit, 
+                                            "BILL_NUMBER"   => "NEW_RESIT_JOURNAL_R02", 
+                                            "DT_ADDED"      => $tarikh_resit, 
+                                        );
+            $data['bill_item'] = array();
+        }
 
         validation_rules('journal_code[]','<strong>kod transaksi</strong>','required');
 
@@ -165,19 +201,26 @@ class Journal extends CI_Controller
             //echo "<script>console.log('".json_encode($_POST['mct_trcodenew'])."');</script>"; //var_dump($_POST['mct_trcodenew']);
             // die();
 
-            $bill_number = $this->m_journal->generate_running_billnumber();
+            if ( $bill_id == -999 && input_data("bill_number") != "" || input_data("bill_number") != NULL)
+            {
+                $bill_number = input_data("bill_number");
+            }
+            else
+            {
+                $bill_number = $this->m_journal->generate_running_billnumber();
+            }
 
             foreach ($_POST['journal_code'] as $i => $v) 
             {
                 $this->m_journal->insert_journal_temp([
                     'created_by' => $this->curuser["USER_ID"],
                     'bill_number' => $bill_number,
-                    'bill_month' => date('m'),
-                    'bill_year' => date('Y'),
+                    'bill_month' => input_data('journal_month'),
+                    'bill_year' => input_data('journal_year'),
                     'journal_id' => $journal_id[$i],
                     'account_id' => input_data('account_id'),
-                    'amount' => $amount[$i],
-                    'bill_category' => 'J',
+                    'amount' => str_replace(",","",$amount[$i]),
+                    'bill_category' => input_data('b_master_bill_category'),
                     'tr_code' => $mct_trcodenew[$i],
                     'status_approval' => 0,
                     'remark' => $remark[$i]
@@ -217,15 +260,17 @@ class Journal extends CI_Controller
             $bill_month = $journalDetail["BILL_MONTH"];
             $bill_year = $journalDetail["BILL_YEAR"];
             $bill_amount = $journalDetail["AMOUNT"];
+            $bill_amount = ($bill_amount == NULL) ? 0 : $bill_amount;
             $journal_id = $journalDetail["JOURNAL_ID"];
             $journal_trcode = $journalDetail["TR_CODE"];
             $journal_trdesc = $journalDetail["ITEM_DESC"];
             $journal_trcode_old = $journalDetail["TR_CODE_OLD"];
+            $journal_bill_category = $journalDetail["BILL_CATEGORY"];
 
-            $existingBill = $this->m_bill_master->getBillId($account_id,$bill_month,$bill_year);
+            $existingBill = $this->m_bill_master->getBillId($account_id,$bill_month,$bill_year,$journal_bill_category);
 
             // Get Total Existing bill number
-            if ( count($existingBill) > 0 && $existingBill["BILL_ID"] != "" )
+            if ( !empty($existingBill) && $existingBill["BILL_ID"] != "" )
             {
                 $bill_id = $existingBill["BILL_ID"];
                 $bill_master_update["TOTAL_AMOUNT"] = $existingBill["TOTAL_AMOUNT"] + $bill_amount;
@@ -243,7 +288,7 @@ class Journal extends CI_Controller
                 $bill_master_insert["BILL_YEAR"] = $bill_year;
                 $bill_master_insert["TOTAL_AMOUNT"] = $bill_amount;
                 $bill_master_insert["BILL_TYPE"] = $bill_type;
-                $bill_master_insert["BILL_CATEGORY"] = 'J';
+                $bill_master_insert["BILL_CATEGORY"] = $journal_bill_category;
 
                 $bill_id = $this->m_bill_master->insertBillMaster($bill_master_insert);
             }
@@ -309,6 +354,140 @@ class Journal extends CI_Controller
 
         load_library('Generate_word');
         $this->generate_word->word_document($id, DOC_JOURNAL);
+    }
+
+    function encrypt($string=NULL)
+    {
+        if (isset($_POST))
+        {
+            $string = $_POST["formData"];
+        }
+        else
+        {
+            if (empty($string) || $string == NULL)
+            {
+                $string = uri_segment(3);            
+            }            
+        }
+        echo urlencode(base64_encode($string));
+    }
+
+    function checkDataValidity()
+    {
+        // $statusValid["acc_status"];
+        // $statusValid["tkh_status"];
+        // $statusValid["bulantahun_status"];
+
+        $account_number     = $_POST["account_no"];
+        $tarikh_resit       = $_POST["tarikh_resit"];
+        $bulantahun_resit   = $_POST["bulantahun_resit"];
+
+        $account_status = $this->m_acc_account->get_account_details_by_accountNo($account_number);
+        if ($account_status != NULL )
+        {
+            $statusValid["acc_status"]  =  array(
+                                                    "status" => true,
+                                                    "value" => $account_status["ACCOUNT_NUMBER"],
+                                                );
+        }
+        else
+        {
+            $statusValid["acc_status"]  =  array(
+                                                    "status" => false,
+                                                    "value" => "ERROR",
+                                                );
+        }
+
+        if ($tarikh_resit == "" || $tarikh_resit == " " || $tarikh_resit == "Invalid date")
+        {
+            $tarikh_resit_status = false;
+        }
+        else
+        {
+            $tarikh_resit_day = explode( '/', $tarikh_resit )[0];
+            $tarikh_resit_month = explode( '/', $tarikh_resit )[1];
+            $tarikh_resit_year = explode( '/', $tarikh_resit )[2];
+            $tarikh_resit_status = checkdate($tarikh_resit_month, $tarikh_resit_day, $tarikh_resit_year);            
+        }
+
+        if ($tarikh_resit_status == true )
+        {
+            $statusValid["tkh_status"]  =  array(
+                                                    "status" => true,
+                                                    "value" => array(
+                                                                        "tarikh_resit" => $tarikh_resit,
+                                                                        "tarikh_resit_day" => $tarikh_resit_day,
+                                                                        "tarikh_resit_month" => $tarikh_resit_month,
+                                                                        "tarikh_resit_year" => $tarikh_resit_year,
+                                                                    ),
+                                                );
+        }
+        else
+        {
+            $statusValid["tkh_status"]  =  array(
+                                                    "status" => false,
+                                                    "value" => array(
+                                                                        "tarikh_resit" => $tarikh_resit,
+                                                                        "tarikh_resit_day" => "",
+                                                                        "tarikh_resit_month" => "",
+                                                                        "tarikh_resit_year" => "",
+                                                                    ),
+                                                );
+        }
+
+        if ($bulantahun_resit != NULL || $bulantahun_resit != "")
+        {
+            $bulan_resit        = explode( '/', $bulantahun_resit )[0];
+            $tahun_resit        = explode( '/', $bulantahun_resit )[1];            
+
+            if ($bulan_resit > 0 && $bulan_resit < 13) 
+            {
+                # code...
+                $bulan_status = true;
+            } 
+            else 
+            {
+                # code...
+                $bulan_status = false;
+            }
+
+            if ($tahun_resit > date('Y')-1 && $tahun_resit < date('Y')+1) 
+            {
+                # code...
+                $tahun_status = true;
+            } 
+            else 
+            {
+                # code...
+                $tahun_status = false;
+            }
+
+            $statusValid["bulantahun_status"] = array(
+                                                            "bulan_status" => array(
+                                                                                        "status" => $bulan_status,
+                                                                                        "value" => $bulan_resit,
+                                                                                    ),
+                                                            "tahun_status" => array(
+                                                                                        "status" => $tahun_status,
+                                                                                        "value" => $tahun_resit,
+                                                                                    ),
+                                                        );            
+        }
+        else
+        {
+            $statusValid["bulantahun_status"] = array(
+                                                            "bulan_status" => array(
+                                                                                        "status" => false,
+                                                                                        "value" => $bulantahun_resit,
+                                                                                    ),
+                                                            "tahun_status" => array(
+                                                                                        "status" => false,
+                                                                                        "value" => $bulantahun_resit,
+                                                                                    ),
+                                                        ); 
+        }
+
+        echo json_encode($statusValid);
     }
     
 }

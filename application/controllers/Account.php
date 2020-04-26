@@ -51,7 +51,7 @@ class Account extends CI_Controller
             'delete_item',
             'upload_dokumen_tandatangan',
             'delete_dokumen_temp',
-            'delete_all_temp_file',
+            'delete_all_temp_file'
         );
         #set pages data
         (in_array($method,$array)) ? $this->$method() : $this->create_acc();

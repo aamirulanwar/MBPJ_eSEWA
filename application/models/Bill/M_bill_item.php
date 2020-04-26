@@ -11,7 +11,7 @@ class M_bill_item extends CI_Model
         db_select('i.*');
         db_select("to_char(i.dt_added, 'yyyy') as dt_added",false);
         db_from('b_item i');
-        db_join('admin.mctrancode t','i.tr_code_old=t.mct_trcode');
+        db_join('admin.mctrancode t','i.tr_code=t.mct_trcodenew');
         db_where('i.bill_id',$id);
         db_where('t.mct_mdcode','B');
         db_order('t.mct_priort');
@@ -506,12 +506,16 @@ class M_bill_item extends CI_Model
         db_select('i.TR_CODE');
         db_select('i.ITEM_DESC');
         db_select('i.ACCOUNT_ID');
+        db_select('a.ACCOUNT_NUMBER');
         db_select('i.BILL_CATEGORY');
+        db_select('m.BILL_CATEGORY as master_bill_category');
         db_select('i.AMOUNT');
         db_select('m.BILL_NUMBER');
         db_select("to_char(m.DT_ADDED,'dd/mm/yyyy') as TKH_BIL");
         db_from('b_item i');
         db_join('b_master m','m.bill_id = i.bill_id');
+        db_join('acc_account a','a.ACCOUNT_ID = m.ACCOUNT_ID');
+
         if(isset($data_search['date_start']) && having_value($data_search['date_start'])):
             db_where("i.dt_added >= to_date('".date('d-M-y',strtotime($data_search['date_start']))."')");
         endif;

@@ -96,7 +96,7 @@ class M_bill_master extends CI_Model
         endif;
     }
 
-    function getBillId($account_id,$month,$year)
+    function getBillId($account_id,$month,$year,$bill_category='B')
     {
         if ( !empty($account_id) && !empty($month) && !empty($year) )
         {
@@ -109,10 +109,14 @@ class M_bill_master extends CI_Model
             db_where("account_id",$account_id);
             db_where("bill_month",$month);
             db_where("bill_year",$year);
+            db_where("bill_category",$bill_category);
+
             $sql = db_get('');
-            if($sql):
+
+            if($sql)
+            {
                 return $sql->row_array('');
-            endif;
+            }
         }
         else
         {
@@ -131,8 +135,8 @@ class M_bill_master extends CI_Model
     function insertBillMaster($data_insert)
     {
         db_set_date_time('dt_added',timenow());
-        db_insert('bill_master',$data_insert);
-        return get_insert_id('bill_master');
+        db_insert('b_master',$data_insert);
+        return get_insert_id('b_master');
     }
 }
 
