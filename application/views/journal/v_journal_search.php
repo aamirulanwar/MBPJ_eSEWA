@@ -197,10 +197,10 @@ checking_validation(validation_errors());
             success: function(data)
             {
                 data = JSON.parse(data);
-                console.log(data);
-                console.log(data["acc_status"]);
-                console.log(data["tkh_status"]);
-                console.log(data["bulantahun_status"]);
+                // console.log(data);
+                // console.log(data["acc_status"]);
+                // console.log(data["tkh_status"]);
+                // console.log(data["bulantahun_status"]);
 
                 if ( data["acc_status"]["status"] == false )
                 {
@@ -243,9 +243,9 @@ checking_validation(validation_errors());
                     bulanresit_status = true;
                 }
 
-                console.log(acc_status);
-                console.log(tkh_status);
-                console.log(bulanresit_status);
+                // console.log(acc_status);
+                // console.log(tkh_status);
+                // console.log(bulanresit_status);
                 
                 if (acc_status == true && tkh_status == true && bulanresit_status == true) 
                 {
@@ -255,15 +255,12 @@ checking_validation(validation_errors());
                         data: {"formData" : formData},
                         success: function(data)
                         {
-                            console.log(data);
+                            // console.log(data);
                             window.location.href = "/journal/generate_current_journal/LTk5OQ%3D%3D/" + data;
                         }
                     });            
                 }
             }
         });
-
-        
-
     }
 </script>

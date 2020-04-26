@@ -269,9 +269,6 @@ class Journal extends CI_Controller
 
             $existingBill = $this->m_bill_master->getBillId($account_id,$bill_month,$bill_year,$journal_bill_category);
 
-            // var_dump($journalDetail);
-            // die();
-
             // Get Total Existing bill number
             if ( !empty($existingBill) && $existingBill["BILL_ID"] != "" )
             {
