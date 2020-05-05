@@ -51,6 +51,13 @@ class M_acc_kuarters_defect extends CI_Model
         endif;
         db_set_date_time('dt_added',timenow());
         db_insert('ACC_KUARTERS_DEFECT',$data_insert);
+    //  $user_id = get_insert_id('a_rental_use');
+          $data_audit_trail['log_id']                  = 6016;
+          $data_audit_trail['remark']                  = "Tambah Laporan Kerosakan Kuarters";
+          $data_audit_trail['status']                  = PROCESS_STATUS_SUCCEED;
+          $data_audit_trail['user_id']                 = $this->curuser['USER_ID'];
+          $data_audit_trail['refer_id']                = ''; //refer to db_where
+          $this->audit_trail_lib->add($data_audit_trail);
         return true;
     }
 
@@ -73,6 +80,12 @@ class M_acc_kuarters_defect extends CI_Model
     function delete_kuarters($id){
         db_where('ACC_KUARTERS_DEFECT_ID',$id);
         db_delete('ACC_KUARTERS_DEFECT');
+          $data_audit_trail['log_id']                   = 6017; 
+          $data_audit_trail['remark']                   = "Padam Laporan Kerosakan Kuarters";
+          $data_audit_trail['status']                   = PROCESS_STATUS_SUCCEED;
+          $data_audit_trail['user_id']                  = $this->curuser['USER_ID'];
+          $data_audit_trail['refer_id']                 = ''; //refer to db_where
+          $this->audit_trail_lib->add($data_audit_trail);
         return true;
     }
 }

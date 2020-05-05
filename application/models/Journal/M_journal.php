@@ -16,7 +16,7 @@ class M_journal extends CI_Model
         db_order('category_code');
 
         if ($result) {
-            
+
             return $result;
         }
     }
@@ -35,8 +35,15 @@ class M_journal extends CI_Model
     function insert_journal_temp($data)
     {
         db_set_date_time('dt_added',timenow());
-        
+
         $insert = db_insert('b_journal_temp',$data);
+
+          $data_audit_trail['log_id']                  = 7001;
+          $data_audit_trail['remark']                  = "Tambah Kod Transaksi Jurnal";
+          $data_audit_trail['status']                  = PROCESS_STATUS_SUCCEED;
+          $data_audit_trail['user_id']                 = $this->curuser['USER_ID'];
+          $data_audit_trail['refer_id']                = $insert;
+          $this->audit_trail_lib->add($data_audit_trail);
 
         return $insert;
     }
@@ -51,7 +58,7 @@ class M_journal extends CI_Model
             FROM
                 b_journal_temp,admin.mctrancode admin
             WHERE
-                b_journal_temp.tr_code=admin.mct_trcodenew and 
+                b_journal_temp.tr_code=admin.mct_trcodenew and
                 id = ?
         ",[$id]);
         $get_journal = $q_get_journal->result_array();
@@ -86,7 +93,7 @@ class M_journal extends CI_Model
         ]);
 
         if ($status_approval==1) {
-            
+
             $q1 = $model->db->query("
                 SELECT
                     COUNT(*) AS TOTAL
@@ -101,7 +108,7 @@ class M_journal extends CI_Model
             $bill_id="";
 
             if ($exist_in_b_master[0]["TOTAL"] > 0) {
-                
+
                 $q2 = $model->db->query("
                     SELECT
                         BILL_ID,
@@ -165,7 +172,7 @@ class M_journal extends CI_Model
                     $bill_type,
                     'J'
                 ]);
-                
+
                 $q2 = $model->db->query("
                     SELECT
                         BILL_ID
@@ -187,7 +194,7 @@ class M_journal extends CI_Model
                 (
                     BILL_ID,
                     JOURNAL_ID,
-                    ACCOUNT_ID, 
+                    ACCOUNT_ID,
                     AMOUNT,
                     DT_ADDED,
                     BILL_CATEGORY,
@@ -231,7 +238,7 @@ class M_journal extends CI_Model
         $check = $query->result_array();
 
         if ($check[0]['TOTAL'] > 0) {
-            
+
             return $this->get_unique_billnumber();
         }
 
@@ -249,7 +256,7 @@ class M_journal extends CI_Model
         $ifAnyRecordExist = $query->result_array();
 
         if ($ifAnyRecordExist[0]['TOTAL']==0) {
-            
+
             return "000001";
         }
 
@@ -271,10 +278,10 @@ class M_journal extends CI_Model
         $prefix_number = "";
 
         if (strlen($new_running_number) != 6) {
-            
-            for ($i=0; $i < (6-strlen($new_running_number)); $i++) { 
-                
-                $prefix_number .="0";    
+
+            for ($i=0; $i < (6-strlen($new_running_number)); $i++) {
+
+                $prefix_number .="0";
             }
             $new_running_number = $prefix_number.$new_running_number;
 
@@ -290,7 +297,7 @@ class M_journal extends CI_Model
         db_from('b_journal_temp b');
         db_join('acc_account a','b.account_id = a.account_id');
         db_join('users u','u.user_id = b.CREATED_BY');
-        db_join('a_journal j','b.journal_id = j.journal_id'); 
+        db_join('a_journal j','b.journal_id = j.journal_id');
         db_join('a_category c','a.category_id = c.category_id','LEFT');
         db_order('bill_number');
          // $model =& get_instance();
@@ -315,7 +322,7 @@ class M_journal extends CI_Model
         // db_group("a.category_id.ITEM_DESC");
         // $result = $query->result_array();
         // if ($result) {
-            
+
         //     return $result;
         // }
         $sql = db_get('');

@@ -565,4 +565,3 @@ class M_bill_item extends CI_Model
         return true;
     }
 }
-
