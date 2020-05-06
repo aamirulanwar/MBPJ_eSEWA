@@ -63,6 +63,7 @@ class Bill_lib {
         {
             #calculate lebihan
             $data_lebihan = $this->calculate_lebihan($data_stage_1);
+
             if($data_lebihan['new_lebihan']>0)
             {
                 $data_stage_1 = $this->generate_item($data_stage_1,$data_lebihan['new_lebihan']);
@@ -155,36 +156,39 @@ class Bill_lib {
 
             $insert_code    = array();
             if($code_category):
-                $insert_code['BILL_ID']     = $bill_id;
-                $insert_code['TR_CODE']     = $code_category['MCT_TRCODENEW'];
-                // $insert_code['TR_ID']       = $code_category['TR_ID'];
-                $insert_code['AMOUNT']      = $data_acc['RENTAL_CHARGE'];
-                $insert_code['PRIORITY']    = $code_category['MCT_PRIORT'];
-                // $insert_code['TR_TYPE']     = $code_category['TR_TYPE'];
-                $insert_code['ACCOUNT_ID']  = $account_id;
-                $insert_code['ITEM_DESC']   = $code_category['MCT_TRDESC'];
-                $insert_code['TR_CODE_OLD'] = $code_category['MCT_TRCODE'];
+                $insert_code['BILL_ID']         = $bill_id;
+                $insert_code['TR_CODE']         = $code_category['MCT_TRCODENEW'];
+                // $insert_code['TR_ID']        = $code_category['TR_ID'];
+                $insert_code['AMOUNT']          = $data_acc['RENTAL_CHARGE'];
+                $insert_code['PRIORITY']        = $code_category['MCT_PRIORT'];
+                // $insert_code['TR_TYPE']      = $code_category['TR_TYPE'];
+                $insert_code['ACCOUNT_ID']      = $account_id;
+                $insert_code['ITEM_DESC']       = $code_category['MCT_TRDESC'];
+                $insert_code['TR_CODE_OLD']     = $code_category['MCT_TRCODE'];
+                $insert_code['BILL_CATEGORY']   = "B";
             else:
-                $insert_code['BILL_ID']     = $bill_id;
-                $insert_code['TR_CODE']     = $data_acc['TRCODE_CATEGORY'];
-                // $insert_code['TR_ID']       = $code_category['TR_ID'];
-                $insert_code['AMOUNT']      = $data_acc['RENTAL_CHARGE'];
-                $insert_code['PRIORITY']    = 1;
-                // $insert_code['TR_TYPE']     = $code_category['TR_TYPE'];
-                $insert_code['ACCOUNT_ID']  = $account_id;
-                $insert_code['ITEM_DESC']   = $data_acc['TRCODE_CATEGORY'];
-                $insert_code['TR_CODE_OLD'] = $data_acc['TRCODE_CATEGORY_OLD'];
+                $insert_code['BILL_ID']         = $bill_id;
+                $insert_code['TR_CODE']         = $data_acc['TRCODE_CATEGORY'];
+                // $insert_code['TR_ID']        = $code_category['TR_ID'];
+                $insert_code['AMOUNT']          = $data_acc['RENTAL_CHARGE'];
+                $insert_code['PRIORITY']        = 1;
+                // $insert_code['TR_TYPE']      = $code_category['TR_TYPE'];
+                $insert_code['ACCOUNT_ID']      = $account_id;
+                $insert_code['ITEM_DESC']       = $data_acc['TRCODE_CATEGORY'];
+                $insert_code['TR_CODE_OLD']     = $data_acc['TRCODE_CATEGORY_OLD'];
+                $insert_code['BILL_CATEGORY']   = "B";
             endif;
 
             $item_id = $this->insert_bill_item($insert_code);
 
-            $data_bill_category['tr_code']      = $insert_code['TR_CODE'];
-            $data_bill_category['tr_code_old']  = $code_category['MCT_TRCODE'];
-            $data_bill_category['amount']       = $insert_code['AMOUNT'];
-            $data_bill_category['item_desc']    = $insert_code['ITEM_DESC'];
-            $data_bill_category['priority']     = $code_category['MCT_PRIORT'];
-            $data_bill_category['gst_status']   = 0;
-            $data_bill_category['item_id']      = $item_id;
+            $data_bill_category['tr_code']          = $insert_code['TR_CODE'];
+            $data_bill_category['tr_code_old']      = $code_category['MCT_TRCODE'];
+            $data_bill_category['amount']           = $insert_code['AMOUNT'];
+            $data_bill_category['item_desc']        = $insert_code['ITEM_DESC'];
+            $data_bill_category['priority']         = $code_category['MCT_PRIORT'];
+            $data_bill_category['gst_status']       = 0;
+            $data_bill_category['item_id']          = $item_id;
+            $data_bill_category['bill_category']    = $insert_code['BILL_CATEGORY'];
 
             $bill_item[] = $data_bill_category;
 
@@ -199,23 +203,25 @@ class Bill_lib {
                     // $insert_code['AMOUNT']      = num(($code_gst['PERCENTAGE']*$data_acc['RENTAL_CHARGE'])/100,1);
                     #get percent
                     $perc_gst = get_perc_from_sentence($code_gst['MCT_TRDESC']);
-                    $insert_code['AMOUNT']      = num(($perc_gst*$data_acc['RENTAL_CHARGE'])/100,1);
-                    $insert_code['PRIORITY']    = $code_gst['MCT_PRIORT'];
-                    // $insert_code['TR_TYPE']     = $code_gst['TR_TYPE'];
-                    $insert_code['ACCOUNT_ID']  = $account_id;
+                    $insert_code['AMOUNT']          = num(($perc_gst*$data_acc['RENTAL_CHARGE'])/100,1);
+                    $insert_code['PRIORITY']        = $code_gst['MCT_PRIORT'];
+                    // $insert_code['TR_TYPE']      = $code_gst['TR_TYPE'];
+                    $insert_code['ACCOUNT_ID']      = $account_id;
                     $insert_code['GST_TYPE']        = 1;
                     $insert_code['TR_GST_STATUS']   = 1;
-                    $insert_code['ITEM_DESC']   = $code_gst['MCT_TRDESC'];
-                    $insert_code['TR_CODE_OLD'] = $code_gst['MCT_TRCODE'];
-                    $item_id = $this->insert_bill_item($insert_code);
+                    $insert_code['ITEM_DESC']       = $code_gst['MCT_TRDESC'];
+                    $insert_code['TR_CODE_OLD']     = $code_gst['MCT_TRCODE'];
+                    $insert_code['BILL_CATEGORY']   = "B";
+                    $item_id                        = $this->insert_bill_item($insert_code);
 
-                    $data_bill_gst['tr_code']       = $insert_code['TR_CODE'];
-                    $data_bill_gst['tr_code_old']   = $code_gst['MCT_TRCODE'];
-                    $data_bill_gst['amount']        = $insert_code['AMOUNT'];
-                    $data_bill_gst['item_desc']     = $insert_code['ITEM_DESC'];
-                    $data_bill_gst['priority']      = $code_category['MCT_PRIORT'];
-                    $data_bill_gst['gst_status']    = 1;
-                    $data_bill_gst['item_id']       = $item_id;
+                    $data_bill_gst['tr_code']           = $insert_code['TR_CODE'];
+                    $data_bill_gst['tr_code_old']       = $code_gst['MCT_TRCODE'];
+                    $data_bill_gst['amount']            = $insert_code['AMOUNT'];
+                    $data_bill_gst['item_desc']         = $insert_code['ITEM_DESC'];
+                    $data_bill_gst['priority']          = $code_category['MCT_PRIORT'];
+                    $data_bill_gst['gst_status']        = 1;
+                    $data_bill_gst['item_id']           = $item_id;
+                    $data_bill_gst['bill_category']     = $insert_code['BILL_CATEGORY'];
 
                     $bill_item[]                = $data_bill_gst;
                 endif;
@@ -226,28 +232,30 @@ class Bill_lib {
                 $code_waste_management = $this->get_data_tr_code(TR_CODE_TIPPING); #cas pengurusan sampah
                 $insert_code    = array();
                 if($code_waste_management):
-                    $insert_code['BILL_ID']     = $bill_id;
-                    $insert_code['TR_CODE']     = $code_waste_management['MCT_TRCODENEW'];
-                    // $insert_code['TR_ID']       = $code_waste_management['TR_ID'];
-                    $insert_code['AMOUNT']      = $data_acc['WASTE_MANAGEMENT_CHARGE'];
-                    $insert_code['PRIORITY']    = $code_waste_management['MCT_PRIORT'];
-                    // $insert_code['TR_TYPE']     = $code_waste_management['TR_TYPE'];
-                    $insert_code['ACCOUNT_ID']  = $account_id;
-                    $insert_code['ITEM_DESC']   = $code_waste_management['MCT_TRDESC'];
+                    $insert_code['BILL_ID']         = $bill_id;
+                    $insert_code['TR_CODE']         = $code_waste_management['MCT_TRCODENEW'];
+                    // $insert_code['TR_ID']        = $code_waste_management['TR_ID'];
+                    $insert_code['AMOUNT']          = $data_acc['WASTE_MANAGEMENT_CHARGE'];
+                    $insert_code['PRIORITY']        = $code_waste_management['MCT_PRIORT'];
+                    // $insert_code['TR_TYPE']      = $code_waste_management['TR_TYPE'];
+                    $insert_code['ACCOUNT_ID']      = $account_id;
+                    $insert_code['ITEM_DESC']       = $code_waste_management['MCT_TRDESC'];
                     $insert_code['GST_TYPE']        = 1;
                     $insert_code['TR_GST_STATUS']   = 1;
-                    $insert_code['TR_CODE_OLD'] = $code_waste_management['MCT_TRCODE'];
-                    $item_id = $this->insert_bill_item($insert_code);
+                    $insert_code['TR_CODE_OLD']     = $code_waste_management['MCT_TRCODE'];
+                    $insert_code['BILL_CATEGORY']   = "B";
+                    $item_id                        = $this->insert_bill_item($insert_code);
 
-                    $data_bill_waste_management['tr_code']      = $insert_code['TR_CODE'];
-                    $data_bill_waste_management['tr_code_old']  = $code_waste_management['MCT_TRCODE'];
-                    $data_bill_waste_management['amount']       = $insert_code['AMOUNT'];
-                    $data_bill_waste_management['item_desc']    = $insert_code['ITEM_DESC'];
-                    $data_bill_waste_management['priority']     = $code_waste_management['MCT_PRIORT'];
-                    $data_bill_waste_management['gst_status']   = 1;
-                    $data_bill_waste_management['item_id']      = $item_id;
+                    $data_bill_waste_management['tr_code']          = $insert_code['TR_CODE'];
+                    $data_bill_waste_management['tr_code_old']      = $code_waste_management['MCT_TRCODE'];
+                    $data_bill_waste_management['amount']           = $insert_code['AMOUNT'];
+                    $data_bill_waste_management['item_desc']        = $insert_code['ITEM_DESC'];
+                    $data_bill_waste_management['priority']         = $code_waste_management['MCT_PRIORT'];
+                    $data_bill_waste_management['gst_status']       = 1;
+                    $data_bill_waste_management['item_id']          = $item_id;
+                    $data_bill_waste_management['bill_category']    = $insert_code['BILL_CATEGORY'];
 
-                    $bill_item[]                                = $data_bill_waste_management;
+                    $bill_item[]                                    = $data_bill_waste_management;
                 endif;
 
                 if($this->status_gst==true):
@@ -255,30 +263,32 @@ class Bill_lib {
                     $code_gst_waste = $this->get_data_tr_code(TR_CODE_GST_TIPPING);
                     $insert_code    = array();
                     if($code_gst):
-                        $insert_code['BILL_ID']     = $bill_id;
-                        $insert_code['TR_CODE']     = $code_gst_waste['MCT_TRCODENEW'];
-                        // $insert_code['TR_ID']       = $code_gst_waste['TR_ID'];
-                        // $insert_code['AMOUNT']      = num(($code_gst_waste['PERCENTAGE']*$data_acc['WASTE_MANAGEMENT_CHARGE'])/100,1);
+                        $insert_code['BILL_ID']         = $bill_id;
+                        $insert_code['TR_CODE']         = $code_gst_waste['MCT_TRCODENEW'];
+                        // $insert_code['TR_ID']        = $code_gst_waste['TR_ID'];
+                        // $insert_code['AMOUNT']       = num(($code_gst_waste['PERCENTAGE']*$data_acc['WASTE_MANAGEMENT_CHARGE'])/100,1);
                         $perc_gst = get_perc_from_sentence($code_gst_waste['MCT_TRDESC']);
-                        $insert_code['AMOUNT']      = num(($perc_gst*$data_acc['WASTE_MANAGEMENT_CHARGE'])/100,1);
-                        $insert_code['PRIORITY']    = $code_gst_waste['MCT_PRIORT'];
-                        // $insert_code['TR_TYPE']     = $code_gst_waste['TR_TYPE'];
-                        $insert_code['ACCOUNT_ID']  = $account_id;
-                        $insert_code['ITEM_DESC']   = $code_gst_waste['MCT_TRDESC'];
-                        $insert_code['TR_CODE_OLD'] = $code_gst_waste['MCT_TRCODE'];
+                        $insert_code['AMOUNT']          = num(($perc_gst*$data_acc['WASTE_MANAGEMENT_CHARGE'])/100,1);
+                        $insert_code['PRIORITY']        = $code_gst_waste['MCT_PRIORT'];
+                        // $insert_code['TR_TYPE']      = $code_gst_waste['TR_TYPE'];
+                        $insert_code['ACCOUNT_ID']      = $account_id;
+                        $insert_code['ITEM_DESC']       = $code_gst_waste['MCT_TRDESC'];
+                        $insert_code['TR_CODE_OLD']     = $code_gst_waste['MCT_TRCODE'];
                         $insert_code['TR_GST_STATUS']   = 1;
                         $insert_code['GST_TYPE']        = GST_TYPE_TIPPING;
+                        $insert_code['BILL_CATEGORY']   = "B";
                         $item_id = $this->insert_bill_item($insert_code);
 
-                        $data_bill_gst_waste_management['tr_code']      = $insert_code['TR_CODE'];
-                        $data_bill_gst_waste_management['tr_code_old']  = $code_gst_waste['MCT_TRCODE'];
-                        $data_bill_gst_waste_management['amount']       = $insert_code['AMOUNT'];
-                        $data_bill_gst_waste_management['item_desc']    = $insert_code['ITEM_DESC'];
-                        $data_bill_gst_waste_management['priority']     = $code_gst_waste['MCT_PRIORT'];
-                        $data_bill_gst_waste_management['gst_status']   = 1;
-                        $data_bill_gst_waste_management['item_id']      = $item_id;
+                        $data_bill_gst_waste_management['tr_code']          = $insert_code['TR_CODE'];
+                        $data_bill_gst_waste_management['tr_code_old']      = $code_gst_waste['MCT_TRCODE'];
+                        $data_bill_gst_waste_management['amount']           = $insert_code['AMOUNT'];
+                        $data_bill_gst_waste_management['item_desc']        = $insert_code['ITEM_DESC'];
+                        $data_bill_gst_waste_management['priority']         = $code_gst_waste['MCT_PRIORT'];
+                        $data_bill_gst_waste_management['gst_status']       = 1;
+                        $data_bill_gst_waste_management['item_id']          = $item_id;
+                        $data_bill_gst_waste_management['bill_category']    = $insert_code['BILL_CATEGORY'];
 
-                        $bill_item[]                                    = $data_bill_gst_waste_management;
+                        $bill_item[]                                        = $data_bill_gst_waste_management;
                     endif;
                 endif;
             endif;
@@ -288,28 +298,30 @@ class Bill_lib {
                 $code_lms = $this->get_data_tr_code(TR_CODE_LMS); #LMS
                 $insert_code    = array();
                 if($code_lms):
-                    $insert_code['BILL_ID']     = $bill_id;
-                    $insert_code['TR_CODE']     = $code_lms['MCT_TRCODENEW'];
-                    // $insert_code['TR_ID']       = $code_waste_management['TR_ID'];
-                    $insert_code['AMOUNT']      = $data_acc['LMS_CHARGE'];
-                    $insert_code['PRIORITY']    = $code_lms['MCT_PRIORT'];
-                    // $insert_code['TR_TYPE']     = $code_waste_management['TR_TYPE'];
-                    $insert_code['ACCOUNT_ID']  = $account_id;
-                    $insert_code['ITEM_DESC']   = $code_lms['MCT_TRDESC'];
+                    $insert_code['BILL_ID']         = $bill_id;
+                    $insert_code['TR_CODE']         = $code_lms['MCT_TRCODENEW'];
+                    // $insert_code['TR_ID']        = $code_waste_management['TR_ID'];
+                    $insert_code['AMOUNT']          = $data_acc['LMS_CHARGE'];
+                    $insert_code['PRIORITY']        = $code_lms['MCT_PRIORT'];
+                    // $insert_code['TR_TYPE']      = $code_waste_management['TR_TYPE'];
+                    $insert_code['ACCOUNT_ID']      = $account_id;
+                    $insert_code['ITEM_DESC']       = $code_lms['MCT_TRDESC'];
                     $insert_code['GST_TYPE']        = 0;
                     $insert_code['TR_GST_STATUS']   = 0;
-                    $insert_code['TR_CODE_OLD'] = $code_lms['MCT_TRCODE'];
-                    $item_id = $this->insert_bill_item($insert_code);
+                    $insert_code['TR_CODE_OLD']     = $code_lms['MCT_TRCODE'];
+                    $insert_code['BILL_CATEGORY']   = "B";
+                    $item_id                        = $this->insert_bill_item($insert_code);
 
-                    $data_bill_lms['tr_code']      = $insert_code['TR_CODE'];
-                    $data_bill_lms['tr_code_old']  = $code_lms['MCT_TRCODE'];
-                    $data_bill_lms['amount']       = $insert_code['AMOUNT'];
-                    $data_bill_lms['item_desc']    = $insert_code['ITEM_DESC'];
-                    $data_bill_lms['priority']     = $code_lms['MCT_PRIORT'];
-                    $data_bill_lms['gst_status']   = 0;
-                    $data_bill_lms['item_id']      = $item_id;
+                    $data_bill_lms['tr_code']       = $insert_code['TR_CODE'];
+                    $data_bill_lms['tr_code_old']   = $code_lms['MCT_TRCODE'];
+                    $data_bill_lms['amount']        = $insert_code['AMOUNT'];
+                    $data_bill_lms['item_desc']     = $insert_code['ITEM_DESC'];
+                    $data_bill_lms['priority']      = $code_lms['MCT_PRIORT'];
+                    $data_bill_lms['gst_status']    = 0;
+                    $data_bill_lms['item_id']       = $item_id;
+                    $data_bill_lms['bill_category'] = $insert_code['BILL_CATEGORY'];
 
-                    $bill_item[]                   = $data_bill_lms;
+                    $bill_item[]                    = $data_bill_lms;
                 endif;
             endif;
 
@@ -406,25 +418,27 @@ class Bill_lib {
             $date_faedah    = '7-'.$this->cur_month.'-'.$this->cur_year;
             $date_faedah    = strtotime($date_faedah);
             if($data_acc['BILL_TYPE']==BILL_TYPE_MONTHLY && ($today>$date_faedah) && $charge_faedah==false && $data_acc['STATUS_ACC']==STATUS_ACCOUNT_ACTIVE):
-                $insert_faedah['BILL_ID']     = $bill_id;
-                $insert_faedah['TR_CODE']     = TR_CODE_FAEDAH_8_PERC;
-                // $insert_code['TR_ID']       = $code_category['TR_ID'];
-                $insert_faedah['AMOUNT']      = round(CHARGE_FAEDAH_SEWAAN_PERC*$data_acc['RENTAL_CHARGE'], 2);
-                $insert_faedah['PRIORITY']    = CHARGE_FAEDAH_PRIORITY;
-                // $insert_code['TR_TYPE']     = $code_category['TR_TYPE'];
-                $insert_faedah['ACCOUNT_ID']  = $account_id;
-                $insert_faedah['ITEM_DESC']   = TR_CODE_DESC_FAEDAH_8_PERC;
-                $insert_faedah['TR_CODE_OLD'] = TR_CODE_FAEDAH_8_PERC_OLD;
+                $insert_faedah['BILL_ID']       = $bill_id;
+                $insert_faedah['TR_CODE']       = TR_CODE_FAEDAH_8_PERC;
+                // $insert_code['TR_ID']        = $code_category['TR_ID'];
+                $insert_faedah['AMOUNT']        = round(CHARGE_FAEDAH_SEWAAN_PERC*$data_acc['RENTAL_CHARGE'], 2);
+                $insert_faedah['PRIORITY']      = CHARGE_FAEDAH_PRIORITY;
+                // $insert_code['TR_TYPE']      = $code_category['TR_TYPE'];
+                $insert_faedah['ACCOUNT_ID']    = $account_id;
+                $insert_faedah['ITEM_DESC']     = TR_CODE_DESC_FAEDAH_8_PERC;
+                $insert_faedah['TR_CODE_OLD']   = TR_CODE_FAEDAH_8_PERC_OLD;
+                $insert_faedah['BILL_CATEGORY'] = "B";
 
                 $item_id = $this->insert_bill_item($insert_faedah);
 
-                $data_bill_faedah['tr_code']     = $insert_faedah['TR_CODE'];
-                $data_bill_faedah['tr_code_old'] = TR_CODE_OLD_FAEDAH_8_PERC;
-                $data_bill_faedah['amount']      = $insert_faedah['AMOUNT'];
-                $data_bill_faedah['item_desc']   = $insert_faedah['ITEM_DESC'];
-                $data_bill_faedah['priority']    = $insert_faedah['PRIORITY'];
-                $data_bill_faedah['gst_status']  = 0;
-                $data_bill_faedah['item_id']      = $item_id;
+                $data_bill_faedah['tr_code']        = $insert_faedah['TR_CODE'];
+                $data_bill_faedah['tr_code_old']    = TR_CODE_OLD_FAEDAH_8_PERC;
+                $data_bill_faedah['amount']         = $insert_faedah['AMOUNT'];
+                $data_bill_faedah['item_desc']      = $insert_faedah['ITEM_DESC'];
+                $data_bill_faedah['priority']       = $insert_faedah['PRIORITY'];
+                $data_bill_faedah['gst_status']     = 0;
+                $data_bill_faedah['item_id']        = $item_id;
+                $data_bill_faedah['bill_category']  = $insert_faedah['BILL_CATEGORY'];
 
                 if($insert_faedah['AMOUNT']>0):
                     $up_level_notice = true;
@@ -466,6 +480,7 @@ class Bill_lib {
                     $data_bill_row['item_desc']     = $row['ITEM_DESC'];
                     $data_bill_row['gst_status']    = 0;
                     $data_bill_row['item_id']       = $row['ITEM_ID'];
+                    $data_bill_row['bill_category'] = $row['BILL_CATEGORY'];
 
                     $bill_item[]                    = $data_bill_row;
 
@@ -723,10 +738,12 @@ class Bill_lib {
     function get_bill_item($data){
         db_select('*');
         db_from('B_ITEM');
+        db_where("DISPLAY_STATUS = 'Y'");
 
         if($data['account_id']):
             db_where('account_id',$data['account_id']);
         endif;
+
         if($data['bill_id']):
             db_where('bill_id',$data['bill_id']);
         endif;
@@ -739,7 +756,7 @@ class Bill_lib {
     }
 
     function sum_amount_item($bill_id){
-        db_select('sum(amount) as total_amount');
+        db_select('nvl(sum(amount),0) as total_amount');
         db_from('B_ITEM');
         db_where('bill_id',$bill_id);
 
@@ -764,6 +781,7 @@ class Bill_lib {
         db_where('m.account_id',$account_id);
         db_where('i.bill_category',$type);
         db_where("i.PREV_YEAR_OUTSTANDING",1);
+        db_where("i.DISPLAY_STATUS = 'Y'");
         // db_group('TR_CODE,ITEM_DESC');
 
         $sql = db_get();
@@ -782,6 +800,7 @@ class Bill_lib {
         // db_select('sum(AMOUNT) as total_amount,TR_CODE,ITEM_DESC,i.GST_TYPE');
         db_from('B_ITEM i');
         db_join('b_master m','m.bill_id = i.bill_id');
+        db_where("i.DISPLAY_STATUS = 'Y'");
         // db_where("substr(i.TR_CODE,0,2)",'11');
         db_where('m.bill_year',$this->cur_year);
         db_where('m.bill_month < '.$this->cur_month);
@@ -972,7 +991,8 @@ class Bill_lib {
         endif;
     }
 
-    function generate_item($data_item,$lebihan){
+    function generate_item($data_item,$lebihan)
+    {
         $this->tunggakan_notice_up = false;
         if(isset($data_item['item'])):
             $new_item = array();
@@ -1087,6 +1107,7 @@ class Bill_lib {
                 $data_bill_row['amount']        = 0;
                 $data_bill_row['item_desc']     = $row['ITEM_DESC'];
                 $data_bill_row['gst_status']    = 0;
+                $data_bill_row['bill_category'] = "B";
                 // $data_bill_row['item_id']       = $row['ITEM_ID'];
 
                 $bill_item[]                    = $data_bill_row;

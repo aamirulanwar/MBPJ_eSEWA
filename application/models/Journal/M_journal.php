@@ -365,4 +365,25 @@ class M_journal extends CI_Model
             return $result;
         }
     }
+
+    function get_a_journal_detail($data_search=array())
+    {
+        db_select('*');
+        db_from('a_journal a');
+
+        if (isset($data_search["JOURNAL_ID"]) && having_value($data_search['JOURNAL_ID']) )
+        {
+            db_where('a.JOURNAL_ID',$data_search['JOURNAL_ID']);
+        }
+
+        if (isset($data_search["JOURNAL_CODE"]) && having_value($data_search['JOURNAL_CODE']) )
+        {
+            db_where('a.JOURNAL_CODE',$data_search['JOURNAL_CODE']);
+        }
+
+        $sql = db_get('');
+        if($sql):
+            return $sql->result_array('');
+        endif;
+    }
 }

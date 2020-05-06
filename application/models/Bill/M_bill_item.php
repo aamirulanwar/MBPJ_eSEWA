@@ -21,6 +21,41 @@ class M_bill_item extends CI_Model
         endif;
     }
 
+    function get_bill_item_by_searchKey($data_search)
+    {
+        db_select('i.*');
+        db_select("to_char(i.dt_added, 'yyyy') as dt_added",false);
+        db_from('b_item i');
+        db_join('admin.mctrancode t','i.tr_code=t.mct_trcodenew');
+
+        if (isset($data_search["BILL_ID"]) && having_value($data_search['BILL_ID']) )
+        {
+            db_where('i.BILL_ID',$data_search['BILL_ID']);
+        }
+
+        if (isset($data_search["ITEM_ID"]) && having_value($data_search['ITEM_ID']) )
+        {
+            db_where('i.ITEM_ID',$data_search['ITEM_ID']);
+        }
+
+        if (isset($data_search["TR_CODE"]) && having_value($data_search['TR_CODE']) )
+        {
+            db_where('i.TR_CODE',$data_search['TR_CODE']);
+        }
+
+        if (isset($data_search["BILL_CATEGORY"]) && having_value($data_search['BILL_CATEGORY']) )
+        {
+            db_where('i.BILL_CATEGORY',$data_search['BILL_CATEGORY']);
+        }
+
+        db_where('t.mct_mdcode','B');
+        db_order('t.mct_priort');
+        $sql = db_get('');
+        if($sql):
+            return $sql->result_array();
+        endif;
+    }
+
     function count_bill_item($tr_id,$category){
         db_select('i.*');
         db_select("to_char(i.dt_added, 'yyyy') as dt_added",false);

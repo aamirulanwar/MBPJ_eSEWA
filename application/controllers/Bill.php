@@ -40,7 +40,8 @@ class Bill extends CI_Controller
             'statement',
             'generate_barcode',
             'add_journal_transaction',
-            'addLODcharge'
+            'addLODcharge',
+            // 'updateBillAmount'
         );
         #set pages data
         (in_array($method,$array)) ? $this->$method() : $this->account_list();
@@ -631,4 +632,23 @@ class Bill extends CI_Controller
             return false;
         }
     }
+
+    // Do not enable this function unless for custom usage
+    // function updateBillAmount()
+    // {
+    //     $account_id     = 1;
+    //     $bill_month     = 4;
+    //     $bill_year      = 2020;
+    //     $bill_category  = "R";
+    //     $existingBill   = $this->m_bill_master->getBillId($account_id,$bill_month,$bill_year,$bill_category);
+    //     $bill_id        = $existingBill["BILL_ID"];
+    //     $billItemDetail = $this->m_bill_item->getBillItemTotalAmount($bill_id );
+    //     $bill_master_update["TOTAL_AMOUNT"] = $billItemDetail["TOTAL_AMOUNT"];
+
+    //     // echo "<pre>";
+    //     // var_dump($bill_master_update);
+    //     // die();
+
+    //     $this->m_bill_master->updateBillMasterTotalAmount($bill_id,$account_id,$bill_master_update);
+    // }
 }

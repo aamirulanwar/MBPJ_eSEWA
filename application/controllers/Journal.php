@@ -16,6 +16,7 @@ class Journal extends CI_Controller
         load_model('Bill/M_bill_item', 'm_bill_item');
         load_model('Account/M_acc_account', 'm_acc_account');
         load_model('Journal/M_journal', 'm_journal');
+        load_model('TrCode/M_tran_code', 'm_tran_code');
     }
 
     function _remap($method)
@@ -221,6 +222,10 @@ class Journal extends CI_Controller
                 }
                 else
                 {
+                    $data_search["MCT_TRCODENEW"]   =   $mct_trcodenew[$i];
+                    $get_trcode_old                 =   $this->m_tran_code->get_tr_code($data_search);
+                    $trCodeOld                      =   $get_trcode_old["MCT_TRCODE"];
+
                     $this->m_journal->insert_journal_temp([
                         'created_by' => $this->curuser["USER_ID"],
                         'bill_number' => $bill_number,
@@ -231,6 +236,7 @@ class Journal extends CI_Controller
                         'amount' => str_replace(",","",$amount[$i]),
                         'bill_category' => input_data('b_master_bill_category'),
                         'tr_code' => $mct_trcodenew[$i],
+                        'tr_code_old' => $trCodeOld,
                         'status_approval' => 0,
                         'remark' => $remark[$i]
                     ]);
@@ -311,7 +317,29 @@ class Journal extends CI_Controller
             $bill_item_insert["BILL_CATEGORY"]  = 'J';
             $bill_item_insert["TR_CODE"]        = $journal_trcode;
             $bill_item_insert["ITEM_DESC"]      = $journal_trdesc;
-            $bill_item_insert["TR_CODE_OLD"]      = $journal_trcode_old;
+            $bill_item_insert["TR_CODE_OLD"]    = $journal_trcode_old;
+
+            $journalTypeSearch["JOURNAL_ID"]    = $journal_id;
+            $journalType = $this->m_journal->get_a_journal_detail($journalTypeSearch);
+
+            if ( $journalType[0]["JOURNAL_CODE"] == "B01" )
+            {
+                // All transaction under B01 must be hidden from view except for penyata
+                $bill_item_insert["DISPLAY_STATUS"] = "N";
+
+                // Get ITEM_ID from B_ITEM that need to be hidden
+                $data_search["BILL_ID"] = $bill_id;
+                $data_search["TR_CODE"] = $journal_trcode;
+                $billItem = $this->m_bill_item->get_bill_item_by_searchKey($data_search);
+                
+                // Please ensure that the result only return one row only. 
+                // Anymore than 1 then this function will become obsolete and need to further check.
+                $item_id = $billItem[0]["ITEM_ID"];
+                $bill_item_update["DISPLAY_STATUS"] = "N";
+                
+
+                $this->m_bill_item->update_bill_item($item_id,$bill_item_update);
+            }
 
             $this->m_bill_item->insert_bill_item($bill_item_insert);
         }
