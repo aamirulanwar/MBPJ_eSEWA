@@ -159,7 +159,7 @@ checking_validation(validation_errors());
             <div class="modal-body">
                 <center>
                     <div class="form-group">
-                        <input type="hidden" id="default_bill_category" value="<?=( $bill_master['BILL_NUMBER'] == "NEW_RESIT_JOURNAL_R02") ? 'R' : $bill_item[0]['BILL_CATEGORY']?>">
+                        <input type="hidden" id="default_bill_category" value="<?=( $bill_master['BILL_NUMBER'] == "NEW_RESIT_JOURNAL_R02") ? 'R' : $bill_master['BILL_CATEGORY']?>">
                         <label>Sila pilih kod transaksi</label>
                         <select name="choose_transaction_code" id="choose_transaction_code" class="form-control">
                             <?php
