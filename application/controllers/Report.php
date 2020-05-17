@@ -1379,7 +1379,7 @@ class Report extends CI_Controller
     }
 
     function hartanah(){
-        // $this->auth->restrict_access($this->curuser,array(8011));
+        $this->auth->restrict_access($this->curuser,array(8012));
         $data['link_1']     = 'Laporan';
         $data['link_2']     = 'Perjanian Sewaan Hartanah';
         $data['link_3']     = '';
@@ -1431,7 +1431,7 @@ class Report extends CI_Controller
     }
 
     function papaniklan(){
-        // $this->auth->restrict_access($this->curuser,array(8011));
+        $this->auth->restrict_access($this->curuser,array(8013));
         $data['link_1']     = 'Laporan';
         $data['link_2']     = 'Perjanian Sewa';
         $data['link_3']     = '';
@@ -1470,7 +1470,7 @@ class Report extends CI_Controller
     }
 
     function perjanjian_kutipan(){
-        // $this->auth->restrict_access($this->curuser,array(8011));
+        $this->auth->restrict_access($this->curuser,array(8014));
         $data['link_1']     = 'Laporan';
         $data['link_2']     = 'Perbandingan';
         $data['link_3']     = '';
@@ -1513,7 +1513,7 @@ class Report extends CI_Controller
     }
 
     function hasil(){
-        // $this->auth->restrict_access($this->curuser,array(8011));
+        $this->auth->restrict_access($this->curuser,array(8015));
         $data['link_1']     = 'Laporan';
         $data['link_2']     = 'Hasil Perjanjian Sewa';
         $data['link_3']     = '';
