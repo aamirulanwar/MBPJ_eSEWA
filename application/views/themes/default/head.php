@@ -604,22 +604,30 @@
                                 <i class="nav-icon fa fa-circle fa-sm"></i> Laporan Jurnal Sewaan</a>
                         </li>
                         <?php endif;?>
+                        <?php if($this->auth->access_view($this->curuser,array(8012))):?>
                         <li class="nav-item">
                             <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('hartanah'))?>" href="/report/hartanah">
                                 <i class="nav-icon fa fa-circle fa-sm"></i> Laporan Perjanjian Sewa Hartanah</a>
                         </li>
+                        <?php endif;?>
+                        <?php if($this->auth->access_view($this->curuser,array(8013))):?>
                         <li class="nav-item">
                             <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('papaniklan'))?>" href="/report/papaniklan">
                                 <i class="nav-icon fa fa-circle fa-sm"></i> Laporan Perjanjian Sewa</a>
                         </li>
+                        <?php endif;?>
+                        <?php if($this->auth->access_view($this->curuser,array(8014))):?>
                         <li class="nav-item">
                             <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('perjanjian'))?>" href="/report/perjanjian_kutipan">
                                 <i class="nav-icon fa fa-circle fa-sm"></i> Laporan Perbandingan</a>
                         </li>
+                        <?php endif;?>
+                        <?php if($this->auth->access_view($this->curuser,array(8015))):?>
                         <li class="nav-item">
                             <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('hasil'))?>" href="/report/hasil">
                                 <i class="nav-icon fa fa-circle fa-sm"></i> Laporan Hasil Perjanjian Sewa</a>
                         </li>
+                        <?php endif;?>
                     </ul>
                 </li>
                 <?php endif;?>
