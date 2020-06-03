@@ -41,7 +41,14 @@ class M_a_asset extends CI_Model
 
     function insert_a_asset($data_insert){
         db_insert('a_asset',$data_insert);
-        return get_insert_id('a_asset');
+        $user_id = get_insert_id('a_asset');
+          $data_audit_trail['log_id']                  = 6007;
+          $data_audit_trail['remark']                  = "Tambah Kod Harta";
+          $data_audit_trail['status']                  = PROCESS_STATUS_SUCCEED;
+          $data_audit_trail['user_id']                 = $this->curuser['USER_ID'];
+          $data_audit_trail['refer_id']                = $user_id; //refer to db_where
+          $this->audit_trail_lib->add($data_audit_trail);
+        return $user_id;
     }
 
     function get_a_asset_by_id($asset_id){
@@ -59,11 +66,34 @@ class M_a_asset extends CI_Model
     function update_a_asset($data_update,$id){
         db_where('asset_id',$id);
         db_update('a_asset',$data_update);
-        if(db_affected_rows()!=0):
-            return true;
-        else:
-            return false;
-        endif;
+        if ($data_update["soft_delete"] == 1)
+        {  // code...
+          if(db_affected_rows()!=0):
+                $data_audit_trail['log_id']                  = 6009;
+                $data_audit_trail['remark']                  = "Padam Kot Harta";
+                $data_audit_trail['status']                  = PROCESS_STATUS_SUCCEED;
+                $data_audit_trail['user_id']                 = $this->curuser['USER_ID'];
+                $data_audit_trail['refer_id']                = $id; //refer to db_where
+                $this->audit_trail_lib->add($data_audit_trail);
+              return true;
+          else:
+              return false;
+          endif;
+        }
+        else
+        { // code...
+          if(db_affected_rows()!=0):
+                $data_audit_trail['log_id']                  = 6008;
+                $data_audit_trail['remark']                  = "Kemaskini Kot Harta";
+                $data_audit_trail['status']                  = PROCESS_STATUS_SUCCEED;
+                $data_audit_trail['user_id']                 = $this->curuser['USER_ID'];
+                $data_audit_trail['refer_id']                = $id; //refer to db_where
+                $this->audit_trail_lib->add($data_audit_trail);
+              return true;
+          else:
+              return false;
+          endif;
+        }
     }
 
     function update_a_asset_by_category_id($data_update,$id){

@@ -160,7 +160,7 @@
             }
         );
     });
-    
+
     function print_report() {
         $('.data-print').removeClass('table-scroll');
         window.print()

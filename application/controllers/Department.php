@@ -84,7 +84,7 @@ class Department extends CI_Controller
         else:
             $data_insert['department_name']     = strtoupper(input_data('name'));
             $data_insert['dept_level']          = input_data('level');
-            
+
             if(input_data('level')==DEPARTMENT_LEVEL_2):
                 $data_insert['parent_id']       = input_data('department_parent');
             else:
@@ -177,4 +177,3 @@ class Department extends CI_Controller
     }
 }
 /* End of file modules/login/controllers/department.php */
-
