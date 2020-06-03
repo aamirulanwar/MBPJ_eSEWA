@@ -428,7 +428,7 @@ function chooseJournalCode() {
         url: '/journal/journal_code_lists',
         type: 'GET',
         data:{
-            bill_category: $('#default_bill_category').val()
+            bill_category: $('#b_master_bill_category').val()
         }
     })
     .done(function(r) {
@@ -472,8 +472,11 @@ function setSelectedTrcode(select_el,target_el) {
     $(target_el).val($(select_el).val());
 }
 
-function remove_tr_code(obj) {
-    $(obj).parent().parent().remove();
+function remove_tr_code(obj) 
+{
+    console.log(obj);
+    $( "#"+obj ).remove();
+    // $(obj).parent().parent().remove();
 }
 
 function status_approve_new() {

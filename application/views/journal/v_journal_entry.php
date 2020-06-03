@@ -10,7 +10,8 @@ checking_validation(validation_errors());
         </div>
         <div class="card-body">
             <div class="pull-right">
-                <button onclick="print_report()" class="btn btn-warning btn-sm pull-right">Print</button>
+                <!-- <button href="/journal/doc_journal" class="btn btn-warning btn-sm pull-right">Print</button> -->
+                <a class="btn btn-warning btn-sm pull-right" href="/journal/doc_journal" target="_blank">Print</a>
             </div>
             <br>
             <br>
@@ -20,6 +21,7 @@ checking_validation(validation_errors());
                         <th>#</th>
                         <th>No. Akaun</th>
                         <th>No. Bil</th>
+                        <th>Kod Jurnal/Keterangan</th>
                         <th>Bil Bulan/Tahun</th>
                         <th>Amaun</th>
                         <th>Status</th>
@@ -36,6 +38,7 @@ checking_validation(validation_errors());
                                 <td><?=$i?></td>
                                 <td><?=$d['ACCOUNT_NUMBER']?></td>
                                 <td><?=$d['BILL_NUMBER']?></td>
+                                <td><?=$d['JOURNAL_CODE']?> <?=$d['JOURNAL_DESC']?></td>
                                 <td><?=$d['BILL_MONTH']?>/<?=$d['BILL_YEAR']?></td>
                                 <td>RM <?=number_format(abs($d['AMOUNT']),2)?></td>
                                 <td>

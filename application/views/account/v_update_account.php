@@ -6,10 +6,11 @@ checking_validation(validation_errors());
 pre(form_error());
 ?>
 <?php echo validation_errors(); ?>
-<form action="/account/update_acc/<?php echo uri_segment(3)?>" method="post" class="form-horizontal">
+<form action="/account/update_acc/<?php echo uri_segment(3)?>" method="post" class="form-horizontal" enctype="multipart/form-data">
     <div class="card card-accent-info">
         <div class="card-header">
             <h3 class="box-title">No. akaun (<?php echo $data_details['ACCOUNT_NUMBER']?>)</h3>
+            <input type="hidden" id="account_id" value="<?php echo $data_details['ACCOUNT_ID']; ?>" />
         </div>
         <div class="card-body">
             <div class="row mb-4">
@@ -193,37 +194,14 @@ pre(form_error());
                     <?php echo form_error('freezer_management_charge')?>
                 </div>
             </div>
-<!--            <div class="form-group row">-->
-<!--                <label class="col-sm-3 col-form-label">Kadar sewa (RM) <span class="mandatory">*</span></label>-->
-<!--                <div class="col-sm-5">-->
-<!--                    <input type="text" class="form-control" onkeyup="currency_format(this),calculate_cost()" name="estimation_rental_charge" id="estimation_rental_charge" placeholder="Kadar sewa (RM)" value="--><?php //echo set_value('estimation_rental_charge',num($data_details['RENTAL_FEE']))?><!--">-->
-<!--                    --><?php //echo form_error('estimation_rental_charge')?>
-<!--                </div>-->
-<!--            </div>-->
-            <?php
-//            if($data_asset):
-                ?>
-                <div class="form-group row">
-                    <label class="col-sm-3 col-form-label">Harga sewaan <span class="mandatory">*</span></label>
-                    <div class="col-sm-5">
-                        <input type="hidden" name="estimation_rental_charge" id="estimation_rental_charge" onkeyup="currency_format(this),calculate_cost()" onchange="currency_format(this)" class="form-control" placeholder="Harga sewaan" value="<?php echo set_value('estimation_rental_charge',$data_details['ESTIMATION_RENTAL_CHARGE'])?>">
-                        <p class="form-control-plaintext"><?php echo num($data_details['ESTIMATION_RENTAL_CHARGE'])?></p>
-                        <?php echo form_error('estimation_rental_charge')?>
-                    </div>
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Harga sewaan <span class="mandatory">*</span></label>
+                <div class="col-sm-5">
+                    <input type="hidden" name="estimation_rental_charge" id="estimation_rental_charge" onkeyup="currency_format(this),calculate_cost()" onchange="currency_format(this)" class="form-control" placeholder="Harga sewaan" value="<?php echo set_value('estimation_rental_charge',$data_details['ESTIMATION_RENTAL_CHARGE'])?>">
+                    <p class="form-control-plaintext"><?php echo num($data_details['ESTIMATION_RENTAL_CHARGE'])?></p>
+                    <?php echo form_error('estimation_rental_charge')?>
                 </div>
-            <?php
-//            else:
-                ?>
-<!--                <div class="form-group row">-->
-<!--                    <label class="col-sm-3 col-form-label">Harga sewaan <span class="mandatory">*</span></label>-->
-<!--                    <div class="col-sm-5">-->
-<!--                        <input type="input" name="estimation_rental_charge" id="estimation_rental_charge" onkeyup="currency_format(this),calculate_cost()" onchange="currency_format(this)" class="form-control" placeholder="Harga sewaan" value="--><?php //echo set_value('estimation_rental_charge',empty($data_details['ESTIMATION_RENTAL_FEE'])?num($data_details['RENTAL_FEE_DEFAULT']):num($data_details['ESTIMATION_RENTAL_FEE']))?><!--">-->
-<!--                        --><?php //echo form_error('estimation_rental_charge')?>
-<!--                    </div>-->
-<!--                </div>-->
-            <?php
-//            endif;
-            ?>
+            </div>
             <div class="form-group row">
                 <label class="col-sm-3 col-form-label">Penambahan / pengurangan caj sewa (RM) <span class="mandatory">*</span></label>
                 <div class="col-sm-2">
@@ -241,7 +219,6 @@ pre(form_error());
                             <input class="form-check-input" onclick="calculate_cost()" type="radio" <?php echo set_radio('difference_rental_charge_type',2,radio_default(2,$data_details['DIFFERENCE_RENTAL_CHARGE_TYPE']))?> name="difference_rental_charge_type" value="2"> Pengurangan
                         </label>
                     </div>
-<!--                    --><?php //echo form_error('difference_rental_charge_type')?>
                 </div>
             </div>
             <div class="form-group row">
@@ -251,19 +228,6 @@ pre(form_error());
                     <?php echo form_error('rental_charge')?>
                 </div>
             </div>
-            <?php
-                if($data_details['TYPE_ID']==6):
-            ?>
-<!--            <div class="form-group row">-->
-<!--                <label class="col-sm-3 col-form-label">Caj LMS (RM) - bagi sewaan papan iklan luaran sahaja </label>-->
-<!--                <div class="col-sm-5">-->
-<!--                    <input type="text" class="form-control" onkeyup="currency_format(this)" name="lms_charge" placeholder="Caj LMS (RM)" value="--><?php //echo set_value('lms_charge')?><!--">-->
-<!--                    --><?php //echo form_error('lms_charge')?>
-<!--                </div>-->
-<!--            </div>-->
-            <?php
-                endif;
-            ?>
             <div class="form-group row">
                 <label class="col-sm-3 col-form-label">Cagaran sewa (RM) </label>
                 <div class="col-sm-5">
@@ -328,9 +292,6 @@ pre(form_error());
                         <?php
                     endif;
                 ?>
-<!--                <a href="/rental_application/application">-->
-<!--                    <button type="button" class="btn btn-default pull-right btn-submit mr-3">Batal</button>-->
-<!--                </a>-->
             </div>
         </div>
     </div>

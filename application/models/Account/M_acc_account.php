@@ -90,8 +90,8 @@ class M_acc_account extends CI_Model
             db_where('a.category_id',$data_search['category_id']);
         endif;
         if(isset($data_search['almost_expired']) && having_value($data_search['almost_expired'])):
-//            db_where("extract(year from a.date_end) = ".date('Y')."");
-//            db_where("extract(month from a.date_get_accountend) = ".date('m')."");
+           // db_where("extract(year from a.date_end) = ".date('Y')."");
+           // db_where("extract(month from a.date_get_accountend) = ".date('m')."");
             if($data_search['almost_expired']==1):
                 db_where("A.DATE_END IS NOT NULL");
                 db_where('a.STATUS_ACC',STATUS_ACCOUNT_ACTIVE);
@@ -192,6 +192,26 @@ class M_acc_account extends CI_Model
         endif;
     }
 
+    function get_account_details_by_accountNo($account_number){
+        db_select('a.*,acc.*,t.*,c.*,r.*,asset.asset_name,asset.asset_add');
+        db_select('a.bill_type as bill_type');
+        db_select("to_char(a.dt_added, 'yyyy-mm-dd hh24:mi:ss') as dt_create_acc",false);
+        db_select("to_char(acc.date_of_birth, 'dd-mm-yyyy') as date_of_birth",false);
+        db_select('acc.address as user_address');
+        db_select('acc.department_id as department_id');
+        db_join('acc_user acc','acc.user_id = a.user_id');
+        db_join('a_type t','t.type_id = a.type_id');
+        db_join('a_category c','c.category_id = a.category_id');
+        db_join('a_asset asset','a.asset_id=asset.asset_id','left');
+        db_join('a_rental_use r','r.rental_use_id = a.rental_use_id','left');
+        db_from('acc_account a');
+        db_where('ACCOUNT_NUMBER',$account_number);
+        $sql = db_get();
+        if($sql):
+            return $sql->row_array();
+        endif;
+    }
+
     function count_account_outstanding($data_search=array()){
         db_select('a.*,acc.*,t.*,c.*,r.*');
         db_join('acc_user acc','acc.user_id = a.user_id');
@@ -269,7 +289,7 @@ class M_acc_account extends CI_Model
             db_where("acc.name like '%".$data_search['name']."%'");
         endif;
         if(isset($data_search['ic_number_company_reg']) && having_value($data_search['ic_number_company_reg'])):
-//            db_where('(acc.ic_number like "%'.$data_search['ic_number_company_reg'].'%" or acc.company_registration_number like "%'.$data_search['ic_number_company_reg'].'%")');
+           // db_where('(acc.ic_number like "%'.$data_search['ic_number_company_reg'].'%" or acc.company_registration_number like "%'.$data_search['ic_number_company_reg'].'%")');
             db_where("(acc.ic_number like '%".$data_search['ic_number_company_reg']."%' or acc.company_registration_number like '%".$data_search['ic_number_company_reg']."%')");
 
         endif;
@@ -292,11 +312,11 @@ class M_acc_account extends CI_Model
         db_join('a_type t','t.type_id = acc.type_id');
         db_join('a_category c','c.category_id = acc.category_id');
         db_from('acc_account acc');
-//        db_where('m.bill_month >= 4');
+        // db_where('m.bill_month >= 4');
         db_where('m.bill_year >= 2015');
         db_where('i.tr_gst_status',1);
-//        db_where('i.amount > 0');
-//        db_where('acc.account_id',6262);
+        // db_where('i.amount > 0');
+        // db_where('acc.account_id',6262);
         if(isset($data_search['type_id']) && having_value($data_search['type_id'])):
             db_where("acc.type_id",$data_search['type_id']);
         endif;
@@ -314,8 +334,8 @@ class M_acc_account extends CI_Model
     }
 
     function account_report_dashboard($per_page='',$search_segment='',$data_search=array()){
-//        db_select('a.*,acc.*,t.*,c.*,r.*');
-//        db_select("to_char(a.dt_added, 'yyyy-mm-dd hh24:mi:ss') as dt_create_acc",false);
+        // db_select('a.*,acc.*,t.*,c.*,r.*');
+        // db_select("to_char(a.dt_added, 'yyyy-mm-dd hh24:mi:ss') as dt_create_acc",false);
         db_select('count(account_id) as total_acc');
         db_select('t.type_name');
         db_join('acc_user acc','acc.user_id = a.user_id');
@@ -323,27 +343,6 @@ class M_acc_account extends CI_Model
         db_join('a_category c','c.category_id = a.category_id');
         db_join('a_rental_use r','r.rental_use_id = a.rental_use_id','LEFT');
         db_from('acc_account a');
-//        if(isset($data_search['account_number']) && having_value($data_search['account_number'])):
-//            db_where('a.account_number',$data_search['account_number']);
-//        endif;
-//        if(isset($data_search['type_id']) && having_value($data_search['type_id'])):
-//            db_where('a.type_id',$data_search['type_id']);
-//        endif;
-//        if(isset($data_search['name']) && having_value($data_search['name'])):
-//            db_where("acc.name like '%".$data_search['name']."%'");
-//        endif;
-//        if(isset($data_search['ic_number_company_reg']) && having_value($data_search['ic_number_company_reg'])):
-////            db_where('(acc.ic_number like "%'.$data_search['ic_number_company_reg'].'%" or acc.company_registration_number like "%'.$data_search['ic_number_company_reg'].'%")');
-//            db_where("(acc.ic_number like '%".$data_search['ic_number_company_reg']."%' or acc.company_registration_number like '%".$data_search['ic_number_company_reg']."%')");
-//
-//        endif;
-//        if(isset($data_search['acc_start']) && having_value($data_search['acc_start'])):
-//            db_where("a.account_number >= '".$data_search['acc_start']."'");
-//        endif;
-//        if(isset($data_search['acc_end']) && having_value($data_search['acc_end'])):
-//            db_where("a.account_number <= '".$data_search['acc_end']."'");
-//        endif;
-//        db_order('a.account_number');
         db_group('t.type_name');
         $sql = db_get();
         if($sql):
@@ -355,8 +354,11 @@ class M_acc_account extends CI_Model
         db_select('*');
         db_from('acc_account a');
         db_where('STATUS_ACC',STATUS_ACCOUNT_ACTIVE);
-        db_where("extract(year from a.date_end) = ".date('Y')."");
-        db_where("extract(month from a.date_end) = ".date('m')."");
+        // db_where("extract(year from a.date_end) = ".date('Y')."");
+        // db_where("extract(month from a.date_end) = ".date('m')."");
+        db_where("A.DATE_END IS NOT NULL");
+        db_where("A.DATE_END > TO_DATE('".date('Y-m-d')."','YYYY-MM-DD')");
+        db_where("( A.DATE_END - TO_DATE('".date('Y-m-d')."','YYYY-MM-DD')) <= 60");
         return db_count_results();
     }
 
@@ -394,11 +396,11 @@ class M_acc_account extends CI_Model
 
     function get_account_cron($data_search=array()){
         db_select('a.account_id,a.bill_type');
-//        db_select("to_char(a.dt_added, 'yyyy-mm-dd hh24:mi:ss') as dt_create_acc",false);
+        // db_select("to_char(a.dt_added, 'yyyy-mm-dd hh24:mi:ss') as dt_create_acc",false);
         db_join('acc_user acc','acc.user_id = a.user_id');
         db_join('a_type t','t.type_id = a.type_id');
         db_join('a_category c','c.category_id = a.category_id');
-//        db_join('a_rental_use r','r.rental_use_id = a.rental_use_id','LEFT');
+        // db_join('a_rental_use r','r.rental_use_id = a.rental_use_id','LEFT');
         db_from('acc_account a');
         if(isset($data_search['status_bill']) && having_value($data_search['status_bill'])):
             db_where('a.STATUS_BILL',STATUS_BILL_ACTIVE);
@@ -409,6 +411,7 @@ class M_acc_account extends CI_Model
         if(isset($data_search['not_added_this_year']) && having_value($data_search['not_added_this_year'])):
             db_where("extract(year from a.dt_added) < ".date('Y')."");
         endif;
+        db_where("a.type_id NOT IN (6,8)");
         db_order('a.account_id','asc');
         $sql = db_get('');
         if($sql):
@@ -426,6 +429,146 @@ class M_acc_account extends CI_Model
         $sql = db_get();
         if($sql):
             return $sql->result_array();
+        endif;
+    }
+
+    // public function sewaan_hartanah($year,$month){
+    public function sewaan_hartanah($data_search){
+        db_select ('a.type_id');
+        db_select ('b.type_name');
+        db_select ('count(account_id) as bil');
+        db_select ("EXTRACT(MONTH FROM A.DATE_START) AS BULAN");
+        db_from('acc_account A');
+        db_join('a_type B','A.type_id = B.type_id');
+        db_where("A.TYPE_ID IN (1,2,3,4,5)");
+        // db_where("EXTRACT(YEAR FROM A.DATE_START) = ",$year);
+        if(isset($data_search['year']) && having_value($data_search['year'])):
+            db_where("EXTRACT(YEAR FROM A.DATE_START) = ".$data_search['year']."");
+        endif;
+        // db_where("EXTRACT(MONTH FROM A.DATE_START) = ",$month);
+        db_group('A.type_id,b.type_name,EXTRACT(YEAR FROM A.DATE_START),EXTRACT(MONTH FROM A.DATE_START)');
+        db_order('TYPE_ID');
+        $sql = db_get();
+        if($sql):
+            return $sql->result_array();
+        endif;
+    }
+
+    public function sewaan_papaniklan($data_search){
+        db_select ('A.BILLBOARD_TYPE');
+        db_select ('COUNT(account_id) as bil');
+        db_select ("EXTRACT(MONTH FROM A.DATE_START)AS BULAN");
+        db_from('acc_account A');
+        if(isset($data_search['year']) && having_value($data_search['year'])):
+            db_where("EXTRACT(YEAR FROM A.DATE_START) =".$data_search['year']."");
+        endif;
+        db_where("A.TYPE_ID = 6");
+        db_where("A.BILLBOARD_TYPE in (1,2)");
+        // db_where("EXTRACT(MONTH FROM A.DATE_START) in (1,2,3,4,5,6,7,8,9,10,12)");
+        db_group('A.BILLBOARD_TYPE,EXTRACT(YEAR FROM A.DATE_START),EXTRACT(MONTH FROM A.DATE_START)');
+        db_order('A.BILLBOARD_TYPE');
+        $sql = db_get();
+        if($sql):
+            return $sql->result_array();
+        endif;
+    }
+
+    public function perjanjian_kutipan($data_search){
+        db_select ('COUNT(A.ACCOUNT_ID) as bil');
+        // db_select ('SUM(A.RENTAL_CHARGE) AS RM');
+        db_select ("EXTRACT(YEAR FROM A.DATE_START)AS YEAR");
+        // db_select ('A.TYPE_ID');
+        db_from('acc_account A');
+        // if(isset($data_search['year']) && having_value($data_search['year'])):
+        //     db_where("EXTRACT(YEAR FROM A.DATE_START) IN(".$data_search['year'].",".$data_search['year2'].",".$data_search['year3'].")");
+        // endif;
+
+        if(isset($data_search['year']) && having_value($data_search['year'])):
+            db_where("EXTRACT(YEAR FROM A.DATE_START) >= ".$data_search['year']."");
+        endif;
+
+        if(isset($data_search['year2']) && having_value($data_search['year2'])):
+            db_where("EXTRACT(YEAR FROM A.DATE_START) <= ".$data_search['year2']."");
+        endif;
+        db_where("A.TYPE_ID NOT IN (6)");
+        //db_where("A.BILLBOARD_TYPE in (1,2)");
+        // db_where("EXTRACT(YEAR FROM A.DATE_START) =2017");
+        db_group('EXTRACT(YEAR FROM A.DATE_START)');
+        db_order('YEAR');
+        $sql = db_get();
+        if($sql):
+            return $sql->result_array();
+        endif;
+    }
+
+    public function perjanjian_kutipan_billboard($data_search){
+        db_select ('COUNT(A.ACCOUNT_ID) as bil');
+        // db_select ('SUM(A.RENTAL_CHARGE) AS RM');
+        db_select ("EXTRACT(YEAR FROM A.DATE_START)AS YEAR");
+        // db_select ('A.TYPE_ID');
+        db_from('acc_account A');
+        // if(isset($data_search['year']) && having_value($data_search['year'])):
+        //     db_where("EXTRACT(YEAR FROM A.DATE_START) IN(".$data_search['year'].",".$data_search['year2'].",".$data_search['year3'].")");
+        // endif;
+
+        if(isset($data_search['year']) && having_value($data_search['year'])):
+            db_where("EXTRACT(YEAR FROM A.DATE_START) >= ".$data_search['year']."");
+        endif;
+
+        if(isset($data_search['year2']) && having_value($data_search['year2'])):
+            db_where("EXTRACT(YEAR FROM A.DATE_START) <= ".$data_search['year2']."");
+        endif;
+        db_where("A.TYPE_ID = 6");
+        //db_where("A.BILLBOARD_TYPE in (1,2)");
+        // db_where("EXTRACT(YEAR FROM A.DATE_START) =2017");
+        db_group('EXTRACT(YEAR FROM A.DATE_START)');
+        db_order('YEAR');
+        $sql = db_get();
+        if($sql):
+            return $sql->result_array();
+      endif;
+    }
+
+    function getAccountNoticeLevel($account_id)
+    {
+        db_select ('notice_level');
+        db_from('acc_account');
+        db_where("account_id",$account_id);
+        $sql = db_get();
+        if($sql):
+            return $sql->row_array();
+        endif;
+    }
+
+    public function hasil($data_search){
+        db_select ('SUM(B.AMOUNT) AS RM');
+        db_select ("EXTRACT(MONTH FROM B.DT_ADDED) AS BULAN");
+        db_select ('A.TYPE_ID');
+        db_from('B_ITEM B');
+        db_join('ACC_ACCOUNT A','A.ACCOUNT_ID = B.ACCOUNT_ID');
+        if(isset($data_search['year']) && having_value($data_search['year'])):
+            db_where("EXTRACT(YEAR FROM B.DT_ADDED) = ".$data_search['year']."");
+        endif;
+        // db_where("A.TYPE_ID = 6");
+        db_where("B.BILL_CATEGORY = 'R'");
+        db_where("B.GST_TYPE = 1");
+        // db_where("EXTRACT(YEAR FROM B.DT_ADDED) =2015");
+        db_group('EXTRACT(MONTH FROM B.DT_ADDED),A.TYPE_ID');
+        db_order('BULAN');
+        $sql = db_get();
+        if($sql):
+            return $sql->result_array();
+      endif;
+    }
+
+    function getAccountDetailOnlyById($account_id)
+    {
+        db_select('*');
+        db_from('acc_account');
+        db_where('account_id',$account_id);
+        $sql = db_get();
+        if($sql):
+            return $sql->row_array();
         endif;
     }
 }

@@ -3,7 +3,7 @@
 notify_msg('notify_msg');
 checking_validation(validation_errors());
 ?>
-<form action="/journal/generate_current_journal/<?php echo uri_segment(3)?>" method="post" class="form-horizontal">
+<form id="journalForm" action="/journal/generate_current_journal/<?php echo uri_segment(3)?>/<?php echo uri_segment(4)?>" method="post" class="form-horizontal" >
     <input type="hidden" name="account_id" value="<?=$account['ACCOUNT_ID']?>">
     <div class="card card-accent-info">
         <div class="card-header">
@@ -81,10 +81,21 @@ checking_validation(validation_errors());
                         endif;
                     ?>
                     <h3 class="header-h1"><?php echo $title?> (<?php echo $bill_master['BILL_MONTH'].'/'.$bill_master['BILL_YEAR']?>)</h3>
+                    <input type="hidden" id="journal_month" name="journal_month" value="<?=$bill_master['BILL_MONTH']?>" />
+                    <input type="hidden" id="journal_year" name="journal_year" value="<?=$bill_master['BILL_YEAR']?>" />
                     <div class="form-group row">
                         <label class="col-sm-4 col-form-label"><?php echo $no?> </label>
                         <div class="col-sm-2">
-                            <p class="form-control-plaintext"><?php echo ($bill_master['BILL_NUMBER'])?></p>
+                            <?php
+                                if ( $bill_master['BILL_NUMBER'] == "NEW_RESIT_JOURNAL_R02")
+                                {
+                                    echo '<p class="form-control-plaintext"><input class="form-control" style="width:310px" type="text" id="bill_number" name="bill_number" value="" placeholder="Sila masukkan no resit bagi transaksi bulan ini"</p>';
+                                }
+                                else
+                                {
+                                    echo '<p class="form-control-plaintext">'.$bill_master['BILL_NUMBER'].'</p>';
+                                }
+                            ?>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -92,6 +103,7 @@ checking_validation(validation_errors());
                         <div class="col-sm-2">
                             <p class="form-control-plaintext"><?php echo (date_display($bill_master['DT_ADDED']))?></p>
                         </div>
+                        <input type="hidden" id="b_master_bill_category" name="b_master_bill_category" value="<?=$bill_master['BILL_CATEGORY']?>">
                     </div>
                 </div>
             </div>
@@ -122,7 +134,7 @@ checking_validation(validation_errors());
 
             <div class="form-group row">
                 <div class="col-sm-12">
-<!--                    <button type="button" onclick="add_transaction_code('B')" class="btn btn-primary pull-left btn-submit">Tambah kod transaksi bill</button>-->
+                    <!-- <button type="button" onclick="add_transaction_code('B')" class="btn btn-primary pull-left btn-submit">Tambah kod transaksi bill</button> -->
                     <button style="margin-left: 20px;" type="button" onclick="chooseJournalCode()" class="btn btn-warning pull-left btn-submit">Tambah kod transaksi jurnal</button>
                 </div>
             </div>
@@ -147,7 +159,7 @@ checking_validation(validation_errors());
             <div class="modal-body">
                 <center>
                     <div class="form-group">
-                        <input type="hidden" id="default_bill_category" value="<?=$bill_item[0]['BILL_CATEGORY']?>">
+                        <input type="hidden" id="default_bill_category" value="<?=( $bill_master['BILL_NUMBER'] == "NEW_RESIT_JOURNAL_R02") ? 'R' : $bill_item[0]['BILL_CATEGORY']?>">
                         <label>Sila pilih kod transaksi</label>
                         <select name="choose_transaction_code" id="choose_transaction_code" class="form-control">
                             <?php
@@ -173,3 +185,50 @@ checking_validation(validation_errors());
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+<script type="text/javascript">
+
+    $('#journalForm').submit(function(event) 
+    {
+        var proceedStatus = [];        
+        var i = 0;
+        $.each( $("input[name='mct_trcodenew[]']"), function (key,value)
+        {
+            var selectedTrCode = $("#"+value.id).val();
+            console.log(value.id);
+            if (selectedTrCode == "" || selectedTrCode == -1 || selectedTrCode == " ")
+            {
+                proceedStatus[i] = false;
+                $("#"+value.id+"_error").html("**Sila pilih kod transaksi");
+            }
+            else if (selectedTrCode != "" || selectedTrCode != -1 || selectedTrCode != " ")
+            {
+                proceedStatus[i] = true;
+                $("#"+value.id+"_error").html("");
+            }
+
+            i = i + 1;
+        });
+
+        console.log(proceedStatus);
+        var check = true;
+        $.each(proceedStatus, function(index, val) 
+        {
+            /* iterate through array or object */
+            console.log(val);
+            if (val == false)
+            {
+                check = false;
+            }
+        });
+
+        if (check == true)
+        {
+            $(this).unbind('submit').submit();
+        }
+        else if (check == false)
+        {
+            event.preventDefault();
+        }
+    });
+</script>

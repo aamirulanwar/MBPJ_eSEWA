@@ -20,7 +20,7 @@ class Bill extends CI_Controller
         load_model('Account/M_acc_user', 'm_acc_user');
         load_model('Account/M_acc_account', 'm_acc_account');
         load_model('Asset/M_a_asset', 'm_a_asset');
-//        load_model('Transaction/M_tr_code', 'm_tr_code');
+        // load_model('Transaction/M_tr_code', 'm_tr_code');
         load_model('TrCode/M_tran_code', 'm_tr_code');
         load_model('Bill/M_bill_master', 'm_bill_master');
         load_model('Bill/M_bill_item', 'm_bill_item');
@@ -39,7 +39,9 @@ class Bill extends CI_Controller
             'bill_history',
             'statement',
             'generate_barcode',
-            'add_journal_transaction'
+            'add_journal_transaction',
+            'addLODcharge',
+            // 'updateBillAmount'
         );
         #set pages data
         (in_array($method,$array)) ? $this->$method() : $this->account_list();
@@ -94,17 +96,24 @@ class Bill extends CI_Controller
         $data['pagetitle']  = '';
 
         $id = urlDecrypt(uri_segment(3));
-        if(!is_numeric($id)):
+
+        if(!is_numeric($id))
+        {
             return false;
-        endif;
+        }
 
         $get_details = $this->m_acc_account->get_account_details($id);
-        if(!$get_details):
+        if(!$get_details)
+        {
             return false;
-        endif;
+        }
 
         load_library('Bill_lib');
         $data_bill_lib['account_id']  = $id;
+
+        // Check current bill need to add LOD charge or not
+        $this->addLODcharge($id);
+
         $bill_item          = $this->bill_lib->generate_bill($data_bill_lib);
 
         $data['item_bil'] = $bill_item['item'];
@@ -118,7 +127,8 @@ class Bill extends CI_Controller
         templates('bill/v_current_bill',$data);
     }
 
-    function generate_current_bill(){
+    function generate_current_bill()
+    {
         $this->auth->restrict_access($this->curuser,array(6002));
 
         $data['link_1']     = 'Bil sewaan';
@@ -127,21 +137,30 @@ class Bill extends CI_Controller
         $data['pagetitle']  = '';
 
         $id = urlDecrypt(uri_segment(3));
-        if(!is_numeric($id)):
-            return false;
-        endif;
 
+        if(!is_numeric($id))
+        {
+            return false;
+        }
+        
         $get_details = $this->m_acc_account->get_account_details($id);
 
-        if(!$get_details):
+        if(!$get_details)
+        {
             return false;
-        endif;
-
+        }
+        
         $data['account'] = $get_details;
 
         load_library('Bill_lib');
         $data_bill_lib['account_id']  = $id;
+
+        // Check current bill need to add LOD charge or not
+        $this->addLODcharge($id);
+
         $bill_item = $this->bill_lib->generate_bill($data_bill_lib);
+
+
         $data_bill_master = $this->m_bill_master->get_bill_master($bill_item['bill_id']);
 
         $data['item_bil']       = $bill_item['item'];
@@ -150,52 +169,44 @@ class Bill extends CI_Controller
         $data['bill_master']    = $data_bill_master;
         $data['bill_item']      = $bill_item;
 
-        if(input_data('MCT_TRCODENEW[]')):
+        if(input_data('MCT_TRCODENEW[]'))
+        {
             validation_rules('MCT_TRCODENEW[]','<strong>kod transaksi</strong>','required');
-        endif;
-
-        if(validation_run()==false):
+        }
+        
+        if(validation_run()==false)
+        {
             templates('bill/v_generate_current_bill',$data);
-        else:
-            if(input_data('MCT_TRCODENEW[]')):
+        }
+        else
+        {
+            if(input_data('MCT_TRCODENEW[]'))
+            {
                 $i = 0;
                 $amount_arr     = input_data('amount[]');
                 $add_minus_arr  = input_data('add_minus[]');
                 $type_arr       = input_data('type[]');
                 $remark_arr     = input_data('remark[]');
-                foreach (input_data('MCT_TRCODENEW[]') as $row):
+                foreach (input_data('MCT_TRCODENEW[]') as $row)
+                {
                     $search_tr_code['MCT_TRCODENEW'] = $row;
                     $tr_code = $this->m_tr_code->get_tr_code($search_tr_code);
 
-//                    $insert_code['BILL_ID']             = $bill_item['bill_id'];
-//                    $insert_code['TR_CODE']             = $tr_code['MCT_TRCODE_NEW'];
-////                    $insert_code['TR_ID']               = $tr_code['TR_ID'];
-//                    $insert_code['AMOUNT']              = (($add_minus_arr[$i]=='minus')?'-':'').currencyToDouble($amount_arr[$i]);
-////                    $insert_code['PRIORITY']            = $tr_code['PRIORITY'];
-//                    $insert_code['TR_TYPE']             = $tr_code['TR_TYPE'];
-//                    $insert_code['ACCOUNT_ID']          = $id;
-//                    $insert_code['ITEM_DESC']           = $tr_code['MCT_TRDESC'];
-//                    $insert_code['TR_CODE_OLD']         = $tr_code['MCT_TRCODE_OLD'];
-//                    $insert_code['BILL_CATEGORY']       = $type_arr[$i];
-//                    $insert_code['COMPLETE_PAYMENT']    = 0;
+                    $insert_code['BILL_ID']         =   $bill_item['bill_id'];
+                    $insert_code['TR_CODE']         =   $tr_code['MCT_TRCODENEW'];
+                    $insert_code['AMOUNT']          =   currencyToDouble($amount_arr[$i]);
+                    $insert_code['PRIORITY']        =   $tr_code['MCT_PRIORT'];
+                    $insert_code['ACCOUNT_ID']      =   $id;
+                    $insert_code['BILL_CATEGORY']   =   "B";
+                    $remark                         =   '';
 
-                    $insert_code['BILL_ID']     = $bill_item['bill_id'];
-                    $insert_code['TR_CODE']     = $tr_code['MCT_TRCODENEW'];
-//                    $insert_code['TR_ID']       = $code_gst_waste['TR_ID'];
-//                    $insert_code['AMOUNT']      = num(($code_gst_waste['PERCENTAGE']*$data_acc['WASTE_MANAGEMENT_CHARGE'])/100,1);
-//                    $insert_code['AMOUNT']      = (($add_minus_arr[$i]=='minus')?'-':'').currencyToDouble($amount_arr[$i]);
-                    $insert_code['AMOUNT']      = currencyToDouble($amount_arr[$i]);
-                    $insert_code['PRIORITY']    = $tr_code['MCT_PRIORT'];
-//                    $insert_code['TR_TYPE']     = $code_gst_waste['TR_TYPE'];
-                    $insert_code['ACCOUNT_ID']  = $id;
-                    $insert_code['BILL_CATEGORY']       = "B";
-                    $remark = '';
-                    if(!empty($remark_arr[$i])):
+                    if(!empty($remark_arr[$i]))
+                    {
                         $remark = ' ('.$remark_arr[$i].')';
-                    endif;
-                    $insert_code['ITEM_DESC']   = $tr_code['MCT_TRDESC'];
-                    $insert_code['REMARK']      = $remark;
-//                    $insert_code['TR_CODE_OLD'] = $code_gst_waste['MCT_TRCODE_OLD'];
+                    }
+                    
+                    $insert_code['ITEM_DESC']       =   $tr_code['MCT_TRDESC'];
+                    $insert_code['REMARK']          =   $remark;
 
                     #check gst type
                     $gst_status = check_trans_gst($insert_code['TR_CODE'],$insert_code['ITEM_DESC']);
@@ -205,19 +216,21 @@ class Bill extends CI_Controller
                     $id_item = $this->m_bill_item->insert_bill_item($insert_code);
                     $i = $i+1;
 
-                    if($id_item>0):
+                    if($id_item > 0)
+                    {
                         $data_audit_trail['log_id']                  = 4002;
                         $data_audit_trail['remark']                  = $insert_code;
                         $data_audit_trail['status']                  = PROCESS_STATUS_SUCCEED;
                         $data_audit_trail['user_id']                 = $this->curuser['USER_ID'];
                         $data_audit_trail['refer_id']                = $id_item;
                         $this->audit_trail_lib->add($data_audit_trail);
-                    endif;
-                endforeach;
-            endif;
+                    }                    
+                }
+            }            
+
             set_notify('notify_msg',TEXT_SAVE_RECORD);
             redirect('/bill/generate_current_bill/'.uri_segment(3));
-        endif;
+        }
     }
 
     function notice_list(){
@@ -240,7 +253,6 @@ class Bill extends CI_Controller
                 $data_search['name']        = '';
             endif;
         endif;
-
 
         $search_segment = uri_segment(3);
         $total = $this->m_acc_account->count_account_outstanding($data_search);
@@ -317,12 +329,6 @@ class Bill extends CI_Controller
                             $data_option.
                         '</select>'.
                     '</div>'.
-//                    '<div class="col-sm-1">'.
-//                        '<select class="form-control" name="add_minus[]">'.
-//                            option_value('add','+','add_minus[]').
-//                            option_value('minus','-','add_minus[]').
-//                        '</select>'.
-//                    '</div>'.
                     '<div class="col-sm-2">'.
                         '<input name="amount[]" onkeyup="currency_format(this)" class="form-control" value="0.00">'.
                     '</div>'.
@@ -397,39 +403,16 @@ class Bill extends CI_Controller
                 $select_script = '<script>$("#'.$unique_select_id.'").select2({disabled:true});</script>';
                 $select_input_value = '<input type="hidden" name="mct_trcodenew[]" id="'.$unique_select_id.'_input" value="'.$tr_code.'">';
             }
-            
-            // if ($journal_code!="B03" && $journal_code!="B04") {
-                
-            //     $select_script = '<script>$("#'.$unique_select_id.'").select2({disabled:true});</script>';
-            //     $select_input_value = '<input type="hidden" name="mct_trcodenew[]" id="'.$unique_select_id.'_input" value="'.$tr_code.'">';
-            // }
-            // elseif ($journal_code!="R03" && $journal_code!="B03" || $journal_code!="B04") {
-            //     $select_script = '<script>$("#'.$unique_select_id.'").select2({disabled:true});</script>';
-            //     $select_input_value = '<input type="hidden" name="mct_trcodenew[]" id="'.$unique_select_id.'_input" value="'.$tr_code.'">';
-            // }
-            // elseif ($journal_code=="B04") {
-            //     $select_script = '<script>$("#'.$unique_select_id.'").select2();</script>';
-            //     $select_input_value = '<input type="hidden" name="mct_trcodenew[]" id="'.$unique_select_id.'_input" value="">';
-            // }
-            // else {
-
-            //     $select_script = '<script>$("#'.$unique_select_id.'").select2();</script>';
-            //     $select_input_value = '<input type="hidden" name="mct_trcodenew[]" id="'.$unique_select_id.'_input" value="">';
-            // }
 
             $data_insert =
-                '<div class="form-group row">'.
+            '<div class="" id="'.$unique_select_id.'_row">'.
+                '<div class="form-group row" >'.
                     '<div class="col-sm-4">'.
-                        '<select class="form-control js-example-basic-singlex" id="'.$unique_select_id.'" onchange="setSelectedTrcode(this,\'#'.$unique_select_id.'_input\')">'.
+                        '<select class="form-control js-example-basic-singlex select2" id="'.$unique_select_id.'" onchange="setSelectedTrcode(this,\'#'.$unique_select_id.'_input\')" ><option value="-1" selected >-Sila Pilih - </option>'.
                             $data_option.
                         '</select>'.
+                        '<p id="'.$unique_select_id.'_input_error" class="valError"></p>'.
                     '</div>'.
-//                    '<div class="col-sm-1">'.
-//                        '<select class="form-control" name="add_minus[]">'.
-//                            option_value('add','+','add_minus[]').
-//                            option_value('minus','-','add_minus[]').
-//                        '</select>'.
-//                    '</div>'.
                     '<div class="col-sm-2">'.
                         '<input name="amount[]" onkeyup="currency_format1(this)" class="form-control" value="'.($journal_code=="B01" || $journal_code=="R01" ? '-'.$bill_amount : '').'" '.($journal_code=="B01" || $journal_code=="R01" ? 'readonly' : '').'>'.
                     '</div>'.
@@ -443,55 +426,56 @@ class Bill extends CI_Controller
                         '<input name="remark[]" type="text" placeholder="Remark" class="form-control" value="">'.
                     '</div>'.
                     '<div class="col-sm-1">'.
-                        '<button type="button" onclick="remove_tr_code(this)" class="btn btn-danger">x</i></button>'.
+                        '<button type="button" onclick="remove_tr_code('."'".$unique_select_id."_row'".')" class="btn btn-danger">x</i></button>'.
                     '</div>'.
                 '</div>
                 <input type="hidden" name="journal_id[]" value="'.$journal_id.'">
-                '.$select_script.$select_input_value;
+                '.$select_script.$select_input_value
+            .'</div>';
 
             echo $data_insert;
         endif;
     }
 
     function bill_history(){
-//        $this->auth->restrict_access($this->curuser,array(6004));
-//
-//        $data['link_1']     = 'Bil sewaan';
-//        $data['link_2']     = 'Senarai akaun';
-//        $data['link_3']     = 'Resit terdahulu';
-//        $data['pagetitle']  = 'Senarai resit terdahulu';
-//
+       // $this->auth->restrict_access($this->curuser,array(6004));
+
+       // $data['link_1']     = 'Bil sewaan';
+       // $data['link_2']     = 'Senarai akaun';
+       // $data['link_3']     = 'Resit terdahulu';
+       // $data['pagetitle']  = 'Senarai resit terdahulu';
+
         $id = urlDecrypt(uri_segment(3));
         if(!is_numeric($id)):
             return false;
         endif;
-//
+
         $data_account = $this->m_acc_account->get_account_details($id);
         if(empty($data_account)):
             return false;
         endif;
-//
-//        $data['data_account'] = $data_account;
-//
-//        $per_page       = 20;
-//        $search_segment = uri_segment(4);
-//        $data_search['bill_category']   = 'R';
-//        $data_search['account_id']      = $id;
-//        $data_list = $this->m_bill_master->get_bill_history_list($per_page,$search_segment,$data_search);
-//        if(!$data_list):
-//            return false;
-//        endif;
-//
-//        $total = $this->m_bill_master->count_bill_history($data_search);
-//        $links          = '/bill/bill_history/'.uri_segment(3);
-//        $uri_segment    = 4;
-//        $per_page       = 20;
-//        paging_config($links,$total,$per_page,$uri_segment);
-//
-//        $data['data_list']      = $data_list;
-//        $data['total_result']   = $total;
-//
-//        templates('bill/v_list_bill_history',$data);
+
+       // $data['data_account'] = $data_account;
+
+       // $per_page       = 20;
+       // $search_segment = uri_segment(4);
+       // $data_search['bill_category']   = 'R';
+       // $data_search['account_id']      = $id;
+       // $data_list = $this->m_bill_master->get_bill_history_list($per_page,$search_segment,$data_search);
+       // if(!$data_list):
+       //     return false;
+       // endif;
+
+       // $total = $this->m_bill_master->count_bill_history($data_search);
+       // $links          = '/bill/bill_history/'.uri_segment(3);
+       // $uri_segment    = 4;
+       // $per_page       = 20;
+       // paging_config($links,$total,$per_page,$uri_segment);
+
+       // $data['data_list']      = $data_list;
+       // $data['total_result']   = $total;
+
+       // templates('bill/v_list_bill_history',$data);
         $data_search['date_start']  = '';
         $data_search['date_end']    = '';
         $data_search['type_id']     = '';
@@ -516,7 +500,7 @@ class Bill extends CI_Controller
         endif;
 
         $data_bill_master = $this->m_bill_master->get_bill_master($bill_id);
-//        pre($data_bill_master);
+        // pre($data_bill_master);
 
         $get_details = $this->m_acc_account->get_account_details($data_bill_master['ACCOUNT_ID']);
         if(!$get_details):
@@ -525,7 +509,7 @@ class Bill extends CI_Controller
 
         $new_bill_item  = array();
         $bill_item      = $this->m_bill_item->get_bill_item($bill_id);
-//        pre($bill_item);
+        // pre($bill_item);
         if($bill_item):
             foreach ($bill_item as $row):
                 $row['amount']      = $row['AMOUNT'];
@@ -538,9 +522,7 @@ class Bill extends CI_Controller
         $data['statement_type'] = 'RESIT';
         $data['bill_master']    = $data_bill_master;
         $data['bill_item']      = $new_bill_item;
-//        pre($data['bill_item']);
-
-
+        // pre($data['bill_item']);
 
         templates('bill/v_current_bill',$data);
     }
@@ -558,4 +540,115 @@ class Bill extends CI_Controller
         // This function call can be copied into your project and can be made from anywhere in your code
         barcode( $filepath, $text, $size, $orientation, $code_type, $print, $sizefactor );
     }
+
+    function addLODcharge($account_id = -999)
+    {
+        // This is for bypass if account_id is not supplied and this function is call using url
+        if ($account_id == -999)
+        {
+            $account_id = uri_segment(3);
+        }
+
+        $curAccountNotice = $this->m_acc_account->getAccountNoticeLevel($account_id);
+        $curNoticeLevel = $curAccountNotice["NOTICE_LEVEL"];
+
+        // echo json_encode($curNoticeLevel);
+        // echo "Current notice level is ".$curNoticeLevel." for account number ".$account_id;
+
+        $month = date('n');     // Return date month with no leading zero
+        $year = date('Y');
+
+        // echo "</br>".$month." / ".$year."</br>";
+
+        if ($curNoticeLevel == 4)
+        {
+            // check if LOD or Notis Mahkamah already been charged on the current bill.
+            // if yes the ignore else add charges
+            $getNoticeChargeList = $this->m_bill_item->getNoticeChargeTransaction($account_id,$month,$year);            
+
+            if ( count($getNoticeChargeList) == 0 )
+            {
+                $getCurrentMonthBill = $this->m_bill_master->getBillId($account_id,$month,$year);
+                $masterBillId = $getCurrentMonthBill["BILL_ID"];
+
+                echo "</br> Current Master Bill ID => ".$masterBillId."</br>";
+
+                $insert_code['BILL_ID']             =   $masterBillId;                
+                $insert_code['AMOUNT']              =   currencyToDouble("10");                
+                $insert_code['ACCOUNT_ID']          =   $account_id;
+                $insert_code['BILL_CATEGORY']       =   "B";                
+                $insert_code['TR_CODE']             =   "11110020";
+                $insert_code['TR_CODE_OLD']         =   "11033";
+                $insert_code['PRIORITY']            =   36; // based on temp_mctrancode
+                $insert_code['ITEM_DESC']           =   "LOD SEWAAN";
+                $insert_code['REMARK']              =   "CAJ NOTIS LOD";                               
+
+                $id_item = $this->m_bill_item->insert_bill_item($insert_code);
+
+                if (!empty($id_item) && $id_item > 0)
+                {
+                    // If insert operation successful, update total_amount in b_master for that bill_id
+                    $getTotalAmountByBillId = $this->m_bill_item->getBillItemTotalAmount($masterBillId);
+                    $data_update["TOTAL_AMOUNT"] = $getTotalAmountByBillId["TOTAL_AMOUNT"];
+                    $this->m_bill_master->updateBillMasterTotalAmount($masterBillId,$account_id,$data_update);
+
+                    // echo "</br>CAJ NOTIS BERJAYA DIMASUKKAN</br>";
+                    return true;
+                }
+                else
+                {
+                    // echo "</br>CAJ NOTIS TIDAK BERJAYA DIMASUKKAN</br>";
+                    // echo "</br>MAKLUMAT BILL ITEM ".json_encode($id_item)."</br>";
+                    return false;
+                }
+            }
+            else
+            {
+                // echo json_encode($getNoticeChargeList);
+                return false;
+            }
+        }
+        else
+        {
+            // If current bill should not have LOD charge, delete it from the db.
+            // This case should happen only when admin change the notice level at function "Kemaskini" at sub-modul "Senarai Akaun"
+            // Please advise admin to not use the function "Kemaskini" at sub-modul "Senarai Akaun" willfully or in malay "sesuka hati or sesedap rasa"
+            $getNoticeChargeList = $this->m_bill_item->getNoticeChargeTransaction($account_id,$month,$year);
+            foreach ($getNoticeChargeList as $row) 
+            {
+                # code...
+                $item_id = $row["ITEM_ID"];
+                $this->m_bill_item->deleteLODCharge($item_id);
+            }
+
+            // If delete operation successful, update total_amount in b_master for that bill_id
+            $getCurrentMonthBill = $this->m_bill_master->getBillId($account_id,$month,$year);
+            $masterBillId = $getCurrentMonthBill["BILL_ID"];
+
+            $getTotalAmountByBillId = $this->m_bill_item->getBillItemTotalAmount($masterBillId);
+            $data_update["TOTAL_AMOUNT"] = $getTotalAmountByBillId["TOTAL_AMOUNT"];
+            $this->m_bill_master->updateBillMasterTotalAmount($masterBillId,$account_id,$data_update);
+
+            return false;
+        }
+    }
+
+    // Do not enable this function unless for custom usage
+    // function updateBillAmount()
+    // {
+    //     $account_id     = 1;
+    //     $bill_month     = 4;
+    //     $bill_year      = 2020;
+    //     $bill_category  = "R";
+    //     $existingBill   = $this->m_bill_master->getBillId($account_id,$bill_month,$bill_year,$bill_category);
+    //     $bill_id        = $existingBill["BILL_ID"];
+    //     $billItemDetail = $this->m_bill_item->getBillItemTotalAmount($bill_id );
+    //     $bill_master_update["TOTAL_AMOUNT"] = $billItemDetail["TOTAL_AMOUNT"];
+
+    //     // echo "<pre>";
+    //     // var_dump($bill_master_update);
+    //     // die();
+
+    //     $this->m_bill_master->updateBillMasterTotalAmount($bill_id,$account_id,$bill_master_update);
+    // }
 }

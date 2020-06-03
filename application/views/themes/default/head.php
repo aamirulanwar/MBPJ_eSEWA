@@ -28,22 +28,33 @@
     <link href="/assets/css/style_extend.css" rel="stylesheet">
     <link href="/assets/node_modules/pace-progress/css/pace.min.css" rel="stylesheet">
     <!-- Global site tag (gtag.js) - Google Analytics-->
-<!--    <script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-118965717-3"></script>-->
+    <!-- <script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-118965717-3"></script> -->
     <!-- Date picker -->
     <link href="/assets/jquery-ui/jquery-ui.min.css" rel="stylesheet">
     <link href="/assets/jquery-ui/jquery-ui.structure.min.css" rel="stylesheet">
     <script src="/assets/node_modules/jquery/dist/jquery.min.js"></script>
-<!--    <script src="/assets/node_modules/chart.js/dist/Chart.js"></script>-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.js" integrity="sha256-qSIshlknROr4J8GMHRlW3fGKrPki733tLq+qeMCR05Q=" crossorigin="anonymous"></script>
-
+    <script src="/assets/Chart.bundle.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.js" integrity="sha256-qSIshlknROr4J8GMHRlW3fGKrPki733tLq+qeMCR05Q=" crossorigin="anonymous"></script> -->
+    <!-- select2 -->
     <link href="/assets/select2/dist/css/select2.min.css" rel="stylesheet">
     <link href="/assets/select2/dist/css/bootstrap-select2.css" rel="stylesheet">
     <script src="/assets/select2/dist/js/select2.min.js"></script>
+    <!-- dataTables -->
+    <link href="/assets/dataTables/jquery.dataTables.min.css" rel="stylesheet">
+    <link href="/assets/dataTables/buttons.dataTables.min.css" rel="stylesheet">
+    <script src="/assets/dataTables/jquery.dataTables.min.js"></script>
+    <script src="/assets/dataTables/dataTables.buttons.min.js"></script>
+    <script src="/assets/dataTables/buttons.print.js"></script>
+
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"> -->
+    <!-- <link href="/assets/node_modules/bootstrap/dist/css/bootstrap.css" > -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
     <script>
         const DEPENDENT_LIST_ARR = '<?php echo json_encode(DEPENDENT_LIST_ARR)?>';
     </script>
-
     <style>
+        
         .need-print{
             display: none;
         }
@@ -446,24 +457,24 @@
                 </li>
                 <?php endif;?>
 
-                <?php if($this->auth->access_main_view($this->curuser,array(7000))):?>    
+                <?php if($this->auth->access_main_view($this->curuser,array(7000))):?>
                 <li class="nav-item nav-dropdown <?php echo set_active_dropdown(uri_segment(1),array('journal'))?>">
                     <a class="nav-link nav-dropdown-toggle <?php echo set_active_menu(uri_segment(1),array('journal'))?>" href="#6">
                         <i class="nav-icon icon-speedometer"></i> Pelarasan</a>
-                    <ul class="nav-dropdown-items"> 
-                        <?php if($this->auth->access_view($this->curuser,array(7001))):?> 
+                    <ul class="nav-dropdown-items">
+                        <?php if($this->auth->access_view($this->curuser,array(7001))):?>
                         <li class="nav-item">
                             <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('account_list','generate_current_bill','current_bill'))?>" href="/journal/search">
                                 <i class="nav-icon fa fa-circle fa-sm"></i>Senarai Pelarasan</a>
                         </li>
                         <?php endif;?>
-                        <?php if($this->auth->access_view($this->curuser,array(7002))):?> 
+                        <?php if($this->auth->access_view($this->curuser,array(7002))):?>
                         <li class="nav-item">
                             <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('account_list','generate_current_bill','current_bill'))?>" href="/journal/entry">
                                 <i class="nav-icon fa fa-circle fa-sm"></i>Senarai Kemasukan</a>
                         </li>
                         <?php endif;?>
-                        <?php if($this->auth->access_view($this->curuser,array(7003))):?> 
+                        <?php if($this->auth->access_view($this->curuser,array(7003))):?>
                         <li class="nav-item">
                             <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('account_list','generate_current_bill','current_bill'))?>" href="/journal/index">
                                 <i class="nav-icon fa fa-circle fa-sm"></i>Senarai Kelulusan</a>
@@ -480,7 +491,8 @@
 <!--                        <i class="nav-icon icon-layers"></i> Penyelarasan</a>-->
 <!--                    <ul class="nav-dropdown-items">-->
 <!--                        <li class="nav-item">-->
-<!--                            <a class="nav-link --><?php //echo set_active_menu(uri_segment(2),array('account_list','generate_current_bill','current_bill'))?><!--" href="/bill/account_list">-->
+<!--                            <a class="nav-link --><?php //echo set_active_menu(uri_segment(2),array('account_list','generate_current_bill','current_bill'))?>
+                                    <!-- " href="/bill/account_list"> -->
 <!--                                <i class="nav-icon fa fa-circle fa-sm"></i> Akaun</a>-->
 <!--                        </li>-->
 <!--                        <li class="nav-item">-->
@@ -503,26 +515,29 @@
 <!--                            <a class="nav-link --><?php //echo set_active_menu(uri_segment(2),array('gl_summary'))?><!--" href="/report/gl_summary">-->
 <!--                                <i class="nav-icon fa fa-circle fa-sm"></i> Hasil Kod GL</a>-->
 <!--                        </li>-->
-                        <?php if($this->auth->access_view($this->curuser,array(8001))):?>
+
 <!--                        <li class="nav-item">-->
 <!--                            <a class="nav-link --><?php //echo set_active_menu(uri_segment(2),array('category_adjustment'))?><!--" href="/report/category_adjustment">-->
 <!--                                <i class="nav-icon fa fa-circle fa-sm"></i> Penyata Penyesuaian</a>-->
 <!--                        </li>-->
-                        <?php endif;?>
-                        <?php if($this->auth->access_view($this->curuser,array(8002))):?>
+
+
 <!--                        <li class="nav-item">-->
 <!--                            <a class="nav-link --><?php //echo set_active_menu(uri_segment(2),array('category_aging'))?><!--" href="/report/category_aging">-->
 <!--                                <i class="nav-icon fa fa-circle fa-sm"></i> Aging Sewaan</a>-->
 <!--                        </li>-->
-                        <?php endif;?>
+                        <?php if($this->auth->access_view($this->curuser,array(8001))):?>
                         <li class="nav-item">
                             <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('category_aging_details'))?>" href="/report/category_aging_details">
                                 <i class="nav-icon fa fa-circle fa-sm"></i> Aging Sewaan Terperinci</a>
                         </li>
+                        <?php endif;?>
+                        <?php if($this->auth->access_view($this->curuser,array(8002))):?>
                         <li class="nav-item">
                             <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('category_aging'))?>" href="/report/category_aging">
                                 <i class="nav-icon fa fa-circle fa-sm"></i> Aging Sewaan Ringkasan</a>
                         </li>
+                        <?php endif;?>
 <!--                        <li class="nav-item">-->
 <!--                            <a class="nav-link --><?php //echo set_active_menu(uri_segment(2),array('account_outstanding'))?><!--" href="/report/account_outstanding">-->
 <!--                                <i class="nav-icon fa fa-circle fa-sm"></i> Tunggakan Tertinggi</a>-->
@@ -564,21 +579,53 @@
                             <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('record_transaction'))?>" href="/report/record_transaction">
                                 <i class="nav-icon fa fa-circle fa-sm"></i> Rekod Transaksi</a>
                         </li>
+                        <?php endif;?>
+                        <?php if($this->auth->access_view($this->curuser,array(8008))):?>
                         <li class="nav-item">
                             <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('adjustment_statement'))?>" href="/report/adjustment_statement">
                                 <i class="nav-icon fa fa-circle fa-sm"></i> Penyata Penyesuaian Terperinci</a>
                         </li>
+                        <?php endif;?>
+                        <?php if($this->auth->access_view($this->curuser,array(8009))):?>
                         <li class="nav-item">
                             <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('adjustment_statement_ringkasan'))?>" href="/report/adjustment_statement_ringkasan">
                                 <i class="nav-icon fa fa-circle fa-sm"></i> Penyata Penyesuaian Ringkasan</a>
                         </li>
+                        <?php endif;?>
+                        <?php if($this->auth->access_view($this->curuser,array(8010))):?>
                         <li class="nav-item">
                             <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('payment'))?>" href="/report/payment">
                                 <i class="nav-icon fa fa-circle fa-sm"></i> Laporan Pembayaran Penyewa</a>
                         </li>
+                        <?php endif;?>
+                        <?php if($this->auth->access_view($this->curuser,array(8011))):?>
                         <li class="nav-item">
                             <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('journal'))?>" href="/report/journal">
                                 <i class="nav-icon fa fa-circle fa-sm"></i> Laporan Jurnal Sewaan</a>
+                        </li>
+                        <?php endif;?>
+                        <?php if($this->auth->access_view($this->curuser,array(8012))):?>
+                        <li class="nav-item">
+                            <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('hartanah'))?>" href="/report/hartanah">
+                                <i class="nav-icon fa fa-circle fa-sm"></i> Laporan Perjanjian Sewa Hartanah</a>
+                        </li>
+                        <?php endif;?>
+                        <?php if($this->auth->access_view($this->curuser,array(8013))):?>
+                        <li class="nav-item">
+                            <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('papaniklan'))?>" href="/report/papaniklan">
+                                <i class="nav-icon fa fa-circle fa-sm"></i> Laporan Perjanjian Sewa</a>
+                        </li>
+                        <?php endif;?>
+                        <?php if($this->auth->access_view($this->curuser,array(8014))):?>
+                        <li class="nav-item">
+                            <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('perjanjian'))?>" href="/report/perjanjian_kutipan">
+                                <i class="nav-icon fa fa-circle fa-sm"></i> Laporan Perbandingan</a>
+                        </li>
+                        <?php endif;?>
+                        <?php if($this->auth->access_view($this->curuser,array(8015))):?>
+                        <li class="nav-item">
+                            <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('hasil'))?>" href="/report/hasil">
+                                <i class="nav-icon fa fa-circle fa-sm"></i> Laporan Hasil Perjanjian Sewa</a>
                         </li>
                         <?php endif;?>
                     </ul>

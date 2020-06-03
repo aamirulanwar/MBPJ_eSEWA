@@ -49,6 +49,18 @@ class M_file_upload_temp extends CI_Model
         $sql = db_delete('file_upload_temp');
         return $sql;
     }
+
+    function delete_by_session($id){
+        db_where('SESSION_ID',$id);
+        $sql = db_delete('file_upload_temp');
+        return $sql;
+    }
+
+    function reset_sequence()
+    {
+        $query = $this->db->query('call reset_sequence_upload_temp()');
+        return $query;
+    }
 }
 /* End of file modules/login/controllers/m_department.php */
 
