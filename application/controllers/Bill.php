@@ -25,6 +25,8 @@ class Bill extends CI_Controller
         load_model('Bill/M_bill_master', 'm_bill_master');
         load_model('Bill/M_bill_item', 'm_bill_item');
         load_model('Notice/M_notice_log', 'm_notice_log');
+        load_model('Notice/M_lod_generation', 'm_lod_generation');
+        load_model('Notice/M_notis_mah_generation', 'm_notis_mah_generation');
     }
 
     function _remap($method)
@@ -298,6 +300,44 @@ class Bill extends CI_Controller
         else:
             $get_all_notice = $this->m_notice_log->get_notice_level($id,99);
         endif;
+
+        // save record lod generation to db for reporting feature
+        if ($notice_level == 4)
+        {
+            $data_search["ACCOUNT_ID"] = $id;
+            $data_search["MONTH"] = date('n');
+            $data_search["YEAR"] = date('Y');
+            $checkCondition = $this->m_lod_generation->get_record_generation($data_search);
+
+            // echo DateTime::createFromFormat('Y-m-d H:i:s', $checkCondition[0]->updated_date)->format('d-m-Y h:i:s A');
+            if ( count($checkCondition) == 0 )
+            {
+                $data_insert_lod["ACCOUNT_ID"] = $id;
+                $data_insert_lod["TOTAL_TUNGGAKAN"] = $get_all_notice["TOTAL_TUNGGAKAN"];
+                $data_insert_lod["MONTH"] = date('n');
+                $data_insert_lod["YEAR"] = date('Y');
+                $this->m_lod_generation->insert_record_generation($data_insert_lod);
+            }
+        }
+
+        // save record notis mahkamah generation to db for reporting feature
+        if ($notice_level == 6)
+        {
+            $data_search["ACCOUNT_ID"] = $id;
+            $data_search["MONTH"] = date('n');
+            $data_search["YEAR"] = date('Y');
+            $checkCondition = $this->m_notis_mah_generation->get_record_generation($data_search);
+
+            // echo DateTime::createFromFormat('Y-m-d H:i:s', $checkCondition[0]->updated_date)->format('d-m-Y h:i:s A');
+            if ( count($checkCondition) == 0 )
+            {
+                $data_insert_notis_mahkamah["ACCOUNT_ID"] = $id;
+                $data_insert_notis_mahkamah["TOTAL_TUNGGAKAN"] = $get_all_notice["TOTAL_TUNGGAKAN"];
+                $data_insert_notis_mahkamah["MONTH"] = date('n');
+                $data_insert_notis_mahkamah["YEAR"] = date('Y');
+                $this->m_notis_mah_generation->insert_record_generation($data_insert_notis_mahkamah);
+            }
+        }
 
         load_library('Generate_word');
         $this->generate_word->word_document($id, DOC_NOTICE, $notice_level,$get_all_notice);

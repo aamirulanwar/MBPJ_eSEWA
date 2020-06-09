@@ -18,7 +18,7 @@ class Generate_word {
     public function __construct()
     {
         $this->ci = & get_instance();
-//        load_library('Phpword');
+        // load_library('Phpword');
         load_model('Application/M_p_application', 'm_p_application');
         load_model('Account/M_acc_account', 'm_acc_account');
         load_model('Interview/M_p_interview_application', 'm_p_interview_application');
@@ -309,8 +309,8 @@ class Generate_word {
             $address = display_address($get_details['ADDRESS_1'],$get_details['ADDRESS_2'],$get_details['ADDRESS_3'],$get_details['POSTCODE'],ucwords(strtolower($get_details['STATE'])));
         endif;
         $address = str_replace('<br>', ' ', $address);
-//        echo $address;
-//        die();
+        // echo $address;
+        // die();
         $templateProcessor->setValue('file_number',$get_details['FILE_NUMBER']);
         $templateProcessor->setValue('letter_date',date_display(timenow(),'d F Y','malay'));
         $templateProcessor->setValue('name',strtoupper($get_details['NAME']));
@@ -325,8 +325,8 @@ class Generate_word {
         $templateProcessor->setValue('tipping_fee',num($get_details['WASTE_MANAGEMENT_CHARGE']));
         $templateProcessor->setValue('deposit',num($get_details['DEPOSIT_RENTAL']));
         $templateProcessor->setValue('agree',num($get_details['RENTAL_AGREEMENT_COST']));
-//
-//        //extra info for kuarters
+
+        //extra info for kuarters
         $templateProcessor->setValue('name_lcase',$get_details['NAME']);
         $templateProcessor->setValue('address_lcase',$address);
         $templateProcessor->setValue('position',$get_details['POSITION']);
@@ -516,15 +516,15 @@ class Generate_word {
         $templateProcessor->setValue('letter_date',date_display(timenow(),'d F Y','malay'));
         $templateProcessor->setValue('letter_time',date_display(timenow(),'h:i:sa'));
         $templateProcessor->setValue('letter_date_hijri',date_display_hijri(timenow()));
-       // $templateProcessor->setValue('file_number_juu',$get_details['FILE_NUMBER_JUU']);
+        // $templateProcessor->setValue('file_number_juu',$get_details['FILE_NUMBER_JUU']);
         $templateProcessor->setValue('name',$get_details['NAME']);
         $templateProcessor->setValue('name_caps',strtoupper($get_details['NAME']));
-       // $templateProcessor->setValue('director_name',strtoupper($get_details['DIRECTOR_NAME']));
-       // $templateProcessor->setValue('comp_reg_no',$get_details['COMPANY_REGISTRATION_NUMBER']);
-       // $templateProcessor->setValue('phone_no',$get_details['HOME_PHONE_NUMBER']);
-       // $templateProcessor->setValue('fax_no',$get_details['FAX_NUMBER']);
-       // $templateProcessor->setValue('category_name',$get_details['CATEGORY_NAME']);
-       // $templateProcessor->setValue('asset_name',$get_details['ASSET_NAME']);
+        // $templateProcessor->setValue('director_name',strtoupper($get_details['DIRECTOR_NAME']));
+        // $templateProcessor->setValue('comp_reg_no',$get_details['COMPANY_REGISTRATION_NUMBER']);
+        // $templateProcessor->setValue('phone_no',$get_details['HOME_PHONE_NUMBER']);
+        // $templateProcessor->setValue('fax_no',$get_details['FAX_NUMBER']);
+        // $templateProcessor->setValue('category_name',$get_details['CATEGORY_NAME']);
+        // $templateProcessor->setValue('asset_name',$get_details['ASSET_NAME']);
         // $templateProcessor->setValue('asset_add',$get_details['ASSET_ADD']);
         $templateProcessor->setValue('ic_number',display_ic_number($get_details['IC_NUMBER']));
         // $templateProcessor->setValue('staff_number',display_ic_number($get_details['STAFF_NUMBER']));
