@@ -437,16 +437,16 @@ class M_acc_account extends CI_Model
         db_select ('a.type_id');
         db_select ('b.type_name');
         db_select ('count(account_id) as bil');
-        db_select ("EXTRACT(MONTH FROM A.DATE_START) AS BULAN");
+        db_select ("EXTRACT(MONTH FROM A.DT_SIGNATURE) AS BULAN");
         db_from('acc_account A');
         db_join('a_type B','A.type_id = B.type_id');
         db_where("A.TYPE_ID IN (1,2,3,4,5)");
         // db_where("EXTRACT(YEAR FROM A.DATE_START) = ",$year);
         if(isset($data_search['year']) && having_value($data_search['year'])):
-            db_where("EXTRACT(YEAR FROM A.DATE_START) = ".$data_search['year']."");
+            db_where("EXTRACT(YEAR FROM A.DT_SIGNATURE) = ".$data_search['year']."");
         endif;
         // db_where("EXTRACT(MONTH FROM A.DATE_START) = ",$month);
-        db_group('A.type_id,b.type_name,EXTRACT(YEAR FROM A.DATE_START),EXTRACT(MONTH FROM A.DATE_START)');
+        db_group('A.type_id,b.type_name,EXTRACT(YEAR FROM A.DT_SIGNATURE),EXTRACT(MONTH FROM A.DT_SIGNATURE)');
         db_order('TYPE_ID');
         $sql = db_get();
         if($sql):
@@ -457,15 +457,15 @@ class M_acc_account extends CI_Model
     public function sewaan_papaniklan($data_search){
         db_select ('A.BILLBOARD_TYPE');
         db_select ('COUNT(account_id) as bil');
-        db_select ("EXTRACT(MONTH FROM A.DATE_START)AS BULAN");
+        db_select ("EXTRACT(MONTH FROM A.DT_SIGNATURE)AS BULAN");
         db_from('acc_account A');
         if(isset($data_search['year']) && having_value($data_search['year'])):
-            db_where("EXTRACT(YEAR FROM A.DATE_START) =".$data_search['year']."");
+            db_where("EXTRACT(YEAR FROM A.DT_SIGNATURE) =".$data_search['year']."");
         endif;
         db_where("A.TYPE_ID = 6");
         db_where("A.BILLBOARD_TYPE in (1,2)");
-        // db_where("EXTRACT(MONTH FROM A.DATE_START) in (1,2,3,4,5,6,7,8,9,10,12)");
-        db_group('A.BILLBOARD_TYPE,EXTRACT(YEAR FROM A.DATE_START),EXTRACT(MONTH FROM A.DATE_START)');
+        // db_where("EXTRACT(MONTH FROM A.DT_SIGNATURE) in (1,2,3,4,5,6,7,8,9,10,12)");
+        db_group('A.BILLBOARD_TYPE,EXTRACT(YEAR FROM A.DT_SIGNATURE),EXTRACT(MONTH FROM A.DT_SIGNATURE)');
         db_order('A.BILLBOARD_TYPE');
         $sql = db_get();
         if($sql):
@@ -476,24 +476,24 @@ class M_acc_account extends CI_Model
     public function perjanjian_kutipan($data_search){
         db_select ('COUNT(A.ACCOUNT_ID) as bil');
         // db_select ('SUM(A.RENTAL_CHARGE) AS RM');
-        db_select ("EXTRACT(YEAR FROM A.DATE_START)AS YEAR");
+        db_select ("EXTRACT(YEAR FROM A.DT_SIGNATURE)AS YEAR");
         // db_select ('A.TYPE_ID');
         db_from('acc_account A');
         // if(isset($data_search['year']) && having_value($data_search['year'])):
-        //     db_where("EXTRACT(YEAR FROM A.DATE_START) IN(".$data_search['year'].",".$data_search['year2'].",".$data_search['year3'].")");
+        //     db_where("EXTRACT(YEAR FROM A.DT_SIGNATURE) IN(".$data_search['year'].",".$data_search['year2'].",".$data_search['year3'].")");
         // endif;
 
         if(isset($data_search['year']) && having_value($data_search['year'])):
-            db_where("EXTRACT(YEAR FROM A.DATE_START) >= ".$data_search['year']."");
+            db_where("EXTRACT(YEAR FROM A.DT_SIGNATURE) >= ".$data_search['year']."");
         endif;
 
         if(isset($data_search['year2']) && having_value($data_search['year2'])):
-            db_where("EXTRACT(YEAR FROM A.DATE_START) <= ".$data_search['year2']."");
+            db_where("EXTRACT(YEAR FROM A.DT_SIGNATURE) <= ".$data_search['year2']."");
         endif;
         db_where("A.TYPE_ID NOT IN (6)");
         //db_where("A.BILLBOARD_TYPE in (1,2)");
-        // db_where("EXTRACT(YEAR FROM A.DATE_START) =2017");
-        db_group('EXTRACT(YEAR FROM A.DATE_START)');
+        // db_where("EXTRACT(YEAR FROM A.DT_SIGNATURE) =2017");
+        db_group('EXTRACT(YEAR FROM A.DT_SIGNATURE)');
         db_order('YEAR');
         $sql = db_get();
         if($sql):
@@ -504,24 +504,24 @@ class M_acc_account extends CI_Model
     public function perjanjian_kutipan_billboard($data_search){
         db_select ('COUNT(A.ACCOUNT_ID) as bil');
         // db_select ('SUM(A.RENTAL_CHARGE) AS RM');
-        db_select ("EXTRACT(YEAR FROM A.DATE_START)AS YEAR");
+        db_select ("EXTRACT(YEAR FROM A.DT_SIGNATURE)AS YEAR");
         // db_select ('A.TYPE_ID');
         db_from('acc_account A');
         // if(isset($data_search['year']) && having_value($data_search['year'])):
-        //     db_where("EXTRACT(YEAR FROM A.DATE_START) IN(".$data_search['year'].",".$data_search['year2'].",".$data_search['year3'].")");
+        //     db_where("EXTRACT(YEAR FROM A.DT_SIGNATURE) IN(".$data_search['year'].",".$data_search['year2'].",".$data_search['year3'].")");
         // endif;
 
         if(isset($data_search['year']) && having_value($data_search['year'])):
-            db_where("EXTRACT(YEAR FROM A.DATE_START) >= ".$data_search['year']."");
+            db_where("EXTRACT(YEAR FROM A.DT_SIGNATURE) >= ".$data_search['year']."");
         endif;
 
         if(isset($data_search['year2']) && having_value($data_search['year2'])):
-            db_where("EXTRACT(YEAR FROM A.DATE_START) <= ".$data_search['year2']."");
+            db_where("EXTRACT(YEAR FROM A.DT_SIGNATURE) <= ".$data_search['year2']."");
         endif;
         db_where("A.TYPE_ID = 6");
         //db_where("A.BILLBOARD_TYPE in (1,2)");
-        // db_where("EXTRACT(YEAR FROM A.DATE_START) =2017");
-        db_group('EXTRACT(YEAR FROM A.DATE_START)');
+        // db_where("EXTRACT(YEAR FROM A.DT_SIGNATURE) =2017");
+        db_group('EXTRACT(YEAR FROM A.DT_SIGNATURE)');
         db_order('YEAR');
         $sql = db_get();
         if($sql):
@@ -541,19 +541,21 @@ class M_acc_account extends CI_Model
     }
 
     public function hasil($data_search){
-        db_select ('SUM(B.AMOUNT) AS RM');
-        db_select ("EXTRACT(MONTH FROM B.DT_ADDED) AS BULAN");
+        db_select ('COUNT(A.ACCOUNT_ID) as bil');
+        // db_select ('SUM(B.AMOUNT) AS RM');
+        db_select ("EXTRACT(MONTH FROM A.DT_SIGNATURE) AS BULAN");
         db_select ('A.TYPE_ID');
-        db_from('B_ITEM B');
-        db_join('ACC_ACCOUNT A','A.ACCOUNT_ID = B.ACCOUNT_ID');
+        // db_from('B_ITEM B');
+        db_from('ACC_ACCOUNT A');
+        db_join('B_ITEM B','B.ACCOUNT_ID = A.ACCOUNT_ID');
         if(isset($data_search['year']) && having_value($data_search['year'])):
-            db_where("EXTRACT(YEAR FROM B.DT_ADDED) = ".$data_search['year']."");
+            db_where("EXTRACT(YEAR FROM A.DT_SIGNATURE) = ".$data_search['year']."");
         endif;
         // db_where("A.TYPE_ID = 6");
         db_where("B.BILL_CATEGORY = 'R'");
         db_where("B.GST_TYPE = 1");
         // db_where("EXTRACT(YEAR FROM B.DT_ADDED) =2015");
-        db_group('EXTRACT(MONTH FROM B.DT_ADDED),A.TYPE_ID');
+        db_group('EXTRACT(MONTH FROM A.DT_SIGNATURE),A.TYPE_ID');
         db_order('BULAN');
         $sql = db_get();
         if($sql):
