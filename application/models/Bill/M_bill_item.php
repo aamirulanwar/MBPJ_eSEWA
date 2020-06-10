@@ -630,7 +630,7 @@ class M_bill_item extends CI_Model
 
     function getBillItemTotalAmount($master_bill_id)
     {
-        db_select('sum(b_item.amount) as total_amount');
+        db_select('nvl(sum(b_item.amount),0) as total_amount');
         db_from('b_item');
         db_where('bill_id',$master_bill_id);
 
