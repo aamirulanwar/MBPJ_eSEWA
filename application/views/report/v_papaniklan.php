@@ -13,6 +13,7 @@
                         <select name="year" class="form-control">
                             <option value=""> - Pilih Tahun - </option>
                             <?php
+                            echo option_value(2020,2020,'year',search_default($data_search,'year'));
                             echo option_value(2019,2019,'year',search_default($data_search,'year'));
                             echo option_value(2018,2018,'year',search_default($data_search,'year'));
                             echo option_value(2017,2017,'year',search_default($data_search,'year'));

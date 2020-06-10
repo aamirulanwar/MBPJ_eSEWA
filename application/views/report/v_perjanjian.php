@@ -16,6 +16,7 @@
                         <select name="year" class="form-control">
                             <option value=""> - Pilih Tahun - </option>
                             <?php
+                            echo option_value(2020,2020,'year',search_default($data_search,'year'));
                             echo option_value(2019,2019,'year',search_default($data_search,'year'));
                             echo option_value(2018,2018,'year',search_default($data_search,'year'));
                             echo option_value(2017,2017,'year',search_default($data_search,'year'));
@@ -36,6 +37,7 @@
                         <select name="year2" class="form-control">
                             <option value=""> - Pilih Tahun - </option>
                             <?php
+                            echo option_value(2020,2020,'year2',search_default($data_search,'year2'));
                             echo option_value(2019,2019,'year2',search_default($data_search,'year2'));
                             echo option_value(2018,2018,'year2',search_default($data_search,'year2'));
                             echo option_value(2017,2017,'year2',search_default($data_search,'year2'));
@@ -75,6 +77,7 @@ checking_validation(validation_errors());
                     <tr>
                         <th width="3%" rowspan="2" style="text-align:center">BIL</th>
                         <th width="12%" rowspan="2" style="text-align:center">JENIS PERJANJIAN</th>
+                        <?php if (count($data_report) > 0): ?>
                         <?php foreach ($data_report[1] as $d):
                             $year = $d['YEAR'] ;
                             echo "<th colspan='3' width='7%'' style='text-align:center'>".$year."</th>";
@@ -129,7 +132,8 @@ checking_validation(validation_errors());
                             echo "<td style='text-align:center'>".num($total,2)."</td>";
                             echo "<td style='text-align:center'></td>";
                         ?>
-                        <?php endforeach;?>                          
+                        <?php endforeach;?> 
+                        <?php endif; ?>                         
                     </tr>
                 </table>
             </div>

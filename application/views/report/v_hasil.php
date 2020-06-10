@@ -16,6 +16,7 @@
                         <select name="year" class="form-control">
                             <option value=""> - Pilih Tahun - </option>
                             <?php
+                            echo option_value(2020,2020,'year',search_default($data_search,'year'));
                             echo option_value(2019,2019,'year',search_default($data_search,'year'));
                             echo option_value(2018,2018,'year',search_default($data_search,'year'));
                             echo option_value(2017,2017,'year',search_default($data_search,'year'));
@@ -70,22 +71,24 @@ checking_validation(validation_errors());
                         <?php if (count($data_report) > 0): ?>
                         <?php
                             $januaryCount = 0;
-                            $hartanah = 0;
-                            $billboard = 0;
+                            $total_hartanah = 0;
+                            $total_billboard = 0;
                             foreach ($data_report as $data)
                             {
                                 if( $data["TYPE_ID"] != 6 && $data["BULAN"] == 1)
                                 {
-                                    $hartanah += $data["RM"];
+                                    $hartanah = $data["BIL"];
                                 }
                                 else if( $data["TYPE_ID"] == 6 && $data["BULAN"] == 1)
                                 {
-                                    $billboard = $data["RM"];
+                                    $billboard = $data["BIL"];
                                 }
                             }
-                            $januaryCount = $hartanah + $billboard;
-                            echo "<td style='text-align:center'>".$hartanah."</td>";
-                            echo "<td style='text-align:center'>".$billboard."</td>";
+                            $total_hartanah = $hartanah * 100;
+                            $total_billboard = $billboard * 100;
+                            $januaryCount = $total_hartanah + $total_billboard;
+                            echo "<td style='text-align:center'>".$total_hartanah."</td>";
+                            echo "<td style='text-align:center'>".$total_billboard."</td>";
                             echo "<td style='text-align:center'>".$januaryCount."</td>";
                             echo "<th style='text-align:center'></th>";
                             echo "<th style='text-align:center'></th";
@@ -96,22 +99,24 @@ checking_validation(validation_errors());
                         <th>FEBRUARI</th>
                         <?php
                             $februaryCount = 0;
-                            $hartanah = 0;
-                            $billboard = 0;
+                            $total_hartanah = 0;
+                            $total_billboard = 0;
                             foreach ($data_report as $data)
                             {
                                 if( $data["TYPE_ID"] != 6 && $data["BULAN"] == 2)
                                 {
-                                    $hartanah += $data["RM"];
+                                    $hartanah = $data["BIL"];
                                 }
                                 else if( $data["TYPE_ID"] == 6 && $data["BULAN"] == 2)
                                 {
-                                    $billboard = $data["RM"];
+                                    $billboard = $data["BIL"];
                                 }
                             }
-                            $februaryCount = $hartanah + $billboard;
-                            echo "<td style='text-align:center'>".$hartanah."</td>";
-                            echo "<td style='text-align:center'>".$billboard."</td>";
+                            $total_hartanah = $hartanah * 100;
+                            $total_billboard = $billboard * 100;
+                            $februaryCount = $total_hartanah + $total_billboard;
+                            echo "<td style='text-align:center'>".$total_hartanah."</td>";
+                            echo "<td style='text-align:center'>".$total_billboard."</td>";
                             echo "<td style='text-align:center'>".$februaryCount."</td>";
                             echo "<th style='text-align:center'></th>";
                             echo "<th style='text-align:center'></th";
@@ -122,22 +127,25 @@ checking_validation(validation_errors());
                         <th>MAC</th>
                         <?php
                             $marchCount = 0;
-                            $hartanah = 0;
-                            $billboard = 0;
+                            $total_hartanah = 0;
+                            $total_billboard = 0;
                             foreach ($data_report as $data)
                             {
                                 if( $data["TYPE_ID"] != 6 && $data["BULAN"] == 3)
                                 {
-                                    $hartanah += $data["RM"];
+                                    $hartanah = $data["BIL"];
                                 }
                                 else if( $data["TYPE_ID"] == 6 && $data["BULAN"] == 3)
                                 {
-                                    $billboard = $data["RM"];
-                                }
+                                    $billboard = $data["BIL"];
+                              
+                              $total_hartanah = $hartanah * 100;
+                            $total_billboard = $billboard * 100;  }
                             }
-                            $marchCount = $hartanah + $billboard;
-                            echo "<td style='text-align:center'>".$hartanah."</td>";
-                            echo "<td style='text-align:center'>".$billboard."</td>";
+
+                            $marchCount = $total_hartanah + $total_billboard;
+                            echo "<td style='text-align:center'>".$total_hartanah."</td>";
+                            echo "<td style='text-align:center'>".$total_billboard."</td>";
                             echo "<td style='text-align:center'>".$marchCount."</td>";
                             echo "<th style='text-align:center'></th>";
                             echo "<th style='text-align:center'></th";
@@ -148,22 +156,24 @@ checking_validation(validation_errors());
                         <th>APRIL</th>            
                         <?php
                             $aprilCount = 0;
-                            $hartanah = 0;
-                            $billboard = 0;
+                            $total_hartanah = 0;
+                            $total_billboard = 0;
                             foreach ($data_report as $data)
                             {
                                 if( $data["TYPE_ID"] != 6 && $data["BULAN"] == 4)
                                 {
-                                    $hartanah += $data["RM"];
+                                    $hartanah = $data["BIL"];
                                 }
                                 else if( $data["TYPE_ID"] == 6 && $data["BULAN"] == 4)
                                 {
-                                    $billboard = $data["RM"];
+                                    $billboard = $data["BIL"];
                                 }
                             }
-                            $aprilCount = $hartanah + $billboard;
-                            echo "<td style='text-align:center'>".$hartanah."</td>";
-                            echo "<td style='text-align:center'>".$billboard."</td>";
+                            $total_hartanah = $hartanah * 100;
+                            $total_billboard = $billboard * 100;
+                            $aprilCount = $total_hartanah + $total_billboard;
+                            echo "<td style='text-align:center'>".$total_hartanah."</td>";
+                            echo "<td style='text-align:center'>".$total_billboard."</td>";
                             echo "<td style='text-align:center'>".$aprilCount."</td>";
                             echo "<th style='text-align:center'></th>";
                             echo "<th style='text-align:center'></th";
@@ -174,22 +184,24 @@ checking_validation(validation_errors());
                         <th>MEI</th>              
                         <?php
                             $mayCount = 0;
-                            $hartanah = 0;
-                            $billboard = 0;
+                            $total_hartanah = 0;
+                            $total_billboard = 0;
                             foreach ($data_report as $data)
                             {
                                 if( $data["TYPE_ID"] != 6 && $data["BULAN"] == 5)
                                 {
-                                    $hartanah += $data["RM"];
+                                    $hartanah = $data["BIL"];
                                 }
                                 else if( $data["TYPE_ID"] == 6 && $data["BULAN"] == 5)
                                 {
-                                    $billboard = $data["RM"];
+                                    $billboard = $data["BIL"];
                                 }
                             }
-                            $mayCount = $hartanah + $billboard;
-                            echo "<td style='text-align:center'>".$hartanah."</td>";
-                            echo "<td style='text-align:center'>".$billboard."</td>";
+                            $total_hartanah = $hartanah * 100;
+                            $total_billboard = $billboard * 100;
+                            $mayCount = $total_hartanah + $total_billboard;
+                            echo "<td style='text-align:center'>".$total_hartanah."</td>";
+                            echo "<td style='text-align:center'>".$total_billboard."</td>";
                             echo "<td style='text-align:center'>".$mayCount."</td>";
                             echo "<th style='text-align:center'></th>";
                             echo "<th style='text-align:center'></th";
@@ -200,22 +212,24 @@ checking_validation(validation_errors());
                         <th>JUN</th>              
                         <?php
                             $junCount = 0;
-                            $hartanah = 0;
-                            $billboard = 0;
+                            $total_hartanah = 0;
+                            $total_billboard = 0;
                             foreach ($data_report as $data)
                             {
                                 if( $data["TYPE_ID"] != 6 && $data["BULAN"] == 6)
                                 {
-                                    $hartanah += $data["RM"];
+                                    $hartanah = $data["BIL"];
                                 }
                                 else if( $data["TYPE_ID"] == 6 && $data["BULAN"] == 6)
                                 {
-                                    $billboard = $data["RM"];
+                                    $billboard = $data["BIL"];
                                 }
                             }
-                            $junCount = $hartanah + $billboard;
-                            echo "<td style='text-align:center'>".$hartanah."</td>";
-                            echo "<td style='text-align:center'>".$billboard."</td>";
+                            $total_hartanah = $hartanah * 100;
+                            $total_billboard = $billboard * 100;
+                            $junCount = $total_hartanah + $total_billboard;
+                            echo "<td style='text-align:center'>".$total_hartanah."</td>";
+                            echo "<td style='text-align:center'>".$total_billboard."</td>";
                             echo "<td style='text-align:center'>".$junCount."</td>";
                             echo "<th style='text-align:center'></th>";
                             echo "<th style='text-align:center'></th";
@@ -226,22 +240,24 @@ checking_validation(validation_errors());
                         <th>JULAI</th>            
                         <?php
                             $julyCount = 0;
-                            $hartanah = 0;
-                            $billboard = 0;
+                            $total_hartanah = 0;
+                            $total_billboard = 0;
                             foreach ($data_report as $data)
                             {
                                 if( $data["TYPE_ID"] != 6 && $data["BULAN"] == 7)
                                 {
-                                    $hartanah += $data["RM"];
+                                    $hartanah = $data["BIL"];
                                 }
                                 else if( $data["TYPE_ID"] == 6 && $data["BULAN"] == 7)
                                 {
-                                    $billboard = $data["RM"];
+                                    $billboard = $data["BIL"];
                                 }
                             }
-                            $julyCount = $hartanah + $billboard;
-                            echo "<td style='text-align:center'>".$hartanah."</td>";
-                            echo "<td style='text-align:center'>".$billboard."</td>";
+                            $total_hartanah = $hartanah * 100;
+                            $total_billboard = $billboard * 100;
+                            $julyCount = $total_hartanah + $total_billboard;
+                            echo "<td style='text-align:center'>".$total_hartanah."</td>";
+                            echo "<td style='text-align:center'>".$total_billboard."</td>";
                             echo "<td style='text-align:center'>".$julyCount."</td>";
                             echo "<th style='text-align:center'></th>";
                             echo "<th style='text-align:center'></th";
@@ -252,22 +268,24 @@ checking_validation(validation_errors());
                         <th>OGOS</th>             
                         <?php
                             $augustCount = 0;
-                            $hartanah = 0;
-                            $billboard = 0;
+                            $total_hartanah = 0;
+                            $total_billboard = 0;
                             foreach ($data_report as $data)
                             {
                                 if( $data["TYPE_ID"] != 6 && $data["BULAN"] == 8)
                                 {
-                                    $hartanah += $data["RM"];
+                                    $hartanah = $data["BIL"];
                                 }
                                 else if( $data["TYPE_ID"] == 6 && $data["BULAN"] == 8)
                                 {
-                                    $billboard = $data["RM"];
+                                    $billboard = $data["BIL"];
                                 }
                             }
-                            $augustCount = $hartanah + $billboard;
-                            echo "<td style='text-align:center'>".$hartanah."</td>";
-                            echo "<td style='text-align:center'>".$billboard."</td>";
+                            $total_hartanah = $hartanah * 100;
+                            $total_billboard = $billboard * 100;
+                            $augustCount = $total_hartanah + $total_billboard;
+                            echo "<td style='text-align:center'>".$total_hartanah."</td>";
+                            echo "<td style='text-align:center'>".$total_billboard."</td>";
                             echo "<td style='text-align:center'>".$augustCount."</td>";
                             echo "<th style='text-align:center'></th>";
                             echo "<th style='text-align:center'></th";
@@ -278,22 +296,24 @@ checking_validation(validation_errors());
                         <th>SEPTEMBER</th>        
                         <?php
                             $septCount = 0;
-                            $hartanah = 0;
-                            $billboard = 0;
+                            $total_hartanah = 0;
+                            $total_billboard = 0;
                             foreach ($data_report as $data)
                             {
                                 if( $data["TYPE_ID"] != 6 && $data["BULAN"] == 9)
                                 {
-                                    $hartanah += $data["RM"];
+                                    $hartanah = $data["BIL"];
                                 }
                                 else if( $data["TYPE_ID"] == 6 && $data["BULAN"] == 9)
                                 {
-                                    $billboard = $data["RM"];
+                                    $billboard = $data["BIL"];
                                 }
                             }
-                            $septCount = $hartanah + $billboard;
-                            echo "<td style='text-align:center'>".$hartanah."</td>";
-                            echo "<td style='text-align:center'>".$billboard."</td>";
+                            $total_hartanah = $hartanah * 100;
+                            $total_billboard = $billboard * 100;
+                            $septCount = $total_hartanah + $total_billboard;
+                            echo "<td style='text-align:center'>".$total_hartanah."</td>";
+                            echo "<td style='text-align:center'>".$total_billboard."</td>";
                             echo "<td style='text-align:center'>".$septCount."</td>";
                             echo "<th style='text-align:center'></th>";
                             echo "<th style='text-align:center'></th";
@@ -304,22 +324,24 @@ checking_validation(validation_errors());
                         <th>OKTOBER</th>          
                         <?php
                             $octCount = 0;
-                            $hartanah = 0;
-                            $billboard = 0;
+                            $total_hartanah = 0;
+                            $total_billboard = 0;
                             foreach ($data_report as $data)
                             {
                                 if( $data["TYPE_ID"] != 6 && $data["BULAN"] == 10)
                                 {
-                                    $hartanah += $data["RM"];
+                                    $hartanah = $data["BIL"];
                                 }
                                 else if( $data["TYPE_ID"] == 6 && $data["BULAN"] == 10)
                                 {
-                                    $billboard = $data["RM"];
+                                    $billboard = $data["BIL"];
                                 }
                             }
-                            $octCount = $hartanah + $billboard;
-                            echo "<td style='text-align:center'>".$hartanah."</td>";
-                            echo "<td style='text-align:center'>".$billboard."</td>";
+                            $total_hartanah = $hartanah * 100;
+                            $total_billboard = $billboard * 100;
+                            $octCount = $total_hartanah + $total_billboard;
+                            echo "<td style='text-align:center'>".$total_hartanah."</td>";
+                            echo "<td style='text-align:center'>".$total_billboard."</td>";
                             echo "<td style='text-align:center'>".$octCount."</td>";
                             echo "<th style='text-align:center'></th>";
                             echo "<th style='text-align:center'></th";
@@ -330,22 +352,24 @@ checking_validation(validation_errors());
                         <th>NOVEMBER</th>         
                         <?php
                             $novCount = 0;
-                            $hartanah = 0;
-                            $billboard = 0;
+                            $total_hartanah = 0;
+                            $total_billboard = 0;
                             foreach ($data_report as $data)
                             {
                                 if( $data["TYPE_ID"] != 6 && $data["BULAN"] == 11)
                                 {
-                                    $hartanah += $data["RM"];
+                                    $hartanah = $data["BIL"];
                                 }
                                 else if( $data["TYPE_ID"] == 6 && $data["BULAN"] == 11)
                                 {
-                                    $billboard = $data["RM"];
+                                    $billboard = $data["BIL"];
                                 }
                             }
-                            $novCount = $hartanah + $billboard;
-                            echo "<td style='text-align:center'>".$hartanah."</td>";
-                            echo "<td style='text-align:center'>".$billboard."</td>";
+                            $total_hartanah = $hartanah * 100;
+                            $total_billboard = $billboard * 100;
+                            $novCount = $total_hartanah + $total_billboard;
+                            echo "<td style='text-align:center'>".$total_hartanah."</td>";
+                            echo "<td style='text-align:center'>".$total_billboard."</td>";
                             echo "<td style='text-align:center'>".$novCount."</td>";
                             echo "<th style='text-align:center'></th>";
                             echo "<th style='text-align:center'></th";
@@ -356,22 +380,24 @@ checking_validation(validation_errors());
                         <th>DISEMBER</th>         
                         <?php
                             $decCount = 0;
-                            $hartanah = 0;
-                            $billboard = 0;
+                            $total_hartanah = 0;
+                            $total_billboard = 0;
                             foreach ($data_report as $data)
                             {
                                 if( $data["TYPE_ID"] != 6 && $data["BULAN"] == 12)
                                 {
-                                    $hartanah += $data["RM"];
+                                    $hartanah = $data["BIL"];
                                 }
                                 else if( $data["TYPE_ID"] == 6 && $data["BULAN"] == 12)
                                 {
-                                    $billboard = $data["RM"];
+                                    $billboard = $data["BIL"];
                                 }
                             }
-                            $decCount = $hartanah + $billboard;
-                            echo "<td style='text-align:center'>".$hartanah."</td>";
-                            echo "<td style='text-align:center'>".$billboard."</td>";
+                            $total_hartanah = $hartanah * 100;
+                            $total_billboard = $billboard * 100;
+                            $decCount = $total_hartanah + $total_billboard;
+                            echo "<td style='text-align:center'>".$total_hartanah."</td>";
+                            echo "<td style='text-align:center'>".$total_billboard."</td>";
                             echo "<td style='text-align:center'>".$decCount."</td>";
                             echo "<th style='text-align:center'></th>";
                             echo "<th style='text-align:center'></th";

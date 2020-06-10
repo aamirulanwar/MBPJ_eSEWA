@@ -113,6 +113,18 @@ notify_msg('notify_msg');
                                 <?php endif;?>
 
                                 <?php
+                                if(count($row['DATE_AGREEMENT'])>0):
+                                    // echo "<pre>";
+                                    // var_dump(count($row['DATE_AGREEMENT']));
+                                ?>
+                                    <a class="btn btn-block btn-secondary btn-display" href="javascript:;"><span class="glyphicon glyphicon-edit"></span> HADIR </a>
+                                <?php 
+                                else:
+                                ?> 
+                                    <a class="btn btn-block btn-primary btn-display" href="/account/update_time/<?php echo urlEncrypt($row['ACCOUNT_ID'])?>" target="_blank"><span class="glyphicon glyphicon-edit"></span> HADIR </a>
+                                <?php endif;?>
+
+                                <?php
                                 if($row['FORM_TYPE']==1 || $row['FORM_TYPE']==2):
                                 ?>
                                     <i class="icons font-xl mt-5 cui-file"></i><div><a href="/account/doc_agreement/<?php echo urlEncrypt($row['ACCOUNT_ID'])?>" target="_blank">Dokumen Perjanjian</div></a>

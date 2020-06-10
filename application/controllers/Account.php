@@ -51,7 +51,8 @@ class Account extends CI_Controller
             'delete_item',
             'upload_dokumen_tandatangan',
             'delete_dokumen_temp',
-            'delete_all_temp_file'
+            'delete_all_temp_file',
+            'update_time'
         );
         #set pages data
         (in_array($method,$array)) ? $this->$method() : $this->create_acc();
@@ -1203,11 +1204,15 @@ class Account extends CI_Controller
         if(!is_numeric($id)):
             return false;
         elseif(is_numeric($id)):
+            $data_update['dt_signature']       = date("d-M-y h:i:s");
+            // var_dump(timenow());
+            $update_acc = $this->m_acc_account->update_account($data_update,$id);
             // $this->m_c_document->get_record_exist($id,'DOC_SIGNATURE');
             echo $this->m_c_document->update_document_printed($id,'DOC_SIGNATURE');
             load_library('Generate_word');
 
             $this->generate_word->word_document($id, DOC_SIGNATURE);
+
         endif;
     }
 
@@ -1814,4 +1819,23 @@ class Account extends CI_Controller
         }
     }
 
+    function update_time()
+    {
+        $id = urlDecrypt(uri_segment(3));
+        if(!is_numeric($id)):
+            return false;
+        endif;
+
+        // $get_details = $this->m_acc_account->get_account_details($id);
+        // if(!$get_details):
+        //     return false;
+        // endif;
+
+            $data_update['date_agreement']       = date("d-M-y h:i:s");
+// var_dump(timenow());
+            $update_acc = $this->m_acc_account->update_account($data_update,$id);
+
+            redirect('/account/account_list/');
+
+    }
 }
