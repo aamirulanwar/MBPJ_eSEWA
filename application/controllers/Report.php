@@ -28,6 +28,8 @@ class Report extends CI_Controller
         load_model('audit_trail/M_audit_trail','m_audit_trail');
         load_model('asset/M_a_asset','m_asset');
         load_model('journal/M_journal','m_journal');
+        load_model('Notice/M_lod_generation', 'm_lod_generation');
+        load_model('Notice/M_notis_mah_generation', 'm_notis_mah_generation');
     }
 
     function _remap($method){
@@ -55,6 +57,8 @@ class Report extends CI_Controller
             'papaniklan',
             'perjanjian_kutipan',
             'hasil',
+            'kutipan_tunggakan',
+            'print_kutipan_tunggakan',
             'laporan_iso'
         );
         #set pages data
@@ -1552,7 +1556,129 @@ class Report extends CI_Controller
         endif;
 
         templates('report/v_hasil',$data);
+    }
 
+    function kutipan_tunggakan(){
+        $this->auth->restrict_access($this->curuser,array(8005));
+        $data['link_1']     = 'Laporan';
+        $data['link_2']     = 'Kutipan Tunggakan Sewaan';
+        $data['link_3']     = '';
+        $data['pagetitle']  = 'Laporan Kutipan Tunggakan Sewaan';
+
+        $search_segment = uri_segment(3);
+
+        $post           = $this->input->post();
+
+        if(!empty($post))
+        {
+            $data_search = $post;
+        }
+        else
+        {
+            $data_search['selectedYear']  = "";
+        }
+
+        if($_POST):
+
+            $data['data_search']    = $data_search;
+
+            // Get data lod by Month within selected year
+
+            $dataMonthLod['Jan'] = $this->m_lod_generation->get_monthly_record_generation( array( "YEAR" => $data_search['selectedYear'], "MONTH" => 1 ) );
+            $dataMonthLod['Feb'] = $this->m_lod_generation->get_monthly_record_generation( array( "YEAR" => $data_search['selectedYear'], "MONTH" => 2 ) );
+            $dataMonthLod['Mac'] = $this->m_lod_generation->get_monthly_record_generation( array( "YEAR" => $data_search['selectedYear'], "MONTH" => 3 ) );
+            $dataMonthLod['Apr'] = $this->m_lod_generation->get_monthly_record_generation( array( "YEAR" => $data_search['selectedYear'], "MONTH" => 4 ) );
+            $dataMonthLod['May'] = $this->m_lod_generation->get_monthly_record_generation( array( "YEAR" => $data_search['selectedYear'], "MONTH" => 5 ) );
+            $dataMonthLod['Jun'] = $this->m_lod_generation->get_monthly_record_generation( array( "YEAR" => $data_search['selectedYear'], "MONTH" => 6 ) );
+            $dataMonthLod['Jul'] = $this->m_lod_generation->get_monthly_record_generation( array( "YEAR" => $data_search['selectedYear'], "MONTH" => 7 ) );
+            $dataMonthLod['Aug'] = $this->m_lod_generation->get_monthly_record_generation( array( "YEAR" => $data_search['selectedYear'], "MONTH" => 8 ) );
+            $dataMonthLod['Sep'] = $this->m_lod_generation->get_monthly_record_generation( array( "YEAR" => $data_search['selectedYear'], "MONTH" => 9 ) );
+            $dataMonthLod['Oct'] = $this->m_lod_generation->get_monthly_record_generation( array( "YEAR" => $data_search['selectedYear'], "MONTH" => 10 ) );
+            $dataMonthLod['Nov'] = $this->m_lod_generation->get_monthly_record_generation( array( "YEAR" => $data_search['selectedYear'], "MONTH" => 11 ) );
+            $dataMonthLod['Dec'] = $this->m_lod_generation->get_monthly_record_generation( array( "YEAR" => $data_search['selectedYear'], "MONTH" => 12 ) );
+
+            $data['data_month_lod'] = $dataMonthLod;
+
+            // Get data lod by Month within selected year
+
+            $dataMonthMahkamah['Jan'] = $this->m_notis_mah_generation->get_monthly_record_generation( array( "YEAR" => $data_search['selectedYear'], "MONTH" => 1 ) );
+            $dataMonthMahkamah['Feb'] = $this->m_notis_mah_generation->get_monthly_record_generation( array( "YEAR" => $data_search['selectedYear'], "MONTH" => 2 ) );
+            $dataMonthMahkamah['Mac'] = $this->m_notis_mah_generation->get_monthly_record_generation( array( "YEAR" => $data_search['selectedYear'], "MONTH" => 3 ) );
+            $dataMonthMahkamah['Apr'] = $this->m_notis_mah_generation->get_monthly_record_generation( array( "YEAR" => $data_search['selectedYear'], "MONTH" => 4 ) );
+            $dataMonthMahkamah['May'] = $this->m_notis_mah_generation->get_monthly_record_generation( array( "YEAR" => $data_search['selectedYear'], "MONTH" => 5 ) );
+            $dataMonthMahkamah['Jun'] = $this->m_notis_mah_generation->get_monthly_record_generation( array( "YEAR" => $data_search['selectedYear'], "MONTH" => 6 ) );
+            $dataMonthMahkamah['Jul'] = $this->m_notis_mah_generation->get_monthly_record_generation( array( "YEAR" => $data_search['selectedYear'], "MONTH" => 7 ) );
+            $dataMonthMahkamah['Aug'] = $this->m_notis_mah_generation->get_monthly_record_generation( array( "YEAR" => $data_search['selectedYear'], "MONTH" => 8 ) );
+            $dataMonthMahkamah['Sep'] = $this->m_notis_mah_generation->get_monthly_record_generation( array( "YEAR" => $data_search['selectedYear'], "MONTH" => 9 ) );
+            $dataMonthMahkamah['Oct'] = $this->m_notis_mah_generation->get_monthly_record_generation( array( "YEAR" => $data_search['selectedYear'], "MONTH" => 10 ) );
+            $dataMonthMahkamah['Nov'] = $this->m_notis_mah_generation->get_monthly_record_generation( array( "YEAR" => $data_search['selectedYear'], "MONTH" => 11 ) );
+            $dataMonthMahkamah['Dec'] = $this->m_notis_mah_generation->get_monthly_record_generation( array( "YEAR" => $data_search['selectedYear'], "MONTH" => 12 ) );
+
+            $data['data_month_mah'] = $dataMonthMahkamah;
+
+            // echo "<pre>";
+            // var_dump($data['data_month']);
+            // die();
+
+        else:
+            $data['data_report']    = array();
+            $data['data_search']    = $data_search;
+        endif;
+
+        templates('/report/v_kutipan_tunggakan_undang',$data);
+    }
+
+    function print_kutipan_tunggakan()
+    {
+        if ( isset($_GET["key"]) )
+        {
+            $year = $_GET["key"];
+        }
+        else
+        {
+            $year = 0;
+        }
+
+        if ($year > 0 && isset($year))
+        {
+            $data_search['selectedYear']  = $year;
+
+            $dataMonthLod['Jan'] = $this->m_lod_generation->get_monthly_record_generation( array( "YEAR" => $data_search['selectedYear'], "MONTH" => 1 ) );
+            $dataMonthLod['Feb'] = $this->m_lod_generation->get_monthly_record_generation( array( "YEAR" => $data_search['selectedYear'], "MONTH" => 2 ) );
+            $dataMonthLod['Mac'] = $this->m_lod_generation->get_monthly_record_generation( array( "YEAR" => $data_search['selectedYear'], "MONTH" => 3 ) );
+            $dataMonthLod['Apr'] = $this->m_lod_generation->get_monthly_record_generation( array( "YEAR" => $data_search['selectedYear'], "MONTH" => 4 ) );
+            $dataMonthLod['May'] = $this->m_lod_generation->get_monthly_record_generation( array( "YEAR" => $data_search['selectedYear'], "MONTH" => 5 ) );
+            $dataMonthLod['Jun'] = $this->m_lod_generation->get_monthly_record_generation( array( "YEAR" => $data_search['selectedYear'], "MONTH" => 6 ) );
+            $dataMonthLod['Jul'] = $this->m_lod_generation->get_monthly_record_generation( array( "YEAR" => $data_search['selectedYear'], "MONTH" => 7 ) );
+            $dataMonthLod['Aug'] = $this->m_lod_generation->get_monthly_record_generation( array( "YEAR" => $data_search['selectedYear'], "MONTH" => 8 ) );
+            $dataMonthLod['Sep'] = $this->m_lod_generation->get_monthly_record_generation( array( "YEAR" => $data_search['selectedYear'], "MONTH" => 9 ) );
+            $dataMonthLod['Oct'] = $this->m_lod_generation->get_monthly_record_generation( array( "YEAR" => $data_search['selectedYear'], "MONTH" => 10 ) );
+            $dataMonthLod['Nov'] = $this->m_lod_generation->get_monthly_record_generation( array( "YEAR" => $data_search['selectedYear'], "MONTH" => 11 ) );
+            $dataMonthLod['Dec'] = $this->m_lod_generation->get_monthly_record_generation( array( "YEAR" => $data_search['selectedYear'], "MONTH" => 12 ) );
+
+            $data['data_month_lod'] = $dataMonthLod;
+
+            // Get data lod by Month within selected year
+
+            $dataMonthMahkamah['Jan'] = $this->m_notis_mah_generation->get_monthly_record_generation( array( "YEAR" => $data_search['selectedYear'], "MONTH" => 1 ) );
+            $dataMonthMahkamah['Feb'] = $this->m_notis_mah_generation->get_monthly_record_generation( array( "YEAR" => $data_search['selectedYear'], "MONTH" => 2 ) );
+            $dataMonthMahkamah['Mac'] = $this->m_notis_mah_generation->get_monthly_record_generation( array( "YEAR" => $data_search['selectedYear'], "MONTH" => 3 ) );
+            $dataMonthMahkamah['Apr'] = $this->m_notis_mah_generation->get_monthly_record_generation( array( "YEAR" => $data_search['selectedYear'], "MONTH" => 4 ) );
+            $dataMonthMahkamah['May'] = $this->m_notis_mah_generation->get_monthly_record_generation( array( "YEAR" => $data_search['selectedYear'], "MONTH" => 5 ) );
+            $dataMonthMahkamah['Jun'] = $this->m_notis_mah_generation->get_monthly_record_generation( array( "YEAR" => $data_search['selectedYear'], "MONTH" => 6 ) );
+            $dataMonthMahkamah['Jul'] = $this->m_notis_mah_generation->get_monthly_record_generation( array( "YEAR" => $data_search['selectedYear'], "MONTH" => 7 ) );
+            $dataMonthMahkamah['Aug'] = $this->m_notis_mah_generation->get_monthly_record_generation( array( "YEAR" => $data_search['selectedYear'], "MONTH" => 8 ) );
+            $dataMonthMahkamah['Sep'] = $this->m_notis_mah_generation->get_monthly_record_generation( array( "YEAR" => $data_search['selectedYear'], "MONTH" => 9 ) );
+            $dataMonthMahkamah['Oct'] = $this->m_notis_mah_generation->get_monthly_record_generation( array( "YEAR" => $data_search['selectedYear'], "MONTH" => 10 ) );
+            $dataMonthMahkamah['Nov'] = $this->m_notis_mah_generation->get_monthly_record_generation( array( "YEAR" => $data_search['selectedYear'], "MONTH" => 11 ) );
+            $dataMonthMahkamah['Dec'] = $this->m_notis_mah_generation->get_monthly_record_generation( array( "YEAR" => $data_search['selectedYear'], "MONTH" => 12 ) );
+
+            $data['data_month_mah'] = $dataMonthMahkamah;
+            $data['data_search'] = $data_search;
+
+            // templates('/report/v_print_kutipan_tunggakan_undang',$data);
+            $this->load->view('/report/v_print_kutipan_tunggakan_undang',$data);
+        }
     }
 
     function laporan_iso(){

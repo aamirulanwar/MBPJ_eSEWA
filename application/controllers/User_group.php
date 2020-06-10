@@ -201,4 +201,3 @@ class User_group extends CI_Controller
     }
 }
 /* End of file modules/login/controllers/department.php */
-
