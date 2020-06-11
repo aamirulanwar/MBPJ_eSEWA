@@ -546,19 +546,19 @@ class M_bill_item extends CI_Model
         db_select('m.BILL_CATEGORY as master_bill_category');
         db_select('i.AMOUNT');
         db_select('m.BILL_NUMBER');
-        db_select("to_char(m.DT_ADDED,'dd/mm/yyyy') as TKH_BIL");
+        db_select("to_char(i.DT_ADDED,'dd/mm/yyyy') as TKH_BIL");
         db_from('b_item i');
         db_join('b_master m','m.bill_id = i.bill_id');
         db_join('acc_account a','a.ACCOUNT_ID = m.ACCOUNT_ID');
 
         if(isset($data_search['date_start']) && having_value($data_search['date_start'])):
-            db_where("i.dt_added >= to_date('".date('d-M-y',strtotime($data_search['date_start']))."')");
+            db_where("i.dt_added >= to_date('".$data_search['date_start']."','DD-MM-YYYY')");
         endif;
         if(isset($data_search['tr_code']) && having_value($data_search['tr_code'])):
             db_where('i.tr_code',$data_search['tr_code']);
         endif;
         if(isset($data_search['date_end']) && having_value($data_search['date_end'])):
-            db_where("i.dt_added <= to_date('".date('d-M-y',strtotime($data_search['date_end']))."')");
+            db_where("i.dt_added <= to_date('".$data_search['date_end']."','DD-MM-YYYY')");
         endif;
         if(isset($data_search['account_id']) && having_value($data_search['account_id'])):
             db_where('m.account_id',$data_search['account_id']);
@@ -611,6 +611,7 @@ class M_bill_item extends CI_Model
             db_select("b_item.ITEM_ID");
             db_select("b_item.TR_CODE");
             db_select("b_item.ITEM_DESC");
+            db_select("b_item.REMARK");
             db_from("b_item");
             db_join("b_master","b_master.bill_id = b_item.bill_id");
             db_where("b_master.account_id",$account_id);

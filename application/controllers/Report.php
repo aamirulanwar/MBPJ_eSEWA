@@ -807,40 +807,90 @@ class Report extends CI_Controller
 
         if ($_POST):
             // $data_report = $this->m_bill_item->record_transaction($data_search);
-            $data_report = $this->m_bill_item->rekodTransaksi($data_search);
+            // $data_report = $this->m_bill_item->rekodTransaksi($data_search);
             // $data['data_report'] = $data_report;
             $data['data_search'] = $data_search;
 
             // Added for filter data by yearly record [START]
-            $backupSearch_startDate = $data_search['date_start'];
-            $backupSearch_endDate = $data_search['date_end'];
+            $backupSearch_startDate = DateTime::createFromFormat('d M Y', $data_search['date_start'])->format('d/m/Y');
+            $backupSearch_endDate = DateTime::createFromFormat('d M Y', $data_search['date_end'])->format('d/m/Y');
             $startYear          = DateTime::createFromFormat('d M Y', $data_search['date_start'])->format('Y');
             $endYear            = DateTime::createFromFormat('d M Y', $data_search['date_end'])->format('Y');
             $nextYear           = $endYear;
 
+            // echo "<pre>";
+            // var_dump($data_search);
+            // echo "</br>";
+            // echo $startYear;
+            // echo "</br>";
+            // echo $nextYear;
+            // die();
+
             $data_year = array();
             while ($nextYear >= $startYear)
             {
-                $new_startDate = '1 Jan '.$nextYear;
-                $new_endDate = '31 Dec '.$nextYear;
-                $date1 = new DateTime($backupSearch_startDate);
-                $date2 = new DateTime($new_startDate);
-
                 if ($nextYear == $endYear)
                 {
-                    $data_search['date_start'] = '1 Jan '.$nextYear;
-                    $data_search['date_end'] = $backupSearch_endDate;
+                    $new_startDate = '01/01/'.$nextYear;
+                    $new_endDate = '31/12/'.$nextYear;
+
+                    //  1/5/2019 > 1/1/2020
+                    if ( $backupSearch_startDate > $new_startDate && $nextYear == $startYear) 
+                    {
+                        $data_search['date_start'] = $backupSearch_startDate;
+                    }
+                    else
+                    {
+                        $data_search['date_start'] = $new_startDate;
+                    }
+                    
+                    // 31/5/2020 < 31/12/2020
+                    if ( $backupSearch_endDate < $new_endDate ) 
+                    {
+                        $data_search['date_end'] = $backupSearch_endDate;
+                    }
+                    else
+                    {
+                        $data_search['date_end'] = $new_endDate;
+                    }
+
                     $data_year["$nextYear"] = $this->m_bill_item->rekodTransaksi($data_search);
-                } else if ($nextYear == $startYear)
+                } 
+                else if ($nextYear == $startYear)
                 {
-                    $data_search['date_start'] = $backupSearch_startDate;
-                    $data_search['date_end'] = '31 Dec '.$nextYear;
+                    $new_startDate = '01/01/'.$nextYear;
+                    $new_endDate = '31/12/'.$nextYear;
+
+                    //  1/5/2019 > 1/1/2019
+                    if ( $backupSearch_startDate > $new_startDate ) 
+                    {
+                        $data_search['date_start'] = $backupSearch_startDate;
+                    }
+                    else
+                    {
+                        $data_search['date_start'] = $new_startDate;
+                    }
+                    
+                    if ( $backupSearch_endDate > $new_endDate ) 
+                    {
+                        $data_search['date_end'] = $backupSearch_endDate;
+                    }
+                    else
+                    {
+                        $data_search['date_end'] = $new_endDate;
+                    }
+
+                    // $data_search['date_start'] = $backupSearch_startDate;
+                    // $data_search['date_end'] = '31 Dec '.$nextYear;
                     $data_year["$nextYear"] = $this->m_bill_item->rekodTransaksi($data_search);
                 }
                 else
                 {
-                    $data_search['date_start'] = '1 Jan '.$nextYear;
-                    $data_search['date_end'] = '31 Dec '.$nextYear;
+                    $new_startDate = '01/01/'.$nextYear;
+                    $new_endDate = '31/12/'.$nextYear;
+
+                    $data_search['date_start'] = $new_startDate;
+                    $data_search['date_end'] = $new_endDate;
                     $data_year["$nextYear"] = $this->m_bill_item->rekodTransaksi($data_search);
                 }
                 

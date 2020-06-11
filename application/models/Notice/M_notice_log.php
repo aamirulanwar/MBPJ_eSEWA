@@ -35,4 +35,25 @@ class M_notice_log extends CI_Model
             return $sql->row_array();
         endif;
     }
+
+    function get_log_notice_by_monthYear($acc_id,$month,$year){
+        db_select('*');
+        db_from('notice_log');
+        db_where('account_id',$acc_id);
+        db_where("extract(year from dt_added) = ".$year);
+        db_where("extract(month from DT_ADDED) = ".$month);
+        $sql = db_get();
+        if($sql):
+            return $sql->row_array();
+        endif;
+    }
+
+    function update_notice_log($data_update,$account_id,$month,$year)
+    {
+        db_where('account_id',$account_id);
+        db_where('extract(year from dt_added) = ',$year);
+        db_where('extract(month from dt_added) = ',$month);
+        db_update('notice_log',$data_update);
+        return true;
+    }
 }
