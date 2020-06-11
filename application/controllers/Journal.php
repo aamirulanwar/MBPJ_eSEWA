@@ -17,6 +17,7 @@ class Journal extends CI_Controller
         load_model('Account/M_acc_account', 'm_acc_account');
         load_model('Journal/M_journal', 'm_journal');
         load_model('TrCode/M_tran_code', 'm_tran_code');
+        load_model('User/M_users', 'm_users');
     }
 
     function _remap($method)
@@ -385,13 +386,25 @@ class Journal extends CI_Controller
 
     function doc_journal()
     {
-        $id = $this->curuser;
-        // if(!is_numeric($id)):
-        //     return false;
-        // endif;
+        $user_id = $this->curuser['USER_ID'];
 
-        load_library('Generate_word');
-        $this->generate_word->word_document($id, DOC_JOURNAL);
+        $user_details = $this->m_users->get_user_details($user_id);
+        if(!$user_details):
+            return false;
+        endif;
+
+        $data['user_details']   = $user_details;
+        $data_search["user_id"] = $user_id;
+        $data["journal_record"] = $this->m_journal->get_lists_temp_journal_print($data_search);
+
+        $this->load->view('/journal/v_print_journal_entry',$data);
+        // $id = $this->curuser;
+        // // if(!is_numeric($id)):
+        // //     return false;
+        // // endif;
+
+        // load_library('Generate_word');
+        // $this->generate_word->word_document($id, DOC_JOURNAL);
     }
 
     function encrypt($string=NULL)

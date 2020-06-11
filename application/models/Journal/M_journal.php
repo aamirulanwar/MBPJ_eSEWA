@@ -352,18 +352,40 @@ class M_journal extends CI_Model
         endif;
     }
 
-    function get_lists_temp_journal_print()
+    function get_lists_temp_journal_print($data_search = array())
     {
-        $model =& get_instance();
+        // $model =& get_instance();
 
-        $query = $model->db->query("SELECT b.*,a.account_number,u.user_name,j.journal_code,j.journal_desc FROM b_journal_temp b, acc_account a, users u, a_journal j WHERE b.account_id=a.account_id AND u.user_id=b.CREATED_BY And b.journal_id=j.journal_id AND b.status_approval=0 ORDER BY bill_number");
-        $result = $query->result_array(); 
-        db_order('category_code');
+        // $query = $model->db->query("SELECT b.*,a.account_number,u.user_name,j.journal_code,j.journal_desc FROM b_journal_temp b, acc_account a, users u, a_journal j WHERE b.account_id=a.account_id AND u.user_id=b.CREATED_BY And b.journal_id=j.journal_id AND b.status_approval=0 ORDER BY bill_number");
+        // $result = $query->result_array(); 
+        // db_order('category_code');
 
-        if ($result) {
+        // if ($result) {
             
-            return $result;
+        //     return $result;
+        // }
+
+        db_select('b.*');
+        db_select('a.account_number,u.user_name,j.journal_code,j.journal_desc');
+        db_from('b_journal_temp b');
+        db_join('acc_account a','b.account_id=a.account_id');
+        db_join('users u','u.user_id=b.CREATED_BY');
+        db_join('a_journal j','b.journal_id=j.journal_id');
+        db_where('b.status_approval = 0');
+
+
+        if (isset($data_search["user_id"]) && having_value($data_search['user_id']) )
+        {
+            db_where('b.CREATED_BY',$data_search['user_id']);
         }
+
+        db_order('bill_number');
+        // db_order('category_code');
+
+        $sql = db_get('');
+        if($sql):
+            return $sql->result_array('');
+        endif;
     }
 
     function get_a_journal_detail($data_search=array())
