@@ -50,7 +50,9 @@ checking_validation(validation_errors());
             <h3 class="box-title">TAPAK PAPAN IKLAN LUARAN</h3>
         </div>
             <div class="card-body">
-                <!-- <div class="pull-right"> -->
+                  <div class="pull-right">
+                    <a class="btn btn-warning btn-sm pull-right" href="/report/print_hartanah?year=<?=$data_search["year"]?>" target="_blank">Print</a>
+                </div>
                         <table class="table table-hover table-bordered table-aging" style="margin-bottom: 0px;">
                             <tr>
                                 <th width="12%" rowspan="2" style="text-align:center">JENIS PERJANJIAN</th>

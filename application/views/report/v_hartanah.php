@@ -47,10 +47,12 @@ checking_validation(validation_errors());
 
     <div class="card card-accent-info">
         <div class="card-header">
-            <h3 class="box-title">Laporan Perjanian Sewaan Hartanah</h3>
+            <h3 class="box-title">Laporan Perjanjian Sewaan Hartanah</h3>
         </div>
             <div class="card-body">
-                <!-- <div class="pull-right"> -->
+                <div class="pull-right">
+                    <a class="btn btn-warning btn-sm pull-right" href="/report/print_hartanah?year=<?=$data_search["year"]?>" target="_blank">Print</a>
+                </div>
                         <table class="table table-hover table-bordered table-aging" style="margin-bottom: 0px;">
                             <tr>
                                 <th width="3%" rowspan="2" style="text-align:center">BULAN</th>

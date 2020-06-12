@@ -52,6 +52,9 @@ checking_validation(validation_errors());
             <h3 class="box-title">Pencapaian Objektif Kualiti Prosedur Penyediaan Perjanjian</h3>
         </div>
             <div class="card-body">
+                <div class="pull-right">
+                    <a class="btn btn-warning btn-sm pull-right" href="/report/print_hartanah?year=<?=$data_search["year"]?>" target="_blank">Print</a>
+                </div>
                 <table class="table table-hover table-bordered table-aging" style="margin-bottom: 0px;">
                     <tr>
                         <th width="12%" rowspan="2" style="text-align:center">OBJEKTIF KUALITI</th>
@@ -68,17 +71,20 @@ checking_validation(validation_errors());
                     </tr>
                     <tr>
                         <th>Maklumat tandatangan perjanjian (45 hari)</th>
-                                    <th>BILLBOARD</th>
-                                    <th>45 Hari</th>
-                                    <th>147</th>
-                                    
+                        <th>BILLBOARD</th>
+                        <th>45 Hari</th>
+                        <th>0</th>
+                        <td></td>   
+                        <td></td>             
                     </tr>
                     
                     <tr>
                         <th>Tandatangan Perjanjian Sewa oleh Penyewa dalam tempoh 15 minit</th>
                         <th>SEWA</th>
                         <th>15 Minit</th>
-                        <th>708</th>   
+                        <th>2</th>
+                        <td></td>   
+                        <td></td>   
                     </tr>
                 </table>
             </div>

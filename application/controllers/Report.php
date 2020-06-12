@@ -54,6 +54,7 @@ class Report extends CI_Controller
             'dataTable4RekodTransaksi',
             'transactionReportHeader',
             'hartanah',
+            'print_hartanah',
             'papaniklan',
             'perjanjian_kutipan',
             'hasil',
@@ -1460,20 +1461,6 @@ class Report extends CI_Controller
         if($_POST):
 
         $data_report = $this->m_acc_account->sewaan_hartanah($data_search);
-        // $data['data_jan'] = $this->m_acc_account->sewaan_hartanah(2019,1);
-        // $data['data_feb'] = $this->m_acc_account->sewaan_hartanah(2019,2);
-        // $data['data_mar'] = $this->m_acc_account->sewaan_hartanah(2019,3);
-        // $data['data_apr'] = $this->m_acc_account->sewaan_hartanah(2019,4);
-        // $data['data_may'] = $this->m_acc_account->sewaan_hartanah(2019,5);
-        // $data['data_jun'] = $this->m_acc_account->sewaan_hartanah(2019,6);
-        // $data['data_jul'] = $this->m_acc_account->sewaan_hartanah(2019,7);
-        // $data['data_aug'] = $this->m_acc_account->sewaan_hartanah(2019,8);
-        // $data['data_sep'] = $this->m_acc_account->sewaan_hartanah(2019,9);
-        // $data['data_oct'] = $this->m_acc_account->sewaan_hartanah(2019,10);
-        // $data['data_nov'] = $this->m_acc_account->sewaan_hartanah(2019,11);
-        // $data['data_dec'] = $this->m_acc_account->sewaan_hartanah(2019,12);
-
-            //echo last_query();
         
             $data['data_report']    = $data_report;
             $data['data_search']    = $data_search;
@@ -1483,6 +1470,22 @@ class Report extends CI_Controller
         endif;
         
         templates('report/v_hartanah',$data);
+    }
+
+    function print_hartanah()
+    {
+        if ( isset($_GET["year"]) )
+        {
+            $year = $_GET["year"];
+        }
+        else
+        {
+            $year = date('Y');
+        }
+
+        $data_search["year"] = $year;
+        $data["hartanah_record"] = $this->m_acc_account->sewaan_hartanah($data_search);
+        $this->load->view('/report/v_print_report_hartanah',$data);
     }
 
     function papaniklan(){
@@ -1769,7 +1772,6 @@ class Report extends CI_Controller
         // endif;
 
         templates('report/v_laporan_iso',$data);
-
     }
 }
 /* End of file modules/login/controllers/report.php */
