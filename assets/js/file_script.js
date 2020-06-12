@@ -407,6 +407,7 @@ function add_journal_transaction(type='J',journal_code,tr_code,journal_id,bill_c
         },
         complete: function () {
             $.LoadingOverlay("hide");
+            $('#transfer_account_id').select2();
             if (journal_code!='B03' || journal_code!='R03') {
 
                 $('.js-example-basic-single').select2({disabled:true});

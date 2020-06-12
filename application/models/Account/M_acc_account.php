@@ -573,4 +573,22 @@ class M_acc_account extends CI_Model
             return $sql->row_array();
         endif;
     }
+
+    function getAllAccounts($accountNumber='')
+    {
+        db_select('account_id');
+        db_select('account_number');
+        db_select('user_id');
+        if ($accountNumber != "")
+        {
+            db_where('account_number',$accountNumber);
+        }
+        db_limit(30);
+        db_from('acc_account');
+        // db_order('account_id');
+        $sql = db_get();
+        if($sql):
+            return $sql->result_array();
+        endif;
+    }
 }

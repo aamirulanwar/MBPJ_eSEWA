@@ -234,6 +234,7 @@ class Journal extends CI_Controller
                         'bill_year' => input_data('journal_year'),
                         'journal_id' => $journal_id[$i],
                         'account_id' => input_data('account_id'),
+                        'transfer_account_id' => input_data('transfer_account_id'),
                         'amount' => str_replace(",","",$amount[$i]),
                         'bill_category' => input_data('b_master_bill_category'),
                         'tr_code' => $mct_trcodenew[$i],
@@ -540,5 +541,4 @@ class Journal extends CI_Controller
 
         echo json_encode($statusValid);
     }
-    
 }

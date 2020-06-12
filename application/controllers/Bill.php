@@ -398,6 +398,7 @@ class Bill extends CI_Controller
 
             $data_search['MCT_TSTATS'] = 'B';
             $data_transaction = $this->m_tr_code->get_tr_code_list_journal($data_search);
+            $list_account = $this->m_acc_account->getAllAccounts();
             
             $data_option = '';
 
@@ -427,6 +428,16 @@ class Bill extends CI_Controller
                 endforeach;
             endif;
 
+            $accounts_option = '';
+            if ($list_account)
+            {
+                foreach ($list_account as $row) 
+                {
+                    # code...
+                    $accounts_option .= '<option value="'.$row['ACCOUNT_ID'].'">'.$row['ACCOUNT_NUMBER'].'</option>';
+                }
+            }
+
             $unique_select_id = "select_trcode_".time();
             $select_script = "";
             $select_input_value = "";
@@ -453,8 +464,14 @@ class Bill extends CI_Controller
                         '</select>'.
                         '<p id="'.$unique_select_id.'_input_error" class="valError"></p>'.
                     '</div>'.
-                    '<div class="col-sm-2">'.
-                        '<input name="amount[]" onkeyup="currency_format1(this)" class="form-control" value="'.($journal_code=="B01" || $journal_code=="R01" ? '-'.$bill_amount : '').'" '.($journal_code=="B01" || $journal_code=="R01" ? 'readonly' : '').'>'.
+                    '<div class="col-sm-2" style="'.($journal_code == "R05" ? 'display:none' : '').'">'.
+                        '<input name="amount[]" onkeyup="currency_format1(this)" class="form-control" value="'.($journal_code=="B01" || $journal_code=="R01" || $journal_code=="R05" ? '-'.$bill_amount : '').'" '.($journal_code=="B01" || $journal_code=="R01" || $journal_code=="R05" ? 'readonly' : '').'>'.
+                    '</div>'.
+                    '<div class="col-sm-2" style="'.($journal_code == "R05" ? '' : 'display:none').'">'.
+                        '<select class="form-control" name="transfer_account_id" id="transfer_account_id" >'.
+                        '   <option value="-1"> -Sila Pilih - </option>'.
+                            $accounts_option.
+                        '</select>'.
                     '</div>'.
                     '<div class="col-sm-1">'.
                         '<input name="type[]" readonly="readonly" class="form-control" value="'.strtoupper($type).'">'.
