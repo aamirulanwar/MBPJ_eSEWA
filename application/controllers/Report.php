@@ -1488,9 +1488,9 @@ class Report extends CI_Controller
     function papaniklan(){
         $this->auth->restrict_access($this->curuser,array(8013));
         $data['link_1']     = 'Laporan';
-        $data['link_2']     = 'Perjanian Sewa';
+        $data['link_2']     = 'Perjanjian Sewa';
         $data['link_3']     = '';
-        $data['pagetitle']  = 'Laporan Perjanian Sewa';
+        $data['pagetitle']  = 'Laporan Perjanjian Sewa';
 
         $search_segment = uri_segment(3);
 
@@ -1588,7 +1588,6 @@ class Report extends CI_Controller
                 $data_search = $filter_session;
             else:
                 $data_search['year']  = '';
-                $data_search['year2']  = '';
             endif;
         endif;
         // pre($data_search);

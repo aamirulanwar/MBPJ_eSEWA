@@ -440,7 +440,7 @@ class M_acc_account extends CI_Model
         db_select ("EXTRACT(MONTH FROM A.DT_SIGNATURE) AS BULAN");
         db_from('acc_account A');
         db_join('a_type B','A.type_id = B.type_id');
-        db_where("A.TYPE_ID IN (1,2,3,4,5)");
+        db_where("A.TYPE_ID IN (1,2,3,4,5,9)");
         // db_where("EXTRACT(YEAR FROM A.DATE_START) = ",$year);
         if(isset($data_search['year']) && having_value($data_search['year'])):
             db_where("EXTRACT(YEAR FROM A.DT_SIGNATURE) = ".$data_search['year']."");
@@ -490,7 +490,7 @@ class M_acc_account extends CI_Model
         if(isset($data_search['year2']) && having_value($data_search['year2'])):
             db_where("EXTRACT(YEAR FROM A.DT_SIGNATURE) <= ".$data_search['year2']."");
         endif;
-        db_where("A.TYPE_ID NOT IN (6)");
+        db_where("A.TYPE_ID IN (1,2,3,4,5,9)");
         //db_where("A.BILLBOARD_TYPE in (1,2)");
         // db_where("EXTRACT(YEAR FROM A.DT_SIGNATURE) =2017");
         db_group('EXTRACT(YEAR FROM A.DT_SIGNATURE)');
@@ -547,13 +547,13 @@ class M_acc_account extends CI_Model
         db_select ('A.TYPE_ID');
         // db_from('B_ITEM B');
         db_from('ACC_ACCOUNT A');
-        db_join('B_ITEM B','B.ACCOUNT_ID = A.ACCOUNT_ID');
+        // db_join('B_ITEM B','B.ACCOUNT_ID = A.ACCOUNT_ID');
         if(isset($data_search['year']) && having_value($data_search['year'])):
             db_where("EXTRACT(YEAR FROM A.DT_SIGNATURE) = ".$data_search['year']."");
         endif;
         // db_where("A.TYPE_ID = 6");
-        db_where("B.BILL_CATEGORY = 'R'");
-        db_where("B.GST_TYPE = 1");
+        // db_where("B.BILL_CATEGORY = 'R'");
+        // db_where("B.GST_TYPE = 1");
         // db_where("EXTRACT(YEAR FROM B.DT_ADDED) =2015");
         db_group('EXTRACT(MONTH FROM A.DT_SIGNATURE),A.TYPE_ID');
         db_order('BULAN');

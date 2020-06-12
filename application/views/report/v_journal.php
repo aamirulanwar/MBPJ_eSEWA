@@ -108,15 +108,15 @@ checking_validation(validation_errors());
                                 <td><?=$d['JOURNAL_CODE']?> <?=$d['JOURNAL_DESC']?></td>
                                 <td><?=$d['ACCOUNT_NUMBER']?></td>
                                 <td><?=$d['TR_CODE']?></td>
-                                <td>RM <?=number_format(abs($d['AMOUNT']),2);
+                                <td>RM <?=number_format($d['AMOUNT'],2);
                                 $journal += $d['AMOUNT'];?></td>
                                 <td>
                                     <?php if($d['STATUS_APPROVAL']==0): ?>
-                                    <span class="badge badge-warning">Pending</span>
+                                    <span>Pending</span>
                                     <?php elseif($d['STATUS_APPROVAL']==1): ?>
-                                    <span class="badge badge-success">Lulus</span>
+                                    <span>Lulus</span>
                                     <?php elseif($d['STATUS_APPROVAL']==2): ?>
-                                    <span class="badge badge-danger">Batal</span>
+                                    <span>Batal</span>
                                     <?php endif; ?>
                                 </td>
                                 <td><?=$d['REMARK']?></td>
@@ -148,7 +148,7 @@ checking_validation(validation_errors());
                                 <?php echo $k?>
                             </td>
                             <td class="text-center">
-                                RM <?php echo number_format(abs($journal),2)?>
+                                RM <?php echo number_format($journal,2)?>
                             </td>
                         </tr>
                         </tbody>

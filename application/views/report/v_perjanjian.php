@@ -100,41 +100,52 @@ checking_validation(validation_errors());
                         <th>1.</th>
                         <th>SEWA</th>
                         <?php
-                            $bil = 0 ;
-                            // $rm  = 0 ;
-                            foreach ($data_report[1] as $d):
+                            $bil_sewa = 0 ;
+                            $bil_billboard = 0 ;
+                            $total_sewa = 0;
+                            $total_billboard = 0;
+                            $total_bil = 0;
+
+                            foreach ($data_report[1] as $d)
                             {
-                                $bil = $d["BIL"]; 
-                                // $rm = $d["RM"];
-                                  
+                                $bil_sewa = $d["BIL"];                                  
                             }
-                            $total = $bil * 100;
-                            echo "<td style='text-align:center'>".$bil."</td>";
-                            echo "<td style='text-align:center'>".num($total,2)."</td>";
-                            echo "<td style='text-align:center'></td>";
+
+                            foreach ($data_report[2] as $d)
+                            {
+                                $bil_billboard = $d["BIL"];                                   
+                            }
+
+                            $total_sewa = $bil_sewa * 100;                            
+                            $total_billboard = $bil_billboard * 100;
+                            $total_bil = $bil_sewa + $bil_billboard;
+                            $total = $total_sewa + $total_billboard;
+                            $peratus = $total / 150000 * 100;
                         ?>
-                        <?php endforeach;?>                          
+                        <td style='text-align:center'> <?=$bil_sewa?> </td>
+                        <td style='text-align:center'> <?=num($total_sewa,2)?> </td>
+                        <td style='text-align:center'> </td>                     
                     </tr>
                     <tr>
                         <th>2.</th>
                         <th>BILLBOARD</th>
-                        <?php
-                            $bil = 0 ;
-                            // $rm  = 0 ;
-                            foreach ($data_report[2] as $d):
-                            {
-                                $bil = $d["BIL"]; 
-                                // $rm = $d["RM"];
-                                  
-                            }
-                            $total = $bil * 100;
-                            echo "<td style='text-align:center'>".$bil."</td>";
-                            echo "<td style='text-align:center'>".num($total,2)."</td>";
-                            echo "<td style='text-align:center'></td>";
-                        ?>
-                        <?php endforeach;?> 
-                        <?php endif; ?>                         
+                        <td style='text-align:center'> <?=$bil_billboard?> </td>
+                        <td style='text-align:center'> <?=num($total_billboard,2)?> </td>
+                        <td style='text-align:center'> </td>
                     </tr>
+                    <tr>
+                        <th colspan="2">JUMLAH KESELURUHAN</th> 
+                        <td style='text-align:center'> <?=$total_bil?> </td>
+                        <td style='text-align:center'> <?=num($total,2)?> </td>
+                        <td style='text-align:center'> <?=round($peratus,2)?> </td>    
+                    </tr>
+                    <tr>
+                        <th colspan="2">SASARAN TAHUNAN</th> 
+                        <td style='text-align:center'>960</td>
+                        <td style='text-align:center'>150000.00</td>
+                        <td style='text-align:center'></td>    
+                    </tr>
+                <?php endif; ?> 
                 </table>
             </div>
         </div>
