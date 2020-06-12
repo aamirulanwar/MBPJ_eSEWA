@@ -634,6 +634,12 @@
                                 <i class="nav-icon fa fa-circle fa-sm"></i> Laporan Pencapaian Objektif Kualiti</a>
                         </li>
                         <!-- <?php endif;?> -->
+                        <!-- <?php if($this->auth->access_view($this->curuser,array(8015))):?> -->
+                        <li class="nav-item">
+                            <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('iso'))?>" href="/report/kutipan_tunggakan">
+                                <i class="nav-icon fa fa-circle fa-sm"></i> Laporan Kutipan Tunggakan Undang-Undang</a>
+                        </li>
+                        <!-- <?php endif;?> -->
                     </ul>
                 </li>
                 <?php endif;?>
