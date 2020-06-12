@@ -54,7 +54,7 @@ checking_validation(validation_errors());
                         <table class="table table-hover table-bordered table-aging" style="margin-bottom: 0px;">
                             <tr>
                                 <th width="3%" rowspan="2" style="text-align:center">BULAN</th>
-                                <th colspan="5" width="7%" style="text-align:center">JENIS HARTANAH</th>
+                                <th colspan="6" width="7%" style="text-align:center">JENIS HARTANAH</th>
                                 <th width="7%" rowspan="2" style="text-align:center">JUMLAH</th>
                             </tr>
                             <tr>
@@ -63,9 +63,10 @@ checking_validation(validation_errors());
                                 <th width="7%">MEDAN SELERA</th>
                                 <th width="7%">UPEN</th>
                                 <th width="7%">KIOSK MIKRO-MARA</th>
+                                <th width="7%">HARTA KOMERSIAL</th>
                             </tr>
                             <tr>
-                                <th>January</th>
+                                <th>Januari</th>
                                 <?php
                                     $januaryCount = 0;
                                     $plb = 0;
@@ -73,6 +74,7 @@ checking_validation(validation_errors());
                                     $medan_selera = 0;
                                     $upen = 0;
                                     $kiosk = 0;
+                                    $komersial = 0;
                                     foreach ($data_report as $data)
                                     {
                                         if( $data["TYPE_ID"] == 3 && $data["BULAN"] == 1)
@@ -95,18 +97,23 @@ checking_validation(validation_errors());
                                         {
                                             $kiosk = $data["BIL"];
                                         }
+                                        else if( $data["TYPE_ID"] == 9 && $data["BULAN"] == 1)
+                                        {
+                                            $komersial = $data["BIL"];
+                                        }
                                     }
-                                    $januaryCount = $plb + $pasar + $medan_selera + $upen + $kiosk;
+                                    $januaryCount = $plb + $pasar + $medan_selera + $upen + $kiosk + $komersial;
                                     echo "<td style='text-align:center'>".$plb."</td>";
                                     echo "<td style='text-align:center'>".$pasar."</td>";
                                     echo "<td style='text-align:center'>".$medan_selera."</td>";
                                     echo "<td style='text-align:center'>".$upen."</td>";
                                     echo "<td style='text-align:center'>".$kiosk."</td>";
+                                    echo "<td style='text-align:center'>".$komersial."</td>";
                                     echo "<td style='text-align:center'>".$januaryCount."</td>";
                                 ?>                                
                             </tr>
                             <tr>
-                                <th>February</th>
+                                <th>Februari</th>
                                 <?php
                                     $februaryCount = 0;
                                     $plb = 0;
@@ -114,6 +121,7 @@ checking_validation(validation_errors());
                                     $medan_selera = 0;
                                     $upen = 0;
                                     $kiosk = 0;
+                                    $komersial = 0;
                                     foreach ($data_report as $data)
                                     {
                                         if( $data["TYPE_ID"] == 3 && $data["BULAN"] == 2)
@@ -136,18 +144,23 @@ checking_validation(validation_errors());
                                         {
                                             $kiosk = $data["BIL"];
                                         }
+                                        else if( $data["TYPE_ID"] == 9 && $data["BULAN"] == 2)
+                                        {
+                                            $komersial = $data["BIL"];
+                                        }
                                     }
-                                    $februaryCount = $plb + $pasar + $medan_selera + $upen + $kiosk;
+                                    $februaryCount = $plb + $pasar + $medan_selera + $upen + $kiosk + $komersial;
                                     echo "<td style='text-align:center'>".$plb."</td>";
                                     echo "<td style='text-align:center'>".$pasar."</td>";
                                     echo "<td style='text-align:center'>".$medan_selera."</td>";
                                     echo "<td style='text-align:center'>".$upen."</td>";
                                     echo "<td style='text-align:center'>".$kiosk."</td>";
+                                    echo "<td style='text-align:center'>".$komersial."</td>";
                                     echo "<td style='text-align:center'>".$februaryCount."</td>";
                                 ?>                                
                             </tr>
                             <tr>
-                                <th>March</th>
+                                <th>Mac</th>
                                 <?php
                                     $marchCount = 0;
                                     $plb = 0;
@@ -155,6 +168,7 @@ checking_validation(validation_errors());
                                     $medan_selera = 0;
                                     $upen = 0;
                                     $kiosk = 0;
+                                    $komersial = 0;
                                     foreach ($data_report as $data)
                                     {
                                         if( $data["TYPE_ID"] == 3 && $data["BULAN"] == 3)
@@ -177,13 +191,18 @@ checking_validation(validation_errors());
                                         {
                                             $kiosk = $data["BIL"];
                                         }
+                                        else if( $data["TYPE_ID"] == 9 && $data["BULAN"] == 3)
+                                        {
+                                            $komersial = $data["BIL"];
+                                        }
                                     }
-                                    $marchCount = $plb + $pasar + $medan_selera + $upen + $kiosk;
+                                    $marchCount = $plb + $pasar + $medan_selera + $upen + $kiosk + $komersial;
                                     echo "<td style='text-align:center'>".$plb."</td>";
                                     echo "<td style='text-align:center'>".$pasar."</td>";
                                     echo "<td style='text-align:center'>".$medan_selera."</td>";
                                     echo "<td style='text-align:center'>".$upen."</td>";
                                     echo "<td style='text-align:center'>".$kiosk."</td>";
+                                    echo "<td style='text-align:center'>".$komersial."</td>";
                                     echo "<td style='text-align:center'>".$marchCount."</td>";
                                 ?>                                
                             </tr>
@@ -196,6 +215,7 @@ checking_validation(validation_errors());
                                     $medan_selera = 0;
                                     $upen = 0;
                                     $kiosk = 0;
+                                    $komersial = 0;
                                     foreach ($data_report as $data)
                                     {
                                         if( $data["TYPE_ID"] == 3 && $data["BULAN"] == 4)
@@ -218,18 +238,23 @@ checking_validation(validation_errors());
                                         {
                                             $kiosk = $data["BIL"];
                                         }
+                                        else if( $data["TYPE_ID"] == 9 && $data["BULAN"] == 4)
+                                        {
+                                            $komersial = $data["BIL"];
+                                        }
                                     }
-                                    $aprilCount = $plb + $pasar + $medan_selera + $upen + $kiosk;
+                                    $aprilCount = $plb + $pasar + $medan_selera + $upen + $kiosk + $komersial;
                                     echo "<td style='text-align:center'>".$plb."</td>";
                                     echo "<td style='text-align:center'>".$pasar."</td>";
                                     echo "<td style='text-align:center'>".$medan_selera."</td>";
                                     echo "<td style='text-align:center'>".$upen."</td>";
                                     echo "<td style='text-align:center'>".$kiosk."</td>";
+                                    echo "<td style='text-align:center'>".$komersial."</td>";
                                     echo "<td style='text-align:center'>".$aprilCount."</td>";
                                 ?>                                
                             </tr>
                             <tr>
-                                <th>May</th>
+                                <th>Mei</th>
                                 <?php
                                     $mayCount = 0;
                                     $plb = 0;
@@ -237,6 +262,7 @@ checking_validation(validation_errors());
                                     $medan_selera = 0;
                                     $upen = 0;
                                     $kiosk = 0;
+                                    $komersial = 0;
                                     foreach ($data_report as $data)
                                     {
                                         if( $data["TYPE_ID"] == 3 && $data["BULAN"] == 5)
@@ -259,13 +285,18 @@ checking_validation(validation_errors());
                                         {
                                             $kiosk = $data["BIL"];
                                         }
+                                        else if( $data["TYPE_ID"] == 9 && $data["BULAN"] == 5)
+                                        {
+                                            $komersial = $data["BIL"];
+                                        }
                                     }
-                                    $mayCount = $plb + $pasar + $medan_selera + $upen + $kiosk;
+                                    $mayCount = $plb + $pasar + $medan_selera + $upen + $kiosk + $komersial;
                                     echo "<td style='text-align:center'>".$plb."</td>";
                                     echo "<td style='text-align:center'>".$pasar."</td>";
                                     echo "<td style='text-align:center'>".$medan_selera."</td>";
                                     echo "<td style='text-align:center'>".$upen."</td>";
                                     echo "<td style='text-align:center'>".$kiosk."</td>";
+                                    echo "<td style='text-align:center'>".$komersial."</td>";
                                     echo "<td style='text-align:center'>".$mayCount."</td>";
                                 ?>                                
                             </tr>
@@ -278,6 +309,7 @@ checking_validation(validation_errors());
                                     $medan_selera = 0;
                                     $upen = 0;
                                     $kiosk = 0;
+                                    $komersial = 0;
                                     foreach ($data_report as $data)
                                     {
                                         if( $data["TYPE_ID"] == 3 && $data["BULAN"] == 6)
@@ -300,18 +332,23 @@ checking_validation(validation_errors());
                                         {
                                             $kiosk = $data["BIL"];
                                         }
+                                        else if( $data["TYPE_ID"] == 9 && $data["BULAN"] == 6)
+                                        {
+                                            $komersial = $data["BIL"];
+                                        }
                                     }
-                                    $junCount = $plb + $pasar + $medan_selera + $upen + $kiosk;
+                                    $junCount = $plb + $pasar + $medan_selera + $upen + $kiosk + $komersial;
                                     echo "<td style='text-align:center'>".$plb."</td>";
                                     echo "<td style='text-align:center'>".$pasar."</td>";
                                     echo "<td style='text-align:center'>".$medan_selera."</td>";
                                     echo "<td style='text-align:center'>".$upen."</td>";
                                     echo "<td style='text-align:center'>".$kiosk."</td>";
+                                    echo "<td style='text-align:center'>".$komersial."</td>";
                                     echo "<td style='text-align:center'>".$junCount."</td>";
                                 ?>                                
                             </tr>
                             <tr>
-                                <th>July</th>
+                                <th>Julai</th>
                                 <?php
                                     $julyCount = 0;
                                     $plb = 0;
@@ -319,6 +356,7 @@ checking_validation(validation_errors());
                                     $medan_selera = 0;
                                     $upen = 0;
                                     $kiosk = 0;
+                                    $komersial = 0;
                                     foreach ($data_report as $data)
                                     {
                                         if( $data["TYPE_ID"] == 3 && $data["BULAN"] == 7)
@@ -341,18 +379,23 @@ checking_validation(validation_errors());
                                         {
                                             $kiosk = $data["BIL"];
                                         }
+                                        else if( $data["TYPE_ID"] == 9 && $data["BULAN"] == 7)
+                                        {
+                                            $komersial = $data["BIL"];
+                                        }
                                     }
-                                    $julyCount = $plb + $pasar + $medan_selera + $upen + $kiosk;
+                                    $julyCount = $plb + $pasar + $medan_selera + $upen + $kiosk + $komersial;
                                     echo "<td style='text-align:center'>".$plb."</td>";
                                     echo "<td style='text-align:center'>".$pasar."</td>";
                                     echo "<td style='text-align:center'>".$medan_selera."</td>";
                                     echo "<td style='text-align:center'>".$upen."</td>";
                                     echo "<td style='text-align:center'>".$kiosk."</td>";
+                                    echo "<td style='text-align:center'>".$komersial."</td>";
                                     echo "<td style='text-align:center'>".$julyCount."</td>";
                                 ?>                                
                             </tr>
                             <tr>
-                                <th>August</th>
+                                <th>Ogos</th>
                                 <?php
                                     $augustCount = 0;
                                     $plb = 0;
@@ -360,6 +403,7 @@ checking_validation(validation_errors());
                                     $medan_selera = 0;
                                     $upen = 0;
                                     $kiosk = 0;
+                                    $komersial = 0;
                                     foreach ($data_report as $data)
                                     {
                                         if( $data["TYPE_ID"] == 3 && $data["BULAN"] == 8)
@@ -382,13 +426,18 @@ checking_validation(validation_errors());
                                         {
                                             $kiosk = $data["BIL"];
                                         }
+                                        else if( $data["TYPE_ID"] == 9 && $data["BULAN"] == 8)
+                                        {
+                                            $komersial = $data["BIL"];
+                                        }
                                     }
-                                    $augustCount = $plb + $pasar + $medan_selera + $upen + $kiosk;
+                                    $augustCount = $plb + $pasar + $medan_selera + $upen + $kiosk + $komersial;
                                     echo "<td style='text-align:center'>".$plb."</td>";
                                     echo "<td style='text-align:center'>".$pasar."</td>";
                                     echo "<td style='text-align:center'>".$medan_selera."</td>";
                                     echo "<td style='text-align:center'>".$upen."</td>";
                                     echo "<td style='text-align:center'>".$kiosk."</td>";
+                                    echo "<td style='text-align:center'>".$komersial."</td>";
                                     echo "<td style='text-align:center'>".$augustCount."</td>";
                                 ?>                                
                             </tr>
@@ -401,6 +450,7 @@ checking_validation(validation_errors());
                                     $medan_selera = 0;
                                     $upen = 0;
                                     $kiosk = 0;
+                                    $komersial = 0;
                                     foreach ($data_report as $data)
                                     {
                                         if( $data["TYPE_ID"] == 3 && $data["BULAN"] == 9)
@@ -423,18 +473,23 @@ checking_validation(validation_errors());
                                         {
                                             $kiosk = $data["BIL"];
                                         }
+                                        else if( $data["TYPE_ID"] == 9 && $data["BULAN"] == 9)
+                                        {
+                                            $komersial = $data["BIL"];
+                                        }
                                     }
-                                    $septemberCount = $plb + $pasar + $medan_selera + $upen + $kiosk;
+                                    $septemberCount = $plb + $pasar + $medan_selera + $upen + $kiosk + $komersial;
                                     echo "<td style='text-align:center'>".$plb."</td>";
                                     echo "<td style='text-align:center'>".$pasar."</td>";
                                     echo "<td style='text-align:center'>".$medan_selera."</td>";
                                     echo "<td style='text-align:center'>".$upen."</td>";
                                     echo "<td style='text-align:center'>".$kiosk."</td>";
+                                    echo "<td style='text-align:center'>".$komersial."</td>";
                                     echo "<td style='text-align:center'>".$septemberCount."</td>";
                                 ?>                                
                             </tr>
                             <tr>
-                                <th>October</th>
+                                <th>Oktober</th>
                                 <?php
                                     $octoberCount = 0;
                                     $plb = 0;
@@ -442,6 +497,7 @@ checking_validation(validation_errors());
                                     $medan_selera = 0;
                                     $upen = 0;
                                     $kiosk = 0;
+                                    $komersial = 0;
                                     foreach ($data_report as $data)
                                     {
                                         if( $data["TYPE_ID"] == 3 && $data["BULAN"] == 10)
@@ -464,13 +520,18 @@ checking_validation(validation_errors());
                                         {
                                             $kiosk = $data["BIL"];
                                         }
+                                        else if( $data["TYPE_ID"] == 9 && $data["BULAN"] == 10)
+                                        {
+                                            $komersial = $data["BIL"];
+                                        }
                                     }
-                                    $octoberCount = $plb + $pasar + $medan_selera + $upen + $kiosk;
+                                    $octoberCount = $plb + $pasar + $medan_selera + $upen + $kiosk + $komersial;
                                     echo "<td style='text-align:center'>".$plb."</td>";
                                     echo "<td style='text-align:center'>".$pasar."</td>";
                                     echo "<td style='text-align:center'>".$medan_selera."</td>";
                                     echo "<td style='text-align:center'>".$upen."</td>";
                                     echo "<td style='text-align:center'>".$kiosk."</td>";
+                                    echo "<td style='text-align:center'>".$komersial."</td>";
                                     echo "<td style='text-align:center'>".$octoberCount."</td>";
                                 ?>                                
                             </tr>
@@ -483,6 +544,7 @@ checking_validation(validation_errors());
                                     $medan_selera = 0;
                                     $upen = 0;
                                     $kiosk = 0;
+                                    $komersial = 0;
                                     foreach ($data_report as $data)
                                     {
                                         if( $data["TYPE_ID"] == 3 && $data["BULAN"] == 11)
@@ -505,18 +567,23 @@ checking_validation(validation_errors());
                                         {
                                             $kiosk = $data["BIL"];
                                         }
+                                        else if( $data["TYPE_ID"] == 9 && $data["BULAN"] == 11)
+                                        {
+                                            $komersial = $data["BIL"];
+                                        }
                                     }
-                                    $novemberCount = $plb + $pasar + $medan_selera + $upen + $kiosk;
+                                    $novemberCount = $plb + $pasar + $medan_selera + $upen + $kiosk + $komersial;
                                     echo "<td style='text-align:center'>".$plb."</td>";
                                     echo "<td style='text-align:center'>".$pasar."</td>";
                                     echo "<td style='text-align:center'>".$medan_selera."</td>";
                                     echo "<td style='text-align:center'>".$upen."</td>";
                                     echo "<td style='text-align:center'>".$kiosk."</td>";
+                                    echo "<td style='text-align:center'>".$komersial."</td>";
                                     echo "<td style='text-align:center'>".$novemberCount."</td>";
                                 ?>                                
                             </tr>
                             <tr>
-                                <th>December</th>
+                                <th>Disember</th>
                                 <?php
                                     $decemberCount = 0;
                                     $plb = 0;
@@ -524,6 +591,8 @@ checking_validation(validation_errors());
                                     $medan_selera = 0;
                                     $upen = 0;
                                     $kiosk = 0;
+                                    $komersial = 0;
+                                    $komersial = 0;
                                     foreach ($data_report as $data)
                                     {
                                         if( $data["TYPE_ID"] == 3 && $data["BULAN"] == 12)
@@ -546,13 +615,19 @@ checking_validation(validation_errors());
                                         {
                                             $kiosk = $data["BIL"];
                                         }
+
+                                        else if( $data["TYPE_ID"] == 9 && $data["BULAN"] == 12)
+                                        {
+                                            $komersial = $data["BIL"];
+                                        }                                    
                                     }
-                                    $decemberCount = $plb + $pasar + $medan_selera + $upen + $kiosk;
+                                    $decemberCount = $plb + $pasar + $medan_selera + $upen + $kiosk + $komersial;
                                     echo "<td style='text-align:center'>".$plb."</td>";
                                     echo "<td style='text-align:center'>".$pasar."</td>";
                                     echo "<td style='text-align:center'>".$medan_selera."</td>";
                                     echo "<td style='text-align:center'>".$upen."</td>";
                                     echo "<td style='text-align:center'>".$kiosk."</td>";
+                                    echo "<td style='text-align:center'>".$komersial."</td>";
                                     echo "<td style='text-align:center'>".$decemberCount."</td>";
                                 ?>                                
                             </tr>

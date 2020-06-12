@@ -35,7 +35,7 @@ checking_validation(validation_errors());
                                 <td><?=$d['BILL_NUMBER']?></td>
                                 <td><?=$d['JOURNAL_CODE']?> <?=$d['JOURNAL_DESC']?></td>
                                 <td><?=$d['BILL_MONTH']?>/<?=$d['BILL_YEAR']?></td>
-                                <td>RM <?=number_format(abs($d['AMOUNT']),2)?></td>
+                                <td>RM <?=number_format($d['AMOUNT'],2)?></td>
                                 <td>
                                     <?php if($d['STATUS_APPROVAL']==0): ?>
                                     <span class="badge badge-warning">Pending</span>

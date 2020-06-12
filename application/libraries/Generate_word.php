@@ -511,6 +511,13 @@ class Generate_word {
         //         $address = $get_details['ADDRESS_1'];
         //     endif;
         // endif;
+
+        $date_time = ($get_details['DATE_AGREEMENT']);
+        // $address = display_address($get_details['MAIL_ADDRESS_1'],$get_details['MAIL_ADDRESS_2'],$get_details['MAIL_ADDRESS_3'],$get_details['MAIL_POSTCODE'],strtolower($get_details['MAIL_STATE']));
+        // if(empty($address)):
+        //     $address = display_address($get_details['ADDRESS_1'],$get_details['ADDRESS_2'],$get_details['ADDRESS_3'],$get_details['POSTCODE'],ucwords(strtolower($get_details['STATE'])));
+        // endif;
+        $date_time = str_replace(".000000 ","", $date_time);
         $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($_SERVER['DOCUMENT_ROOT'].'/file_download/perjanjian/'.$template);
 
         $templateProcessor->setValue('letter_date',date_display(timenow(),'d F Y','malay'));
@@ -519,7 +526,7 @@ class Generate_word {
         // $templateProcessor->setValue('file_number_juu',$get_details['FILE_NUMBER_JUU']);
         $templateProcessor->setValue('name',$get_details['NAME']);
         $templateProcessor->setValue('name_caps',strtoupper($get_details['NAME']));
-        // $templateProcessor->setValue('director_name',strtoupper($get_details['DIRECTOR_NAME']));
+        $templateProcessor->setValue('attend_date',$date_time);
         // $templateProcessor->setValue('comp_reg_no',$get_details['COMPANY_REGISTRATION_NUMBER']);
         // $templateProcessor->setValue('phone_no',$get_details['HOME_PHONE_NUMBER']);
         // $templateProcessor->setValue('fax_no',$get_details['FAX_NUMBER']);
