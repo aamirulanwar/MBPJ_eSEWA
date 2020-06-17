@@ -483,7 +483,7 @@ class Bill extends CI_Controller
                     '</div>'.
                     '<div class="col-sm-2" style="'.($journal_code == "R05" ? '' : 'display:none').'">'.
                         '<select class="form-control" name="transfer_account_id" id="transfer_account_id" >'.
-                        '   <option value="-1"> -Sila Pilih - </option>'.
+                        '   <option value="-1" selected> -Sila Pilih - </option>'.
                             $accounts_option.
                         '</select>'.
                     '</div>'.
