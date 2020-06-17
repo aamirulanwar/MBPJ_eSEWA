@@ -13,7 +13,6 @@
                     <select name="selectedYear" id="selectedYear" class="form-control js-example-basic-single">
                         <option value=""> - Sila Pilih - </option>
                         <?php
-
                         	$currentYear = date('Y');
                         	$loopedYear = $currentYear;
                         	// echo "<option value='$currentYear'> $currentYear </option>";
