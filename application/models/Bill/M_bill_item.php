@@ -546,19 +546,21 @@ class M_bill_item extends CI_Model
         db_select('m.BILL_CATEGORY as master_bill_category');
         db_select('i.AMOUNT');
         db_select('m.BILL_NUMBER');
+        db_select(" case when i.BILL_CATEGORY = 'J' then (select bill_number from b_journal_temp where id = i.b_journal_id) else m.BILL_NUMBER end as reference_no");
         db_select("to_char(i.DT_ADDED,'dd/mm/yyyy') as TKH_BIL");
         db_from('b_item i');
         db_join('b_master m','m.bill_id = i.bill_id');
         db_join('acc_account a','a.ACCOUNT_ID = m.ACCOUNT_ID');
+        db_where("i.display_status != 'X'");
 
         if(isset($data_search['date_start']) && having_value($data_search['date_start'])):
-            db_where("i.dt_added >= to_date('".$data_search['date_start']."','DD-MM-YYYY')");
+            db_where("i.dt_added >= to_date('".$data_search['date_start']."','DD-MM-YYYY')-1");
         endif;
         if(isset($data_search['tr_code']) && having_value($data_search['tr_code'])):
             db_where('i.tr_code',$data_search['tr_code']);
         endif;
         if(isset($data_search['date_end']) && having_value($data_search['date_end'])):
-            db_where("i.dt_added <= to_date('".$data_search['date_end']."','DD-MM-YYYY')");
+            db_where("i.dt_added <= to_date('".$data_search['date_end']."','DD-MM-YYYY')+1");
         endif;
         if(isset($data_search['account_id']) && having_value($data_search['account_id'])):
             db_where('m.account_id',$data_search['account_id']);
@@ -582,6 +584,7 @@ class M_bill_item extends CI_Model
             db_select('acc_account.account_number');
             db_select('acc_user.name');
             db_select('acc_account.estimation_rental_charge');
+            db_select('acc_account.status_acc');
             db_select('a_asset.asset_add');
             db_select('a_category.category_name');
             db_select('a_category.address');

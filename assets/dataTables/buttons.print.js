@@ -86,7 +86,7 @@ DataTable.ext.buttons.print = {
 		return dt.i18n( 'buttons.print', 'Print' );
 	},
 
-	action: function ( e, dt, button, config ) {
+	action: function ( e, dt, button, config, messageHeader ) {
 		var data = dt.buttons.exportData(
 			$.extend( {decodeEntities: false}, config.exportOptions ) // XSS protection
 		);
@@ -111,7 +111,7 @@ DataTable.ext.buttons.print = {
 					'class="'+columnClasses[i]+'"' :
 					'';
 
-				str += '<'+tag+' '+classAttr+'>'+dataOut+'</'+tag+'>';
+				str += '<'+tag+' '+classAttr+' style="text-align:center;vertical-align:middle">'+dataOut+'</'+tag+'>';
 			}
 
 			return str + '</tr>';
@@ -157,7 +157,8 @@ DataTable.ext.buttons.print = {
 
 		// Inject the table and other surrounding information
 		win.document.body.innerHTML =
-			'<h1>'+exportInfo.title+'</h1>'+
+			// '<h1>'+exportInfo.title+'</h1>'+
+			'<h1>'+messageHeader+'</h1>'+
 			'<div>'+(exportInfo.messageTop || '')+'</div>'+
 			html+
 			'<div>'+(exportInfo.messageBottom || '')+'</div>';
