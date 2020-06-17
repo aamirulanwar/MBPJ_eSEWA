@@ -455,6 +455,20 @@ class Bill extends CI_Controller
                 $select_input_value = '<input type="hidden" name="mct_trcodenew[]" id="'.$unique_select_id.'_input" value="'.$tr_code.'">';
             }
 
+            // set journal amount for selected journal code transaction
+            if ($journal_code=="B01" || $journal_code=="R01")
+            {
+                $bill_amount = abs($bill_amount) * -1;
+            }
+            else if ($journal_code=="R05")
+            {
+                $bill_amount = abs($bill_amount) ;
+            }
+            else
+            {
+                // do nothing
+            }
+
             $data_insert =
             '<div class="" id="'.$unique_select_id.'_row">'.
                 '<div class="form-group row" >'.
@@ -465,7 +479,7 @@ class Bill extends CI_Controller
                         '<p id="'.$unique_select_id.'_input_error" class="valError"></p>'.
                     '</div>'.
                     '<div class="col-sm-2" style="'.($journal_code == "R05" ? 'display:none' : '').'">'.
-                        '<input name="amount[]" onkeyup="currency_format1(this)" class="form-control" value="'.($journal_code=="B01" || $journal_code=="R01" || $journal_code=="R05" ? '-'.$bill_amount : '').'" '.($journal_code=="B01" || $journal_code=="R01" || $journal_code=="R05" ? 'readonly' : '').'>'.
+                        '<input name="amount[]" onkeyup="currency_format1(this)" class="form-control" value="'.($journal_code=="B01" || $journal_code=="R01" || $journal_code=="R05" ? $bill_amount : '').'" '.($journal_code=="B01" || $journal_code=="R01" || $journal_code=="R05" ? 'readonly' : '').'>'.
                     '</div>'.
                     '<div class="col-sm-2" style="'.($journal_code == "R05" ? '' : 'display:none').'">'.
                         '<select class="form-control" name="transfer_account_id" id="transfer_account_id" >'.
