@@ -52,7 +52,8 @@ class Account extends CI_Controller
             'upload_dokumen_tandatangan',
             'delete_dokumen_temp',
             'delete_all_temp_file',
-            'update_time'
+            'update_time',
+            'retrieveListAccountForJournal'
         );
         #set pages data
         (in_array($method,$array)) ? $this->$method() : $this->create_acc();
@@ -1831,11 +1832,36 @@ class Account extends CI_Controller
         //     return false;
         // endif;
 
-            $data_update['date_agreement']       = date("d-M-y h:i:s");
-// var_dump(timenow());
+        $data_update['date_agreement']       = date("d-M-y h:i:s");
+        // var_dump(timenow());
             $update_acc = $this->m_acc_account->update_account($data_update,$id);
 
-            redirect('/account/account_list/');
+        redirect('/account/account_list/');
+    }
 
+    function retrieveListAccountForJournal()
+    {
+        if( isset($_POST['searchTerm']) )
+        {
+            $search = $_POST['searchTerm'];// Search text
+        }
+        else
+        {
+            $search = "";
+        }
+
+        $data = $this->m_acc_account->getAllAccounts($search);
+
+        $responseData = array();
+
+        foreach ($data as $dataRow) 
+        {
+            # code...
+            $responseData[] = array(
+                                "id" => $dataRow["ACCOUNT_ID"],
+                                "text" => $dataRow["ACCOUNT_NUMBER"],
+                            );
+        }
+        echo json_encode( $responseData );
     }
 }

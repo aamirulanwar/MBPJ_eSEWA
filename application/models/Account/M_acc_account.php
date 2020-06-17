@@ -581,7 +581,7 @@ class M_acc_account extends CI_Model
         db_select('user_id');
         if ($accountNumber != "")
         {
-            db_where('account_number',$accountNumber);
+            db_where("account_number like '%$accountNumber%'");
         }
         db_limit(30);
         db_from('acc_account');

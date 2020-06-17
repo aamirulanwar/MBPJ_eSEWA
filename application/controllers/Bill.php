@@ -398,7 +398,6 @@ class Bill extends CI_Controller
 
             $data_search['MCT_TSTATS'] = 'B';
             $data_transaction = $this->m_tr_code->get_tr_code_list_journal($data_search);
-            $list_account = $this->m_acc_account->getAllAccounts();
             
             $data_option = '';
 
@@ -426,17 +425,7 @@ class Bill extends CI_Controller
                         $is_changeable_trcode = true;
                     }
                 endforeach;
-            endif;
-
-            $accounts_option = '';
-            if ($list_account)
-            {
-                foreach ($list_account as $row) 
-                {
-                    # code...
-                    $accounts_option .= '<option value="'.$row['ACCOUNT_ID'].'">'.$row['ACCOUNT_NUMBER'].'</option>';
-                }
-            }
+            endif;            
 
             $unique_select_id = "select_trcode_".time();
             $select_script = "";
@@ -484,7 +473,6 @@ class Bill extends CI_Controller
                     '<div class="col-sm-2" style="'.($journal_code == "R05" ? '' : 'display:none').'">'.
                         '<select class="form-control" name="transfer_account_id" id="transfer_account_id" >'.
                         '   <option value="-1" selected> -Sila Pilih - </option>'.
-                            $accounts_option.
                         '</select>'.
                     '</div>'.
                     '<div class="col-sm-1">'.
@@ -502,7 +490,31 @@ class Bill extends CI_Controller
                 '</div>
                 <input type="hidden" name="journal_id[]" value="'.$journal_id.'">
                 '.$select_script.$select_input_value
-            .'</div>';
+            .'</div>'.
+            '<script type="text/javascript">
+                $(document).ready(function()
+                {
+                    $("#transfer_account_id").select2({
+                        ajax: {
+                            url: "/account/retrieveListAccountForJournal",
+                            type: "post",
+                            dataType: "json",
+                            delay: 250,
+                            data: function (params) {
+                               return {
+                                  searchTerm: params.term // search term
+                               };
+                            },
+                            processResults: function (response) {
+                               return {
+                                  results: response
+                               };
+                            },
+                            cache: true
+                        }
+                    });
+                });
+            </script>';
 
             echo $data_insert;
         endif;

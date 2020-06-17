@@ -279,6 +279,7 @@ class Journal extends CI_Controller
             $bill_year = $journalDetail["BILL_YEAR"];
             $bill_amount = $journalDetail["AMOUNT"];
             $bill_amount = ($bill_amount == NULL) ? 0 : $bill_amount;
+            $b_journal_id = $journalDetail["ID"];
             $journal_id = $journalDetail["JOURNAL_ID"];
             $journal_transfer_id = $journalDetail["TRANSFER_ACCOUNT_ID"];
             $journal_trcode = $journalDetail["TR_CODE"];
@@ -286,7 +287,18 @@ class Journal extends CI_Controller
             $journal_trcode_old = $journalDetail["TR_CODE_OLD"];
             $journal_bill_category = $journalDetail["BILL_CATEGORY"];
 
-            $existingBill = $this->m_bill_master->getBillId($account_id,$bill_month,$bill_year,$journal_bill_category);
+            $journalTypeSearch["JOURNAL_ID"]    = $journal_id;
+            $journalType = $this->m_journal->get_a_journal_detail($journalTypeSearch);
+
+            if ( $journalType[0]["JOURNAL_CODE"] == "R05" )
+            {
+                $existingBill = $this->m_bill_master->getBillId($journal_transfer_id,$bill_month,$bill_year,$journal_bill_category);
+                $oldExistingBill = $this->m_bill_master->getBillId($account_id,$bill_month,$bill_year,$journal_bill_category);
+            }
+            else
+            {
+                $existingBill = $this->m_bill_master->getBillId($account_id,$bill_month,$bill_year,$journal_bill_category);
+            }
 
             // Get Total Existing bill number
             if ( !empty($existingBill) && $existingBill["BILL_ID"] != "" )
@@ -298,32 +310,47 @@ class Journal extends CI_Controller
             }
             else
             {
-                $accountDetail = $this->m_acc_account->getAccountDetailOnlyById($account_id);
-                $bill_type = $accountDetail["BILL_TYPE"];
+                if ( $journalType[0]["JOURNAL_CODE"] == "R05" )
+                {
+                    $accountDetail = $this->m_acc_account->getAccountDetailOnlyById($journal_transfer_id);
+                    $bill_type = $accountDetail["BILL_TYPE"];
 
-                $bill_master_insert["ACCOUNT_ID"] = $account_id;
-                $bill_master_insert["BILL_NUMBER"] = $bill_number;
-                $bill_master_insert["BILL_MONTH"] = $bill_month;
-                $bill_master_insert["BILL_YEAR"] = $bill_year;
-                $bill_master_insert["TOTAL_AMOUNT"] = $bill_amount;
-                $bill_master_insert["BILL_TYPE"] = $bill_type;
-                $bill_master_insert["BILL_CATEGORY"] = $journal_bill_category;
+                    $bill_master_insert["ACCOUNT_ID"] = $journal_transfer_id;
+                    $bill_master_insert["BILL_NUMBER"] = $bill_number;
+                    $bill_master_insert["BILL_MONTH"] = $bill_month;
+                    $bill_master_insert["BILL_YEAR"] = $bill_year;
+                    $bill_master_insert["TOTAL_AMOUNT"] = $bill_amount;
+                    $bill_master_insert["BILL_TYPE"] = $bill_type;
+                    $bill_master_insert["BILL_CATEGORY"] = $journal_bill_category;
 
-                $bill_id = $this->m_bill_master->insertBillMaster($bill_master_insert);
+                    $bill_id = $this->m_bill_master->insertBillMaster($bill_master_insert);
+                }
+                else
+                {
+                    $accountDetail = $this->m_acc_account->getAccountDetailOnlyById($account_id);
+                    $bill_type = $accountDetail["BILL_TYPE"];
+
+                    $bill_master_insert["ACCOUNT_ID"] = $account_id;
+                    $bill_master_insert["BILL_NUMBER"] = $bill_number;
+                    $bill_master_insert["BILL_MONTH"] = $bill_month;
+                    $bill_master_insert["BILL_YEAR"] = $bill_year;
+                    $bill_master_insert["TOTAL_AMOUNT"] = $bill_amount;
+                    $bill_master_insert["BILL_TYPE"] = $bill_type;
+                    $bill_master_insert["BILL_CATEGORY"] = $journal_bill_category;
+
+                    $bill_id = $this->m_bill_master->insertBillMaster($bill_master_insert);
+                }
             }
 
             // Insert journal item into bill_item
             $bill_item_insert["BILL_ID"]        = $bill_id;
-            $bill_item_insert["JOURNAL_ID"]     = $journal_id;
+            $bill_item_insert["B_JOURNAL_ID"]     = $b_journal_id;
             $bill_item_insert["ACCOUNT_ID"]     = $account_id;
             $bill_item_insert["AMOUNT"]         = $bill_amount;
             $bill_item_insert["BILL_CATEGORY"]  = 'J';
             $bill_item_insert["TR_CODE"]        = $journal_trcode;
             $bill_item_insert["ITEM_DESC"]      = $journal_trdesc;
             $bill_item_insert["TR_CODE_OLD"]    = $journal_trcode_old;
-
-            $journalTypeSearch["JOURNAL_ID"]    = $journal_id;
-            $journalType = $this->m_journal->get_a_journal_detail($journalTypeSearch);
 
             if ( $journalType[0]["JOURNAL_CODE"] == "B01" )
             {
@@ -340,26 +367,24 @@ class Journal extends CI_Controller
                 $item_id = $billItem[0]["ITEM_ID"];
                 $bill_item_update["DISPLAY_STATUS"] = "N";
                 
-
                 $this->m_bill_item->update_bill_item($item_id,$bill_item_update);
             }
             else if ( $journalType[0]["JOURNAL_CODE"] == "R05" )
             {
-                // All transaction under B01 must be hidden from view except for penyata
+                // All transaction under R05 must be hidden from all view
                 $bill_item_insert["DISPLAY_STATUS"] = "Y";
                 $bill_item_insert["ACCOUNT_ID"]     = $journal_transfer_id;
 
                 // Get ITEM_ID from B_ITEM that need to be hidden
-                $data_search["BILL_ID"] = $bill_id;
+                $old_bill_id = $oldExistingBill["BILL_ID"];
+                $data_search["BILL_ID"] = $old_bill_id;
                 $data_search["TR_CODE"] = $journal_trcode;
                 $billItem = $this->m_bill_item->get_bill_item_by_searchKey($data_search);
                 
                 // Please ensure that the result only return one row only. 
-                // Anymore than 1 then this function will become obsolete and need to further check.
+                // Anymore than 1 then this function will return error and need to further check.
                 $item_id = $billItem[0]["ITEM_ID"];
-                $bill_item_update["DISPLAY_STATUS"] = "N";
-                
-
+                $bill_item_update["DISPLAY_STATUS"] = "X";
                 $this->m_bill_item->update_bill_item($item_id,$bill_item_update);
             }
 
