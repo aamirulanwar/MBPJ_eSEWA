@@ -1461,7 +1461,7 @@ class Report extends CI_Controller
         $data['link_1']     = 'Laporan';
         $data['link_2']     = 'Perjanian Sewaan Hartanah';
         $data['link_3']     = '';
-        $data['pagetitle']  = 'Laporan Perjanian Sewaan Hartanah';
+        $data['pagetitle']  = 'Laporan Perjanjian Sewaan Hartanah';
 
         $search_segment = uri_segment(3);
 
