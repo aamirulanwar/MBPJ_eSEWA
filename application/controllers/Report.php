@@ -51,6 +51,7 @@ class Report extends CI_Controller
             'adjustment_statement_ringkasan',
             'payment',
             'journal',
+            'print_journal',
             'dataTable4RekodTransaksi',
             'transactionReportHeader',
             'hartanah',
@@ -1383,6 +1384,27 @@ class Report extends CI_Controller
         endif;
 
         templates('report/v_journal',$data);
+    }
+
+    function print_journal()
+    {
+        $filter_session = get_session('arr_filter_journal');
+        if( !empty($filter_session) )
+        {
+            $data_search = $filter_session;
+            $data_report = $this->m_journal->get_lists_temp_journal_report($data_search);
+            //echo last_query();
+            $data['filter_session']    = $filter_session;
+            $data['data_report']    = $data_report;
+            $data['data_search']    = $data_search;
+        }
+        else
+        {
+            $data = array();
+        }
+
+        // templates('report/v_journal',$data);
+        $this->load->view('/report/v_print_jurnal_sewaan',$data);
     }
 
     function dataTable4RekodTransaksi()
