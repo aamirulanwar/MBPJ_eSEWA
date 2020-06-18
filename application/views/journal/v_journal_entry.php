@@ -30,7 +30,7 @@ checking_validation(validation_errors());
                 </thead>
                 <tbody>
                         <?php $i=0; ?>
-                        <?php if (count($data) > 0): ?>
+                        <?php if ( isset($data) && count($data) > 0 ): ?>
                         <?php foreach ($data as $d): ?>
                         <?php if ($d['STATUS_APPROVAL']==0): ?>
                             <?php $i++; ?>
