@@ -113,7 +113,7 @@ notify_msg('notify_msg');
                                 <?php endif;?>
 
                                 <?php
-                                if(count($row['DATE_AGREEMENT'])>0):
+                                if( isset($row['DATE_AGREEMENT']) && $row['DATE_AGREEMENT'] > 0):
                                     // echo "<pre>";
                                     // var_dump(count($row['DATE_AGREEMENT']));
                                 ?>
