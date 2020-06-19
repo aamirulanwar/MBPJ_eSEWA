@@ -51,7 +51,7 @@ checking_validation(validation_errors());
         </div>
             <div class="card-body">
                   <div class="pull-right">
-                    <a class="btn btn-warning btn-sm pull-right" href="/report/print_hartanah?year=<?=$data_search["year"]?>" target="_blank">Print</a>
+                    <button onclick="print_report_papaniklan()" class="btn btn-warning btn-sm pull-right">Print</button>
                 </div>
                         <table class="table table-hover table-bordered table-aging" style="margin-bottom: 0px;">
                             <tr>
@@ -257,6 +257,13 @@ checking_validation(validation_errors());
                                         $('table tr').last().append('<td style=text-align:center>'+this+'</td>')
                                       });
                                 });
+                        </script>
+                        <script type="text/javascript">
+                            function print_report_papaniklan()
+                            {
+                                var selectedYear = $("#selectedYear").val();
+                                window.open('/report/print_papaniklan','_blank');
+                            }
                         </script>
                     </div>
                 <!-- </div> -->
