@@ -371,21 +371,22 @@ class Journal extends CI_Controller
             }
             else if ( $journalType[0]["JOURNAL_CODE"] == "R05" )
             {
-                // All transaction under R05 must be hidden from all view
-                $bill_item_insert["DISPLAY_STATUS"] = "Y";
-                $bill_item_insert["ACCOUNT_ID"]     = $journal_transfer_id;
-
                 // Get ITEM_ID from B_ITEM that need to be hidden
                 $old_bill_id = $oldExistingBill["BILL_ID"];
                 $data_search["BILL_ID"] = $old_bill_id;
                 $data_search["TR_CODE"] = $journal_trcode;
                 $billItem = $this->m_bill_item->get_bill_item_by_searchKey($data_search);
-                
+
                 // Please ensure that the result only return one row only. 
                 // Anymore than 1 then this function will return error and need to further check.
+                // All transaction under R05 must be hidden from all view
                 $item_id = $billItem[0]["ITEM_ID"];
                 $bill_item_update["DISPLAY_STATUS"] = "X";
                 $this->m_bill_item->update_bill_item($item_id,$bill_item_update);
+
+                $bill_item_insert["DISPLAY_STATUS"] = "Y";
+                $bill_item_insert["ACCOUNT_ID"]     = $journal_transfer_id;
+                $bill_item_insert["DT_ADDED"]       = $billItem[0]["ORIGINAL_DT_ADDED"];             
             }
 
             $this->m_bill_item->insert_bill_item($bill_item_insert);

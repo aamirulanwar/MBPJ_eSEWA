@@ -25,6 +25,7 @@ class M_bill_item extends CI_Model
     {
         db_select('i.*');
         db_select("to_char(i.dt_added, 'yyyy') as dt_added",false);
+        db_select("i.dt_added as ORIGINAL_DT_ADDED",false);
         db_from('b_item i');
         db_join('admin.mctrancode t','i.tr_code=t.mct_trcodenew');
 
@@ -123,8 +124,12 @@ class M_bill_item extends CI_Model
         return db_count_results();
     }
 
-    function insert_bill_item($data_insert){
-        db_set_date_time('dt_added',timenow());
+    function insert_bill_item($data_insert)
+    {
+        if ( !isset($data_insert["DT_ADDED"]) || $data_insert["DT_ADDED"] == "" )
+        {
+            db_set_date_time('dt_added',timenow());
+        }
         db_insert('B_ITEM ',$data_insert);
         return get_insert_id('B_ITEM');
     }
