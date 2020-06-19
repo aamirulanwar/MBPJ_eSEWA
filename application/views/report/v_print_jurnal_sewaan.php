@@ -54,6 +54,8 @@
 			</table>
 		</div>
 		</br>
+        <div> <b>Tarikh Laporan : </b><?=$data_search["date_start"]?> hingga <?=$data_search["date_end"]?></div>
+        </br>
 		<table class="table table-bordered table-hover">
             <thead>
                 <tr>

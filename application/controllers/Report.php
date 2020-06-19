@@ -1396,6 +1396,17 @@ class Report extends CI_Controller
             $data_search = $filter_session;
             $data_report = $this->m_journal->get_lists_temp_journal_report($data_search);
             //echo last_query();
+
+            if ( isset($data_search["date_start"]) && $data_search["date_start"] == "")
+            {
+                $data_search["date_start"] = date("d M Y");
+            }
+
+            if ( isset($data_search["date_end"]) && $data_search["date_end"] == "")
+            {
+                $data_search["date_end"] = date("d M Y");
+            }
+            
             $data['filter_session']    = $filter_session;
             $data['data_report']    = $data_report;
             $data['data_search']    = $data_search;
