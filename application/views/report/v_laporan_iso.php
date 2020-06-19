@@ -6,7 +6,7 @@
         text-align: center;
     }
 </style>
- <form method="post" action="/report/perjanjian_kutipan/">
+ <form method="post" action="/report/laporan_iso/">
     <div class="card card-accent-info">
         <div class="card-body">
             <h1 class="need-print" style="margin-bottom: 20px;"><?php echo $pagetitle?></h1>
@@ -53,7 +53,7 @@ checking_validation(validation_errors());
         </div>
             <div class="card-body">
                 <div class="pull-right">
-                    <a class="btn btn-warning btn-sm pull-right" href="/report/print_hartanah?year=<?=$data_search["year"]?>" target="_blank">Print</a>
+                    <button onclick="print_report_iso()" class="btn btn-warning btn-sm pull-right">Print</button>
                 </div>
                 <table class="table table-hover table-bordered table-aging" style="margin-bottom: 0px;">
                     <tr>
@@ -73,8 +73,25 @@ checking_validation(validation_errors());
                         <th>Maklumat tandatangan perjanjian (45 hari)</th>
                         <th>BILLBOARD</th>
                         <th>45 Hari</th>
-                        <th>0</th>
+                        <?php
+                            $type_id = array(1,2,3,4,5,9);
+                            $sewa = 0;
+                            $billboard = 0;
+                            foreach ($data_report as $data)
+                            {
+                                if( in_array($data["TYPE_ID"],$type_id))
+                                {
+                                    $sewa += $data["BIL"];
+                                }
+                                else if( $data["TYPE_ID"] == 6)
+                                {
+                                    $billboard = $data["BIL"];
+                                }
+                            }
+                        ?>                                 
+                        <th><?=$billboard?></th>
                         <td></td>   
+                        <td></td>             
                         <td></td>             
                     </tr>
                     
@@ -82,10 +99,18 @@ checking_validation(validation_errors());
                         <th>Tandatangan Perjanjian Sewa oleh Penyewa dalam tempoh 15 minit</th>
                         <th>SEWA</th>
                         <th>15 Minit</th>
-                        <th>2</th>
+                        <th><?=$sewa?></th>
+                        <td></td>   
                         <td></td>   
                         <td></td>   
                     </tr>
                 </table>
             </div>
         </div>
+        <script type="text/javascript">
+            function print_report_iso()
+            {
+                var selectedYear = $("#selectedYear").val();
+                window.open('/report/print_iso','_blank');
+            }
+        </script>

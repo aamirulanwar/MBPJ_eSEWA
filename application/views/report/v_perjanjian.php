@@ -13,7 +13,7 @@
                 <div class="form-group row">
                     <div class="col-sm-4">
                         <label class="col-form-label">TAHUN MULA</label>
-                        <select name="year" class="form-control">
+                        <select id="year" name="year" class="form-control">
                             <option value=""> - Pilih Tahun - </option>
                             <?php
                             echo option_value(2020,2020,'year',search_default($data_search,'year'));
@@ -34,7 +34,7 @@
                     </div>
                     <div class="col-sm-4">
                         <label class="col-form-label">TAHUN TAMAT</label>
-                        <select name="year2" class="form-control">
+                        <select id="year2" name="year2" class="form-control">
                             <option value=""> - Pilih Tahun - </option>
                             <?php
                             echo option_value(2020,2020,'year2',search_default($data_search,'year2'));
@@ -74,7 +74,7 @@ checking_validation(validation_errors());
         </div>
             <div class="card-body">
                 <div class="pull-right">
-                    <a class="btn btn-warning btn-sm pull-right" href="/report/print_hartanah?year=<?=$data_search["year"]?>" target="_blank">Print</a>
+                    <button onclick="print_report_perjanjian_kutipan()" class="btn btn-warning btn-sm pull-right">Print</button>
                 </div>
                 <table class="table table-hover table-bordered table-aging" style="margin-bottom: 0px;">
                     <tr>
@@ -150,5 +150,12 @@ checking_validation(validation_errors());
                     </tr>
                 <?php endif; ?> 
                 </table>
+                <script type="text/javascript">
+                    function print_report_perjanjian_kutipan()
+                        {
+                            var selectedYear = $("#selectedYear").val();
+                            window.open('/report/print_perjanjian_kutipan','_blank');
+                        }
+                </script>
             </div>
         </div>
