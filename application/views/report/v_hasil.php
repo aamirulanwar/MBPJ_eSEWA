@@ -53,7 +53,7 @@ checking_validation(validation_errors());
         </div>
             <div class="card-body">
                 <div class="pull-right">
-                    <button onclick="print_report_hasil()" class="btn btn-warning btn-sm pull-right">Print</button>
+                    <a class="btn btn-warning btn-sm pull-right" href="/report/print_hartanah?year=<?=$data_search["year"]?>" target="_blank">Print</a>
                 </div>
                 <table class="table table-hover table-bordered table-aging" style="margin-bottom: 0px;">
                     <tr>
@@ -69,8 +69,7 @@ checking_validation(validation_errors());
                         <th width='3%'>BILLBOARD</th>
                     </tr>
                     <tr>
-                        <?php if ( isset($data_report) || count($data_report) == 0): echo "<td colspan='7' style='text-align:center'> Tiada Rekod </td"; ?>                        
-                        <?php elseif ( isset($data_report) && count($data_report) > 0): ?>
+                        <?php if (count($data_report) > 0): ?>
                         <th>1.</th>
                         <th>JANUARI</th>
                         <?php
@@ -468,13 +467,6 @@ checking_validation(validation_errors());
                           $('table tr').last().append('<td style=text-align:center>150000</td>');
                           $('table tr').last().append('<td style=text-align:center><?php echo(round($peratus,2));?></td>');
                         });
-                    </script>
-                    <script type="text/javascript">
-                            function print_report_hasil()
-                            {
-                                var selectedYear = $("#selectedYear").val();
-                                window.open('/report/print_hasil','_blank');
-                            }
                     </script>
 
             </div>
