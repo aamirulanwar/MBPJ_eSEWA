@@ -7,7 +7,7 @@
     <meta name="description" content="CoreUI - Open Source Bootstrap Admin Template">
     <meta name="author" content="Łukasz Holeczek">
     <meta name="keyword" content="Bootstrap,Admin,Template,Open,Source,jQuery,CSS,HTML,RWD,Dashboard">
-    <title>SENARAI KEMASUKAN JURNAL</title>
+    <title>Laporan Perjanjian Sewaan Hartanah</title>
     <!-- Icons-->
     <link rel="icon" href="<?=base_url()?>/favicon.ico" type="image/x-icon">
     <link href="/assets/node_modules/@coreui/icons/css/coreui-icons.min.css" rel="stylesheet">
@@ -41,69 +41,224 @@
                 <tr><td style="height:20px;"></td></tr>
                 <tr>
                     <td colspan="2" style="text-align: center;font-weight: bold;font-size: 30px">
-                        <span>SENARAI KEMASUKAN JURNAL</span></br>
+                        <span>LAPORAN PERJANJIAN SEWAAN</span></br>
+                        <?php
+                        $year = $data_search['year'];
+                        // var_dump($data_search);
+                        // die();
+                        echo "<span>JANUARI - DISEMBER ".$year."</span></br>";
+                        ?>
+                        <span>TAPAK PAPAN IKLAN LUARAN</span>
                     </td>
                 </tr>
             </table>
         </div>
         </br>
-        <table class="table table-bordered" style="border-width:thick;">
-            <tr>
-                <td style="text-align:center;font-size:13px;font-weight: bold;"> NO </td>
-                <td style="text-align:center;font-size:13px;font-weight: bold;"> No.Akaun </td>
-                <td style="text-align:center;font-size:13px;font-weight: bold;"> No.Bil / Jurnal </td>
-                <td style="text-align:center;font-size:13px;font-weight: bold;"> Kod Jurnal/Keterangan </td>
-                <td style="text-align:center;font-size:13px;font-weight: bold;"> AMAUN (RM) </td>
-            </tr>
-            <?php
-            $totalAmountJournal = 0;
-                for ($i=0; $i < count($journal_record); $i++) 
-                {
-                    # code...
-                    $rowData = $journal_record[$i];
-                    $totalAmountJournal = $totalAmountJournal + $rowData['AMOUNT'];
-
-                    echo "<tr>";
-                    echo "  <td style='text-align:center;font-size:13px;'>". ($i+1) ."</td>";
-                    echo "  <td style='text-align:center;font-size:13px;'>". $rowData['ACCOUNT_NUMBER']. "</td>";
-                    echo "  <td style='text-align:center;font-size:13px;'>". $rowData['BILL_NUMBER']. "</td>";
-                    echo "  <td style='text-align:center;font-size:13px;'>". $rowData['JOURNAL_CODE']." - ".$rowData['JOURNAL_DESC']. "</td>";
-                    echo "  <td style='text-align:center;font-size:13px;'>". ($rowData['AMOUNT'] == null || $rowData['AMOUNT'] == "" ? 0 : $rowData['AMOUNT'] ) . "</td>";
-                    echo "</tr>";
-                }
-            ?>
-            
-        </table>
-<br>
-<br>
-        <table>
-            <tr>
-                <td style="width:auto;font-family: arial;font-size: 12px;">Dimasuk Oleh</td>
-                <td style="width:auto;font-family: arial;font-size: 12px;text-align: left;white-space: nowrap;">&nbsp; <?=$user_details["USER_NAME"]?></td>
-                <td style="width:50px;">&nbsp;</td>
-                <td style="width:50px;">&nbsp;</td>
-                <td style="width:180px;font-family: arial;font-size: 12px;">Disahkan Oleh</td>
-            </tr>
-            <tr>                
-                <td style="width:50px;font-family: arial;font-size: 12px;">Tarikh</td>
-                <td style="width:10px;font-family: arial;font-size: 12px;"><?php echo date('d-m-Y');?></td>
-                <td style="width:50px;font-family: arial;font-size: 12px;">&nbsp;</td>
-                <td style="width:50px;font-family: arial;font-size: 12px;">&nbsp;</td>
-                <td style="font-family: arial;font-size: 12px;">Tarikh</td>
-            </tr>
-            <tr>
-                <td style="font-family: arial;font-size: 12px;">Tandatangan</td>
-                <td style="width:10px;font-family: arial;font-size: 12px;">&nbsp;</td>
-                <td style="width:50px;font-family: arial;font-size: 12px;">&nbsp;</td>
-                <td style="width:50px;font-family: arial;font-size: 12px;">&nbsp;</td>
-                <td style="font-family: arial;font-size: 12px;">Tandatangan</td>
-            </tr>
-            <!-- <tr>
-                <td colspan="3" style="width:300px;height:60px;font-weight: bold;font-size: 12px;text-align: center;">JUMLAH KESELURUHAN AMAUN JERNAL RM</td>
-                <td style="width:50px;">&nbsp;</td>
-                <td style="font-weight: bold;font-size: 12px;"> <?=$totalAmountJournal?> </td>
-            </tr> -->
-        </table>
+        <table class="table table-hover table-bordered table-aging" style="margin-bottom: 0px;">
+                            <tr>
+                                <th width="12%" rowspan="2" style="text-align:center">JENIS PERJANJIAN</th>
+                                <th colspan="12" width="7%" style="text-align:center">BULAN</th>
+                                <th width="5%" rowspan="2" style="text-align:center">JUMLAH PERJANJIAN</th>
+                            </tr>
+                            <tr>
+                                <th width="3%">1</th>
+                                <th width="3%">2</th>
+                                <th width="3%">3</th>
+                                <th width="3%">4</th>
+                                <th width="3%">5</th>
+                                <th width="3%">6</th>
+                                <th width="3%">7</th>
+                                <th width="3%">8</th>
+                                <th width="3%">9</th>
+                                <th width="3%">10</th>
+                                <th width="3%">11</th>
+                                <th width="3%">12</th>
+                            </tr>
+                            <tr>
+                                <th>INTERIM</th>
+                                <?php
+                                    $InterimCount = 0;
+                                    $jan = 0;
+                                    $feb = 0;
+                                    $mar = 0;
+                                    $apr = 0;
+                                    $may = 0;
+                                    $jun = 0;
+                                    $jul = 0;
+                                    $aug = 0;
+                                    $sep = 0;
+                                    $oct = 0;
+                                    $nov = 0;
+                                    $dec = 0;
+                                    
+                                    foreach ($data_report as $d)
+                                    {
+                                        if( $d["BILLBOARD_TYPE"] == 1 && $d["BULAN"] == 1)
+                                        {
+                                            $jan = $d["BIL"];
+                                        }
+                                        else if( $d["BILLBOARD_TYPE"] == 1 && $d["BULAN"] == 2)
+                                        {
+                                            $feb = $d["BIL"];
+                                        }
+                                        else if( $d["BILLBOARD_TYPE"] == 1 && $d["BULAN"] == 3)
+                                        {
+                                            $mar = $d["BIL"];
+                                        }
+                                        else if( $d["BILLBOARD_TYPE"] == 1 && $d["BULAN"] == 4)
+                                        {
+                                            $apr = $d["BIL"];
+                                        }
+                                        else if ( $d["BILLBOARD_TYPE"] == 1 && $d["BULAN"] == 5)
+                                        {
+                                            $may = $d["BIL"];
+                                        }
+                                        else if ( $d["BILLBOARD_TYPE"] == 1 && $d["BULAN"] == 6)
+                                        {
+                                            $jun = $d["BIL"];
+                                        }
+                                        else if ( $d["BILLBOARD_TYPE"] == 1 && $d["BULAN"] == 7)
+                                        {
+                                            $jul = $d["BIL"];
+                                        }
+                                        else if ( $d["BILLBOARD_TYPE"] == 1 && $d["BULAN"] == 8)
+                                        {
+                                            $aug = $d["BIL"];
+                                        }
+                                        else if ( $d["BILLBOARD_TYPE"] == 1 && $d["BULAN"] == 9)
+                                        {
+                                            $sep = $d["BIL"];
+                                        }
+                                        else if ( $d["BILLBOARD_TYPE"] == 1 && $d["BULAN"] == 10)
+                                        {
+                                            $oct = $d["BIL"];
+                                        }
+                                        else if ( $d["BILLBOARD_TYPE"] == 1 && $d["BULAN"] == 11)
+                                        {
+                                            $nov = $d["BIL"];
+                                        }
+                                        else if ( $d["BILLBOARD_TYPE"] == 1 && $d["BULAN"] == 12)
+                                        {
+                                            $dec = $d["BIL"];
+                                        }
+                                    }
+                                    $InterimCount = $jan + $feb + $mar + $apr + $may + $jun + $jul + $aug + $sep + $oct + $nov + $dec;
+                                    echo "<td style='text-align:center'>".$jan."</td>";
+                                    echo "<td style='text-align:center'>".$feb."</td>";
+                                    echo "<td style='text-align:center'>".$mar."</td>";
+                                    echo "<td style='text-align:center'>".$apr."</td>";
+                                    echo "<td style='text-align:center'>".$may."</td>";
+                                    echo "<td style='text-align:center'>".$jun."</td>";
+                                    echo "<td style='text-align:center'>".$jul."</td>";
+                                    echo "<td style='text-align:center'>".$aug."</td>";
+                                    echo "<td style='text-align:center'>".$sep."</td>";
+                                    echo "<td style='text-align:center'>".$oct."</td>";
+                                    echo "<td style='text-align:center'>".$nov."</td>";
+                                    echo "<td style='text-align:center'>".$dec."</td>";
+                                    echo "<td style='text-align:center'>".$InterimCount."</td>";
+                                ?>                                
+                            </tr>
+                            <tr>
+                                <th>SUB - LESEN</th>
+                                <?php
+                                    $SublesenCount = 0;
+                                    $jan = 0;
+                                    $feb = 0;
+                                    $mar = 0;
+                                    $apr = 0;
+                                    $may = 0;
+                                    $jun = 0;
+                                    $jul = 0;
+                                    $aug = 0;
+                                    $sep = 0;
+                                    $oct = 0;
+                                    $nov = 0;
+                                    $dec = 0;
+                                    
+                                    foreach ($data_report as $d)
+                                    {
+                                        if( $d["BILLBOARD_TYPE"] == 2 && $d["BULAN"] == 1)
+                                        {
+                                            $jan = $d["BIL"];
+                                        }
+                                        else if( $d["BILLBOARD_TYPE"] == 2 && $d["BULAN"] == 2)
+                                        {
+                                            $feb = $d["BIL"];
+                                        }
+                                        else if( $d["BILLBOARD_TYPE"] == 2 && $d["BULAN"] == 3)
+                                        {
+                                            $mar = $d["BIL"];
+                                        }
+                                        else if( $d["BILLBOARD_TYPE"] == 2 && $d["BULAN"] == 4)
+                                        {
+                                            $apr = $d["BIL"];
+                                        }
+                                        else if ( $d["BILLBOARD_TYPE"] == 2 && $d["BULAN"] == 5)
+                                        {
+                                            $may = $d["BIL"];
+                                        }
+                                        else if ( $d["BILLBOARD_TYPE"] == 2 && $d["BULAN"] == 6)
+                                        {
+                                            $jun = $d["BIL"];
+                                        }
+                                        else if ( $d["BILLBOARD_TYPE"] == 2 && $d["BULAN"] == 7)
+                                        {
+                                            $jul = $d["BIL"];
+                                        }
+                                        else if ( $d["BILLBOARD_TYPE"] == 2 && $d["BULAN"] == 8)
+                                        {
+                                            $aug = $d["BIL"];
+                                        }
+                                        else if ( $d["BILLBOARD_TYPE"] == 2 && $d["BULAN"] == 9)
+                                        {
+                                            $sep = $d["BIL"];
+                                        }
+                                        else if ( $d["BILLBOARD_TYPE"] == 2 && $d["BULAN"] == 10)
+                                        {
+                                            $oct = $d["BIL"];
+                                        }
+                                        else if ( $d["BILLBOARD_TYPE"] == 2 && $d["BULAN"] == 11)
+                                        {
+                                            $nov = $d["BIL"];
+                                        }
+                                        else if ( $d["BILLBOARD_TYPE"] == 2 && $d["BULAN"] == 12)
+                                        {
+                                            $dec = $d["BIL"];
+                                        }
+                                    }
+                                    $SublesenCount = $jan + $feb + $mar + $apr + $may + $jun + $jul + $aug + $sep + $oct + $nov + $dec;
+                                    echo "<td style='text-align:center'>".$jan."</td>";
+                                    echo "<td style='text-align:center'>".$feb."</td>";
+                                    echo "<td style='text-align:center'>".$mar."</td>";
+                                    echo "<td style='text-align:center'>".$apr."</td>";
+                                    echo "<td style='text-align:center'>".$may."</td>";
+                                    echo "<td style='text-align:center'>".$jun."</td>";
+                                    echo "<td style='text-align:center'>".$jul."</td>";
+                                    echo "<td style='text-align:center'>".$aug."</td>";
+                                    echo "<td style='text-align:center'>".$sep."</td>";
+                                    echo "<td style='text-align:center'>".$oct."</td>";
+                                    echo "<td style='text-align:center'>".$nov."</td>";
+                                    echo "<td style='text-align:center'>".$dec."</td>";
+                                    echo "<td style='text-align:center'>".$SublesenCount."</td>";
+                                ?>                                
+                            </tr>
+                        </table>
+                            <script>
+                                $(document).ready(function(){
+                                    var result = [];
+                                        $('table tr').each(function(){
+                                        $('td', this).each(function(index, val){
+                                            if(!result[index]) result[index] = 0;
+                                                result[index] += parseInt($(val).text());
+                                            });
+                                        });
+                                        $('table').append('<tr style="background-color: #adaaaa;font-weight: bold"></tr>');
+                                        $('table tr').last().append('<td style=text-align:center>JUMLAH KESELURUHAN</td>')
+                                        $(result).each(function(){
+                                        $('table tr').last().append('<td style=text-align:center>'+this+'</td>')
+                                      });
+                                });
+                        </script>
     </div>
     <script>
         $( window ).on('load', '', function(event) {
