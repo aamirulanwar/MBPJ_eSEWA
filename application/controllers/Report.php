@@ -56,8 +56,10 @@ class Report extends CI_Controller
             'hartanah',
             'print_hartanah',
             'papaniklan',
+            'print_papaniklan',
             'perjanjian_kutipan',
             'hasil',
+            'print_hasil',
             'kutipan_tunggakan',
             'print_kutipan_tunggakan',
             'laporan_iso'
@@ -1499,6 +1501,8 @@ class Report extends CI_Controller
 
         $post           = $this->input->post();
         $filter_session = get_session('arr_filter_papaniklan');
+        // var_dump($filter_session);
+        // die();
         if(!empty($post)):
             $this->session->set_userdata('arr_filter_papaniklan',$post);
             $data_search = $post;
@@ -1506,7 +1510,9 @@ class Report extends CI_Controller
             if(!empty($filter_session)):
                 $data_search = $filter_session;
             else:
-                $data_search['year']  = '';
+                $post["year"] = '2020';
+                $data_search['year']  = '2020';
+                $this->session->set_userdata('arr_filter_papaniklan',$post);
             endif;
         endif;
         // pre($data_search);
@@ -1525,6 +1531,27 @@ class Report extends CI_Controller
 
         templates('report/v_papaniklan',$data);
 
+    }
+
+    function print_papaniklan()
+    {
+        $filter_session = get_session('arr_filter_papaniklan');
+        if( !empty($filter_session) )
+        {
+            $data_search = $filter_session;
+            $data_report = $this->m_acc_account->sewaan_papaniklan($data_search);
+            //echo last_query();
+            $data['filter_session']    = $filter_session;
+            $data['data_report']    = $data_report;
+            $data['data_search']    = $data_search;
+        }
+        else
+        {
+            $data = array();
+        }
+
+        // templates('report/v_journal',$data);
+        $this->load->view('/report/v_print_report_papaniklan',$data);
     }
 
     function perjanjian_kutipan(){
@@ -1582,15 +1609,19 @@ class Report extends CI_Controller
         $search_segment = uri_segment(3);
 
         $post           = $this->input->post();
-        $filter_session = get_session('arr_filter_perjanjian');
+        $filter_session = get_session('arr_filter_hasil');
+        var_dump($filter_session);
+        // die();
         if(!empty($post)):
-            $this->session->set_userdata('arr_filter_perjanjian',$post);
+            $this->session->set_userdata('arr_filter_hasil',$post);
             $data_search = $post;
         else:
             if(!empty($filter_session)):
                 $data_search = $filter_session;
             else:
-                $data_search['year']  = '';
+                $post["year"] = '2020';
+                $data_search['year']  = '2020';
+                $this->session->set_userdata('arr_filter_hasil',$post);
             endif;
         endif;
         // pre($data_search);
@@ -1598,7 +1629,7 @@ class Report extends CI_Controller
       
         if($_POST):
 
-        $data_report= $this->m_acc_account->m_acc_account->hasil($data_search);
+        $data_report= $this->m_acc_account->hasil($data_search);
 
             $data['data_report']    = $data_report;
             $data['data_search']    = $data_search;
@@ -1608,6 +1639,27 @@ class Report extends CI_Controller
         endif;
 
         templates('report/v_hasil',$data);
+    }
+
+    function print_hasil()
+    {
+        $filter_session = get_session('arr_filter_hasil');
+        if( !empty($filter_session) )
+        {
+            $data_search = $filter_session;
+            $data_report = $this->m_acc_account->hasil($data_search);
+            //echo last_query();
+            $data['filter_session']    = $filter_session;
+            $data['data_report']    = $data_report;
+            $data['data_search']    = $data_search;
+        }
+        else
+        {
+            $data = array();
+        }
+
+        // templates('report/v_journal',$data);
+        $this->load->view('/report/v_print_report_hasil',$data);
     }
 
     function kutipan_tunggakan(){
