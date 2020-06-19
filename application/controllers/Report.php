@@ -59,11 +59,13 @@ class Report extends CI_Controller
             'papaniklan',
             'print_papaniklan',
             'perjanjian_kutipan',
+            'print_perjanjian_kutipan',
             'hasil',
             'print_hasil',
             'kutipan_tunggakan',
             'print_kutipan_tunggakan',
-            'laporan_iso'
+            'laporan_iso',
+            'print_iso'
         );
         #set pages data
         (in_array($method,$array)) ? $this->$method() : $this->gl_summary();
@@ -1630,6 +1632,29 @@ class Report extends CI_Controller
 
     }
 
+    function print_perjanjian_kutipan()
+    {
+        $filter_session = get_session('arr_filter_perjanjian');
+        if( !empty($filter_session) )
+        {
+            $data_search = $filter_session;
+            $data_report[1] = $this->m_acc_account->perjanjian_kutipan($data_search);
+            $data_report[2] = $this->m_acc_account->perjanjian_kutipan_billboard($data_search);
+            //echo last_query();
+            $data['filter_session']    = $filter_session;
+            $data['data_report']    = $data_report;
+            $data['data_search']    = $data_search;
+        }
+        else
+        {
+            $data = array();
+        }
+
+        // templates('report/v_journal',$data);
+        $this->load->view('/report/v_print_report_perjanjian_kutipan',$data);
+    }
+
+
     function hasil(){
         $this->auth->restrict_access($this->curuser,array(8015));
         $data['link_1']     = 'Laporan';
@@ -1827,36 +1852,55 @@ class Report extends CI_Controller
 
         // $data['data'] = $this->m_acc_account->hasil_billboard();
 
-        // $search_segment = uri_segment(3);
+        $search_segment = uri_segment(3);
 
-        // $post           = $this->input->post();
-        // $filter_session = get_session('arr_filter_perjanjian');
-        // if(!empty($post)):
-        //     $this->session->set_userdata('arr_filter_perjanjian',$post);
-        //     $data_search = $post;
-        // else:
-        //     if(!empty($filter_session)):
-        //         $data_search = $filter_session;
-        //     else:
-        //         $data_search['year']  = '';
-        //         $data_search['year2']  = '';
-        //     endif;
-        // endif;
-        // // pre($data_search);
-        // // die();
+        $post           = $this->input->post();
+        $filter_session = get_session('arr_filter_iso');
+        if(!empty($post)):
+            $this->session->set_userdata('arr_filter_iso',$post);
+            $data_search = $post;
+        else:
+            if(!empty($filter_session)):
+                $data_search = $filter_session;
+            else:
+                $data_search['year']  = '';
+            endif;
+        endif;
+       
       
-        // if($_POST):
+        if($_POST):
 
-        // $data_report= $this->m_acc_account->m_acc_account->hasil($data_search);
+        $data_report= $this->m_acc_account->m_acc_account->iso($data_search);
 
-        //     $data['data_report']    = $data_report;
-        //     $data['data_search']    = $data_search;
-        // else:
-        //     $data['data_report']    = array();
-        //     $data['data_search']    = $data_search;
-        // endif;
+            $data['data_report']    = $data_report;
+            $data['data_search']    = $data_search;
+        else:
+            $data['data_report']    = array();
+            $data['data_search']    = $data_search;
+        endif;
 
         templates('report/v_laporan_iso',$data);
+    }
+
+    function print_iso()
+    {
+        $filter_session = get_session('arr_filter_iso');
+        if( !empty($filter_session) )
+        {
+            $data_search = $filter_session;
+            $data_report = $this->m_acc_account->iso($data_search);
+            //echo last_query();
+            $data['filter_session']    = $filter_session;
+            $data['data_report']    = $data_report;
+            $data['data_search']    = $data_search;
+        }
+        else
+        {
+            $data = array();
+        }
+
+        // templates('report/v_journal',$data);
+        $this->load->view('/report/v_print_report_iso',$data);
     }
 }
 /* End of file modules/login/controllers/report.php */

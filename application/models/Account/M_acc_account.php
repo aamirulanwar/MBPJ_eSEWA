@@ -591,4 +591,17 @@ class M_acc_account extends CI_Model
             return $sql->result_array();
         endif;
     }
+    public function iso($data_search){
+        db_select ('COUNT(A.ACCOUNT_ID) as bil');
+        db_select ('A.TYPE_ID');
+        db_from('ACC_ACCOUNT A');
+        if(isset($data_search['year']) && having_value($data_search['year'])):
+            db_where("EXTRACT(YEAR FROM A.DT_SIGNATURE) = ".$data_search['year']."");
+        endif;
+        db_group('A.TYPE_ID');
+        $sql = db_get();
+        if($sql):
+            return $sql->result_array();
+      endif;
+    }
 }
