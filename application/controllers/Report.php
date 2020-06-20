@@ -1602,48 +1602,105 @@ class Report extends CI_Controller
 
         $post           = $this->input->post();
         $filter_session = get_session('arr_filter_perjanjian');
-        if(!empty($post)):
+
+        if( !empty($post) )
+        {
+            if ( $post["year"] == "" ){ $post["year"] = date('Y'); }
+            if ( $post["year2"] == "" ){ $post["year2"] = date('Y'); }
+
             $this->session->set_userdata('arr_filter_perjanjian',$post);
             $data_search = $post;
-        else:
-            if(!empty($filter_session)):
+        }
+        else
+        {
+            if(!empty($filter_session))
+            {
+                if ( $filter_session["year"] == "" ){ $filter_session["year"] = date('Y'); }
+                if ( $filter_session["year2"] == "" ){ $filter_session["year2"] = date('Y'); }
+
                 $data_search = $filter_session;
-            else:
-                $data_search['year']  = '';
-                $data_search['year2']  = '';
-            endif;
-        endif;
-        // pre($data_search);
-        // die();
+            }
+            else
+            {
+                $data_search['year']  = date('Y');
+                $data_search['year2'] = date('Y');                
+            }
+            $this->session->set_userdata('arr_filter_perjanjian',$data_search);
+        }
       
-        if($_POST):
+        if($_POST || ( isset($data_search['year']) && $data_search['year'] != "") )
+        {
+            if ( $data_search['year'] > $data_search['year2'] )
+            {
+                for ($i = $data_search['year'] ; $i >= $data_search['year2'] ; $i--) 
+                {
+                    # code...
+                    $data_search_perjanjian["year"] = $i;
+                    $data_kutipan["$i"] = $this->m_acc_account->count_perjanjian_kutipan($data_search_perjanjian);
+                    $data_billboard["$i"] = $this->m_acc_account->count_perjanjian_kutipan_billboard($data_search_perjanjian);
+                }
+            }
+            else
+            {
+                for ($i = $data_search['year'] ; $i <= $data_search['year2'] ; $i++) 
+                {
+                    # code...
+                    $data_search_perjanjian["year"] = $i;
+                    $data_kutipan["$i"] = $this->m_acc_account->count_perjanjian_kutipan($data_search_perjanjian);
+                    $data_billboard["$i"] = $this->m_acc_account->count_perjanjian_kutipan_billboard($data_search_perjanjian);
+                }
+            }
 
-        $data_report[1] = $this->m_acc_account->perjanjian_kutipan($data_search);
-        $data_report[2] = $this->m_acc_account->perjanjian_kutipan_billboard($data_search);
-
-            $data['data_report']    = $data_report;
+            $data['data_kutipan']    = $data_kutipan;
+            $data['data_billboard']    = $data_billboard;
             $data['data_search']    = $data_search;
-        else:
-            $data['data_report']    = array();
+        }
+        else
+        {
+            $data['data_kutipan']   = array();
+            $data['data_billboard'] = array();
             $data['data_search']    = $data_search;
-        endif;
+        }
 
         templates('report/v_perjanjian',$data);
-
     }
 
     function print_perjanjian_kutipan()
     {
         $filter_session = get_session('arr_filter_perjanjian');
-        if( !empty($filter_session) )
+        if( !empty($filter_session) || ( isset($filter_session['year']) && $filter_session['year'] != "") )
         {
             $data_search = $filter_session;
-            $data_report[1] = $this->m_acc_account->perjanjian_kutipan($data_search);
-            $data_report[2] = $this->m_acc_account->perjanjian_kutipan_billboard($data_search);
-            //echo last_query();
-            $data['filter_session']    = $filter_session;
-            $data['data_report']    = $data_report;
-            $data['data_search']    = $data_search;
+            
+            if ( $data_search['year'] > $data_search['year2'] )
+            {
+                $data["year_diff"] = $data_search['year'] - $data_search['year2'];
+
+                for ($i = $data_search['year'] ; $i >= $data_search['year2'] ; $i--) 
+                {
+                    # code...
+                    $data_search_perjanjian["year"] = $i;
+                    $data_kutipan["$i"] = $this->m_acc_account->count_perjanjian_kutipan($data_search_perjanjian);
+                    $data_billboard["$i"] = $this->m_acc_account->count_perjanjian_kutipan_billboard($data_search_perjanjian);
+                }
+            }
+            else
+            {
+                $data["year_diff"] = $data_search['year2'] - $data_search['year'];
+
+                for ($i = $data_search['year'] ; $i <= $data_search['year2'] ; $i++) 
+                {
+                    # code...
+                    $data_search_perjanjian["year"] = $i;
+                    $data_kutipan["$i"] = $this->m_acc_account->count_perjanjian_kutipan($data_search_perjanjian);
+                    $data_billboard["$i"] = $this->m_acc_account->count_perjanjian_kutipan_billboard($data_search_perjanjian);
+                }
+            }
+
+            $data['data_kutipan']       =   $data_kutipan;
+            $data['data_billboard']     =   $data_billboard;
+            $data['data_search']        =   $data_search;
+            $data['filter_session']     =   $filter_session;
         }
         else
         {

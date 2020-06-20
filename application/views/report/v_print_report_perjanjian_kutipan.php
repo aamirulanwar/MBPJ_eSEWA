@@ -19,7 +19,16 @@
     <link href="/assets/node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="/assets/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
     <style>
-        @page { size: A4 potrait;margin: 0.1cm; }
+        <?php 
+            if ( $year_diff > 4 )
+            {
+                echo "@page { size: A4 landscape;margin: 0.1cm; }";
+            }
+            else
+            {
+                echo "@page { size: A4 potrait;margin: 0.1cm; }";
+            }
+        ?>        
     </style>
 </head>
 <body style="margin: 1cm">
@@ -44,91 +53,187 @@
                         <span>LAPORAN PERBANDINGAN JUMLAH</span></br>
                         <span>PERJANJIAN & KUTIPAN</span></br>
                         <?php
-                        $year = $data_search['year'] ;
-                        // var_dump($data_search);
-                        // die()
-                        echo "<span>(TAHUN ".$year." )</span></br>";
+                            $year = $data_search['year'] ;
+                            echo "<span>(TAHUN ".$year." )</span></br>";
                         ?>
                     </td>
                 </tr>
             </table>
         </div>
         </br>
-        <table class="table table-hover table-bordered table-aging" style="margin-bottom: 0px;">
-                    <table class="table table-hover table-bordered table-aging" style="margin-bottom: 0px;">
-                    <tr>
-                        <th width="3%" rowspan="2" style="text-align:center">BIL</th>
-                        <th width="12%" rowspan="2" style="text-align:center">JENIS PERJANJIAN</th>
-                        <?php if (count($data_report) > 0): ?>
-                        <?php foreach ($data_report[1] as $d):
-                            $year = $d['YEAR'] ;
-                            echo "<th colspan='3' width='7%'' style='text-align:center'>".$year."</th>";
-                        ?>
-                        <?php endforeach; ?>
-                    </tr>
-                    <tr>
-                        <?php
-                            foreach ($data_report[1] as $d) 
-                            {
-                                echo "
-                                    <th width='3%'>BIL</th>
-                                    <th width='3%'>RM</th>
-                                    <th width='3%'>%</th>
-                                    ";
-                            }
-                        ?>
-                    </tr>
-                    <tr>
-                        <th>1.</th>
-                        <th>SEWA</th>
-                        <?php
-                            $bil_sewa = 0 ;
-                            $bil_billboard = 0 ;
-                            $total_sewa = 0;
-                            $total_billboard = 0;
-                            $total_bil = 0;
+        <table class="table table-hover table-bordered table-aging" style="margin-bottom: 0px;overflow: auto">
+            <tr>
+                <th width="3%" rowspan="2" style="text-align:center">BIL</th>
+                <th width="12%" rowspan="2" style="text-align:center">JENIS PERJANJIAN</th>
+                <?php 
+                    if ( $data_search['year'] > $data_search['year2'] )
+                    {
+                        for ($i = $data_search['year'] ; $i >= $data_search['year2'] ; $i--) 
+                        {
+                            # code...
+                            echo "<th colspan='3' width='7%'' style='text-align:center'>".$i."</th>";
+                        }
+                    }
+                    else
+                    {
+                        for ($i = $data_search['year'] ; $i <= $data_search['year2'] ; $i++) 
+                        {
+                            # code...
+                            echo "<th colspan='3' width='7%'' style='text-align:center'>".$i."</th>";
+                        }
+                    }
+                ?>
+            </tr>
+            <tr>
+                <?php 
+                    if ( $data_search['year'] > $data_search['year2'] )
+                    {
+                        for ($i = $data_search['year'] ; $i >= $data_search['year2'] ; $i--) 
+                        {
+                            # code...
+                            echo "<th width='3%' style='text-align:center'>BIL</th>";
+                            echo "<th width='3%' style='text-align:center'>RM</th>";
+                            echo "<th width='3%' style='text-align:center'>%</th>";
+                        }
+                    }
+                    else
+                    {
+                        for ($i = $data_search['year'] ; $i <= $data_search['year2'] ; $i++) 
+                        {
+                            # code...
+                            echo "<th width='3%' style='text-align:center'>BIL</th>";
+                            echo "<th width='3%' style='text-align:center'>RM</th>";
+                            echo "<th width='3%' style='text-align:center'>%</th>";
+                        }
+                    }
+                ?>
+            </tr>
+            <tr>
+                <th>1.</th>
+                <th>SEWA</th>
+                <?php
+                    $bil_sewa = 0 ;
+                    $bil_billboard = 0 ;
+                    $total_sewa = 0;
+                    $total_billboard = 0;
+                    $total_bil = 0;
+                    $sasaran_bil = 960;
+                    $sasaran_rm = 150000.00;                        
+                
+                    if ( $data_search['year'] > $data_search['year2'] )
+                    {
+                        for ($i = $data_search['year'] ; $i >= $data_search['year2'] ; $i--) 
+                        {
+                            # code...
+                            $total_perc_kutipan = ( ( ( $data_kutipan[$i] ) / $sasaran_bil ) * 100 );
+                            echo "<td style='text-align:center'> ".$data_kutipan[$i]." </td>";
+                            echo "<td style='text-align:center'> ".( $data_kutipan[$i] * 100 )." </td>";
+                            echo "<td style='text-align:center'> ".round($total_perc_kutipan,2)." </td>";
+                        }
+                    }
+                    else
+                    {
+                        for ($i = $data_search['year'] ; $i <= $data_search['year2'] ; $i++) 
+                        {
+                            # code...
+                            $total_perc_kutipan = ( ( ( $data_kutipan[$i] ) / $sasaran_bil ) * 100 );
+                            echo "<td style='text-align:center'> ".$data_kutipan[$i]." </td>";
+                            echo "<td style='text-align:center'> ".( $data_kutipan[$i] * 100 )." </td>";
+                            echo "<td style='text-align:center'> ".round($total_perc_kutipan,2)." </td>";
+                        }
+                    }
+                ?>                
+            </tr>
+            <tr>
+                <th>2.</th>
+                <th>BILLBOARD</th>
+                <?php
+                    if ( $data_search['year'] > $data_search['year2'] )
+                    {
+                        for ($i = $data_search['year'] ; $i >= $data_search['year2'] ; $i--) 
+                        {
+                            # code...
+                            $total_perc_billboard = ( ( ( $data_billboard[$i] ) / $sasaran_bil ) * 100 );
+                            echo "<td style='text-align:center'> ".$data_billboard[$i]." </td>";
+                            echo "<td style='text-align:center'> ".( $data_billboard[$i] * 100 )." </td>";
+                            echo "<td style='text-align:center'> ".round($total_perc_billboard,2)." </td>";
+                        }
+                    }
+                    else
+                    {
+                        for ($i = $data_search['year'] ; $i <= $data_search['year2'] ; $i++) 
+                        {
+                            # code...
+                            $total_perc_billboard = ( ( ( $data_billboard[$i] ) / $sasaran_bil ) * 100 );
+                            echo "<td style='text-align:center'> ".$data_billboard[$i]." </td>";
+                            echo "<td style='text-align:center'> ".( $data_billboard[$i] * 100 )." </td>";
+                            echo "<td style='text-align:center'> ".round($total_perc_billboard,2)." </td>";
+                        }
+                    }
+                ?>
+            </tr>
+            <tr>
+                <th colspan="2">JUMLAH KESELURUHAN</th>
+                <?php
+                    $total_bil = $bil_sewa + $bil_billboard;
+                    $total_rm  = ( ( $bil_sewa + $bil_billboard ) * 100 );
 
-                            foreach ($data_report[1] as $d)
-                            {
-                                $bil_sewa = $d["BIL"];                                  
-                            }
+                    if ( $data_search['year'] > $data_search['year2'] )
+                    {
+                        for ($i = $data_search['year'] ; $i >= $data_search['year2'] ; $i--) 
+                        {
+                            # code...
+                            $total_bil  = $data_kutipan[$i] + $data_billboard[$i];
+                            $total_rm   = ( ( $data_kutipan[$i] + $data_billboard[$i] ) * 100 );
+                            $total_perc = ( ( ( $data_kutipan[$i] + $data_billboard[$i] ) / $sasaran_bil ) * 100 );
 
-                            foreach ($data_report[2] as $d)
-                            {
-                                $bil_billboard = $d["BIL"];                                   
-                            }
+                            echo "<td style='text-align:center'> ".$total_bil." </td>";
+                            echo "<td style='text-align:center'> ".num($total_rm,2)." </td>";
+                            echo "<td style='text-align:center'> ".round($total_perc,2)." </td>";
+                        }
+                    }
+                    else
+                    {
+                        for ($i = $data_search['year'] ; $i <= $data_search['year2'] ; $i++) 
+                        {
+                            # code...
+                            $total_bil  = $data_kutipan[$i] + $data_billboard[$i];
+                            $total_rm   = ( ( $data_kutipan[$i] + $data_billboard[$i] ) * 100 );
+                            $total_perc = ( ( ( $data_kutipan[$i] + $data_billboard[$i] ) / $sasaran_bil ) * 100 ); 
 
-                            $total_sewa = $bil_sewa * 100;                            
-                            $total_billboard = $bil_billboard * 100;
-                            $total_bil = $bil_sewa + $bil_billboard;
-                            $total = $total_sewa + $total_billboard;
-                            $peratus = $total / 150000 * 100;
-                        ?>
-                        <td style='text-align:center'> <?=$bil_sewa?> </td>
-                        <td style='text-align:center'> <?=num($total_sewa,2)?> </td>
-                        <td style='text-align:center'> </td>                     
-                    </tr>
-                    <tr>
-                        <th>2.</th>
-                        <th>BILLBOARD</th>
-                        <td style='text-align:center'> <?=$bil_billboard?> </td>
-                        <td style='text-align:center'> <?=num($total_billboard,2)?> </td>
-                        <td style='text-align:center'> </td>
-                    </tr>
-                    <tr>
-                        <th colspan="2">JUMLAH KESELURUHAN</th> 
-                        <td style='text-align:center'> <?=$total_bil?> </td>
-                        <td style='text-align:center'> <?=num($total,2)?> </td>
-                        <td style='text-align:center'> <?=round($peratus,2)?> </td>    
-                    </tr>
-                    <tr>
-                        <th colspan="2">SASARAN TAHUNAN</th> 
-                        <td style='text-align:center'>960</td>
-                        <td style='text-align:center'>150000.00</td>
-                        <td style='text-align:center'></td>    
-                    </tr>
-                <?php endif; ?> 
-                </table>
+                            echo "<td style='text-align:center'> ".$total_bil." </td>";
+                            echo "<td style='text-align:center'> ".num($total_rm,2)." </td>";
+                            echo "<td style='text-align:center'> ".round($total_perc,2)." </td>";
+                        }
+                    }
+                ?>
+            </tr>
+            <tr>
+                <th colspan="2">SASARAN TAHUNAN</th> 
+                <?php
+                    if ( $data_search['year'] > $data_search['year2'] )
+                    {
+                        for ($i = $data_search['year'] ; $i >= $data_search['year2'] ; $i--) 
+                        {
+                            # code...
+                            echo "<td style='text-align:center'>960</td>";
+                            echo "<td style='text-align:center'>150000.00</td>";
+                            echo "<td style='text-align:center'></td>";
+                        }
+                    }
+                    else
+                    {
+                        for ($i = $data_search['year'] ; $i <= $data_search['year2'] ; $i++) 
+                        {
+                            # code...
+                            echo "<td style='text-align:center'>960</td>";
+                            echo "<td style='text-align:center'>150000.00</td>";
+                            echo "<td style='text-align:center'></td>";
+                        }
+                    }
+                ?>
+            </tr>
+        </table>
     </div>
     <script>
         $( window ).on('load', '', function(event) {
