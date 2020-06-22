@@ -623,7 +623,7 @@ class Generate_word {
         $templateProcessor->setValue('overdue_utility',num($notice_info['AIR']));
         $templateProcessor->setValue('overdue_tipping_fee',num($notice_info['TIPPING']));
         $templateProcessor->setValue('total_overdue',num($notice_info['TOTAL_TUNGGAKAN']));
-        $templateProcessor->setValue('total_overdue_lod',num($notice_info['TOTAL_TUNGGAKAN']));
+        $templateProcessor->setValue('total_overdue_lod',num($notice_info['TOTAL_TUNGGAKAN'])+ 10);
 
         //Check and replace if symbol in name exist that might make the file to be corrupted or cant be named
         $filename_replace = preg_replace("/[^A-Za-z0-9' ]/", "", $get_details['NAME']); 
