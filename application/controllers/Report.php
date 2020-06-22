@@ -1474,7 +1474,7 @@ class Report extends CI_Controller
     function hartanah(){
         $this->auth->restrict_access($this->curuser,array(8012));
         $data['link_1']     = 'Laporan';
-        $data['link_2']     = 'Perjanian Sewaan Hartanah';
+        $data['link_2']     = 'Perjanjian Sewaan Hartanah';
         $data['link_3']     = '';
         $data['pagetitle']  = 'Laporan Perjanjian Sewaan Hartanah';
 
