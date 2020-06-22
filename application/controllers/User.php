@@ -19,13 +19,11 @@ class User extends CI_Controller
         load_model('Department/M_department','m_dept');
         load_model('Access/M_access_file_parent','m_access_file_parent');
         load_model('User/M_user_group','m_user_group');
-
-
     }
 
     function _remap($method)
     {
-        $array = array('user_list','add_user','edit_user','delete_user');
+        $array = array('user_list','add_user','edit_user','delete_user','reset_password');
         #set pages data
         (in_array($method,$array)) ? $this->$method() : $this->user_list();
     }
@@ -78,8 +76,6 @@ class User extends CI_Controller
         $data['file_access_parent'] = $file_access_parent;
 
         $data['list_user_group']    = $this->m_user_group->get_active_user_group();
-//        $data['list_gred']          = $this->m_user->get_active_gred();
-//        $data['list_position']      = $this->m_user->get_active_position();
 
         $get_department_layer_1 = $this->m_dept->get_department_layer_1();
         $department_arr = array();
@@ -98,25 +94,22 @@ class User extends CI_Controller
         validation_rules('name','<strong>nama</strong>','required');
         validation_rules('user_group','<strong>kumpulan pengguna</strong>','required');
         validation_rules('department','<strong>jabatan/bahagian</strong>','required');
-//        validation_rules('position','<strong>position</strong>','required');
         validation_rules('email_address','<strong>Id pengguna (emel)</strong>','required|valid_email|is_unique[USERS.USER_EMAIL]');
         validation_rules('mobile_number','<strong>no. telefon</strong>','required');
-//        validation_rules('user_role','<strong>user role</strong>','required');
-//        validation_rules('assign_to_csr','<strong>user role</strong>','required');
 
         if(validation_run()==false):
             templates('/user/v_user_add',$data);
         else:
             $data_insert['user_name']               = ucwords(input_data('name'));
             $data_insert['user_group_id']           = input_data('user_group');
-//            $data_insert['user_role']       = input_data('user_role');
+            //            $data_insert['user_role']       = input_data('user_role');
             $data_insert['department_id']           = input_data('department');
-//            $data_insert['pos_id']          = input_data('position');
+            //            $data_insert['pos_id']          = input_data('position');
             $data_insert['user_email']              = input_data('email_address');
-//            $data_insert['assign_to_csr']   = input_data('assign_to_csr');
+            //            $data_insert['assign_to_csr']   = input_data('assign_to_csr');
             $data_insert['user_nobimbit']           = input_data('mobile_number');
-//            $data_insert['dt_added']                = timenow();
-//            $data_insert['last_dt_update_password'] = timenow();
+            //            $data_insert['dt_added']                = timenow();
+            //            $data_insert['last_dt_update_password'] = timenow();
             $id_user                                = $this->m_users->insert_user($data_insert);
             if(is_numeric($id_user)):
                 $password                       = sha1(DEFAULT_PASSWORD.$id_user);
@@ -156,8 +149,8 @@ class User extends CI_Controller
 
         $data['list_user_group']    = $this->m_user_group->get_active_user_group();
 
-//        $data['list_gred']          = $this->m_user->get_active_gred();
-//        $data['list_position']      = $this->m_user->get_active_position();
+        //        $data['list_gred']          = $this->m_user->get_active_gred();
+        //        $data['list_position']      = $this->m_user->get_active_position();
 
         $get_department_layer_1 = $this->m_dept->get_department_layer_1();
         $department_arr = array();
@@ -176,10 +169,10 @@ class User extends CI_Controller
         validation_rules('name','<strong>name</strong>','required');
         validation_rules('user_group','<strong>user group</strong>','required');
         validation_rules('department','<strong>department / section</strong>','required');
-//        validation_rules('position','<strong>position</strong>','required');
+        //        validation_rules('position','<strong>position</strong>','required');
         validation_rules('status','<strong>status</strong>');
-//        validation_rules('user_role','<strong>user role</strong>','required');
-//        validation_rules('assign_to_csr','<strong>user role</strong>','required');
+        //        validation_rules('user_role','<strong>user role</strong>','required');
+        //        validation_rules('assign_to_csr','<strong>user role</strong>','required');
 
         if(input_data('email_address')!=$user_details['USER_EMAIL']):
             validation_rules('email_address','<strong>Id pengguna (emel)</strong>','required|valid_email|is_unique[USERS.USER_EMAIL]');
@@ -193,13 +186,13 @@ class User extends CI_Controller
         else:
             $data_update['user_name']       = ucwords(input_data('name'));
             $data_update['user_group_id']   = input_data('user_group');
-//            $data_update['user_role']       = input_data('user_role');
+            //            $data_update['user_role']       = input_data('user_role');
             $data_update['department_id']   = input_data('department');
-//            $data_update['pos_id']          = input_data('position');
+            //            $data_update['pos_id']          = input_data('position');
             $data_update['user_email']      = input_data('email_address');
             $data_update['user_nobimbit']   = input_data('mobile_number');
             $data_update['active']          = (input_data('status'))?STATUS_ACTIVE:STATUS_INACTIVE;
-//            $data_update['assign_to_csr']   = input_data('assign_to_csr');
+            //            $data_update['assign_to_csr']   = input_data('assign_to_csr');
 
 
             $update_status                  = $this->m_users->update_user($data_update,$user_id);
@@ -247,8 +240,13 @@ class User extends CI_Controller
 
             $data_update['profile_version'] = sha1(DEFAULT_PASSWORD.$user_id);
             $update_status                  = $this->m_users->update_user($data_update,$user_id);
-            if($update_status!=0 && is_numeric($update_status)):
-                echo 1;
+            if($update_status):
+                // echo 1;
+                return true;
+            else:
+                // echo "<pre>";
+                // var_dump($data_update);
+                return false;
             endif;
         endif;
     }

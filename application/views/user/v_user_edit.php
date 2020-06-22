@@ -22,33 +22,6 @@
                     <?php echo form_error('name')?>
                 </div>
             </div>
-<!--            <div class="form-group row">-->
-<!--                <label class="col-sm-3 col-form-label">User Role <span class="mandatory">*</span></label>-->
-<!--                <div class="col-sm-5">-->
-<!--                    <select class="form-control" name="user_role">-->
-<!--                        <option value=""> - Please Select - </option>-->
-<!--                        --><?php
-//                        echo option_value(USER_ROLE_CUSTOMER_SERVICE,'Customer Service','user_role',$user_details['user_role']);
-//                        echo option_value(USER_ROLE_HOD,'HOD','user_role',$user_details['user_role']);
-//                        echo option_value(USER_ROLE_EXEC,'Executive','user_role',$user_details['user_role']);
-//                        echo option_value(USER_ROLE_TECHNICAL_SUPPORT,'Technical Support','user_role',$user_details['user_role']);
-//                        ?>
-<!--                    </select>-->
-<!--                    --><?php //echo form_error('level')?>
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="form-group row">-->
-<!--                <label class="col-sm-3 col-form-label">Able to assign online tickets to Customer Service staff <span class="mandatory">*</span></label>-->
-<!--                <div class="col-sm-5">-->
-<!--                    <select class="form-control" name="assign_to_csr">-->
-<!--                        --><?php
-//                        echo option_value(0,'No','assign_to_csr',$user_details['assign_to_csr']);
-//                        echo option_value(1,'Yes','assign_to_csr',$user_details['assign_to_csr']);
-//                        ?>
-<!--                    </select>-->
-<!--                    --><?php //echo form_error('assign_to_csr')?>
-<!--                </div>-->
-<!--            </div>-->
             <div class="form-group row">
                 <label class="col-sm-3 col-form-label">Kumpulan Pengguna <span class="mandatory">*</span></label>
                 <div class="col-sm-5">
@@ -81,20 +54,6 @@
                     <?php echo form_error('department')?>
                 </div>
             </div>
-<!--            <div class="form-group row">-->
-<!--                <label class="col-sm-3 col-form-label">Position <span class="mandatory">*</span></label>-->
-<!--                <div class="col-sm-5">-->
-<!--                    <select class="form-control" name="position">-->
-<!--                        <option value=""> - Please select - </option>-->
-<!--                        --><?php
-//                        foreach($list_position as $position):
-//                            echo option_value($position['pos_id'],$position['pos_name'],'position',$user_details['pos_id']);
-//                        endforeach;
-//                        ?>
-<!--                    </select>-->
-<!--                    --><?php //echo form_error('position')?>
-<!--                </div>-->
-<!--            </div>-->
             <div class="form-group row">
                 <label class="col-sm-3 col-form-label">No. Telefon</label>
                 <div class="col-sm-5">
