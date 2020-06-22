@@ -67,7 +67,7 @@
                         <th width='3%'>BILLBOARD</th>
                     </tr>
                     <tr>
-                        <?php if ( isset($data_report) || count($data_report) == 0): echo "<td colspan='7' style='text-align:center'> Tiada Rekod </td"; ?>                        
+                        <?php if ( isset($data_report) && count($data_report) == 0): echo "<td colspan='7' style='text-align:center'> Tiada Rekod </td"; ?>                        
                         <?php elseif ( isset($data_report) && count($data_report) > 0): ?>
                         <th>1.</th>
                         <th>JANUARI</th>
