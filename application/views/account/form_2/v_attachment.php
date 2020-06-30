@@ -78,7 +78,7 @@
         <?php echo form_error('map_info_status')?>
     </div>
 </div>
-<div class="form-group row">
+<div class="form-group row" style="display:<?=( $customPageKey == "2") ? "" : "none"?>">
     <label class="col-sm-3 col-form-label">Dokumen Tandatangan Perjanjian & Proses Hasil</label>
     <div class="col-sm-5">
         <div class="row files" id="containerDokumenTandatangan">            
@@ -93,10 +93,13 @@
             <div id="uploadedSupportDocument">
                 <ul>
                 <?php
-                    foreach ($support_documents as $document) 
+                    if ( $customPageKey == "2")
                     {
-                        # code...
-                        echo "<li><a href='/".$document["PATH"]."/".$document["FILENAME"]."' download>".$document["FILENAME"]."</a></li>";
+                        foreach ($support_documents as $document) 
+                        {
+                            # code...
+                            echo "<li><a href='/".$document["PATH"]."/".$document["FILENAME"]."' download>".$document["FILENAME"]."</a></li>";
+                        } 
                     }
                 ?>
                 </ul>

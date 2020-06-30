@@ -65,6 +65,7 @@ class Account extends CI_Controller
         $data['link_2']     = 'Pendaftaran akaun';
         $data['link_3']     = '';
         $data['pagetitle']  = '';
+        $data['customPageKey']  = '1';
 
         $id = urlDecrypt(uri_segment(3));
         if(!is_numeric($id)):
@@ -739,6 +740,7 @@ class Account extends CI_Controller
         $data['link_2']     = 'Kemaskini akaun';
         $data['link_3']     = '';
         $data['pagetitle']  = '';
+        $data['customPageKey']  = '2';
 
         $id = urlDecrypt(uri_segment(3));
         if(!is_numeric($id)):
