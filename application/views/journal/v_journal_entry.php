@@ -24,6 +24,7 @@ checking_validation(validation_errors());
                         <th>Kod Jurnal/Keterangan</th>
                         <th>Bil Bulan/Tahun</th>
                         <th>Amaun</th>
+                        <th>No. Akaun Baru</th>
                         <th>Status</th>
                         <th>Updated by/at</th>
                     </tr>
@@ -41,6 +42,13 @@ checking_validation(validation_errors());
                                 <td><?=$d['JOURNAL_CODE']?> <?=$d['JOURNAL_DESC']?></td>
                                 <td><?=$d['BILL_MONTH']?>/<?=$d['BILL_YEAR']?></td>
                                 <td>RM <?=number_format($d['AMOUNT'],2)?></td>
+                                <td>
+                                    <?php if($d['TRANSFER_ACCOUNT_ID']>=0): ?>
+                                    <?php echo $d['NEW_ACCOUNT']; ?>
+                                    <?php else: ?>
+                                        <i>Tiada Rekod</i>
+                                    <?php endif; ?>
+                                </td>
                                 <td>
                                     <?php if($d['STATUS_APPROVAL']==0): ?>
                                     <span class="badge badge-warning">Pending</span>

@@ -231,7 +231,7 @@
 <style type="text/css">
     @page
     {
-        size: landscape;
+        size: portrait;
         margin: 10mm;
     }
 </style>
@@ -299,6 +299,12 @@
                     var alamatAkaun1 = $("#account_address1").val();
                     var alamatAkaun2 = $("#account_address2").val();
                     var alamatAkaun3 = $("#account_address3").val();
+                    var today = new Date();
+                    var dd = String(today.getDate()).padStart(2, '0');
+                    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+                    var yyyy = today.getFullYear();
+
+                    today = dd + '/' + mm + '/' + yyyy;
 
                     if ( statusAkaun == 1)
                     {
@@ -337,7 +343,10 @@
                                             "           <td style='vertical-align:top'>:</td>" +
                                             "           <td>" + alamatAkaun1 + "</br>" + alamatAkaun2 + "</br>" + alamatAkaun3 + "</td>" + 
                                             "           <td style='width: 80px;'></td>" + 
-                                            "           <td colspan='3'></td>" + 
+                                            // "           <td colspan='3'></td>" + 
+                                            "           <td style='margin-right: 1em;text-align:left'>Tarikh</td>" +
+                                            "           <td style='margin-right: 1em;text-align:left'>:</td>" +
+                                            "           <td style='margin-right: 1em;text-align:left'>" + today + "</td>" + 
                                             "       </tr>" + 
                                             "   </table>" + 
                                             "</div></br>" ;

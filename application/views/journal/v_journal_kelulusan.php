@@ -17,7 +17,8 @@ checking_validation(validation_errors());
                         <th>No. Bil</th>
                         <th>Kod Jurnal/Keterangan</th>
                         <th>Bil Bulan/Tahun</th>
-                        <th>Amaun</th>
+                        <th>Amaun (RM)</th>
+                        <th>No. Akaun Baru</th>
                         <th>Status</th>
                         <th>Dimasukkan Oleh</th>
                         <th>Tindakan</th>
@@ -35,7 +36,14 @@ checking_validation(validation_errors());
                                 <td><?=$d['BILL_NUMBER']?></td>
                                 <td><?=$d['JOURNAL_CODE']?> <?=$d['JOURNAL_DESC']?></td>
                                 <td><?=$d['BILL_MONTH']?>/<?=$d['BILL_YEAR']?></td>
-                                <td>RM <?=number_format($d['AMOUNT'],2)?></td>
+                                <td><?=number_format($d['AMOUNT'],2)?></td>
+                                <td>
+                                    <?php if($d['TRANSFER_ACCOUNT_ID']>=0): ?>
+                                    <?php echo $d['NEW_ACCOUNT']; ?>
+                                    <?php else: ?>
+                                        <i>Tiada Rekod</i>
+                                    <?php endif; ?>
+                                </td>
                                 <td>
                                     <?php if($d['STATUS_APPROVAL']==0): ?>
                                     <span class="badge badge-warning">Pending</span>
@@ -58,7 +66,7 @@ checking_validation(validation_errors());
                                         ?>
                                     </i></small>
                                 </td>
-                                <td>
+                                <td style="width:17%;">
                                     <?php if($d['STATUS_APPROVAL']==0): ?>
                                     <button type="button" class="btn btn-success" onclick="showApprovalConfirmation(<?php echo $d['ID']; ?>)">Lulus <i class="fa fa-check-circle"></i></button>
                                     <button type="button" class="btn btn-danger" onclick="showDeclineConfirmation(<?php echo $d['ID']; ?>)">Batal <i class="fa fa-times-circle"></i></button>

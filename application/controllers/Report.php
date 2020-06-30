@@ -1369,9 +1369,11 @@ class Report extends CI_Controller
                 $data_search['date_end']    = '';
                 $data_search['category_id'] = '';
                 $data_search['acc_status']  = '';
+                $data_search['journal_id']  = '';
             endif;
         endif;
         $data['data_code_category']   = $this->m_category->get_a_category_all('','');
+        $data['data_code_journal']   = $this->m_journal->get_a_journal_all('');
 
         // pre($data_report);
         // die();
@@ -1710,7 +1712,7 @@ class Report extends CI_Controller
     }
 
     function kutipan_tunggakan(){
-        $this->auth->restrict_access($this->curuser,array(8005));
+        $this->auth->restrict_access($this->curuser,array(8017));
         $data['link_1']     = 'Laporan';
         $data['link_2']     = 'Kutipan Tunggakan Sewaan';
         $data['link_3']     = '';
@@ -1833,7 +1835,7 @@ class Report extends CI_Controller
     }
 
     function laporan_iso(){
-        // $this->auth->restrict_access($this->curuser,array(8015));
+        $this->auth->restrict_access($this->curuser,array(8016));
         $data['link_1']     = 'Laporan';
         $data['link_2']     = 'Pencapaian Objektif Kualiti';
         $data['link_3']     = '';
