@@ -501,6 +501,30 @@ class M_acc_account extends CI_Model
         endif;
     }
 
+    public function count_perjanjian_kutipan( $data_search )
+    {
+        db_select ('A.ACCOUNT_ID');
+        db_from('acc_account A');
+        db_where("A.TYPE_ID IN (1,2,3,4,5,9)");
+
+        if( isset($data_search['year']) && having_value($data_search['year']) )
+        {
+            db_where(" EXTRACT(YEAR FROM A.DT_SIGNATURE) = ".$data_search['year']."");
+        }
+
+        $sql = db_count_results();
+
+        if ( empty($sql) )
+        {
+            return 0;
+        }
+        else
+        {
+            // return $sql->row_array();
+            return $sql;
+        }
+    }
+
     public function perjanjian_kutipan_billboard($data_search){
         db_select ('COUNT(A.ACCOUNT_ID) as bil');
         // db_select ('SUM(A.RENTAL_CHARGE) AS RM');
@@ -527,6 +551,30 @@ class M_acc_account extends CI_Model
         if($sql):
             return $sql->result_array();
       endif;
+    }
+
+    public function count_perjanjian_kutipan_billboard( $data_search )
+    {
+        db_select ('A.ACCOUNT_ID');
+        db_from('acc_account A');
+        db_where("A.TYPE_ID = 6");
+
+        if( isset($data_search['year']) && having_value($data_search['year']) )
+        {
+            db_where(" EXTRACT(YEAR FROM A.DT_SIGNATURE) = ".$data_search['year']."");
+        }
+
+        $sql = db_count_results();
+
+        if ( empty($sql) )
+        {
+            return 0;
+        }
+        else
+        {
+            // return $sql->row_array();
+            return $sql;
+        }
     }
 
     function getAccountNoticeLevel($account_id)

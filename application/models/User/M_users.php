@@ -127,16 +127,25 @@ class M_users extends CI_Model
         return $user_id;
     }
 
-    function update_user($data_update,$id_user){
-        if(isset($data_update['last_dt_update_password'])):
+    function update_user($data_update,$id_user)
+    {
+        if(isset($data_update['last_dt_update_password']))
+        {
             db_set_date_time('last_dt_update_password',timenow());
             unset($data_update['last_dt_update_password']);
-        endif;
+        }
+        else
+        {
+            db_set_date_time('last_dt_update_password',timenow());
+        }
+
         db_where('user_id',$id_user);
         db_update('users',$data_update);
-        if ($data_update["soft_delete"] == 1)
-        {  // code...
-          if(db_affected_rows()!=0):
+
+        if ( isset($data_update["soft_delete"]) && $data_update["soft_delete"] == 1)
+        {  
+            // code...
+            if(db_affected_rows() > 0):
                 $data_audit_trail['log_id']                  = 5009;
                 $data_audit_trail['remark']                  = "Padam Akaun Pengguna";
                 $data_audit_trail['status']                  = PROCESS_STATUS_SUCCEED;
@@ -144,13 +153,14 @@ class M_users extends CI_Model
                 $data_audit_trail['refer_id']                = $id_user; //refer to db_where
                 $this->audit_trail_lib->add($data_audit_trail);
               return true;
-          else:
+            else:
               return false;
-          endif;
+            endif;
         }
         else
-        { // code...
-          if(db_affected_rows()!=0):
+        { 
+            // code...
+            if(db_affected_rows() > 0):
                 $data_audit_trail['log_id']                  = 5008;
                 $data_audit_trail['remark']                  = "Kemaskini Akaun Pengguna";
                 $data_audit_trail['status']                  = PROCESS_STATUS_SUCCEED;
@@ -158,17 +168,16 @@ class M_users extends CI_Model
                 $data_audit_trail['refer_id']                = $id_user; //refer to db_where
                 $this->audit_trail_lib->add($data_audit_trail);
               return true;
-          else:
+            else:
               return false;
-          endif;
+            endif;
         }
-
     }
 
     function get_user_details($user_id){
         db_select('u.*,ug.*,d.*,u.active as user_active');
         db_from('users u');
-//        db_join('position_lvl p','u.pos_id = p.pos_id');
+        // db_join('position_lvl p','u.pos_id = p.pos_id');
         db_join('user_group ug','ug.user_group_id = u.user_group_id');
         db_join('department d','d.department_id = u.department_id');
         db_where('user_id',$user_id);

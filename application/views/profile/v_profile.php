@@ -87,57 +87,20 @@ checking_validation(validation_errors());
     </div>
 </div>
 
-<!--<div class="modal fade" id="modal_password" style="margin-top: 20vh;" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="">-->
-<!--    <div class="modal-dialog modal-md">-->
-<!--        <div class="modal-content">-->
-<!--            <div class="modal-header">-->
-<!--                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
-<!--                <h4 class="modal-title">Tukar Katalaluan</h4>-->
-<!--            </div>-->
-<!--            <div class="modal-body">-->
-<!--                <form class="form-horizontal">-->
-<!--                    <div class="form-group">-->
-<!--                        <label class="col-sm-4 control-label">Katalaluan semasa</label>-->
-<!--                        <div class="col-sm-8">-->
-<!--                            <input type="password" class="form-control" name="current_pass" id="current_pass" placeholder="Katalaluan semasa">-->
-<!--                            <div style="color: red" id="current_pass_err"></div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="form-group">-->
-<!--                        <label class="col-sm-4 control-label">Katalaluan baru</label>-->
-<!--                        <div class="col-sm-8">-->
-<!--                            <input type="password" class="form-control" name="new_pass" id="new_pass" placeholder="Katalaluan baru">-->
-<!--                            <div style="color: red" id="new_pass_err"></div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="form-group">-->
-<!--                        <label class="col-sm-4 control-label">Sahkan katalaluan baru</label>-->
-<!--                        <div class="col-sm-8">-->
-<!--                            <input type="password" class="form-control" name="retype_new_pass" id="retype_new_pass" placeholder="Sahkan katalaluan baru">-->
-<!--                            <div style="color: red" id="retype_new_pass_err"></div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </form>-->
-<!--            </div>-->
-<!--            <div class="modal-footer">-->
-<!--                <button type="button" class="btn btn-default" onclick="close_modal('modal_password')">Batal</button>-->
-<!--                <button type="button" class="btn btn-primary" onclick="confirm_change_password()">Tukar katalaluan</button>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
 <script language="JavaScript">
     function close_modal(val){
-        $('#'+val).modal('hide');
+        $('#'+val)
         $('#current_pass').val('');
         $('#new_pass').val('');
         $('#retype_new_pass').val('');
     }
 
-    function clear_data(){
+    function clear_data()
+    {
         $('#current_pass_err').html('');
         $('#new_pass_err').html('');
         $('#retype_new_pass_err').html('');
+        $("#modal_password").modal('show');
     }
 
     function confirm_change_password(){
