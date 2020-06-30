@@ -32,6 +32,19 @@
                         ?>
                     </select>
                 </div>
+                <div class="col-sm-4">
+                    <label class="col-form-label">KOD JURNAL</label>
+                    <select name="journal_id" class="form-control">
+                        <option value=""> - Semua - </option>
+                        <?php
+                        if($data_code_journal):
+                        foreach ($data_code_journal as $row):
+                                echo option_value($row['JOURNAL_ID'],$row['JOURNAL_CODE'].' - '.$row['JOURNAL_DESC'],'journal_id',search_default($data_search,'journal_id'));
+                            endforeach;
+                        endif;
+                        ?>
+                    </select>
+                </div>
             </div>
             <div class="form-group row">
                 <div class="col-sm-4">
@@ -82,7 +95,8 @@ checking_validation(validation_errors());
                         <th>KOD JURNAL / KETERANGAN</th>
                         <th>NO. AKAUN</th>
                         <th>KOD TRANSAKSI</th>
-                        <th>AMAUN</th>
+                        <th>AMAUN (RM)</th>
+                        <th>NO. AKAUN BARU</th>
                         <th>STATUS</th>
                         <th>CATATAN</th>
                     </tr>
@@ -135,7 +149,8 @@ checking_validation(validation_errors());
                                     echo "  <td>".$d['JOURNAL_CODE']." ".$d['JOURNAL_DESC']."</td>";
                                     echo "  <td>".$d['ACCOUNT_NUMBER']."</td>";
                                     echo "  <td>".$d['TR_CODE']."</td>";
-                                    echo "  <td>RM ".number_format($d['AMOUNT'],2)."</td>";
+                                    echo "  <td>".number_format($d['AMOUNT'],2)."</td>";
+                                    echo "  <td>". (($d['TRANSFER_ACCOUNT_ID']>=0) ? $d['NEW_ACCOUNT'] : "<i>Tiada Rekod</i>") . "</td>";
                                     echo "  <td><span>".$status."</span></td>";
                                     echo "  <td>".$d['REMARK']."</td>";
                                     echo "</tr>";

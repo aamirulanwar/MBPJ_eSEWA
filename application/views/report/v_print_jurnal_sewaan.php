@@ -64,7 +64,8 @@
                     <th>KOD JURNAL / KETERANGAN</th>
                     <th>NO. AKAUN</th>
                     <th>KOD TRANSAKSI</th>
-                    <th>AMAUN</th>
+                    <th>AMAUN (RM)</th>
+                    <th>NO. AKAUN BARU</th>
                     <th>STATUS</th>
                     <th>CATATAN</th>
                 </tr>
@@ -117,7 +118,8 @@
                                 echo "  <td>".$d['JOURNAL_CODE']." ".$d['JOURNAL_DESC']."</td>";
                                 echo "  <td>".$d['ACCOUNT_NUMBER']."</td>";
                                 echo "  <td>".$d['TR_CODE']."</td>";
-                                echo "  <td>RM ".number_format($d['AMOUNT'],2)."</td>";
+                                echo "  <td>".number_format($d['AMOUNT'],2)."</td>";
+                                echo "  <td>". (($d['TRANSFER_ACCOUNT_ID']>=0) ? $d['NEW_ACCOUNT'] : "<i>Tiada Rekod</i>") . "</td>";
                                 echo "  <td><span>".$status."</span></td>";
                                 echo "  <td>".$d['REMARK']."</td>";
                                 echo "</tr>";

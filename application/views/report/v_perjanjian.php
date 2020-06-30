@@ -145,10 +145,11 @@ checking_validation(validation_errors());
                             for ($i = $data_search['year'] ; $i >= $data_search['year2'] ; $i--) 
                             {
                                 # code...
-                                $total_perc_kutipan = ( ( ( $data_kutipan[$i] ) / $sasaran_bil ) * 100 );
+                                $total_perc_kutipan = ( ( ( $data_kutipan[$i] ) / $sasaran_rm ) * 100 );
                                 echo "<td style='text-align:center'> ".$data_kutipan[$i]." </td>";
                                 echo "<td style='text-align:center'> ".( $data_kutipan[$i] * 100 )." </td>";
-                                echo "<td style='text-align:center'> ".round($total_perc_kutipan,2)." </td>";
+                                // echo "<td style='text-align:center'> ".round($total_perc_kutipan,2)." </td>";
+                                echo "<td style='text-align:center'></td>";
                             }
                         }
                         else
@@ -156,10 +157,11 @@ checking_validation(validation_errors());
                             for ($i = $data_search['year'] ; $i <= $data_search['year2'] ; $i++) 
                             {
                                 # code...
-                                $total_perc_kutipan = ( ( ( $data_kutipan[$i] ) / $sasaran_bil ) * 100 );
+                                $total_perc_kutipan = ( ( ( $data_kutipan[$i] ) / $sasaran_rm ) * 100 );
                                 echo "<td style='text-align:center'> ".$data_kutipan[$i]." </td>";
                                 echo "<td style='text-align:center'> ".( $data_kutipan[$i] * 100 )." </td>";
-                                echo "<td style='text-align:center'> ".round($total_perc_kutipan,2)." </td>";
+                                // echo "<td style='text-align:center'> ".round($total_perc_kutipan,2)." </td>";
+                                echo "<td style='text-align:center'></td>";
                             }
                         }
                     ?>                
@@ -173,10 +175,11 @@ checking_validation(validation_errors());
                             for ($i = $data_search['year'] ; $i >= $data_search['year2'] ; $i--) 
                             {
                                 # code...
-                                $total_perc_billboard = ( ( ( $data_billboard[$i] ) / $sasaran_bil ) * 100 );
+                                $total_perc_billboard = ( ( ( $data_billboard[$i] ) / $sasaran_rm ) * 100 );
                                 echo "<td style='text-align:center'> ".$data_billboard[$i]." </td>";
                                 echo "<td style='text-align:center'> ".( $data_billboard[$i] * 100 )." </td>";
-                                echo "<td style='text-align:center'> ".round($total_perc_billboard,2)." </td>";
+                                // echo "<td style='text-align:center'> ".round($total_perc_billboard,2)." </td>";
+                                echo "<td style='text-align:center'></td>";
                             }
                         }
                         else
@@ -184,10 +187,11 @@ checking_validation(validation_errors());
                             for ($i = $data_search['year'] ; $i <= $data_search['year2'] ; $i++) 
                             {
                                 # code...
-                                $total_perc_billboard = ( ( ( $data_billboard[$i] ) / $sasaran_bil ) * 100 );
+                                $total_perc_billboard = ( ( ( $data_billboard[$i] ) / $sasaran_rm ) * 100 );
                                 echo "<td style='text-align:center'> ".$data_billboard[$i]." </td>";
                                 echo "<td style='text-align:center'> ".( $data_billboard[$i] * 100 )." </td>";
-                                echo "<td style='text-align:center'> ".round($total_perc_billboard,2)." </td>";
+                                // echo "<td style='text-align:center'> ".round($total_perc_billboard,2)." </td>";
+                                echo "<td style='text-align:center'></td>";
                             }
                         }
                     ?>
@@ -205,7 +209,8 @@ checking_validation(validation_errors());
                                 # code...
                                 $total_bil  = $data_kutipan[$i] + $data_billboard[$i];
                                 $total_rm   = ( ( $data_kutipan[$i] + $data_billboard[$i] ) * 100 );
-                                $total_perc = ( ( ( $data_kutipan[$i] + $data_billboard[$i] ) / $sasaran_bil ) * 100 );
+                                // $total_perc = ( ( ( $data_kutipan[$i] + $data_billboard[$i] ) / $sasaran_rm ) * 100 );
+                                $total_perc = ( ( $total_rm / $sasaran_rm ) * 100 ); 
 
                                 echo "<td style='text-align:center'> ".$total_bil." </td>";
                                 echo "<td style='text-align:center'> ".num($total_rm,2)." </td>";
@@ -219,7 +224,7 @@ checking_validation(validation_errors());
                                 # code...
                                 $total_bil  = $data_kutipan[$i] + $data_billboard[$i];
                                 $total_rm   = ( ( $data_kutipan[$i] + $data_billboard[$i] ) * 100 );
-                                $total_perc = ( ( ( $data_kutipan[$i] + $data_billboard[$i] ) / $sasaran_bil ) * 100 ); 
+                                $total_perc = ( ( $total_rm / $sasaran_rm ) * 100 ); 
 
                                 echo "<td style='text-align:center'> ".$total_bil." </td>";
                                 echo "<td style='text-align:center'> ".num($total_rm,2)." </td>";

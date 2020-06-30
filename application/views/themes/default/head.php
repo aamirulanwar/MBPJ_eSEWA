@@ -628,18 +628,18 @@
                                 <i class="nav-icon fa fa-circle fa-sm"></i> Laporan Hasil Perjanjian Sewa</a>
                         </li>
                         <?php endif;?>
-                        <!-- <?php if($this->auth->access_view($this->curuser,array(8015))):?> -->
+                        <?php if($this->auth->access_view($this->curuser,array(8016))):?>
                         <li class="nav-item">
                             <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('iso'))?>" href="/report/laporan_iso">
                                 <i class="nav-icon fa fa-circle fa-sm"></i> Laporan Pencapaian Objektif Kualiti</a>
                         </li>
-                        <!-- <?php endif;?> -->
-                        <!-- <?php if($this->auth->access_view($this->curuser,array(8015))):?> -->
+                        <?php endif;?>
+                        <?php if($this->auth->access_view($this->curuser,array(8017))):?>
                         <li class="nav-item">
-                            <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('iso'))?>" href="/report/kutipan_tunggakan">
+                            <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('kutipan_tunggakan'))?>" href="/report/kutipan_tunggakan">
                                 <i class="nav-icon fa fa-circle fa-sm"></i> Laporan Kutipan Tunggakan Undang-Undang</a>
                         </li>
-                        <!-- <?php endif;?> -->
+                        <?php endif;?>
                     </ul>
                 </li>
                 <?php endif;?>

@@ -54,6 +54,7 @@
                 <td style="text-align:center;font-size:13px;font-weight: bold;"> No.Bil / Jurnal </td>
                 <td style="text-align:center;font-size:13px;font-weight: bold;"> Kod Jurnal/Keterangan </td>
                 <td style="text-align:center;font-size:13px;font-weight: bold;"> AMAUN (RM) </td>
+                <td style="text-align:center;font-size:13px;font-weight: bold;"> No. Akaun Baru </td>
             </tr>
             <?php
             $totalAmountJournal = 0;
@@ -69,6 +70,7 @@
                     echo "  <td style='text-align:center;font-size:13px;'>". $rowData['BILL_NUMBER']. "</td>";
                     echo "  <td style='text-align:center;font-size:13px;'>". $rowData['JOURNAL_CODE']." - ".$rowData['JOURNAL_DESC']. "</td>";
                     echo "  <td style='text-align:center;font-size:13px;'>". ($rowData['AMOUNT'] == null || $rowData['AMOUNT'] == "" ? 0 : $rowData['AMOUNT'] ) . "</td>";
+                    echo "  <td style='text-align:center;font-size:13px;'>". (($rowData['TRANSFER_ACCOUNT_ID']>=0) ? $rowData['NEW_ACCOUNT'] : "<i>Tiada Rekod</i>") . "</td>";
                     echo "</tr>";
                 }
             ?>
@@ -78,24 +80,24 @@
 <br>
         <table>
             <tr>
+                <td style="width:25%;">&nbsp;</td>
                 <td style="width:auto;font-family: arial;font-size: 12px;">Dimasuk Oleh</td>
                 <td style="width:auto;font-family: arial;font-size: 12px;text-align: left;white-space: nowrap;">&nbsp; <?=$user_details["USER_NAME"]?></td>
-                <td style="width:50px;">&nbsp;</td>
-                <td style="width:50px;">&nbsp;</td>
+                <td style="width:30%;">&nbsp;</td>
                 <td style="width:180px;font-family: arial;font-size: 12px;">Disahkan Oleh</td>
             </tr>
-            <tr>                
+            <tr>  
+                <td style="width:25%;">&nbsp;</td>              
                 <td style="width:50px;font-family: arial;font-size: 12px;">Tarikh</td>
                 <td style="width:10px;font-family: arial;font-size: 12px;"><?php echo date('d-m-Y');?></td>
-                <td style="width:50px;font-family: arial;font-size: 12px;">&nbsp;</td>
-                <td style="width:50px;font-family: arial;font-size: 12px;">&nbsp;</td>
+                <td style="width:30%;">&nbsp;</td>
                 <td style="font-family: arial;font-size: 12px;">Tarikh</td>
             </tr>
             <tr>
-                <td style="font-family: arial;font-size: 12px;">Tandatangan</td>
+                <td style="width:25%;">&nbsp;</td>
+                <td style="height:30%;font-family: arial;font-size: 12px;">Tandatangan</td>
                 <td style="width:10px;font-family: arial;font-size: 12px;">&nbsp;</td>
-                <td style="width:50px;font-family: arial;font-size: 12px;">&nbsp;</td>
-                <td style="width:50px;font-family: arial;font-size: 12px;">&nbsp;</td>
+                <td style="width:30%x;font-family: arial;font-size: 12px;">&nbsp;</td>
                 <td style="font-family: arial;font-size: 12px;">Tandatangan</td>
             </tr>
             <!-- <tr>
