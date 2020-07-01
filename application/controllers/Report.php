@@ -30,6 +30,7 @@ class Report extends CI_Controller
         load_model('journal/M_journal','m_journal');
         load_model('Notice/M_lod_generation', 'm_lod_generation');
         load_model('Notice/M_notis_mah_generation', 'm_notis_mah_generation');
+        load_model('User/M_users', 'm_users');
     }
 
     function _remap($method){
@@ -45,6 +46,7 @@ class Report extends CI_Controller
             'code_gl',
             'highest_overdue',
             'record_transaction',
+            'print_all_record_transaction',
             'report_dashboard',
             'category_aging_details',
             'adjustment_statement',
@@ -920,6 +922,178 @@ class Report extends CI_Controller
         endif;
 
         templates('/report/v_record_transaction', $data);
+    }
+
+    function print_all_record_transaction()
+    {
+        // Get current user session to display during print document
+        $user_id = $this->curuser['USER_ID'];
+
+        $user_details = $this->m_users->get_user_details($user_id);
+        if(!$user_details):
+            return false;
+        endif;
+
+        $data['user_details']   = $user_details;
+
+        # code...
+        $filter_session = get_session('arr_filter_record_transaction');
+        $post_status = false;
+
+        if (!empty($filter_session))
+        {
+            $data_search = $filter_session;
+            $post_status = true;
+        }
+        else
+        {
+            $data_search['date_start'] = date_display(timenow(), 'd M Y');
+            $data_search['date_end'] = '';
+            $data_search['type_id'] = '';
+            $data_search['category_id'] = '';
+            $data_search['account_id'] = '';
+            $data_search['order_by'] = '';
+            $data_search['tr_code'] = '';
+        }
+
+        if (empty($data_search['date_start']) || $data_search['date_start'] == "")
+        {
+            $data_search['date_start'] = date("d M Y");
+        }
+
+        if (empty($data_search['date_end']) || $data_search['date_end'] == "")
+        {
+            $data_search['date_end'] = date("d M Y");
+        }
+
+        $data['data_type']          = $this->m_type->get_a_type();
+        $data['data_account']       = $this->m_acc_account->get_account();
+        $data['data_code_object']   = $this->m_tran_code->get_tr_code_list();
+
+        if ($post_status)
+        {
+            $data['data_search'] = $data_search;
+
+            // Added for filter data by yearly record [START]
+
+            $backupSearch_startDate = DateTime::createFromFormat('d M Y', $data_search['date_start'])->format('d/m/Y');
+            $backupSearch_endDate = DateTime::createFromFormat('d M Y', $data_search['date_end'])->format('d/m/Y');
+            $startYear          = DateTime::createFromFormat('d M Y', $data_search['date_start'])->format('Y');
+            $endYear            = DateTime::createFromFormat('d M Y', $data_search['date_end'])->format('Y');
+            $nextYear           = $endYear;
+
+            $data_year = array();
+            while ($nextYear >= $startYear)
+            {
+                if ($nextYear == $endYear)
+                {
+                    $new_startDate = '01/01/'.$nextYear;
+                    $new_endDate = '31/12/'.$nextYear;
+
+                    //  1/5/2019 > 1/1/2020
+                    if ( $backupSearch_startDate > $new_startDate && $nextYear == $startYear) 
+                    {
+                        $data_search['date_start'] = $backupSearch_startDate;
+                    }
+                    else
+                    {
+                        $data_search['date_start'] = $new_startDate;
+                    }
+                    
+                    // 31/5/2020 < 31/12/2020
+                    if ( $backupSearch_endDate < $new_endDate ) 
+                    {
+                        $data_search['date_end'] = $backupSearch_endDate;
+                    }
+                    else
+                    {
+                        $data_search['date_end'] = $new_endDate;
+                    }
+
+                    $data_year["$nextYear"] = $this->m_bill_item->rekodTransaksi($data_search);
+                } 
+                else if ($nextYear == $startYear)
+                {
+                    $new_startDate = '01/01/'.$nextYear;
+                    $new_endDate = '31/12/'.$nextYear;
+
+                    //  1/5/2019 > 1/1/2019
+                    if ( $backupSearch_startDate > $new_startDate ) 
+                    {
+                        $data_search['date_start'] = $backupSearch_startDate;
+                    }
+                    else
+                    {
+                        $data_search['date_start'] = $new_startDate;
+                    }
+                    
+                    if ( $backupSearch_endDate > $new_endDate ) 
+                    {
+                        $data_search['date_end'] = $backupSearch_endDate;
+                    }
+                    else
+                    {
+                        $data_search['date_end'] = $new_endDate;
+                    }
+
+                    // $data_search['date_start'] = $backupSearch_startDate;
+                    // $data_search['date_end'] = '31 Dec '.$nextYear;
+                    $data_year["$nextYear"] = $this->m_bill_item->rekodTransaksi($data_search);
+                }
+                else
+                {
+                    $new_startDate = '01/01/'.$nextYear;
+                    $new_endDate = '31/12/'.$nextYear;
+
+                    $data_search['date_start'] = $new_startDate;
+                    $data_search['date_end'] = $new_endDate;
+                    $data_year["$nextYear"] = $this->m_bill_item->rekodTransaksi($data_search);
+                }
+                
+                $nextYear = $nextYear - 1;
+            }
+
+            $data['data_report'] = $data_year;
+
+            // Added for filter data by yearly record [END]
+
+            // [START] added for print header
+            $account_details = $this->transactionReportHeader($data_search['account_id']); 
+
+            if (isset($account_details[0]))
+            {
+                $account_details = $account_details[0];                
+            }
+            else
+            {
+                $account_details['ACCOUNT_NUMBER']="";
+                $account_details['NAME']="";
+                $account_details['ASSET_ADD']="";
+                $account_details['CATEGORY_NAME']="";
+                $account_details['ADDRESS']="";
+            }
+
+            $data["account_details"] = $account_details;
+            // [END] added for print header
+
+            // $data["account_details"] = $this->transactionReportHeader($data_search['account_id']); // added for print header
+            $data['acc_details'] = array();
+
+            if($data_search['account_id'])
+            {
+                $data['acc_details'] = $this->m_acc_account->get_account_details($data_search['account_id']);
+            }
+        }
+        else
+        {
+            $data['account_details'] = array();
+            $data['data_report'] = array();
+            $data['acc_details'] = array();
+            $data['data_search'] = $data_search;
+        }
+
+        // templates('/report/v_print_record_transaction', $data);
+        $this->load->view('/report/v_print_record_transaction',$data);
     }
 
     public function report_dashboard(){

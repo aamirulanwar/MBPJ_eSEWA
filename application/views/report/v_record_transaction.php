@@ -227,6 +227,9 @@
         <input type="hidden" id="account_address3" value="<?=$account_details['ADDRESS'];?>" />
         <!-- END development here -->
     </div>
+    <div class="card-footer">
+        <button class="btn btn-primary" onclick="printAll()">CETAK SEMUA</button>
+    </div>
 </div>
 <style type="text/css">
     @page
@@ -402,4 +405,11 @@
         // document.title = backupTitle;
     });
     
+</script>
+
+<script type="text/javascript">
+    function printAll()
+    {
+        window.open('/report/print_all_record_transaction','_blank');
+    }
 </script>
