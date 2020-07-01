@@ -1887,7 +1887,6 @@ class Report extends CI_Controller
         $this->load->view('/report/v_print_report_perjanjian_kutipan',$data);
     }
 
-
     function hasil(){
         $this->auth->restrict_access($this->curuser,array(8015));
         $data['link_1']     = 'Laporan';
