@@ -1901,7 +1901,7 @@ class Report extends CI_Controller
 
         $post           = $this->input->post();
         $filter_session = get_session('arr_filter_hasil');
-        var_dump($filter_session);
+        // var_dump($filter_session);
         // die();
         if(!empty($post)):
             $this->session->set_userdata('arr_filter_hasil',$post);
