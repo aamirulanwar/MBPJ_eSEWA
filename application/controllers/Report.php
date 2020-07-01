@@ -966,9 +966,10 @@ class Report extends CI_Controller
             $data_search['date_end'] = date("d M Y");
         }
 
-        $data['data_type']          = $this->m_type->get_a_type();
-        $data['data_account']       = $this->m_acc_account->get_account();
-        $data['data_code_object']   = $this->m_tran_code->get_tr_code_list();
+        $data['data_type']              = $this->m_type->get_a_type();
+        $data['data_account']           = $this->m_acc_account->get_account();
+        $data['data_code_object']       = $this->m_tran_code->get_tr_code_list();
+        $data['search_code_category']   = $this->m_category->get_a_category_details($data_search['tr_code']);
 
         if ($post_status)
         {

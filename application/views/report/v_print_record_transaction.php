@@ -7,7 +7,7 @@
     <meta name="description" content="CoreUI - Open Source Bootstrap Admin Template">
     <meta name="author" content="Łukasz Holeczek">
     <meta name="keyword" content="Bootstrap,Admin,Template,Open,Source,jQuery,CSS,HTML,RWD,Dashboard">
-    <title>Laporan Perjanjian Sewaan Hartanah</title>
+    <title>Laporan Penyata Rekod Transaksi</title>
     <!-- Icons-->
     <link rel="icon" href="<?=base_url()?>/favicon.ico" type="image/x-icon">
     <link href="/assets/node_modules/@coreui/icons/css/coreui-icons.min.css" rel="stylesheet">
@@ -50,43 +50,83 @@
             </table>
         </div>
         </br>
-        <div id="reportHeader">
-        <table style='width:100%'>
-            <tr>
-                <td style="font-size:14px;">No Akaun</td> 
-                <td style="font-size:14px;">:</td>
-                <td style="font-size:14px;"><?=$account_details['ACCOUNT_NUMBER'];?></td>
-                <td style='width: 80px;'></td>
-                <td style='margin-right: 1em;text-align:left;width:150px;font-size:14px;'>Kadar Sewaan (RM)</td>
-                <td style='margin-right: 1em;text-align:left;width:10px;font-size:14px;'>:</td>
-                <td style='margin-right: 1em;text-align:left;font-size:14px;'><?=$account_details['ESTIMATION_RENTAL_CHARGE'];?></td>
-            </tr>
-            <tr>
-                <td style="font-size:14px;">Nama</td>
-                <td style="font-size:14px;">:</td>
-                <td style="font-size:14px;"><?=$account_details['NAME'];?></td>
-                <td style='width: 80px;'></td>
-                <td style='margin-right: 1em;text-align:left;font-size:14px;'>Status Akaun</td>
-                <td style='margin-right: 1em;text-align:left;font-size:14px;'>:</td>
-                <td style='margin-right: 1em;text-align:left;font-size:14px;'><?=$account_details['STATUS_ACC'];?></td>
-            </tr>
-            <tr>
-                <td rowspan="2" style='vertical-align:top;width:100px;font-size:14px;'>Alamat Harta</td>
-                <td rowspan="2" style='vertical-align:top;font-size:14px;'>:</td>
-                <td rowspan="2" style="font-size:14px;"><?=$account_details['ASSET_ADD'];?></br><?=$account_details['CATEGORY_NAME'];?></br><?=$account_details['ADDRESS'];?></td>
-                <td style='width: 80px;'></td>
-                <td style='vertical-align:top;margin-right: 1em;text-align:left;font-size:14px;'>Tarikh</td>
-                <td style='vertical-align:top;margin-right: 1em;text-align:left;font-size:14px;'>:</td>
-                <td style='vertical-align:top;margin-right: 1em;text-align:left;font-size:14px;'><?=date('d/m/Y')?></td>
-            </tr>
-            <tr>
-                <td style='width: 80px;'></td>
-                <td style='vertical-align:top;margin-right: 1em;text-align:left;font-size:14px;'>Pengguna</td>
-                <td style='vertical-align:top;margin-right: 1em;text-align:left;font-size:14px;'>:</td>
-                <td style='vertical-align:top;margin-right: 1em;text-align:left;font-size:14px;'>&nbsp; <?=$user_details["USER_NAME"]?></td>
-            </tr>
-        </table> 
+        <?php //echo "<pre>"; var_dump($data_search['account_id']); die(); ?>
+        <div id="reportHeader1" style="width:100%;display:<?=( $data_search['account_id'] == -999 || $data_search['account_id'] == "" ) ? "none" : "" ?>">
+            <table style='width:100%'>
+                <tr>
+                    <td style="font-size:14px;">No Akaun</td> 
+                    <td style="font-size:14px;">:</td>
+                    <td style="font-size:14px;"><?=isset($account_details['ACCOUNT_NUMBER']) ? $account_details['ACCOUNT_NUMBER'] : "";?></td>
+                    <td style='min-width: 80px;'></td>
+                    <td style='margin-right: 1em;text-align:left;width:150px;font-size:14px;'>Kadar Sewaan (RM)</td>
+                    <td style='margin-right: 1em;text-align:left;width:10px;font-size:14px;'>:</td>
+                    <td style='margin-right: 1em;text-align:left;font-size:14px;'><?=isset($account_details['ESTIMATION_RENTAL_CHARGE']) ? $account_details['ESTIMATION_RENTAL_CHARGE'] : "";?></td>
+                </tr>
+                <tr>
+                    <td style="font-size:14px;">Nama</td>
+                    <td style="font-size:14px;">:</td>
+                    <td style="font-size:14px;"><?=isset($account_details['NAME']) ? $account_details['NAME'] : "";?></td>
+                    <td style='min-width: 80px;'></td>
+                    <td style='margin-right: 1em;text-align:left;font-size:14px;'>Status Akaun</td>
+                    <td style='margin-right: 1em;text-align:left;font-size:14px;'>:</td>
+                    <td style='margin-right: 1em;text-align:left;font-size:14px;'><?=isset($account_details['STATUS_ACC']) ? $account_details['STATUS_ACC'] : "";?></td>
+                </tr>
+                <tr>
+                    <td rowspan="2" style='vertical-align:top;width:100px;font-size:14px;'>Alamat Harta</td>
+                    <td rowspan="2" style='vertical-align:top;font-size:14px;'>:</td>
+                    <td rowspan="2" style="font-size:14px;"><?=isset($account_details['ASSET_ADD']) ? $account_details['ASSET_ADD'] : "";?></br><?=isset($account_details['CATEGORY_NAME']) ? $account_details['CATEGORY_NAME'] : "";?></br><?=isset($account_details['ADDRESS']) ? $account_details['ADDRESS'] : "";?></td>
+                    <td style='min-width: 80px;'></td>
+                    <td style='vertical-align:top;margin-right: 1em;text-align:left;font-size:14px;'>Tarikh</td>
+                    <td style='vertical-align:top;margin-right: 1em;text-align:left;font-size:14px;'>:</td>
+                    <td style='vertical-align:top;margin-right: 1em;text-align:left;font-size:14px;'>&nbsp;<?=date('d/m/Y')?></td>
+                </tr>
+                <tr>
+                    <td style='min-width: 80px;'></td>
+                    <td style='vertical-align:top;margin-right: 1em;text-align:left;font-size:14px;'>Pengguna</td>
+                    <td style='vertical-align:top;margin-right: 1em;text-align:left;font-size:14px;'>:</td>
+                    <td style='vertical-align:top;margin-right: 1em;text-align:left;font-size:14px;'>&nbsp;<?=$user_details["USER_NAME"]?></td>
+                </tr>
+            </table> 
             </br>
+        </div>
+        <div id="reportHeader2" style="width:100%;display:<?=( $data_search['account_id'] == -999 || $data_search['account_id'] == "" ) ? "" : "none" ?>">
+             <table style='width:100%'>
+                <tr>
+                    <td style="width:100px;font-size:14px;">Akaun</td> 
+                    <td style="font-size:14px;">:</td>
+                    <td style="font-size:14px;">
+                        <?=($data_search['account_id'] == "") ? "Semua" : "";?>                     
+                    </td>
+                    <td style='min-width: 80px;'></td>
+                    <td style='width:100px;vertical-align:top;margin-right: 1em;text-align:left;font-size:14px;'>Tarikh</td>
+                    <td style='vertical-align:top;margin-right: 1em;text-align:left;font-size:14px;'>:</td>
+                    <td style='vertical-align:top;margin-right: 1em;text-align:left;font-size:14px;'>&nbsp;<?=date('d/m/Y')?></td>
+                </tr>
+                <tr>
+                    <td style="font-size:14px;">Tarikh Carian</td> 
+                    <td style="font-size:14px;">:</td>
+                    <td style="font-size:14px;">
+                        <?=isset($data_search['date_start']) ? $data_search['date_start'] : "&nbsp;";?>
+                        &nbsp;Hingga&nbsp;
+                        <?=isset($data_search['date_end']) ? $data_search['date_end'] : "&nbsp;";?>                        
+                    </td>
+                    <td style='min-width: 80px;'></td>
+                    <td style='vertical-align:top;margin-right: 1em;text-align:left;font-size:14px;'>Pengguna</td>
+                    <td style='vertical-align:top;margin-right: 1em;text-align:left;font-size:14px;'>:</td>
+                    <td style='vertical-align:top;margin-right: 1em;text-align:left;font-size:14px;'>&nbsp;<?=$user_details["USER_NAME"]?></td>
+                </tr>
+                <tr>
+                    <td style="font-size:14px;">Kod Transaksi</td> 
+                    <td style="font-size:14px;">:</td>
+                    <td style="font-size:14px;">
+                        <?=($data_search['tr_code'] == "") ? "Semua" : "&nbsp;".$search_code_category["CATEGORY_NAME"];?>                     
+                    </td>
+                    <td style='min-width: 80px;'></td>
+                    <td style='vertical-align:top;margin-right: 1em;text-align:left;font-size:14px;'></td>
+                    <td style='vertical-align:top;margin-right: 1em;text-align:left;font-size:14px;'></td>
+                    <td style='vertical-align:top;margin-right: 1em;text-align:left;font-size:14px;'></td>
+                </tr>
+            </table>
         </div>
         <div id="reportContainer">
             <?php 
@@ -162,6 +202,15 @@
                             echo '          <td align="center" style="text-align:center;font-size:14px;">'.$totalAmount.'</td>';
                             echo '      </tr>';
                         }
+
+                        if ( count($data_report["$nextYear"]) == 0 )
+                        {                    
+                            echo "<tr><td colspan='9' style='text-align:center;font-size:14px;'>Tiada Rekod</td></tr>";                    
+                        }
+                    }
+                    else 
+                    {
+                        echo "<tr><td colspan='9'>Tiada Rekod</td></tr>";
                     }
                     echo '      </tbody>';                
                     echo '  </table>';
@@ -188,13 +237,13 @@
     </div>
     <script>
         $( window ).on('load', '', function(event) {
-            // window.print();
+            window.print();
         });
 
         $(function()
         {
             $("body").hover(function(){
-                // window.close();
+                window.close();
             });
         });
     </script>
