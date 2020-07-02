@@ -214,6 +214,8 @@
                 $account_details['ASSET_ADD']="";
                 $account_details['CATEGORY_NAME']="";
                 $account_details['ADDRESS']="";
+                $account_details['ESTIMATION_RENTAL_CHARGE']=0;
+                $account_details['STATUS_ACC']="-";
             }
 
             // echo "<script>closePopup();</script>";

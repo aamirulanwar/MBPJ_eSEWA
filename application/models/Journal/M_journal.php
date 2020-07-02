@@ -12,7 +12,7 @@ class M_journal extends CI_Model
         $model =& get_instance();
 
         $query = $model->db->query("SELECT b.*,a.account_number,u.user_name,j.journal_code,j.journal_desc,
-                                    (SELECT a.account_number FROM acc_account a, b_journal_temp b WHERE a.account_id=b.transfer_account_id) as new_account
+                                    (SELECT account_number FROM acc_account WHERE account_id=b.transfer_account_id) as new_account
                                     FROM b_journal_temp b, acc_account a, users u, a_journal j 
                                     WHERE b.account_id=a.account_id AND u.user_id=b.CREATED_BY And b.journal_id=j.journal_id
                                     ORDER BY bill_number");
@@ -329,7 +329,7 @@ class M_journal extends CI_Model
 
     function get_lists_temp_journal_report($data_search=array())
     {
-        db_select('b.*,a.account_number,u.user_name,j.journal_code,j.journal_desc,c.category_name,(SELECT a.account_number FROM acc_account a, b_journal_temp b WHERE a.account_id=b.transfer_account_id) as new_account');
+        db_select('b.*,a.account_number,u.user_name,j.journal_code,j.journal_desc,c.category_name,(SELECT account_number FROM acc_account WHERE account_id=b.transfer_account_id) as new_account');
         db_from('b_journal_temp b');
         db_join('acc_account a','b.account_id = a.account_id');
         db_join('users u','u.user_id = b.CREATED_BY');
@@ -385,7 +385,7 @@ class M_journal extends CI_Model
         // }
 
         db_select('b.*');
-        db_select('a.account_number,u.user_name,j.journal_code,j.journal_desc,(SELECT a.account_number FROM acc_account a, b_journal_temp b WHERE a.account_id=b.transfer_account_id) as new_account');
+        db_select('a.account_number,u.user_name,j.journal_code,j.journal_desc,(SELECT account_number FROM acc_account WHERE account_id=b.transfer_account_id) as new_account');
         db_from('b_journal_temp b');
         db_join('acc_account a','b.account_id=a.account_id');
         db_join('users u','u.user_id=b.CREATED_BY');
