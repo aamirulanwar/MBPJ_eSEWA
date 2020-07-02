@@ -12,7 +12,7 @@
             <div class="form-group row">
                 <label class="col-sm-3 col-form-label">Id pengguna (emel) <span class="mandatory">*</span></label>
                 <div class="col-sm-5">
-                    <input type="input" name="email_address" class="form-control" value="<?php echo set_value('email_address')?>" placeholder="Eg: myemail@mpkj.com">
+                    <input type="input" name="email_address" class="form-control" value="<?php echo set_value('email_address')?>" placeholder="Eg: myemail@mpkj.gov.my">
                     <?php echo form_error('email_address')?>
                 </div>
             </div>

@@ -619,7 +619,7 @@
                         <?php if($this->auth->access_view($this->curuser,array(8014))):?>
                         <li class="nav-item">
                             <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('perjanjian'))?>" href="/report/perjanjian_kutipan">
-                                <i class="nav-icon fa fa-circle fa-sm"></i> Laporan Perbandingan</a>
+                                <i class="nav-icon fa fa-circle fa-sm"></i> Laporan Perbandingan Jumlah Perjanjian & Kutipan</a>
                         </li>
                         <?php endif;?>
                         <?php if($this->auth->access_view($this->curuser,array(8015))):?>
