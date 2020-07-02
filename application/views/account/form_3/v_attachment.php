@@ -106,7 +106,7 @@
         </div>
     </div>
 </div>
-<div class="form-group row" style="display:<?=( $customPageKey == "2") ? "" : "none"?>">
+<div class="form-group row" style="display:<?=( isset($customPageKey) && $customPageKey == "2") ? "" : "none"?>">
     <label class="col-sm-3 col-form-label">Dokumen Tandatangan Perjanjian & Proses Hasil</label>
     <div class="col-sm-5">
         <div class="row files" id="containerDokumenTandatangan">            
