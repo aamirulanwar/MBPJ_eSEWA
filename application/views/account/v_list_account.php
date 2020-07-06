@@ -112,7 +112,8 @@ notify_msg('notify_msg');
                                 <a class="btn btn-block btn-primary btn-display" href="/account/update_acc/<?php echo urlEncrypt($row['ACCOUNT_ID'])?>"><span class="glyphicon glyphicon-edit"></span> Kemaskini </a><br>
                                 <?php endif;?>
 
-                                <?php
+                                <?php if($this->auth->access_view($this->curuser,array(5007))):?>
+                                <?php 
                                 if( isset($row['DATE_AGREEMENT']) && $row['DATE_AGREEMENT'] > 0):
                                     // echo "<pre>";
                                     // var_dump(count($row['DATE_AGREEMENT']));
@@ -123,7 +124,9 @@ notify_msg('notify_msg');
                                 ?> 
                                     <a class="btn btn-block btn-primary btn-display" href="/account/update_time/<?php echo urlEncrypt($row['ACCOUNT_ID'])?>" target="_blank"><span class="glyphicon glyphicon-edit"></span> HADIR </a>
                                 <?php endif;?>
+                                <?php endif;?>
 
+                                <?php if($this->auth->access_view($this->curuser,array(5006))):?>
                                 <?php
                                 if($row['FORM_TYPE']==1 || $row['FORM_TYPE']==2):
                                 ?>
@@ -144,7 +147,10 @@ notify_msg('notify_msg');
                                     endif;
                                 endif;
                                 ?>
+                                <?php endif;?>
+                                <?php if($this->auth->access_view($this->curuser,array(5007))):?>
                                 <i class="icons font-xl mt-5 cui-file"></i><div><a href="/account/doc_signature/<?php echo urlEncrypt($row['ACCOUNT_ID'])?>" target="_blank">Dokumen Tandatangan <?php if ($row["TOTAL_COUNT"]>0){echo "(".$row["TOTAL_COUNT"].")";} ?></div></a>
+                                <?php endif;?>
                             </td>
                         </tr>
                     <?php
