@@ -776,6 +776,16 @@ class Report extends CI_Controller
 
         $search_segment = uri_segment(3);
 
+        // Get current user session to display during print document
+        $user_id = $this->curuser['USER_ID'];
+
+        $user_details = $this->m_users->get_user_details($user_id);
+        if(!$user_details):
+            return false;
+        endif;
+
+        $data['user_details']   = $user_details;
+
         $post = $this->input->post();
         $filter_session = get_session('arr_filter_record_transaction');
         if (!empty($post)):

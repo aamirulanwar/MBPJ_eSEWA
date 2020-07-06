@@ -1191,6 +1191,8 @@ class Account extends CI_Controller
     }
 
     function doc_agreement(){
+        $this->auth->restrict_access($this->curuser,array(5006));
+
         $id = urlDecrypt(uri_segment(3));
         if(!is_numeric($id)):
             return false;
@@ -1201,6 +1203,8 @@ class Account extends CI_Controller
     }
 
     function doc_signature(){
+        $this->auth->restrict_access($this->curuser,array(5007));
+
         $id = urlDecrypt(uri_segment(3));
         if(!is_numeric($id)):
             return false;

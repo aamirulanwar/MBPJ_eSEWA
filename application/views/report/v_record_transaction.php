@@ -216,6 +216,7 @@
                 $account_details['ADDRESS']="";
                 $account_details['ESTIMATION_RENTAL_CHARGE']=0;
                 $account_details['STATUS_ACC']="-";
+                $user_details["USER_NAME"]="";
             }
 
             // echo "<script>closePopup();</script>";
@@ -227,6 +228,7 @@
         <input type="hidden" id="account_address1" value="<?=$account_details['ASSET_ADD'];?>" />
         <input type="hidden" id="account_address2" value="<?=$account_details['CATEGORY_NAME'];?>" />
         <input type="hidden" id="account_address3" value="<?=$account_details['ADDRESS'];?>" />
+        <input type="hidden" id="user_name" value="<?=$user_details["USER_NAME"]?>" />
         <!-- END development here -->
     </div>
 </div>
@@ -301,6 +303,7 @@
                     var alamatAkaun1 = $("#account_address1").val();
                     var alamatAkaun2 = $("#account_address2").val();
                     var alamatAkaun3 = $("#account_address3").val();
+                    var username = $("#user_name").val();
                     var today = new Date();
                     var dd = String(today.getDate()).padStart(2, '0');
                     var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -346,9 +349,9 @@
                                             "           <td>" + alamatAkaun1 + "</br>" + alamatAkaun2 + "</br>" + alamatAkaun3 + "</td>" + 
                                             "           <td style='width: 80px;'></td>" + 
                                             // "           <td colspan='3'></td>" + 
-                                            "           <td style='margin-right: 1em;text-align:left'>Tarikh</td>" +
-                                            "           <td style='margin-right: 1em;text-align:left'>:</td>" +
-                                            "           <td style='margin-right: 1em;text-align:left'>" + today + "</td>" + 
+                                            "           <td style='margin-right: 1em;text-align:left'>Tarikh </br> Pengguna</td>" +
+                                            "           <td style='margin-right: 1em;text-align:left'>: </br> :</td>" +
+                                            "           <td style='margin-right: 1em;text-align:left'>" + today + "</br>" + username + "</td>" + 
                                             "       </tr>" + 
                                             "   </table>" + 
                                             "</div></br>" ;

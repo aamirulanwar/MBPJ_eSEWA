@@ -90,15 +90,16 @@ checking_validation(validation_errors());
             <table class="table table-bordered table-hover">
                 <thead>
                     <tr>
-                        <th>BIL</th>
-                        <th>JURNAL</th>
-                        <th>KOD JURNAL / KETERANGAN</th>
-                        <th>NO. AKAUN</th>
-                        <th>KOD TRANSAKSI</th>
-                        <th>AMAUN (RM)</th>
-                        <th>NO. AKAUN BARU</th>
-                        <th>STATUS</th>
-                        <th>CATATAN</th>
+                        <th style="text-align:center; vertical-align: middle">BIL</th>
+                        <th style="text-align:center; vertical-align: middle">JURNAL</th>
+                        <th style="text-align:center; vertical-align: middle">KOD JURNAL / KETERANGAN</th>
+                        <th style="text-align:center; vertical-align: middle">NO. AKAUN</th>
+                        <th style="text-align:center; vertical-align: middle">KOD TRANSAKSI</th>
+                        <th style="text-align:center; vertical-align: middle">AMAUN (RM)</th>
+                        <th style="text-align:center; vertical-align: middle">NO. AKAUN BARU</th>
+                        <th style="text-align:center; vertical-align: middle">STATUS</th>
+                        <th style="text-align:center; vertical-align: middle">Diluluskan Oleh</th>
+                        <th style="text-align:center; vertical-align: middle">CATATAN</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -150,8 +151,9 @@ checking_validation(validation_errors());
                                     echo "  <td>".$d['ACCOUNT_NUMBER']."</td>";
                                     echo "  <td>".$d['TR_CODE']."</td>";
                                     echo "  <td>".number_format($d['AMOUNT'],2)."</td>";
-                                    echo "  <td>". (($d['TRANSFER_ACCOUNT_ID']>=0) ? $d['NEW_ACCOUNT'] : "<i>Tiada Rekod</i>") . "</td>";
+                                    echo "  <td style='text-align:center'>". (($d['TRANSFER_ACCOUNT_ID']>=0) ? $d['NEW_ACCOUNT'] : "<i>-</i>") . "</td>";
                                     echo "  <td><span>".$status."</span></td>";
+                                    echo "  <td>".$d['USER_NAME']."</td>";
                                     echo "  <td>".$d['REMARK']."</td>";
                                     echo "</tr>";
                                 }
