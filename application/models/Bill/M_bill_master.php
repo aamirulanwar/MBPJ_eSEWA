@@ -202,5 +202,33 @@ class M_bill_master extends CI_Model
         db_insert('b_master',$data_insert);
         return get_insert_id('b_master');
     }
+
+    function getTotalBillGeneratedByKodKategory($month,$year)
+    {
+        db_select('count(b_master.bill_id) as total_bill_count');
+        db_select('sum(b_master.total_amount) as total_bill_amount');
+        db_select('b_master.bill_month');
+        db_select('b_master.bill_year');
+        db_select('b_master.bill_category');
+        db_select('a_category.category_code');
+        db_select('a_category.category_name');
+        db_from('b_master');
+        db_join('acc_account','acc_account.account_id = b_master.account_id');
+        db_join('a_category','a_category.category_id = acc_account.category_id');
+        db_where('b_master.bill_month',$month);
+        db_where('b_master.bill_year',$year);
+        db_where('b_master.bill_category','B');
+        db_group('b_master.bill_month, b_master.bill_year, b_master.bill_category, a_category.category_code, a_category.category_name');
+
+        $sql = db_get();
+        if($sql):
+            return $sql->result_array();
+        endif;
+    }
+
+    function pushBillGeneratedToSP()
+    {
+        
+    }
 }
 

@@ -645,6 +645,17 @@
                         <?php endif;?>
                     </ul>
                 </li>
+                <li class="nav-item nav-dropdown <?php echo set_active_dropdown(uri_segment(1),array('integration'))?>">
+                    <a class="nav-link nav-dropdown-toggle <?php echo set_active_menu(uri_segment(1),array('integration'))?>" href="#5">
+                        <i class="nav-icon icon-chart"></i> TEST INTEGRATION </a>
+                    <ul class="nav-dropdown-items">
+                        <li class="nav-item">
+                            <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('test_sistem_kewangan'))?>" href="/integration/test_sistem_kewangan">
+                                <i class="nav-icon fa fa-circle fa-sm"></i> SISTEM KEWANGAN 
+                            </a>
+                        </li>
+                    </ul>
+                </li>
                 <?php endif;?>
             </ul>
         </nav>
