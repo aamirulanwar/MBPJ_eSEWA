@@ -611,35 +611,38 @@ class Bill extends CI_Controller
                 $getCurrentMonthBill = $this->m_bill_master->getBillId($account_id,$month,$year);
                 $masterBillId = $getCurrentMonthBill["BILL_ID"];
 
-                echo "</br> Current Master Bill ID => ".$masterBillId."</br>";
-
-                $insert_code['BILL_ID']             =   $masterBillId;                
-                $insert_code['AMOUNT']              =   currencyToDouble("10");                
-                $insert_code['ACCOUNT_ID']          =   $account_id;
-                $insert_code['BILL_CATEGORY']       =   "B";                
-                $insert_code['TR_CODE']             =   "11110020";
-                $insert_code['TR_CODE_OLD']         =   "11033";
-                $insert_code['PRIORITY']            =   36; // based on temp_mctrancode
-                $insert_code['ITEM_DESC']           =   "LOD SEWAAN";
-                $insert_code['REMARK']              =   "CAJ NOTIS LOD";                               
-
-                $id_item = $this->m_bill_item->insert_bill_item($insert_code);
-
-                if (!empty($id_item) && $id_item > 0)
+                if (isset($masterBillId) && $masterBillId > 0)
                 {
-                    // If insert operation successful, update total_amount in b_master for that bill_id
-                    $getTotalAmountByBillId = $this->m_bill_item->getBillItemTotalAmount($masterBillId);
-                    $data_update["TOTAL_AMOUNT"] = $getTotalAmountByBillId["TOTAL_AMOUNT"];
-                    $this->m_bill_master->updateBillMasterTotalAmount($masterBillId,$account_id,$data_update);
+                    // echo "</br> Current Master Bill ID => ".$masterBillId."</br>";
 
-                    // echo "</br>CAJ NOTIS BERJAYA DIMASUKKAN</br>";
-                    return true;
-                }
-                else
-                {
-                    // echo "</br>CAJ NOTIS TIDAK BERJAYA DIMASUKKAN</br>";
-                    // echo "</br>MAKLUMAT BILL ITEM ".json_encode($id_item)."</br>";
-                    return false;
+                    $insert_code['BILL_ID']             =   $masterBillId;                
+                    $insert_code['AMOUNT']              =   currencyToDouble("10");                
+                    $insert_code['ACCOUNT_ID']          =   $account_id;
+                    $insert_code['BILL_CATEGORY']       =   "B";                
+                    $insert_code['TR_CODE']             =   "11110020";
+                    $insert_code['TR_CODE_OLD']         =   "11033";
+                    $insert_code['PRIORITY']            =   36; // based on temp_mctrancode
+                    $insert_code['ITEM_DESC']           =   "LOD SEWAAN";
+                    $insert_code['REMARK']              =   "CAJ NOTIS LOD";                               
+
+                    $id_item = $this->m_bill_item->insert_bill_item($insert_code);
+
+                    if (!empty($id_item) && $id_item > 0)
+                    {
+                        // If insert operation successful, update total_amount in b_master for that bill_id
+                        $getTotalAmountByBillId = $this->m_bill_item->getBillItemTotalAmount($masterBillId);
+                        $data_update["TOTAL_AMOUNT"] = $getTotalAmountByBillId["TOTAL_AMOUNT"];
+                        $this->m_bill_master->updateBillMasterTotalAmount($masterBillId,$account_id,$data_update);
+
+                        // echo "</br>CAJ NOTIS BERJAYA DIMASUKKAN</br>";
+                        return true;
+                    }
+                    else
+                    {
+                        // echo "</br>CAJ NOTIS TIDAK BERJAYA DIMASUKKAN</br>";
+                        // echo "</br>MAKLUMAT BILL ITEM ".json_encode($id_item)."</br>";
+                        return false;
+                    }
                 }
             }
             else
