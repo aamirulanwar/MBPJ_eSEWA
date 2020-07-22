@@ -1396,7 +1396,7 @@ class Account extends CI_Controller
     }
 
     function kuarters_list(){
-        $this->auth->restrict_access($this->curuser,array(5003));
+        $this->auth->restrict_access($this->curuser,array(5008));
 
         $data['link_1']     = 'Akaun sewaan';
         $data['link_2']     = 'Senarai laporan kerosakan kuarters';

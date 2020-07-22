@@ -41,7 +41,7 @@ checking_validation(validation_errors());
                                     <?php if($d['TRANSFER_ACCOUNT_ID']>=0): ?>
                                     <?php echo $d['NEW_ACCOUNT']; ?>
                                     <?php else: ?>
-                                        <i>Tiada Rekod</i>
+                                        <i>-</i>
                                     <?php endif; ?>
                                 </td>
                                 <td>

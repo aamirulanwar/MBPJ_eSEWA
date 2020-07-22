@@ -161,12 +161,12 @@ checking_validation(validation_errors());
                         }
                         else
                         {
-                            echo "<tr><td colspan='8' style='text-align:center'> Tiada Rekod </td></tr>";
+                            echo "<tr><td colspan='10' style='text-align:center'> Tiada Rekod </td></tr>";
                         }
                     }
                     else
                     {
-                        echo "<tr><td colspan='8' style='text-align:center'> Tiada Rekod </td></tr>";
+                        echo "<tr><td colspan='10' style='text-align:center'> Tiada Rekod </td></tr>";
                     }
                 ?>
                 </tbody>

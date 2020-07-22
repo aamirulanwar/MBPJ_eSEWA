@@ -123,6 +123,7 @@ class M_a_asset extends CI_Model
         db_where('active',STATUS_ACTIVE);
         db_where('rental_status',RENTAL_STATUS_NO);
         db_from('a_asset');
+        db_order('asset_name');
         $sql = db_get();
         if($sql):
             return $sql->result_array();
