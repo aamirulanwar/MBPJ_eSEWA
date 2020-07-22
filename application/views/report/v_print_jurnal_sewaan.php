@@ -54,7 +54,16 @@
             </table>
         </div>
         </br>
-        <div> <b>Tarikh Laporan : </b><?=$data_search["date_start"]?> hingga <?=$data_search["date_end"]?></div>
+        <div> <b>
+            <?php 
+            if (isset($data_report) && count($data_search) > 0) {
+                echo "Tarikh Laporan : </b>" .$data_search['date_start']. " hingga " .$data_search['date_end']."</div>";
+            }
+            else
+            {
+                echo "Tarikh Laporan :";
+            }
+            ?>
         </br>
         <table class="table table-bordered table-hover">
             <thead>
@@ -130,12 +139,12 @@
                     }
                     else
                     {
-                        echo "<tr><td colspan='8' style='text-align:center'> Tiada Rekod </td></tr>";
+                        echo "<tr><td colspan='10' style='text-align:center'> Tiada Rekod </td></tr>";
                     }
                 }
                 else
                 {
-                    echo "<tr><td colspan='8' style='text-align:center'> Tiada Rekod </td></tr>";
+                    echo "<tr><td colspan='10' style='text-align:center'> Tiada Rekod </td></tr>";
                 }                
             ?>
             </tbody>

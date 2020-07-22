@@ -117,6 +117,7 @@ checking_validation(validation_errors());
                 data : {'cur_pass':cur_pass,'type':'current_password'},
                 success: function(data)
                 {
+                    var paswd=  /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,12}$/;
                     if(data==0){
                         $('#current_pass_err').html('Katalaluan semasa tidak padan.');
                         cur_status_update = false;
@@ -124,8 +125,9 @@ checking_validation(validation_errors());
                         $('#current_pass_err').html('');
 
                         if(new_pass != ''){
-                            if(new_pass.length < 6){
-                                $('#new_pass_err').html('Ruang katalaluan baru mestilah sekurang-kurangnya 8 aksara.');
+                            // console.log(new_pass.match(paswd));
+                            if(new_pass.match(paswd) == null ){
+                                $('#new_pass_err').html('Ruang katalaluan baru mestilah mengandungi sekurang-kurangnya 8 aksara, satu digit angka dan simbol.');
                                 cur_status_update = false;
                             }else{
                                 $('#new_pass_err').html('');
