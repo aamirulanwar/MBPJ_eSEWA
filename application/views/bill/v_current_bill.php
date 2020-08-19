@@ -156,11 +156,11 @@ notify_msg('notify_msg');
 
                         echo $account['LOCATION_BILLBOARD'].'<br>';
                     }
-//
-//
-//                    echo $account['ADDRESS_1'].', '.$account['ADDRESS_2'].'<br>';
-//                    echo $account['ADDRESS_3'].'<br>';
-//                    echo $account['POSTCODE'].' '.$account['STATE'];
+
+
+                   // echo $account['ADDRESS_1'].', '.$account['ADDRESS_2'].'<br>';
+                   // echo $account['ADDRESS_3'].'<br>';
+                   // echo $account['POSTCODE'].' '.$account['STATE'];
                     ?>
                 </div>
             </div>
@@ -208,21 +208,42 @@ notify_msg('notify_msg');
                 <div class="p-2 border-div" style="min-height: 400px;">
                     <div class="text-center"><strong>BUTIRAN BAYARAN</strong><br><br></div>
                     <?php
-                        if($bill_item):
-                            echo '<table class="table">';
+                        if($bill_item)
+                        {
                             $total = 0;
-                            foreach ($bill_item as $item):
-                                ?>
-                                    <tr>
-                                        <td><?php echo $item['item_desc']?></td>
-                                        <td class="text-right"><?php echo num($item['amount'])?></td>
-                                    </tr>
-                                <?php
-                                $total = $total+$item['amount'];
-                            endforeach;
-                            echo '<tr><td>JUMLAH BAYARAN</td><td class="text-right" style="border-top: 1px solid;border-bottom: 1px double">'.num($total).'</td></tr>';
+                            echo '<table class="table">';
+                            foreach ($bill_item as $item)
+                            {
+                                $total = $total+$item['AMOUNT'];                                
+
+                                if ($item['AMOUNT'] < 0) 
+                                { 
+                                    $amount = 0;
+                                }
+                                else 
+                                {
+                                    $amount = $item['AMOUNT'];
+                                }
+
+                                echo '  <tr>';
+                                echo '    <td>'.$item['TR_DESC'].'</td>';
+                                echo '    <td class="text-right">'.num($amount).'</td>';
+                                echo '  </tr>';
+
+                                if ( $item['AMOUNT'] < 0)
+                                {
+                                    echo '  <tr>';
+                                    echo '    <td>LEBIHAN BAYARAN '.$item['TR_DESC'].'</td>';
+                                    echo '    <td class="text-right">'.num($item['AMOUNT']).'</td>';
+                                    echo '  </tr>';
+                                }
+                            }
+                            echo '  <tr>';
+                            echo '    <td>JUMLAH BAYARAN</td>';
+                            echo '    <td class="text-right" style="border-top: 1px solid;border-bottom: 1px double">'.num($total).'</td>';
+                            echo '  </tr>';
                             echo '</table>';
-                        endif;
+                        }
                     ?>
                 </div>
             </div>
@@ -296,10 +317,10 @@ Kadar sewaan bulanan hendaklah dibayar SELEWAT-LEWATNYA SEBELUM ATAU PADA 7HB se
                             echo $account['CATEGORY_NAME'].'<br>';
                             echo $account['ADDRESS'].'<br>';
 
-//                            echo $account['NAME'].'<br>';
-//                            echo $account['ADDRESS_1'].', '.$account['ADDRESS_2'].'<br>';
-//                            echo $account['ADDRESS_3'].'<br>';
-//                            echo $account['POSTCODE'].' '.$account['STATE'];
+                           // echo $account['NAME'].'<br>';
+                           // echo $account['ADDRESS_1'].', '.$account['ADDRESS_2'].'<br>';
+                           // echo $account['ADDRESS_3'].'<br>';
+                           // echo $account['POSTCODE'].' '.$account['STATE'];
                             ?>
                             <div style="margin-top: 20px; text-align: center">
                                 <?php
@@ -309,22 +330,44 @@ Kadar sewaan bulanan hendaklah dibayar SELEWAT-LEWATNYA SEBELUM ATAU PADA 7HB se
                         </div>
                         <div class="col-8">
                             <div class="text-left"><strong>BUTIRAN BAYARAN</strong><br><br></div>
+                            
                             <?php
-                            if($bill_item):
-                                echo '<table class="table">';
-                                $total = 0;
-                                foreach ($bill_item as $item):
-                                    ?>
-                                    <tr>
-                                        <td><?php echo $item['item_desc']?></td>
-                                        <td class="text-right"><?php echo num($item['amount'])?></td>
-                                    </tr>
-                                    <?php
-                                    $total = $total+$item['amount'];
-                                endforeach;
-                                echo '<tr><td>JUMLAH BAYARAN</td><td class="text-right" style="border-top: 1px solid;border-bottom: 1px double">'.num($total).'</td></tr>';
-                                echo '</table>';
-                            endif;
+                                if($bill_item)
+                                {
+                                    $total = 0;
+                                    echo '<table class="table">';
+                                    foreach ($bill_item as $item)
+                                    {
+                                        $total = $total+$item['AMOUNT'];                                
+
+                                        if ($item['AMOUNT'] < 0) 
+                                        { 
+                                            $amount = 0;
+                                        }
+                                        else 
+                                        {
+                                            $amount = $item['AMOUNT'];
+                                        }
+
+                                        echo '  <tr>';
+                                        echo '    <td>'.$item['TR_DESC'].'</td>';
+                                        echo '    <td class="text-right">'.num($amount).'</td>';
+                                        echo '  </tr>';
+
+                                        if ( $item['AMOUNT'] < 0)
+                                        {
+                                            echo '  <tr>';
+                                            echo '    <td>LEBIHAN BAYARAN '.$item['TR_DESC'].'</td>';
+                                            echo '    <td class="text-right">'.num($item['AMOUNT']).'</td>';
+                                            echo '  </tr>';
+                                        }
+                                    }
+                                    echo '  <tr>';
+                                    echo '    <td>JUMLAH BAYARAN</td>';
+                                    echo '    <td class="text-right" style="border-top: 1px solid;border-bottom: 1px double">'.num($total).'</td>';
+                                    echo '  </tr>';
+                                    echo '</table>';
+                                }
                             ?>
                         </div>
                     </div>

@@ -7,6 +7,78 @@ class M_bill_item extends CI_Model
         parent::__construct();
     }
 
+    function get($data_search)
+    {
+        db_select('i.*');
+        db_select("to_char(m.dt_added, 'yyyy-mm-dd') as dt_added",false);
+        db_from('b_item i');
+
+        if (isset($data_search["ITEM_ID"]) && having_value($data_search['ITEM_ID']) )
+        {
+            db_where('i.ITEM_ID',$data_search['ITEM_ID']);
+        }
+
+        if ( isset($data_search["BILL_ID"]) && $data_search["BILL_ID"] != "" )
+        {
+            db_where('i.BILL_ID',$data_search['BILL_ID']);
+        }
+
+        if ( isset($data_search["ACCOUNT_ID"]) && $data_search["ACCOUNT_ID"] != "" )
+        {
+            db_where('i.ACCOUNT_ID',$data_search['ACCOUNT_ID']);
+        }
+        
+        if ( isset($data_search["BILL_CATEGORY"]) && $data_search["BILL_CATEGORY"] != "" )
+        {
+            db_where('i.BILL_CATEGORY',$data_search['BILL_CATEGORY']);
+        }
+
+        if (isset($data_search["TR_CODE"]) && having_value($data_search['TR_CODE']) )
+        {
+            db_where('i.TR_CODE',$data_search['TR_CODE']);
+        }
+
+        $sql = db_get('');
+
+        if($sql)
+        {
+            return $sql->result_array();
+        }
+    }
+
+    function delete($data_delete)
+    {
+        $ci =& get_instance();
+
+        if (isset($data_search["ITEM_ID"]) && having_value($data_delete['ITEM_ID']) )
+        {
+            db_where('ITEM_ID',$data_delete['ITEM_ID']);
+        }
+
+        if ( isset($data_delete["BILL_ID"]) && $data_delete["BILL_ID"] != "" )
+        {
+            db_where('BILL_ID',$data_delete['BILL_ID']);
+        }
+
+        if ( isset($data_delete["ACCOUNT_ID"]) && $data_delete["ACCOUNT_ID"] != "" )
+        {
+            db_where('ACCOUNT_ID',$data_delete['ACCOUNT_ID']);
+        }
+
+        if ( isset($data_delete["BILL_CATEGORY"]) && $data_delete["BILL_CATEGORY"] != "" )
+        {
+            db_where('BILL_CATEGORY',$data_delete['BILL_CATEGORY']);
+        }
+
+        if ( isset($data_delete["DISPLAY_STATUS"]) && $data_delete["DISPLAY_STATUS"] != "" )
+        {
+            db_where('DISPLAY_STATUS',$data_delete['DISPLAY_STATUS']);
+        }
+
+        $ci->db->delete('B_ITEM');
+        return true;
+    }
+
     function get_bill_item($id){
         db_select('i.*');
         db_select("to_char(i.dt_added, 'yyyy') as dt_added",false);
@@ -660,5 +732,79 @@ class M_bill_item extends CI_Model
         $ci->db->where('ITEM_ID', $item_id);
         $ci->db->delete('B_ITEM'); 
         return true;
+    }
+    
+    function getPreviousBillCharges($account_id=-1,$bill_month=0,$bill_year=0,$tr_code_new=0)
+    {
+        db_select('tr_code');
+        db_select('sum(amount) as total_amount');
+        db_from('b_item');
+        db_where(' account_id',$account_id);
+
+        if ( $tr_code_new != 0 && isset($tr_code_new) )
+        {
+            db_where(' tr_code',$tr_code_new);
+        }
+
+        db_where(" substr(tr_code,0,2) = '11' ");
+        db_where(" bill_id in (select bill_id from b_master where account_id = ".$account_id." and bill_year = ".$bill_year." and bill_month < ".$bill_month." ) ");
+        db_group(" tr_code,bill_category");
+        $sql = db_get('');
+
+        if( $sql && $tr_code_new != 0 && isset($tr_code_new) )
+        {
+            return $sql->row_array('');
+        }
+        else if( $sql )
+        {
+            return $sql->result_array('');
+        }
+        else
+        {
+            return array();
+        }
+    }
+    
+    function getPreviousBillPayment($account_id=-1,$bill_month=0,$bill_year=0,$tr_code_new=0)
+    {
+        db_select('tr_code');
+        db_select('sum(amount) as total_amount');
+        db_from('b_item');
+        db_where(' account_id',$account_id);
+        db_where(' tr_code',$tr_code_new);
+        db_where(" substr(tr_code,0,2) = '21' ");
+        db_where(" bill_id in (select bill_id from b_master where account_id = ".$account_id." and bill_year = ".$bill_year." and bill_month < ".$bill_month." ) ");
+        db_group(" tr_code,bill_category");
+        $sql = db_get('');
+
+        if($sql)
+        {
+            return $sql->row_array('');
+        }
+        else
+        {
+            return array();
+        }
+    }
+    
+    function getPreviousBillTransaction($account_id=-1,$bill_month=0,$bill_year=0)
+    {
+        db_select('tr_code');
+        db_select('sum(amount) as total_amount');
+        db_from('b_item');
+        db_where(' account_id',$account_id);
+        db_where(" substr(tr_code,0,2) in ('11','21') ");
+        db_where(" bill_id in (select bill_id from b_master where account_id = ".$account_id." and bill_year = ".$bill_year." and bill_month < ".$bill_month." ) ");
+        db_group(" tr_code,bill_category");
+        $sql = db_get('');
+
+        if($sql)
+        {
+            return $sql->result_array('');
+        }
+        else
+        {
+            return array();
+        }
     }
 }

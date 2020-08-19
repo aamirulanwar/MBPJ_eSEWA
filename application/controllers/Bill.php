@@ -110,21 +110,23 @@ class Bill extends CI_Controller
             return false;
         }
 
-        load_library('Bill_lib');
         $data_bill_lib['account_id']  = $id;
 
+        // load_library('Bill_lib');
         // Check current bill need to add LOD charge or not
-        $this->addLODcharge($id);
+        // $this->addLODcharge($id);
+        // $bill_item          = $this->bill_lib->generate_bill($data_bill_lib);
+        // $data['item_bil'] = $bill_item['item'];
+        // $data['bill_item']      = $bill_item['item'];
 
-        $bill_item          = $this->bill_lib->generate_bill($data_bill_lib);
-
-        $data['item_bil'] = $bill_item['item'];
-        $data_bill_master = $this->m_bill_master->get_bill_master($bill_item['bill_id']);
+        $this->load->library('BillGenerator');
+        $bill_master_id = $this->m_bill_master->getBillId( $id, date('n'), date('Y'), 'B');
+        $data_bill_master = $this->m_bill_master->get_bill_master($bill_master_id['BILL_ID']);
 
         $data['account']        = $get_details;
         $data['statement_type'] = 'BIL';
         $data['bill_master']    = $data_bill_master;
-        $data['bill_item']      = $bill_item['item'];
+        $data['bill_item']      = $this->billgenerator->viewCurrentBill($id);
 
         templates('bill/v_current_bill',$data);
     }
@@ -154,6 +156,8 @@ class Bill extends CI_Controller
         
         $data['account'] = $get_details;
 
+        /*
+
         load_library('Bill_lib');
         $data_bill_lib['account_id']  = $id;
 
@@ -170,6 +174,21 @@ class Bill extends CI_Controller
         $data['statement_type'] = 'BIL';
         $data['bill_master']    = $data_bill_master;
         $data['bill_item']      = $bill_item;
+        
+        */
+
+        // Debug Line for new development function 
+        // $this->load->controller('BillGenerator');
+        $this->load->library('BillGenerator');
+
+        $data['list_of_bill']   =  $this->billgenerator->viewCurrentBill($id);
+        $generate_bill          =  $this->billgenerator->generateCurrentBill( $id, date('n'), date('Y') );
+        $bill_id_master         =  $generate_bill['BILL_ID'];
+
+        $new_total_bill_amount              = $this->m_bill_item->getBillItemTotalAmount($bill_id_master);
+        $data_update_master["TOTAL_AMOUNT"] = $new_total_bill_amount["TOTAL_AMOUNT"];
+
+        $this->m_bill_master->updateBillMasterTotalAmount( $bill_id_master, $id, $data_update_master);
 
         if(input_data('MCT_TRCODENEW[]'))
         {
@@ -194,26 +213,27 @@ class Bill extends CI_Controller
                     $search_tr_code['MCT_TRCODENEW'] = $row;
                     $tr_code = $this->m_tr_code->get_tr_code($search_tr_code);
 
-                    $insert_code['BILL_ID']         =   $bill_item['bill_id'];
+                    $insert_code['ACCOUNT_ID']      =   $id;
+                    $insert_code['BILL_ID']         =   $generate_bill['BILL_ID'];
                     $insert_code['TR_CODE']         =   $tr_code['MCT_TRCODENEW'];
+                    $insert_code['TR_CODE_OLD']     =   $tr_code['MCT_TRCODE'];
+                    $insert_code['ITEM_DESC']       =   $tr_code['MCT_TRDESC'];
                     $insert_code['AMOUNT']          =   currencyToDouble($amount_arr[$i]);
                     $insert_code['PRIORITY']        =   $tr_code['MCT_PRIORT'];
-                    $insert_code['ACCOUNT_ID']      =   $id;
                     $insert_code['BILL_CATEGORY']   =   "B";
+                    $insert_code['DISPLAY_STATUS']  =   "C";
                     $remark                         =   '';
 
                     if(!empty($remark_arr[$i]))
                     {
                         $remark = ' ('.$remark_arr[$i].')';
-                    }
-                    
-                    $insert_code['ITEM_DESC']       =   $tr_code['MCT_TRDESC'];
+                    }                    
                     $insert_code['REMARK']          =   $remark;
 
                     #check gst type
-                    $gst_status = check_trans_gst($insert_code['TR_CODE'],$insert_code['ITEM_DESC']);
-                    $insert_code['TR_GST_STATUS']   = $gst_status['TR_GST_STATUS'];
-                    $insert_code['GST_TYPE']        = $gst_status['GST_TYPE'];
+                    $gst_status                     =  check_trans_gst($insert_code['TR_CODE'],$insert_code['ITEM_DESC']);
+                    $insert_code['TR_GST_STATUS']   =  $gst_status['TR_GST_STATUS'];
+                    $insert_code['GST_TYPE']        =  $gst_status['GST_TYPE'];
 
                     $id_item = $this->m_bill_item->insert_bill_item($insert_code);
                     $i = $i+1;
@@ -226,9 +246,13 @@ class Bill extends CI_Controller
                         $data_audit_trail['user_id']                 = $this->curuser['USER_ID'];
                         $data_audit_trail['refer_id']                = $id_item;
                         $this->audit_trail_lib->add($data_audit_trail);
-                    }                    
+                    }
                 }
-            }            
+
+                $new_total_bill_amount = $this->m_bill_item->getBillItemTotalAmount($id);
+                $data_update_master["TOTAL_AMOUNT"] = $new_total_bill_amount;
+                $this->m_bill_master->updateBillMasterTotalAmount( $generate_bill['BILL_ID'], $id, $data_update_master);
+            }
 
             set_notify('notify_msg',TEXT_SAVE_RECORD);
             redirect('/bill/generate_current_bill/'.uri_segment(3));

@@ -7,6 +7,62 @@ class M_bill_master extends CI_Model
         parent::__construct();
     }
 
+    function insert_bill_master($data_insert)
+    {
+        db_set_date_time('dt_added',timenow());
+        db_insert('b_master',$data_insert);
+        return get_insert_id('b_master');
+    }
+
+    function get($data_search)
+    {
+        db_select('m.*');
+        db_select("to_char(m.dt_added, 'yyyy-mm-dd') as dt_added",false);
+        db_from('b_master m');
+
+        if ( isset($data_search["BILL_ID"]) && $data_search["BILL_ID"] != "" )
+        {
+            db_where('m.BILL_ID',$data_search['BILL_ID']);
+        }
+
+        if ( isset($data_search["ACCOUNT_ID"]) && $data_search["ACCOUNT_ID"] != "" )
+        {
+            db_where('m.ACCOUNT_ID',$data_search['ACCOUNT_ID']);
+        }
+
+        if ( isset($data_search["BILL_MONTH"]) && $data_search["BILL_MONTH"] != "" )
+        {
+            db_where('m.BILL_MONTH',$data_search['BILL_MONTH']);
+        }
+        
+        if ( isset($data_search["BILL_YEAR"]) && $data_search["BILL_YEAR"] != "" )
+        {
+            db_where('m.BILL_YEAR',$data_search['BILL_YEAR']);
+        }
+        
+        if ( isset($data_search["BILL_TYPE"]) && $data_search["BILL_TYPE"] != "" )
+        {
+            db_where('m.BILL_TYPE',$data_search['BILL_TYPE']);
+        }
+        
+        if ( isset($data_search["BILL_CATEGORY"]) && $data_search["BILL_CATEGORY"] != "" )
+        {
+            db_where('m.BILL_CATEGORY',$data_search['BILL_CATEGORY']);
+        }
+
+        if ( isset($data_search["BILL_MONTH_FIRST"]) && $data_search["BILL_MONTH_FIRST"] != "" && isset($data_search["BILL_MONTH_LAST"]) && $data_search["BILL_MONTH_LAST"] != "" )
+        {
+            db_where(" BILL_MONTH between ".$data_search["BILL_MONTH_FIRST"]." and ".$data_search["BILL_MONTH_LAST"]." " );
+        }
+
+        $sql = db_get('');
+
+        if($sql)
+        {
+            return $sql->result_array();
+        }
+    }
+
     function get_bill_history_list($per_page,$search_segment,$data_search=array(),$bill_category=array('B','R')){
         db_select('m.*');
         db_select('a.*');

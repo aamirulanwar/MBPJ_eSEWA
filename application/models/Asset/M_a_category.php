@@ -125,7 +125,7 @@ class M_a_category extends CI_Model
     function get_a_category_all(){
         db_select('*');
         db_from('a_category a');
-//        db_where('active',STATUS_ACTIVE);
+        // db_where('active',STATUS_ACTIVE);
         db_where('soft_delete',SOFT_DELETE_FALSE);
         db_order('category_code');
         $sql = db_get();
@@ -137,8 +137,8 @@ class M_a_category extends CI_Model
     function get_data_category_by_type($type_id){
         db_select('*');
         db_from('a_category a');
-//        db_join('tr_code tr','tr.mct_trcode_new=a.trcode_category');
-      db_where('a.active',STATUS_ACTIVE);
+        // db_join('tr_code tr','tr.mct_trcode_new=a.trcode_category');
+        db_where('a.active',STATUS_ACTIVE);
         db_where('a.soft_delete',SOFT_DELETE_FALSE);
         db_where('a.type_id',$type_id);
         db_order('a.category_name');

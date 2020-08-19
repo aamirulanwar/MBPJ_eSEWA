@@ -64,28 +64,115 @@ checking_validation(validation_errors());
             <hr>
             <div class="row mb-4">
                 <div class="col-sm-12">
-                    <h3 class="header-h1">Maklumat bil semasa (<?php echo $bill_master['BILL_MONTH'].'/'.$bill_master['BILL_YEAR']?>)</h3>
+                    <h3 class="header-h1">Maklumat bil semasa (<?php echo date('n').'/'.date('Y'); ?>)</h3>
                 </div>
             </div>
-
-
+            
+            <!-- Display the current bill charge [START]-->
             <?php
-                if($item_bil):
-                    foreach ($item_bil as $item):
+                /*
+                if($test_function):
+                    foreach ($test_function as $item):
                         ?>
                         <div class="form-group row">
-                            <label class="col-sm-6 col-form-label"><?php echo $item['item_desc']?> </label>
+                            <label class="col-sm-6 col-form-label"><?php echo $item['PERIHAL_CAJ_BARU']; ?> </label>
                             <div class="col-sm-2">
-                                <p class="form-control-plaintext">RM<?php echo num($item['amount'])?></p>
+                                <p class="form-control-plaintext">RM<?php echo num($item['CAJ_ANGGARAN']); ?></p>
                             </div>
                             <div class="col-sm-1">
-                               <p class="form-control-plaintext"><?php echo ($item['bill_category'])?></p>
+                               <p class="form-control-plaintext"><?php echo $item['BILL_CATEGORY']; ?></p>
                             </div>
                         </div>
                         <?php
                     endforeach;
                 endif;
+                */
             ?>
+            <!-- Display the current bill charge [END]-->
+            <!-- Display the outstanding bill charge [START]-->
+            <?php
+                /*
+                if($test_function2):
+                    foreach ($test_function2 as $item):
+                        ?>
+                        <div class="form-group row">
+                            <label class="col-sm-6 col-form-label"><?php echo $item['TR_DESC_TUNGGAKAN']; ?> </label>
+                            <div class="col-sm-2">
+                                <p class="form-control-plaintext">RM<?php echo num($item['BALANCE_AMOUNT']); ?></p>
+                            </div>
+                            <div class="col-sm-1">
+                               <p class="form-control-plaintext">B</p>
+                            </div>
+                        </div>
+                        <?php
+                    endforeach;
+                endif;
+                */
+            ?>
+            <!-- Display the outstanding bill charge [END]-->
+
+            <!-- TEST DISPLAY -->
+            <?php
+                // // Select list of column that we need to sort by
+                // foreach ($list_of_bill as $key => $row) 
+                // {
+                //     # code...
+                //     $display_priority_1[$key]  = $row['DISPLAY_PRIORITY'];
+                //     $display_priority_2[$key]  = $row['TR_CODE_NEW'];
+                // }
+
+                // // Sort the data retrieved from function with out custom sort by column above
+                // array_multisort($display_priority_1, SORT_ASC, $display_priority_2, SORT_ASC, $list_of_bill);
+
+                // Display the sorted data
+                if($list_of_bill)
+                {
+                    foreach ($list_of_bill as $item)
+                    {                        
+                        echo '<div class="form-group row">';
+                        echo '  <label class="col-sm-6 col-form-label">'.$item['TR_DESC'].'</label>';
+                        echo '  <div class="col-sm-2">';
+                        echo '      <p class="form-control-plaintext">';
+
+                        if ($item['AMOUNT'] < 0) 
+                        { 
+                            echo "RM 0.00";
+                        }
+                        else 
+                        {
+                            echo "RM ".num($item['AMOUNT']);
+                        }
+                        
+                        echo '      </p>';
+                        echo '  </div>';
+                        echo '  <div class="col-sm-1">';
+                        echo '      <p class="form-control-plaintext">B</p>';
+                        echo '  </div>';
+                        echo '</div>';
+
+                        if ( $item['AMOUNT'] < 0)
+                        {
+                            echo '<div class="form-group row">';
+                            echo '  <label class="col-sm-6 col-form-label">LEBIHAN BAYARAN '.$item['TR_DESC'].'</label>';
+                            echo '  <div class="col-sm-2">';
+                            echo '      <p class="form-control-plaintext">RM '.num($item['AMOUNT']).'</p>';
+                            echo '  </div>';
+                            echo '  <div class="col-sm-1">';
+                            echo '      <p class="form-control-plaintext">B</p>';
+                            echo '  </div>';
+                            echo '</div>';
+                        }
+                    }
+                }
+            ?>
+            <!-- TEST DISPLAY -->
+            <div>
+                <?php
+                    // echo "<pre>";
+                    // var_dump($test_function2);
+                    // echo "<pre>";
+                ?>
+            </div>
 
             <div id="content_transaction">
 
