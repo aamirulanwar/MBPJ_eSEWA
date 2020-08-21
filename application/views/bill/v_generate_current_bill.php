@@ -67,63 +67,8 @@ checking_validation(validation_errors());
                     <h3 class="header-h1">Maklumat bil semasa (<?php echo date('n').'/'.date('Y'); ?>)</h3>
                 </div>
             </div>
-            
-            <!-- Display the current bill charge [START]-->
-            <?php
-                /*
-                if($test_function):
-                    foreach ($test_function as $item):
-                        ?>
-                        <div class="form-group row">
-                            <label class="col-sm-6 col-form-label"><?php echo $item['PERIHAL_CAJ_BARU']; ?> </label>
-                            <div class="col-sm-2">
-                                <p class="form-control-plaintext">RM<?php echo num($item['CAJ_ANGGARAN']); ?></p>
-                            </div>
-                            <div class="col-sm-1">
-                               <p class="form-control-plaintext"><?php echo $item['BILL_CATEGORY']; ?></p>
-                            </div>
-                        </div>
-                        <?php
-                    endforeach;
-                endif;
-                */
-            ?>
-            <!-- Display the current bill charge [END]-->
-            <!-- Display the outstanding bill charge [START]-->
-            <?php
-                /*
-                if($test_function2):
-                    foreach ($test_function2 as $item):
-                        ?>
-                        <div class="form-group row">
-                            <label class="col-sm-6 col-form-label"><?php echo $item['TR_DESC_TUNGGAKAN']; ?> </label>
-                            <div class="col-sm-2">
-                                <p class="form-control-plaintext">RM<?php echo num($item['BALANCE_AMOUNT']); ?></p>
-                            </div>
-                            <div class="col-sm-1">
-                               <p class="form-control-plaintext">B</p>
-                            </div>
-                        </div>
-                        <?php
-                    endforeach;
-                endif;
-                */
-            ?>
-            <!-- Display the outstanding bill charge [END]-->
 
-            <!-- TEST DISPLAY -->
             <?php
-                // // Select list of column that we need to sort by
-                // foreach ($list_of_bill as $key => $row) 
-                // {
-                //     # code...
-                //     $display_priority_1[$key]  = $row['DISPLAY_PRIORITY'];
-                //     $display_priority_2[$key]  = $row['TR_CODE_NEW'];
-                // }
-
-                // // Sort the data retrieved from function with out custom sort by column above
-                // array_multisort($display_priority_1, SORT_ASC, $display_priority_2, SORT_ASC, $list_of_bill);
-
                 // Display the sorted data
                 if($list_of_bill)
                 {
@@ -165,14 +110,6 @@ checking_validation(validation_errors());
                     }
                 }
             ?>
-            <!-- TEST DISPLAY -->
-            <div>
-                <?php
-                    // echo "<pre>";
-                    // var_dump($test_function2);
-                    // echo "<pre>";
-                ?>
-            </div>
 
             <div id="content_transaction">
 

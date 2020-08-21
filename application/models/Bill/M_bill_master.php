@@ -16,8 +16,16 @@ class M_bill_master extends CI_Model
 
     function get($data_search)
     {
-        db_select('m.*');
-        db_select("to_char(m.dt_added, 'yyyy-mm-dd') as dt_added",false);
+        if ( isset($data_search["CUSTOM_COLUMN"]) && $data_search["CUSTOM_COLUMN"] != "" )
+        {
+            db_select( 'm.'.$data_search["CUSTOM_COLUMN"] );
+        }
+        else
+        {
+            db_select('m.*');
+            db_select("to_char(m.dt_added, 'yyyy-mm-dd') as dt_added",false);
+        }
+                
         db_from('b_master m');
 
         if ( isset($data_search["BILL_ID"]) && $data_search["BILL_ID"] != "" )

@@ -19,6 +19,32 @@ class M_lod_generation extends CI_Model
         return get_insert_id('C_LOD_GENERATION');
     }
 
+    function update_record_generation($condition,$data_update)
+    {     
+        if ( isset($condition["ID"]) && $condition["ID"] != "" )
+        {
+            db_where('ID',$condition['ID']);
+        }
+
+        if ( isset($condition["ACCOUNT_ID"]) && $condition["ACCOUNT_ID"] != "" )
+        {
+            db_where('ACCOUNT_ID',$condition['ACCOUNT_ID']);
+        }
+
+        if ( isset($condition["MONTH"]) && $condition["MONTH"] != "" )
+        {
+            db_where('MONTH',$condition['MONTH']);
+        }
+
+        if ( isset($condition["YEAR"]) && $condition["YEAR"] != "" )
+        {
+            db_where('YEAR',$condition['YEAR']);
+        }
+
+        db_update('C_LOD_GENERATION',$data_update);
+        return true;
+    }
+
     function get_record_generation( $data_search = array() )
     {
         db_select('*');

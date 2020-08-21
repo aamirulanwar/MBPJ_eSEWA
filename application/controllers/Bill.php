@@ -319,11 +319,31 @@ class Bill extends CI_Controller
 
         // echo $notice_level;
 
-        if($notice_level<=4):
-            $get_all_notice = $this->m_notice_log->get_notice_level($id,$notice_level);
-        else:
-            $get_all_notice = $this->m_notice_log->get_notice_level($id,99);
-        endif;
+        // if($notice_level<=4):
+        //     $get_all_notice = $this->m_notice_log->get_notice_level($id,$notice_level);
+        // else:
+        //     $get_all_notice = $this->m_notice_log->get_notice_level($id,99);
+        // endif;
+
+        $this->load->library('BillGenerator');
+        $list_outstanding_charges    =  $this->billgenerator->getCurrentMonthOutstandingCharge($id);
+
+        // ---- Outstanding Charge ----
+        $total_outstanding_amount = 0;
+        foreach ($list_outstanding_charges as $outstanding_charges) 
+        {
+            // $data[] = array( 
+            //                     'TR_CODE_OLD'      =>  $outstanding_charges["TR_CODE_OLD_TUNGGAKAN"],
+            //                     'TR_CODE_NEW'      =>  $outstanding_charges["TR_CODE_TUNGGAKAN"],
+            //                     'TR_DESC'          =>  $outstanding_charges["TR_DESC_TUNGGAKAN"],
+            //                     'AMOUNT'           =>  $outstanding_charges["BALANCE_AMOUNT"],
+            //                     'DISPLAY_PRIORITY' =>  '3',
+            //                 );
+            $total_outstanding_amount = $total_outstanding_amount + $outstanding_charges["BALANCE_AMOUNT"];
+
+            // echo "<pre>";
+            // var_dump($outstanding_charges["BALANCE_AMOUNT"]);
+        }
 
         // save record lod generation to db for reporting feature
         if ($notice_level == 4)
@@ -337,10 +357,18 @@ class Bill extends CI_Controller
             if ( count($checkCondition) == 0 )
             {
                 $data_insert_lod["ACCOUNT_ID"] = $id;
-                $data_insert_lod["TOTAL_TUNGGAKAN"] = $get_all_notice["TOTAL_TUNGGAKAN"];
+                $data_insert_lod["TOTAL_TUNGGAKAN"] = $total_outstanding_amount;
                 $data_insert_lod["MONTH"] = date('n');
                 $data_insert_lod["YEAR"] = date('Y');
                 $this->m_lod_generation->insert_record_generation($data_insert_lod);
+            }
+            else
+            {
+                $data_update_condition_lod["ACCOUNT_ID"]    = $id;
+                $data_update_condition_lod["MONTH"]         = date('n');
+                $data_update_condition_lod["YEAR"]          = date('Y');
+                $data_update_lod["TOTAL_TUNGGAKAN"]         = $total_outstanding_amount;
+                $this->m_lod_generation->update_record_generation($data_update_condition_lod, $data_update_lod);
             }
         }
 
@@ -355,11 +383,20 @@ class Bill extends CI_Controller
             // echo DateTime::createFromFormat('Y-m-d H:i:s', $checkCondition[0]->updated_date)->format('d-m-Y h:i:s A');
             if ( count($checkCondition) == 0 )
             {
-                $data_insert_notis_mahkamah["ACCOUNT_ID"] = $id;
-                $data_insert_notis_mahkamah["TOTAL_TUNGGAKAN"] = $get_all_notice["TOTAL_TUNGGAKAN"];
-                $data_insert_notis_mahkamah["MONTH"] = date('n');
-                $data_insert_notis_mahkamah["YEAR"] = date('Y');
+                $data_insert_notis_mahkamah["ACCOUNT_ID"]       = $id;
+                $data_insert_notis_mahkamah["MONTH"]            = date('n');
+                $data_insert_notis_mahkamah["YEAR"]             = date('Y');
+                $data_insert_notis_mahkamah["TOTAL_TUNGGAKAN"]  = $total_outstanding_amount;
                 $this->m_notis_mah_generation->insert_record_generation($data_insert_notis_mahkamah);
+            }
+            else
+            {
+                $data_update_condition_notis_mahkamah["ACCOUNT_ID"]       = $id;
+                $data_update_condition_notis_mahkamah["MONTH"]            = date('n');
+                $data_update_condition_notis_mahkamah["YEAR"]             = date('Y');
+                $data_update_notis_mahkamah["TOTAL_TUNGGAKAN"]            = $total_outstanding_amount;
+
+                $this->m_lod_generation->update_record_generation($data_update_condition_notis_mahkamah, $data_update_notis_mahkamah);
             }
         }
 
