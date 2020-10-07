@@ -253,7 +253,7 @@ notify_msg('notify_msg');
                     </div>
                 </div>
                 
-                <textarea style="padding:6px;width: 100%;border-radius: 0px 0px 6px 6px;border-top-style: hidden;" rows="13">Sila nyatakan nama Bank Pembayar, Tarikh serta No. Cek / Bank Draf / Banker's Cheque / Kiriman Wang / Wang Pos. 
+                <textarea <?=$this->auth->restrict_access_V2( $this->curuser,array(6005)) !== true ? "readonly" : "" ?> style="padding:6px;width: 100%;border-radius: 0px 0px 6px 6px;border-top-style: hidden;" rows="13">Sila nyatakan nama Bank Pembayar, Tarikh serta No. Cek / Bank Draf / Banker's Cheque / Kiriman Wang / Wang Pos. 
 Kadar sewaan bulanan hendaklah dibayar SELEWAT-LEWATNYA SEBELUM ATAU PADA 7HB setiap bulan. Penalti lewat bayar pada kadar 8% atas jumlah tertunggak akan dikenakan jika kadar sewaan bulanan gagal dibayar dalam tempoh ditetapkan.</textarea>
                 <!--
                 <div class="p-2 border-div" style="padding:6px;width: 100%;height:auto;border-radius: 0px 0px 6px 6px;border-top-style: hidden;">

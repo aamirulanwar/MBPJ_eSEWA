@@ -113,6 +113,34 @@ class Auth extends CI_Model
         redirect('/profile/');
     }
 
+    function restrict_access_V2($curuser='',$access='')
+    {
+        $status = false;
+        
+        $user_access = json_decode($curuser['FILE_ACCESS']);
+
+        if (CHECK_ADMIN)
+        {
+            if ($this->curuser['USER_ID'] == ADMIN_ID)
+            {
+                // return true;
+                $status = true;
+            }
+        }
+
+        #begin checking access
+        foreach($access as $row)
+        {
+            if(in_array($row,$user_access))
+            {
+                // return true;
+                $status = true;
+            }
+        }
+
+        return $status;
+    }
+
     function loginonly($curuser='')
     {
         if(!$curuser || empty($curuser)):
