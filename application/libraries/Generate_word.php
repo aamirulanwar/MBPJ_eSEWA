@@ -1,3 +1,4 @@
+        //     $address = $get_details['ADDRESS_1'];
 <?php (! defined('BASEPATH')) and exit('No direct script access allowed');
 
 /**
@@ -387,7 +388,9 @@ class Generate_word {
         $templateProcessor->setValue('phone_number',display_mobile_number($get_details['MOBILE_PHONE_NUMBER']));
 
         ob_clean();
-        $filename = 'Surat Setuju Terima - '.$get_details['NAME'].'.docx';
+        //Check and replace if symbol in name exist that might make the file to be corrupted or cant be named
+        $filename_replace = preg_replace("/[^A-Za-z0-9' ]/", "", $get_details['NAME']); 
+        $filename = 'Surat Setuju Terima - '.$filename_replace.'.docx';
         $templateProcessor->saveAs($filename);
 
         header('Content-Disposition: attachment; filename='.$filename);
@@ -485,7 +488,9 @@ class Generate_word {
         endif;
 
         ob_clean();
-        $filename = 'Perjanjian Sewaan - '.$get_details['NAME'].'.docx';
+        //Check and replace if symbol in name exist that might make the file to be corrupted or cant be named
+        $filename_replace = preg_replace("/[^A-Za-z0-9' ]/", "_", $get_details['NAME']); 
+        $filename = 'Perjanjian Sewaan - '.$filename_replace.'.docx';
         $templateProcessor->saveAs($filename);
 
         header('Content-Disposition: attachment; filename='.$filename);
@@ -520,7 +525,7 @@ class Generate_word {
         $date_time = str_replace(".000000 ","", $date_time);
         $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($_SERVER['DOCUMENT_ROOT'].'/file_download/perjanjian/'.$template);
 
-        $templateProcessor->setValue('letter_date',date_display(timenow(),'d F Y','malay'));
+        $templateProcessor->setValue('letter_date',date_display(timenow(),'d-M-y'));
         $templateProcessor->setValue('letter_time',date_display(timenow(),'h:i:sa'));
         $templateProcessor->setValue('letter_date_hijri',date_display_hijri(timenow()));
         // $templateProcessor->setValue('file_number_juu',$get_details['FILE_NUMBER_JUU']);
@@ -557,7 +562,9 @@ class Generate_word {
 
 
         ob_clean();
-        $filename = 'Dokumen Tandatangan - '.$get_details['NAME'].'.docx';
+        //Check and replace if symbol in name exist that might make the file to be corrupted or cant be named
+        $filename_replace = preg_replace("/[^A-Za-z0-9' ]/", "_", $get_details['NAME']); 
+        $filename = 'Dokumen Tandatangan - '.$filename_replace.'.docx';
         $templateProcessor->saveAs($filename);
         header('Content-Disposition: attachment; filename='.$filename);
         header('Content-Transfer-Encoding: binary');
