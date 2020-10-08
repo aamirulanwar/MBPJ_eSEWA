@@ -28,7 +28,7 @@ class BillGenerator
         // Get asset detail
         $asset_code = $this->CI->m_a_asset->get_a_asset_by_id( $account_detail["ASSET_ID"] );
 
-        // Get transaction code for selected category
+        // Get transaction code for selected category such as "BIL TIPPING FEE" or "BIL AIR"
         $data_search_sewaan["MCT_TRCODENEW"] = $category_code["TRCODE_CATEGORY"];
         $data_search_sampah["MCT_TRCODENEW"] = "11110014";
         $tr_code_sewaan = $this->CI->m_tr_code->get_tr_code( $data_search_sewaan );
@@ -91,6 +91,9 @@ class BillGenerator
 
     public function getCurrentMonthOutstandingCharge($account_id)
     {
+        // Get account detail
+        $account_detail = $this->CI->m_acc_account->getAccountDetailOnlyById( $account_id );
+
         // Get list of current account charges before current month
         $month = date('n');
         $year = date('Y');
@@ -102,38 +105,50 @@ class BillGenerator
             $year = $year - 1;
         }
 
-        $list_of_transaction = $this->CI->m_bill_item->getPreviousBillCharges($account_id,$month,$year);
+        $list_of_transaction = $this->CI->m_bill_item->getPreviousBillCharges(  $account_detail["BILL_TYPE"], $account_id, $month, $year );
 
-        // Manipulate data
-        foreach ($list_of_transaction as $bill_transaction) 
+        if ( !empty($list_of_transaction) )
         {
-            $tr_code_semasa = $bill_transaction["TR_CODE"];
-            // Replace first string of transaction code to "2" TO convert the transaction code to "Bayaran" transaction
-            $tr_code_bayaran = "21".substr($bill_transaction["TR_CODE"],2);
-            // Replace second string of transaction code to "2" TO convert the transaction code to "Tunggakan" transaction
-            $tr_code_tunggakan = "12".substr($bill_transaction["TR_CODE"],2);
+            // Manipulate data
+            foreach ($list_of_transaction as $bill_transaction) 
+            {
+                if ( $bill_transaction["TR_CODE"] != "11119999" )
+                {
+                    $tr_code_semasa = $bill_transaction["TR_CODE"];
+                    // Replace first string of transaction code to "2" TO convert the transaction code to "Bayaran" transaction
+                    $tr_code_bayaran = "21".substr($bill_transaction["TR_CODE"],2);
+                    // Replace second string of transaction code to "2" TO convert the transaction code to "Tunggakan" transaction
+                    $tr_code_tunggakan = "12".substr($bill_transaction["TR_CODE"],2);
 
-            // Get Payment fo each bill_transaction semasa
-            $get_payment_details = $this->CI->m_bill_item->getPreviousBillPayment($account_id,$month,$year,$tr_code_bayaran);
+                    // Get Payment fo each bill_transaction semasa
+                    $get_payment_details = $this->CI->m_bill_item->getPreviousBillPayment( $account_detail["BILL_TYPE"], $account_id,$month,$year,$tr_code_bayaran);
 
-            // Get tr_code description
-            $data_search_semasa["MCT_TRCODENEW"] = $bill_transaction["TR_CODE"];
-            $data_search_bayaran_semasa["MCT_TRCODENEW"] = $tr_code_bayaran;
-            $data_search_tunggakan["MCT_TRCODENEW"] = $tr_code_tunggakan;
+                    // Get tr_code description
+                    $data_search_semasa["MCT_TRCODENEW"] = $bill_transaction["TR_CODE"];
+                    $data_search_bayaran_semasa["MCT_TRCODENEW"] = $tr_code_bayaran;
+                    $data_search_tunggakan["MCT_TRCODENEW"] = $tr_code_tunggakan;
 
-            $tr_detail_semasa           = $this->CI->m_tr_code->get_tr_code( $data_search_semasa );
-            $tr_detail_bayaran_semasa   = $this->CI->m_tr_code->get_tr_code( $data_search_bayaran_semasa );
-            $tr_detail_tunggakan  = $this->CI->m_tr_code->get_tr_code( $data_search_tunggakan );
+                    $tr_detail_semasa           = $this->CI->m_tr_code->get_tr_code( $data_search_semasa );
+                    $tr_detail_bayaran_semasa   = $this->CI->m_tr_code->get_tr_code( $data_search_bayaran_semasa );
+                    $tr_detail_tunggakan  = $this->CI->m_tr_code->get_tr_code( $data_search_tunggakan );
 
-            $data[] = array(
-                                'TR_CODE_BILL'          => $bill_transaction["TR_CODE"],
-                                'TR_DESC_BILL'          => $tr_detail_semasa["MCT_TRDESC"],
-                                'TR_CODE_TUNGGAKAN'     => $tr_code_tunggakan,
-                                'TR_CODE_OLD_TUNGGAKAN' => $tr_detail_tunggakan["MCT_TRCODE"],
-                                'TR_DESC_TUNGGAKAN'     => $tr_detail_tunggakan["MCT_TRDESC"],
-                                'PRIORITY'              => $tr_detail_tunggakan['MCT_PRIORT'],
-                                'BALANCE_AMOUNT'        => $bill_transaction["TOTAL_AMOUNT"] - $get_payment_details["TOTAL_AMOUNT"], 
-                            );
+                    $data[] = array(
+                                        'TR_CODE_BILL'          => $bill_transaction["TR_CODE"],
+                                        'TR_CODE_OLD_BILL'      => $tr_detail_semasa["MCT_TRCODE"],
+                                        'TR_DESC_BILL'          => $tr_detail_semasa["MCT_TRDESC"],
+                                        'TR_CODE_TUNGGAKAN'     => $tr_code_tunggakan,
+                                        'TR_CODE_OLD_TUNGGAKAN' => $tr_detail_tunggakan["MCT_TRCODE"],
+                                        'TR_DESC_TUNGGAKAN'     => $tr_detail_tunggakan["MCT_TRDESC"],
+                                        'PRIORITY'              => $tr_detail_tunggakan['MCT_PRIORT'],
+                                        'BALANCE_AMOUNT'        => $bill_transaction["TOTAL_AMOUNT"] - $get_payment_details["TOTAL_AMOUNT"], 
+                                    );
+                }
+            }
+        }
+        else
+        {
+            // $data = false;
+            $data = $list_of_transaction;
         }
 
         return $data;
@@ -141,49 +156,77 @@ class BillGenerator
 
     public function getOtherCharge($account_id)
     {
+        // Get account detail
+        $account_detail = $this->CI->m_acc_account->getAccountDetailOnlyById( $account_id );
+
         // Check if outstanding bill already not paid for greater than 3 months
         $date_search_1["ACCOUNT_ID"]        = $account_id;
-        $date_search_1["BILL_MONTH_FIRST"]  = date('n') - 1;
-        $date_search_1["BILL_MONTH_LAST"]   = date('n');
-        $date_search_1["BILL_YEAR"]         = date('Y');
         $date_search_1["BILL_CATEGORY"]     = "R";
         $date_search_1["CUSTOM_COLUMN"]     = "BILL_ID";
 
         $date_search_2["ACCOUNT_ID"]        = $account_id;
-        $date_search_2["BILL_MONTH_FIRST"]  = date('n') - 2;
-        $date_search_2["BILL_MONTH_LAST"]   = date('n');
-        $date_search_2["BILL_YEAR"]         = date('Y');
         $date_search_2["BILL_CATEGORY"]     = "R";
         $date_search_2["CUSTOM_COLUMN"]     = "BILL_ID";
-
+        
         $date_search_3["ACCOUNT_ID"]        = $account_id;
-        $date_search_3["BILL_MONTH_FIRST"]  = date('n') - 3;
-        $date_search_3["BILL_MONTH_LAST"]   = date('n');
-        $date_search_3["BILL_YEAR"]         = date('Y');
         $date_search_3["BILL_CATEGORY"]     = "R";
         $date_search_3["CUSTOM_COLUMN"]     = "BILL_ID";
-
+        
         $date_search_4["ACCOUNT_ID"]        = $account_id;
-        $date_search_4["BILL_MONTH_FIRST"]  = date('n') - 4;
-        $date_search_4["BILL_MONTH_LAST"]   = date('n');
-        $date_search_4["BILL_YEAR"]         = date('Y');
         $date_search_4["BILL_CATEGORY"]     = "R";
         $date_search_4["CUSTOM_COLUMN"]     = "BILL_ID";
-
+        
         $date_search_5["ACCOUNT_ID"]        = $account_id;
-        $date_search_5["BILL_MONTH_FIRST"]  = date('n') - 5;
-        $date_search_5["BILL_MONTH_LAST"]   = date('n');
-        $date_search_5["BILL_YEAR"]         = date('Y');
         $date_search_5["BILL_CATEGORY"]     = "R";
         $date_search_5["CUSTOM_COLUMN"]     = "BILL_ID";
 
-        $total_payment_record_in_1_month = $this->CI->m_bill_master->get($date_search_1);
-        $total_payment_record_in_2_month = $this->CI->m_bill_master->get($date_search_2);
-        $total_payment_record_in_3_month = $this->CI->m_bill_master->get($date_search_3);
-        $total_payment_record_in_4_month = $this->CI->m_bill_master->get($date_search_4);
-        $total_payment_record_in_5_month = $this->CI->m_bill_master->get($date_search_5);
+        if ( $account_detail["BILL_TYPE"] == 1 || $account_detail["BILL_TYPE"] == 3 )
+        {
+            $date_search_1["BILL_MONTH_FIRST"]  = date('n') - 1;
+            $date_search_1["BILL_MONTH_LAST"]   = date('n');
+            $date_search_1["BILL_YEAR"]         = date('Y');
 
-        if ( count($total_payment_record_in_5_month) == 0 )
+            $date_search_2["BILL_MONTH_FIRST"]  = date('n') - 2;
+            $date_search_2["BILL_MONTH_LAST"]   = date('n');
+            $date_search_2["BILL_YEAR"]         = date('Y');
+
+            $date_search_3["BILL_MONTH_FIRST"]  = date('n') - 3;
+            $date_search_3["BILL_MONTH_LAST"]   = date('n');
+            $date_search_3["BILL_YEAR"]         = date('Y');
+
+            $date_search_4["BILL_MONTH_FIRST"]  = date('n') - 4;
+            $date_search_4["BILL_MONTH_LAST"]   = date('n');
+            $date_search_4["BILL_YEAR"]         = date('Y');
+
+            $date_search_5["BILL_MONTH_FIRST"]  = date('n') - 5;
+            $date_search_5["BILL_MONTH_LAST"]   = date('n');
+            $date_search_5["BILL_YEAR"]         = date('Y');
+        }
+        else if ( $account_detail["BILL_TYPE"] == 2 )
+        {
+            $date_search_1["BILL_YEAR_FIRST"]  = date('Y') - 1;
+            $date_search_1["BILL_YEAR_LAST"]   = date('Y');
+
+            $date_search_2["BILL_YEAR_FIRST"]  = date('Y') - 2;
+            $date_search_2["BILL_YEAR_LAST"]   = date('Y');
+
+            $date_search_3["BILL_YEAR_FIRST"]  = date('Y') - 3;
+            $date_search_3["BILL_YEAR_LAST"]   = date('Y');
+
+            $date_search_4["BILL_YEAR_FIRST"]  = date('Y') - 4;
+            $date_search_4["BILL_YEAR_LAST"]   = date('Y');
+
+            $date_search_5["BILL_YEAR_FIRST"]  = date('Y') - 5;
+            $date_search_5["BILL_YEAR_LAST"]   = date('Y');
+        }
+
+        $total_payment_delayed_1_times = $this->CI->m_bill_master->get($date_search_1);
+        $total_payment_delayed_2_times = $this->CI->m_bill_master->get($date_search_2);
+        $total_payment_delayed_3_times = $this->CI->m_bill_master->get($date_search_3);
+        $total_payment_delayed_4_times = $this->CI->m_bill_master->get($date_search_4);
+        $total_payment_delayed_5_times = $this->CI->m_bill_master->get($date_search_5);
+
+        if ( count($total_payment_delayed_5_times) == 0 )
         {
             // add LOD charge
             $current_lod_transaction = "11110020";      // Please change this value if "LOD SEWAAN" is not using this transaction code
@@ -203,7 +246,7 @@ class BillGenerator
             $data_update["NOTICE_LEVEL"] = 5;
             $this->CI->m_acc_account->update_account($data_update,$account_id);
         }
-        else if ( count($total_payment_record_in_4_month) == 0 )
+        else if ( count($total_payment_delayed_4_times) == 0 )
         {
             // add LOD charge
             $current_lod_transaction = "11110020";      // Please change this value if "LOD SEWAAN" is not using this transaction code
@@ -224,19 +267,19 @@ class BillGenerator
             $data_update["NOTICE_LEVEL"] = 4;
             $this->CI->m_acc_account->update_account($data_update,$account_id);
         }
-        else if ( count($total_payment_record_in_3_month) == 0 )
+        else if ( count($total_payment_delayed_3_times) == 0 )
         {
             $data_update["NOTICE_LEVEL"] = 3;
             $this->CI->m_acc_account->update_account($data_update,$account_id);
             $data = false;
         }
-        else if ( count($total_payment_record_in_2_month) == 0 )
+        else if ( count($total_payment_delayed_2_times) == 0 )
         {
             $data_update["NOTICE_LEVEL"] = 2;
             $this->CI->m_acc_account->update_account($data_update,$account_id);
             $data = false;
         }
-        else if ( count($total_payment_record_in_1_month) == 0 )
+        else if ( count($total_payment_delayed_1_times) == 0 )
         {
             $data_update["NOTICE_LEVEL"] = 1;
             $this->CI->m_acc_account->update_account($data_update,$account_id);
@@ -254,98 +297,114 @@ class BillGenerator
 
     public function generateCurrentBill($account_id,$month,$year)
     {
-        // Check if a master record already exist for current month
-        $data_search["BILL_MONTH"]      =  $month;
-        $data_search["BILL_YEAR"]       =  $year;
-        $data_search["ACCOUNT_ID"]      =  $account_id;
-        $date_search["CUSTOM_COLUMN"]   = "BILL_ID";
+        // Get account detail
+        $account_detail = $this->CI->m_acc_account->getAccountDetailOnlyById( $account_id );
 
-        $exist = count( $this->CI->m_bill_master->get($data_search) );
-
-        if ( $exist == 0 )
+        if ( $account_detail["STATUS_ACC"] == 1 )
         {
-            // Get account detail
-            $account_detail = $this->CI->m_acc_account->getAccountDetailOnlyById( $account_id );
+            // Check if a master record already exist for current month
 
-            $data_insert_b_master["ACCOUNT_ID"]      =  $account_id;
-            $data_insert_b_master["BILL_YEAR"]       =  date('Y');
-            $data_insert_b_master["BILL_MONTH"]      =  date('n');
-            $data_insert_b_master["BILL_CATEGORY"]   =  "B";
-            $data_insert_b_master["BILL_NUMBER"]     =  date('Y').date('m').str_pad($account_id,6,"0",STR_PAD_LEFT).'1';
-            $data_insert_b_master["BILL_TYPE"]       =  $account_detail["BILL_TYPE"]; // 1 =  Monthly, 2 =  Yearly
-            $data_insert_b_master["TOTAL_PAID"]      =  "0";
-            $data_insert_b_master["TOTAL_AMOUNT"]    =  "0";
-            $data_insert_b_master["NUMBER_GENERATE"] =  "1";
+            $data_search["BILL_YEAR"]       =  $year;
+            $data_search["ACCOUNT_ID"]      =  $account_id;
+            $date_search["CUSTOM_COLUMN"]   =  "BILL_ID";
 
-            $this->CI->m_bill_master->insert_bill_master($data_insert_b_master);
-        }
+            if ( $account_detail["BILL_TYPE"] == 1 )
+            {
+                $data_search["BILL_MONTH"]      =  $month;
+            }        
 
-        $b_master = $this->CI->m_bill_master->get($data_search)[0];
+            $exist = count( $this->CI->m_bill_master->get($data_search) );
 
-        // var_dump($b_master); die();
+            if ( $exist == 0 )
+            {
+                $data_insert_b_master["ACCOUNT_ID"]      =  $account_id;
+                $data_insert_b_master["BILL_YEAR"]       =  date('Y');
+                $data_insert_b_master["BILL_MONTH"]      =  date('n');
+                $data_insert_b_master["BILL_CATEGORY"]   =  "B";
+                $data_insert_b_master["BILL_NUMBER"]     =  date('Y').date('m').str_pad($account_id,6,"0",STR_PAD_LEFT).'1';
+                $data_insert_b_master["BILL_TYPE"]       =  $account_detail["BILL_TYPE"]; // 1 =  Monthly, 2 =  Yearly, 3 = Rumah Tmn mudun
+                $data_insert_b_master["TOTAL_PAID"]      =  "0";
+                $data_insert_b_master["TOTAL_AMOUNT"]    =  "0";
+                $data_insert_b_master["NUMBER_GENERATE"] =  "1";
 
-        // Delete existing item bill under master record and recreate back. All bill_category = "J" will be ignored in this deletion
-        $data_delete["ACCOUNT_ID"]      =  $account_id;
-        $data_delete["BILL_ID"]         =  $b_master["BILL_ID"];
-        $data_delete["BILL_CATEGORY"]   =  "B";
-        $data_delete["DISPLAY_STATUS"]  =  "Y";
+                $this->CI->m_bill_master->insert_bill_master($data_insert_b_master);
+            }
 
-        $this->CI->m_bill_item->delete($data_delete);
+            $b_master = $this->CI->m_bill_master->get($data_search)[0];
 
-        // Get current month item bill and save with master record
-        $current_month_item = $this->getCurrentMonthBillCharge($account_id);
-        foreach ($current_month_item as $item)
-        {
-            # code...
-            $data_insert_b_item['BILL_ID']         = $b_master["BILL_ID"];
-            $data_insert_b_item['TR_CODE']         = $item['KOD_CAJ_BARU'];
-            $data_insert_b_item['TR_CODE_OLD']     = $item['KOD_CAJ_LAMA'];
-            $data_insert_b_item['AMOUNT']          = $item['CAJ_ANGGARAN'];
-            $data_insert_b_item['PRIORITY']        = $item['PRIORITY'];
-            $data_insert_b_item['ACCOUNT_ID']      = $account_id;
-            $data_insert_b_item['ITEM_DESC']       = $item['PERIHAL_CAJ_BARU'];
-            $data_insert_b_item['BILL_CATEGORY']   = "B";
+            // var_dump($b_master); die();
 
-            $this->CI->m_bill_item->insert_bill_item($data_insert_b_item);
-        }
+            // Delete existing item bill under master record and recreate back. All bill_category = "J" will be ignored in this deletion
+            $data_delete["ACCOUNT_ID"]      =  $account_id;
+            $data_delete["BILL_ID"]         =  $b_master["BILL_ID"];
+            $data_delete["BILL_CATEGORY"]   =  "B";
+            $data_delete["DISPLAY_STATUS"]  =  "Y";
 
-        // Get other charges and save with master record
-        $list_of_other_charges = $this->getOtherCharge($account_id);
+            $this->CI->m_bill_item->delete($data_delete);
 
-        if ( $list_of_other_charges !== false)
-        {
-            foreach ($list_of_other_charges as $other_charge) 
+            // Get current month item bill and save with master record
+            $current_month_item = $this->getCurrentMonthBillCharge($account_id);
+            foreach ($current_month_item as $item)
             {
                 # code...
-                $data_insert['BILL_ID']         = $b_master["BILL_ID"];
-                $data_insert['TR_CODE']         = $other_charge['TR_CODE_NEW'];
-                $data_insert['TR_CODE_OLD']     = $other_charge['TR_CODE_OLD'];
-                $data_insert['AMOUNT']          = $other_charge['AMOUNT'];
-                $data_insert['PRIORITY']        = $other_charge['PRIORITY'];
-                $data_insert['ACCOUNT_ID']      = $account_id;
-                $data_insert['ITEM_DESC']       = $other_charge['TR_DESC'];
-                $data_insert['BILL_CATEGORY']   = "B";
+                $data_insert_b_item['BILL_ID']         = $b_master["BILL_ID"];
+                $data_insert_b_item['TR_CODE']         = $item['KOD_CAJ_BARU'];
+                $data_insert_b_item['TR_CODE_OLD']     = $item['KOD_CAJ_LAMA'];
+                $data_insert_b_item['AMOUNT']          = $item['CAJ_ANGGARAN'];
+                $data_insert_b_item['PRIORITY']        = $item['PRIORITY'];
+                $data_insert_b_item['ACCOUNT_ID']      = $account_id;
+                $data_insert_b_item['ITEM_DESC']       = $item['PERIHAL_CAJ_BARU'];
+                $data_insert_b_item['BILL_CATEGORY']   = "B";
 
-                $this->CI->m_bill_item->insert_bill_item($data_insert);
+                $this->CI->m_bill_item->insert_bill_item($data_insert_b_item);
             }
+
+            // Get other charges and save with master record
+            $list_of_other_charges = $this->getOtherCharge($account_id);
+
+            if ( $list_of_other_charges !== false)
+            {
+                foreach ($list_of_other_charges as $other_charge) 
+                {
+                    # code...
+                    $data_insert['BILL_ID']         = $b_master["BILL_ID"];
+                    $data_insert['TR_CODE']         = $other_charge['TR_CODE_NEW'];
+                    $data_insert['TR_CODE_OLD']     = $other_charge['TR_CODE_OLD'];
+                    $data_insert['AMOUNT']          = $other_charge['AMOUNT'];
+                    $data_insert['PRIORITY']        = $other_charge['PRIORITY'];
+                    $data_insert['ACCOUNT_ID']      = $account_id;
+                    $data_insert['ITEM_DESC']       = $other_charge['TR_DESC'];
+                    $data_insert['BILL_CATEGORY']   = "B";
+
+                    $this->CI->m_bill_item->insert_bill_item($data_insert);
+                }
+            }
+
+            $data_update_master["TOTAL_AMOUNT"] = $this->CI->m_bill_item->getBillItemTotalAmount( $b_master["BILL_ID"] )["TOTAL_AMOUNT"];
+            $this->CI->m_bill_master->updateBillMasterTotalAmount($b_master["BILL_ID"],$account_id,$data_update_master);
+
+            return $b_master;
         }
-
-        $data_update_master["TOTAL_AMOUNT"] = $this->CI->m_bill_item->getBillItemTotalAmount( $b_master["BILL_ID"] )["TOTAL_AMOUNT"];
-        $this->CI->m_bill_master->updateBillMasterTotalAmount($b_master["BILL_ID"],$account_id,$data_update_master);
-
-        return $b_master;
+        else
+        {
+            return false;
+        }
     }
 
-    public function viewCurrentBill($account_id)
+    public function listCurrentBill($account_id)
     {
+        // Get account detail
+        $account_detail = $this->CI->m_acc_account->getAccountDetailOnlyById( $account_id );
+
         $month = date('n');
         $year = date('Y');
         $list_processed_transaction  =  false;
         $list_monthly_charges        =  $this->getCurrentMonthBillCharge($account_id);
         $list_outstanding_charges    =  $this->getCurrentMonthOutstandingCharge($account_id);
+        $list_of_other_charges       =  $this->getOtherCharge($account_id);
 
         // Calculate monthly charges
-        // ---- Current charge ----
+        // ---- Current charge ----        
         foreach ($list_monthly_charges as $monthly_charge_item) 
         {
             # code...
@@ -356,20 +415,24 @@ class BillGenerator
 
             // Check Payment Record
             $tr_code_bayaran       =  "21".substr($tr_code_new,2);
-            $check_charges_record  =  $this->CI->m_bill_item->getPreviousBillCharges($account_id,$month,$year,$tr_code_new);
-            $check_payment_record  =  $get_payment_details = $this->CI->m_bill_item->getPreviousBillPayment($account_id,$month,$year,$tr_code_bayaran);
+            $check_charges_record  =  $this->CI->m_bill_item->getPreviousBillCharges( $account_detail["BILL_TYPE"], $account_id, $month, $year, $tr_code_new );
+            $check_payment_record  =  $get_payment_details = $this->CI->m_bill_item->getPreviousBillPayment( $account_detail["BILL_TYPE"], $account_id, $month, $year, $tr_code_bayaran );
             $balance_amount        =  $check_charges_record["TOTAL_AMOUNT"] - $check_payment_record["TOTAL_AMOUNT"];
 
             if ( $balance_amount > 0 )
             {
                 // Add one record for current caj as new bill item and one record for tunggakan caj as extra bill item
-                $data[] = array( 
+                // Only active account has current bill
+                if ( $account_detail["STATUS_ACC"] == 1 ) 
+                {
+                    $data[] = array( 
                                     'TR_CODE_OLD'      =>  $tr_code_old,
                                     'TR_CODE_NEW'      =>  $tr_code_new,
                                     'TR_DESC'          =>  $tr_desc,
                                     'AMOUNT'           =>  $caj,
                                     'DISPLAY_PRIORITY' =>  '1',
                                 );
+                }
 
                 $tr_code_tunggakan = "12".substr($tr_code_new,2);
                 $data_search_tunggakan["MCT_TRCODENEW"] = $tr_code_tunggakan;
@@ -383,7 +446,7 @@ class BillGenerator
                                     'DISPLAY_PRIORITY' =>  '3',
                                 );
             }
-            else if ( $balance_amount <= 0 )
+            else if ( $balance_amount <= 0 && $account_detail["STATUS_ACC"] == 1 ) // Only active account has current bill
             {
                 $new_balance_amount = $caj + $balance_amount;
                 $data[] = array( 
@@ -400,23 +463,24 @@ class BillGenerator
         }
 
         // ---- Outstanding Charge ----
-        foreach ($list_outstanding_charges as $outstanding_charges) 
+        if ( $list_outstanding_charges !== false )
         {
-            if ( array_search( $outstanding_charges["TR_CODE_BILL"], $list_processed_transaction) === false )
+            foreach ($list_outstanding_charges as $outstanding_charges) 
             {
-                $data[] = array( 
-                                    'TR_CODE_OLD'      =>  $outstanding_charges["TR_CODE_OLD_TUNGGAKAN"],
-                                    'TR_CODE_NEW'      =>  $outstanding_charges["TR_CODE_TUNGGAKAN"],
-                                    'TR_DESC'          =>  $outstanding_charges["TR_DESC_TUNGGAKAN"],
-                                    'AMOUNT'           =>  $outstanding_charges["BALANCE_AMOUNT"],
-                                    'DISPLAY_PRIORITY' =>  '3',
-                                );
+                if ( array_search( $outstanding_charges["TR_CODE_BILL"], $list_processed_transaction) === false )
+                {
+                    $data[] = array( 
+                                        'TR_CODE_OLD'      =>  $outstanding_charges["TR_CODE_OLD_TUNGGAKAN"],
+                                        'TR_CODE_NEW'      =>  $outstanding_charges["TR_CODE_TUNGGAKAN"],
+                                        'TR_DESC'          =>  $outstanding_charges["TR_DESC_TUNGGAKAN"],
+                                        'AMOUNT'           =>  $outstanding_charges["BALANCE_AMOUNT"],
+                                        'DISPLAY_PRIORITY' =>  '3',
+                                    );
+                }
             }
         }
 
         // ---- Other Charge ----
-        $list_of_other_charges = $this->getOtherCharge($account_id);
-
         if ( $list_of_other_charges !== false)
         {
             foreach ($list_of_other_charges as $other_charge) 

@@ -734,20 +734,32 @@ class M_bill_item extends CI_Model
         return true;
     }
     
-    function getPreviousBillCharges($account_id=-1,$bill_month=0,$bill_year=0,$tr_code_new=0)
+    function getPreviousBillCharges( $bill_type = 1, $account_id=-1,$bill_month=0,$bill_year=0,$tr_code_new=0 )
     {
         db_select('tr_code');
         db_select('sum(amount) as total_amount');
         db_from('b_item');
         db_where(' account_id',$account_id);
+        db_where(" substr(tr_code,0,2) = '11' ");
 
         if ( $tr_code_new != 0 && isset($tr_code_new) )
         {
             db_where(' tr_code',$tr_code_new);
         }
 
-        db_where(" substr(tr_code,0,2) = '11' ");
-        db_where(" bill_id in (select bill_id from b_master where account_id = ".$account_id." and bill_year = ".$bill_year." and bill_month < ".$bill_month." ) ");
+        if ( $bill_type == 1 )
+        {
+            db_where(" bill_id in (select bill_id from b_master where account_id = ".$account_id." and bill_year = ".$bill_year." and bill_month < ".$bill_month." ) ");
+        }
+        else if ( $bill_type == 2 )
+        {
+            db_where(" bill_id < (select max(bill_id) bill_id from b_master where account_id = ".$account_id." ) ");
+        }
+        else if ( $bill_type == 3 )
+        {
+            db_where(" bill_id in (select bill_id from b_master where account_id = ".$account_id." and bill_year = ".$bill_year." and bill_month < ".$bill_month." ) ");
+        }       
+        
         db_group(" tr_code,bill_category");
         $sql = db_get('');
 
@@ -765,7 +777,7 @@ class M_bill_item extends CI_Model
         }
     }
     
-    function getPreviousBillPayment($account_id=-1,$bill_month=0,$bill_year=0,$tr_code_new=0)
+    function getPreviousBillPayment( $bill_type = 1, $account_id=-1,$bill_month=0,$bill_year=0,$tr_code_new=0 )
     {
         db_select('tr_code');
         db_select('sum(amount) as total_amount');
@@ -773,7 +785,16 @@ class M_bill_item extends CI_Model
         db_where(' account_id',$account_id);
         db_where(' tr_code',$tr_code_new);
         db_where(" substr(tr_code,0,2) = '21' ");
-        db_where(" bill_id in (select bill_id from b_master where account_id = ".$account_id." and bill_year = ".$bill_year." and bill_month < ".$bill_month." ) ");
+
+        if ( $bill_type == 1 )
+        {
+            db_where(" bill_id in (select bill_id from b_master where account_id = ".$account_id." and bill_year = ".$bill_year." and bill_month < ".$bill_month." ) ");
+        }
+        else if ( $bill_type == 2 )
+        {
+            db_where(" bill_id < (select max(bill_id) bill_id from b_master where account_id = ".$account_id." ) ");
+        }
+
         db_group(" tr_code,bill_category");
         $sql = db_get('');
 

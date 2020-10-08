@@ -18,50 +18,56 @@ class M_bill_master extends CI_Model
     {
         if ( isset($data_search["CUSTOM_COLUMN"]) && $data_search["CUSTOM_COLUMN"] != "" )
         {
-            db_select( 'm.'.$data_search["CUSTOM_COLUMN"] );
+            db_select( $data_search["CUSTOM_COLUMN"] );
         }
         else
         {
-            db_select('m.*');
-            db_select("to_char(m.dt_added, 'yyyy-mm-dd') as dt_added",false);
+            db_select('B_MASTER.*');
+            db_select("to_char(dt_added, 'yyyy-mm-dd') as dt_added",false);
         }
                 
-        db_from('b_master m');
+        db_from('b_master');
 
         if ( isset($data_search["BILL_ID"]) && $data_search["BILL_ID"] != "" )
         {
-            db_where('m.BILL_ID',$data_search['BILL_ID']);
+            db_where('BILL_ID',$data_search['BILL_ID']);
         }
 
         if ( isset($data_search["ACCOUNT_ID"]) && $data_search["ACCOUNT_ID"] != "" )
         {
-            db_where('m.ACCOUNT_ID',$data_search['ACCOUNT_ID']);
+            db_where('ACCOUNT_ID',$data_search['ACCOUNT_ID']);
         }
 
         if ( isset($data_search["BILL_MONTH"]) && $data_search["BILL_MONTH"] != "" )
         {
-            db_where('m.BILL_MONTH',$data_search['BILL_MONTH']);
+            db_where('BILL_MONTH',$data_search['BILL_MONTH']);
         }
         
         if ( isset($data_search["BILL_YEAR"]) && $data_search["BILL_YEAR"] != "" )
         {
-            db_where('m.BILL_YEAR',$data_search['BILL_YEAR']);
+            db_where('BILL_YEAR',$data_search['BILL_YEAR']);
         }
         
         if ( isset($data_search["BILL_TYPE"]) && $data_search["BILL_TYPE"] != "" )
         {
-            db_where('m.BILL_TYPE',$data_search['BILL_TYPE']);
+            db_where('BILL_TYPE',$data_search['BILL_TYPE']);
         }
         
         if ( isset($data_search["BILL_CATEGORY"]) && $data_search["BILL_CATEGORY"] != "" )
         {
-            db_where('m.BILL_CATEGORY',$data_search['BILL_CATEGORY']);
+            db_where('BILL_CATEGORY',$data_search['BILL_CATEGORY']);
         }
 
         if ( isset($data_search["BILL_MONTH_FIRST"]) && $data_search["BILL_MONTH_FIRST"] != "" && isset($data_search["BILL_MONTH_LAST"]) && $data_search["BILL_MONTH_LAST"] != "" )
         {
             db_where(" BILL_MONTH between ".$data_search["BILL_MONTH_FIRST"]." and ".$data_search["BILL_MONTH_LAST"]." " );
         }
+
+        if ( isset($data_search["BILL_YEAR_FIRST"]) && $data_search["BILL_YEAR_FIRST"] != "" && isset($data_search["BILL_YEAR_LAST"]) && $data_search["BILL_YEAR_LAST"] != "" )
+        {
+            db_where(" BILL_YEAR between ".$data_search["BILL_YEAR_FIRST"]." and ".$data_search["BILL_YEAR_LAST"]." " );
+        }
+
 
         $sql = db_get('');
 
@@ -71,7 +77,8 @@ class M_bill_master extends CI_Model
         }
     }
 
-    function get_bill_history_list($per_page,$search_segment,$data_search=array(),$bill_category=array('B','R')){
+    function get_bill_history_list($per_page,$search_segment,$data_search=array(),$bill_category=array('B','R'))
+    {
         db_select('m.*');
         db_select('a.*');
         db_select("to_char(m.dt_added, 'yyyy-mm-dd') as dt_added",false);
@@ -106,7 +113,8 @@ class M_bill_master extends CI_Model
         endif;
     }
 
-    function count_bill_history ($data_search=array(),$bill_category=array('B','R')){
+    function count_bill_history ($data_search=array(),$bill_category=array('B','R'))
+    {
         db_select('*');
         db_in('BILL_CATEGORY', $bill_category);
         if(isset($data_search['account_id']) && having_value($data_search['account_id'])):
@@ -132,7 +140,8 @@ class M_bill_master extends CI_Model
         return db_count_results();
     }
 
-    function get_bill_master($id){
+    function get_bill_master($id)
+    {
         db_select('m.*,a.*');
         db_select("to_char(m.dt_added, 'yyyy-mm-dd') as dt_added",false);
         db_join('acc_account a','a.account_id=m.account_id');
@@ -144,7 +153,8 @@ class M_bill_master extends CI_Model
         endif;
     }
 
-    function get_highest_oustanding_bill($per_page,$search_segment,$id,$data_search=array()){
+    function get_highest_oustanding_bill($per_page,$search_segment,$id,$data_search=array())
+    {
         db_select('*');
         db_from('b_master m');
         db_join('acc_account a','a.account_id=m.account_id');
@@ -224,11 +234,6 @@ class M_bill_master extends CI_Model
         if($sql):
             return $sql->result_array();
         endif;
-    }
-
-    function pushBillGeneratedToSP()
-    {
-        
     }
 }
 

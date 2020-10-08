@@ -43,13 +43,14 @@ class Bill extends CI_Controller
             'generate_barcode',
             'add_journal_transaction',
             'addLODcharge',
-            // 'updateBillAmount'
+            'updateBillAmount'
         );
         #set pages data
         (in_array($method,$array)) ? $this->$method() : $this->account_list();
     }
 
-    function account_list(){
+    function account_list()
+    {
         $this->auth->restrict_access($this->curuser,array(6001));
 
         $data['link_1']     = 'Bil sewaan';
@@ -89,7 +90,9 @@ class Bill extends CI_Controller
         templates('bill/v_list_account',$data);
     }
 
-    function current_bill(){
+    function current_bill()
+    {
+        // $this->output->enable_profiler(TRUE);
         $this->auth->restrict_access($this->curuser,array(6003));
 
         $data['link_1']     = 'Bil sewaan';
@@ -126,7 +129,7 @@ class Bill extends CI_Controller
         $data['account']        = $get_details;
         $data['statement_type'] = 'BIL';
         $data['bill_master']    = $data_bill_master;
-        $data['bill_item']      = $this->billgenerator->viewCurrentBill($id);
+        $data['bill_item']      = $this->billgenerator->listCurrentBill($id);
 
         templates('bill/v_current_bill',$data);
     }
@@ -181,7 +184,7 @@ class Bill extends CI_Controller
         // $this->load->controller('BillGenerator');
         $this->load->library('BillGenerator');
 
-        $data['list_of_bill']   =  $this->billgenerator->viewCurrentBill($id);
+        $data['list_of_bill']   =  $this->billgenerator->listCurrentBill($id);
         $generate_bill          =  $this->billgenerator->generateCurrentBill( $id, date('n'), date('Y') );
         $bill_id_master         =  $generate_bill['BILL_ID'];
 
@@ -259,7 +262,8 @@ class Bill extends CI_Controller
         }
     }
 
-    function notice_list(){
+    function notice_list()
+    {
         $data['link_1']     = 'Bil sewaan';
         $data['link_2']     = 'Senarai tunggakan';
         $data['link_3']     = '';
@@ -310,7 +314,8 @@ class Bill extends CI_Controller
         templates('bill/v_list_notice',$data);
     }
 
-    function generate_notice(){
+    function generate_notice()
+    {
         $id            = urlDecrypt(uri_segment(3));
         $notice_level  = urlDecrypt(uri_segment(4));
         if(!is_numeric($id)):
@@ -404,7 +409,8 @@ class Bill extends CI_Controller
         $this->generate_word->word_document($id, DOC_NOTICE, $notice_level,$get_all_notice);
     }
 
-    function add_transaction(){
+    function add_transaction()
+    {
         if(is_ajax()):
             $type = input_data('type');
             // $data_search['TR_TYPE']         = 1;
@@ -581,7 +587,8 @@ class Bill extends CI_Controller
         endif;
     }
 
-    function bill_history(){
+    function bill_history()
+    {
        // $this->auth->restrict_access($this->curuser,array(6004));
 
        // $data['link_1']     = 'Bil sewaan';
@@ -632,7 +639,8 @@ class Bill extends CI_Controller
 
     }
 
-    function statement(){
+    function statement()
+    {
         $data['link_1']     = 'Bil sewaan';
         $data['link_2']     = 'Senarai akaun';
         $data['link_3']     = 'Resit terdahulu';
@@ -671,7 +679,8 @@ class Bill extends CI_Controller
         templates('bill/v_current_bill',$data);
     }
 
-    function generate_barcode(){
+    function generate_barcode()
+    {
         // For demonstration purposes, get pararameters that are passed in through $_GET or set to the default value
         $filepath = (isset($_GET["filepath"])?$_GET["filepath"]:"");
         $text = (isset($_GET["text"])?$_GET["text"]:"0");
@@ -781,21 +790,45 @@ class Bill extends CI_Controller
     }
 
     // Do not enable this function unless for custom usage
-    // function updateBillAmount()
-    // {
-    //     $account_id     = 1;
-    //     $bill_month     = 4;
-    //     $bill_year      = 2020;
-    //     $bill_category  = "R";
-    //     $existingBill   = $this->m_bill_master->getBillId($account_id,$bill_month,$bill_year,$bill_category);
-    //     $bill_id        = $existingBill["BILL_ID"];
-    //     $billItemDetail = $this->m_bill_item->getBillItemTotalAmount($bill_id );
-    //     $bill_master_update["TOTAL_AMOUNT"] = $billItemDetail["TOTAL_AMOUNT"];
+    function updateBillAmount()
+    {
+        $account_id     = 6930;
 
-    //     // echo "<pre>";
-    //     // var_dump($bill_master_update);
-    //     // die();
+        $data_search["ACCOUNT_ID"] = 6949;
+        $data_search["CUSTOM_COLUMN"] = "BILL_ID";
 
-    //     $this->m_bill_master->updateBillMasterTotalAmount($bill_id,$account_id,$bill_master_update);
-    // }
+        $list_bill_master = $this->m_bill_master->get($data_search);
+
+        foreach ($list_bill_master as $bill) 
+        {
+            # code...
+            $bill_items = $this->m_bill_item->getBillItemTotalAmount( $bill["BILL_ID"] );
+            $bill_master_update["TOTAL_AMOUNT"] = $bill_items["TOTAL_AMOUNT"];
+            $this->m_bill_master->updateBillMasterTotalAmount( $bill["BILL_ID"], $account_id, $bill_master_update );
+        }
+
+        if ( isset($list_bill_master) )
+        {
+            echo "DONE";
+        }
+        else
+        {
+            echo "NO RECORD TO BE UPDATED";
+        }
+
+
+        // $bill_month     = 4;
+        // $bill_year      = 2020;
+        // $bill_category  = "R";
+        // $existingBill   = $this->m_bill_master->getBillId($account_id,$bill_month,$bill_year,$bill_category);
+        // $bill_id        = $existingBill["BILL_ID"];
+        // $billItemDetail = $this->m_bill_item->getBillItemTotalAmount($bill_id );
+        // $bill_master_update["TOTAL_AMOUNT"] = $billItemDetail["TOTAL_AMOUNT"];
+
+        // echo "<pre>";
+        // var_dump($bill_master_update);
+        // die();
+
+        // $this->m_bill_master->updateBillMasterTotalAmount($bill_id,$account_id,$bill_master_update);
+    }
 }

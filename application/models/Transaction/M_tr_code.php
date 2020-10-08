@@ -8,7 +8,7 @@ class M_tr_code extends CI_Model
     }
 
     function get_tr_code($data_search = array()){
-        db_select('*');
+        db_select('MCT_TRCODE,MCT_TRCODENEW,MCT_TRDESC,MCT_PRIORT');
         db_from('tr_code');
         if(isset($data_search['tr_id']) && having_value($data_search['tr_id'])):
             db_where('tr_id',$data_search['tr_id']);
