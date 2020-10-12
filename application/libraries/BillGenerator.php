@@ -105,50 +105,112 @@ class BillGenerator
             $year = $year - 1;
         }
 
-        $list_of_transaction = $this->CI->m_bill_item->getPreviousBillCharges(  $account_detail["BILL_TYPE"], $account_id, $month, $year );
+        $list_of_transaction = $this->CI->m_bill_item->groupAmountByYearTrcode( $account_id );
 
+        
         if ( !empty($list_of_transaction) )
         {
             // Manipulate data
+            $i = 1;
             foreach ($list_of_transaction as $bill_transaction) 
             {
-                if ( $bill_transaction["TR_CODE"] != "11119999" )
-                {
-                    $tr_code_semasa = $bill_transaction["TR_CODE"];
-                    // Replace first string of transaction code to "2" TO convert the transaction code to "Bayaran" transaction
-                    $tr_code_bayaran = "21".substr($bill_transaction["TR_CODE"],2);
-                    // Replace second string of transaction code to "2" TO convert the transaction code to "Tunggakan" transaction
-                    $tr_code_tunggakan = "12".substr($bill_transaction["TR_CODE"],2);
+                // if ($i == 3){die();}
+                // echo "</br>";
+                // echo "LOOP".$i.PHP_EOL;
 
-                    // Get Payment fo each bill_transaction semasa
-                    $get_payment_details = $this->CI->m_bill_item->getPreviousBillPayment( $account_detail["BILL_TYPE"], $account_id,$month,$year,$tr_code_bayaran);
+                if ( $bill_transaction["TR_CODE"] != "" && strlen( $bill_transaction["TR_CODE"] ) > 5 )
+                {
+                    $temp_trcode = $bill_transaction["TR_CODE"];
+                }
+                else if ( $bill_transaction["TR_CODE"] == "" && strlen( $bill_transaction["TR_CODE_OLD"] ) == 5 )
+                {
+                    $temp_trcode = $bill_transaction["TR_CODE_OLD"];
+                }
+
+                if ( substr( $temp_trcode,0,2 ) == '11')
+                {
+                    $temp_trcode = "12".substr( $temp_trcode,2 );
+                }
+
+                if ( $temp_trcode != "" || $temp_trcode != NULL )
+                {
+                    if ( substr( $temp_trcode,0,1 ) == "1" ) // Handle caj
+                    {
+                        if ( empty( $outstandingBill[ $temp_trcode ] ) )
+                        {
+                            $outstandingBill[ $temp_trcode ] = $bill_transaction["TOTAL_AMOUNT"] ;
+                        }
+                        else if ( isset( $outstandingBill[ $temp_trcode ] ) )
+                        {
+                            if ( isset( $outstandingBill[$temp_trcode] ) && substr( $temp_trcode,0,2 ) == '12' && $outstandingBill[$temp_trcode] == $bill_transaction["TOTAL_AMOUNT"] )
+                            {
+                                $outstandingBill[$temp_trcode] = $outstandingBill[$temp_trcode] + 0;
+                            }
+                            else
+                            {
+                                $outstandingBill[$temp_trcode] = $outstandingBill[$temp_trcode] + $bill_transaction["TOTAL_AMOUNT"];
+                            }
+                        }
+                        // echo $temp_trcode.PHP_EOL;
+                        // echo $outstandingBill[$temp_trcode] .PHP_EOL;
+                    }
+                    else if ( substr( $temp_trcode,0,1 ) == "2" ) // Handle payment
+                    {
+                        // Merge payment to tunggakan transaction code
+                        $caj_tunggakan_trcode = "12".substr( $temp_trcode,2 ) ;
+
+                        if ( empty( $outstandingBill[ $caj_tunggakan_trcode ] ) )
+                        {
+                            $outstandingBill[ $caj_tunggakan_trcode ] = $bill_transaction["TOTAL_AMOUNT"] * -1;
+                        }
+                        else if ( isset( $outstandingBill[ $caj_tunggakan_trcode ] ) )
+                        {
+                            
+                            $outstandingBill[$caj_tunggakan_trcode] = $outstandingBill[$caj_tunggakan_trcode] + ($bill_transaction["TOTAL_AMOUNT"] * -1);
+                            
+                        }
+                        // echo $caj_tunggakan_trcode.PHP_EOL;
+                        // echo $outstandingBill[$caj_tunggakan_trcode] .PHP_EOL;
+                    }
+                }
+
+                $i++;
+            }
+
+            foreach ($outstandingBill as $tr_code => $total_amount) 
+            {
+                if ( $tr_code != "11119999" )
+                {
+                    $tr_code_tunggakan = "12".substr($tr_code,2);
 
                     // Get tr_code description
-                    $data_search_semasa["MCT_TRCODENEW"] = $bill_transaction["TR_CODE"];
-                    $data_search_bayaran_semasa["MCT_TRCODENEW"] = $tr_code_bayaran;
-                    $data_search_tunggakan["MCT_TRCODENEW"] = $tr_code_tunggakan;
+                    if ( strlen($tr_code) == 5 )
+                    {
+                        $data_search_tunggakan["MCT_TRCODE"] = $tr_code_tunggakan;
+                        unset( $data_search_tunggakan["MCT_TRCODENEW"] );
+                    }
+                    else
+                    {
+                        $data_search_tunggakan["MCT_TRCODENEW"] = $tr_code_tunggakan;
+                        unset( $data_search_tunggakan["MCT_TRCODE"] );
+                    }
 
-                    $tr_detail_semasa           = $this->CI->m_tr_code->get_tr_code( $data_search_semasa );
-                    $tr_detail_bayaran_semasa   = $this->CI->m_tr_code->get_tr_code( $data_search_bayaran_semasa );
                     $tr_detail_tunggakan  = $this->CI->m_tr_code->get_tr_code( $data_search_tunggakan );
 
                     $data[] = array(
-                                        'TR_CODE_BILL'          => $bill_transaction["TR_CODE"],
-                                        'TR_CODE_OLD_BILL'      => $tr_detail_semasa["MCT_TRCODE"],
-                                        'TR_DESC_BILL'          => $tr_detail_semasa["MCT_TRDESC"],
                                         'TR_CODE_TUNGGAKAN'     => $tr_code_tunggakan,
                                         'TR_CODE_OLD_TUNGGAKAN' => $tr_detail_tunggakan["MCT_TRCODE"],
                                         'TR_DESC_TUNGGAKAN'     => $tr_detail_tunggakan["MCT_TRDESC"],
                                         'PRIORITY'              => $tr_detail_tunggakan['MCT_PRIORT'],
-                                        'BALANCE_AMOUNT'        => $bill_transaction["TOTAL_AMOUNT"] - $get_payment_details["TOTAL_AMOUNT"], 
+                                        'BALANCE_AMOUNT'        => $total_amount, 
                                     );
                 }
             }
         }
         else
         {
-            // $data = false;
-            $data = $list_of_transaction;
+            $data = false;
+            // $data = $list_of_transaction;
         }
 
         return $data;
@@ -300,7 +362,7 @@ class BillGenerator
         // Get account detail
         $account_detail = $this->CI->m_acc_account->getAccountDetailOnlyById( $account_id );
 
-        if ( $account_detail["STATUS_ACC"] == 1 )
+        if ( $account_detail["STATUS_ACC"] == 1 && ( $account_detail["CATEGORY_ID"] != "" || $account_detail["CATEGORY_ID"] != NULL ) )
         {
             // Check if a master record already exist for current month
 
@@ -403,6 +465,10 @@ class BillGenerator
         $list_outstanding_charges    =  $this->getCurrentMonthOutstandingCharge($account_id);
         $list_of_other_charges       =  $this->getOtherCharge($account_id);
 
+        // echo "<pre>";
+        // var_dump($list_outstanding_charges);
+        // die();
+
         // Calculate monthly charges
         // ---- Current charge ----        
         foreach ($list_monthly_charges as $monthly_charge_item) 
@@ -413,53 +479,13 @@ class BillGenerator
             $tr_desc     = $monthly_charge_item["PERIHAL_CAJ_BARU"];
             $caj         = $monthly_charge_item["CAJ_ANGGARAN"];
 
-            // Check Payment Record
-            $tr_code_bayaran       =  "21".substr($tr_code_new,2);
-            $check_charges_record  =  $this->CI->m_bill_item->getPreviousBillCharges( $account_detail["BILL_TYPE"], $account_id, $month, $year, $tr_code_new );
-            $check_payment_record  =  $get_payment_details = $this->CI->m_bill_item->getPreviousBillPayment( $account_detail["BILL_TYPE"], $account_id, $month, $year, $tr_code_bayaran );
-            $balance_amount        =  $check_charges_record["TOTAL_AMOUNT"] - $check_payment_record["TOTAL_AMOUNT"];
-
-            if ( $balance_amount > 0 )
-            {
-                // Add one record for current caj as new bill item and one record for tunggakan caj as extra bill item
-                // Only active account has current bill
-                if ( $account_detail["STATUS_ACC"] == 1 ) 
-                {
-                    $data[] = array( 
-                                    'TR_CODE_OLD'      =>  $tr_code_old,
-                                    'TR_CODE_NEW'      =>  $tr_code_new,
-                                    'TR_DESC'          =>  $tr_desc,
-                                    'AMOUNT'           =>  $caj,
-                                    'DISPLAY_PRIORITY' =>  '1',
-                                );
-                }
-
-                $tr_code_tunggakan = "12".substr($tr_code_new,2);
-                $data_search_tunggakan["MCT_TRCODENEW"] = $tr_code_tunggakan;
-                $tr_detail_tunggakan  = $this->CI->m_tr_code->get_tr_code( $data_search_tunggakan );
-
-                $data[] = array( 
-                                    'TR_CODE_OLD'      =>  $tr_detail_tunggakan["MCT_TRCODE"],
-                                    'TR_CODE_NEW'      =>  $tr_detail_tunggakan["MCT_TRCODENEW"],
-                                    'TR_DESC'          =>  $tr_detail_tunggakan["MCT_TRDESC"],
-                                    'AMOUNT'           =>  $balance_amount,
-                                    'DISPLAY_PRIORITY' =>  '3',
-                                );
-            }
-            else if ( $balance_amount <= 0 && $account_detail["STATUS_ACC"] == 1 ) // Only active account has current bill
-            {
-                $new_balance_amount = $caj + $balance_amount;
-                $data[] = array( 
-                                    'TR_CODE_OLD'      =>  $tr_code_old,
-                                    'TR_CODE_NEW'      =>  $tr_code_new,
-                                    'TR_DESC'          =>  $tr_desc,
-                                    'AMOUNT'           =>  $new_balance_amount,
-                                    'DISPLAY_PRIORITY' =>  '1',
-                                );
-            }
-
-            // Record the processed transaction
-            $list_processed_transaction[] = $tr_code_new;
+            $data[] = array( 
+                                'TR_CODE_OLD'      =>  $tr_code_old,
+                                'TR_CODE_NEW'      =>  $tr_code_new,
+                                'TR_DESC'          =>  $tr_desc,
+                                'AMOUNT'           =>  $caj,
+                                'DISPLAY_PRIORITY' =>  '1',
+                            );
         }
 
         // ---- Outstanding Charge ----
@@ -467,7 +493,7 @@ class BillGenerator
         {
             foreach ($list_outstanding_charges as $outstanding_charges) 
             {
-                if ( array_search( $outstanding_charges["TR_CODE_BILL"], $list_processed_transaction) === false )
+                if ( $outstanding_charges["BALANCE_AMOUNT"] > 0 )
                 {
                     $data[] = array( 
                                         'TR_CODE_OLD'      =>  $outstanding_charges["TR_CODE_OLD_TUNGGAKAN"],

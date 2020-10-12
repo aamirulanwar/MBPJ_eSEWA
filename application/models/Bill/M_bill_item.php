@@ -734,6 +734,7 @@ class M_bill_item extends CI_Model
         return true;
     }
     
+    /*   
     function getPreviousBillCharges( $bill_type = 1, $account_id=-1,$bill_month=0,$bill_year=0,$tr_code_new=0 )
     {
         db_select('tr_code');
@@ -749,13 +750,14 @@ class M_bill_item extends CI_Model
 
         if ( $bill_type == 1 )
         {
-            db_where(" bill_id in (select bill_id from b_master where account_id = ".$account_id." and bill_year = ".$bill_year." and bill_month < ".$bill_month." ) ");
+            // db_where(" bill_id in (select bill_id from b_master where account_id = ".$account_id." and bill_year = ".$bill_year." and bill_month < ".$bill_month." ) ");
+            db_where(" bill_id not in (select bill_id from b_master where bill_type = 1 and account_id = ".$account_id." and bill_year = ".$bill_year." and bill_month = ".$bill_month." ) ");
         }
         else if ( $bill_type == 2 )
         {
-            db_where(" bill_id < (select max(bill_id) bill_id from b_master where account_id = ".$account_id." ) ");
+            db_where(" bill_id < (select max(bill_id) bill_id from b_master where bill_type = 2 and account_id = ".$account_id." ) ");
         }
-        else if ( $bill_type == 3 )
+        else if ( $bill_type == 3 ) // This bill type is generated once only
         {
             db_where(" bill_id in (select bill_id from b_master where account_id = ".$account_id." and bill_year = ".$bill_year." and bill_month < ".$bill_month." ) ");
         }       
@@ -776,6 +778,41 @@ class M_bill_item extends CI_Model
             return array();
         }
     }
+
+    function getOutstandingBillChargesCarriedForwardInNewYear( $bill_type = 1, $account_id=-1,$bill_month=1,$bill_year=0 )
+    {
+        db_select('tr_code');
+        db_select('sum(amount) as total_amount');
+        db_from('b_item');
+        db_where(' account_id',$account_id);
+        db_where(" substr(tr_code,0,2) = '12' ");
+
+        if ( $bill_type == 1 )
+        {
+            // db_where(" bill_id in (select bill_id from b_master where account_id = ".$account_id." and bill_year = ".$bill_year." and bill_month < ".$bill_month." ) ");
+            db_where(" bill_id not in (select bill_id from b_master where bill_type = 1 and account_id = ".$account_id." and bill_year = ".$bill_year." and bill_month = ".$bill_month." ) ");
+        }
+        else if ( $bill_type == 2 )
+        {
+            db_where(" bill_id not in (select max(bill_id) bill_id from b_master where bill_type = 2 and account_id = ".$account_id." ) ");
+        }
+        else if ( $bill_type == 3 ) // This bill type is generated once only
+        {
+            db_where(" bill_id in (select bill_id from b_master where account_id = ".$account_id." and bill_year = ".$bill_year." and bill_month < ".$bill_month." ) ");
+        }
+
+        db_group(" tr_code,bill_category");
+        $sql = db_get('');
+
+        if( $sql )
+        {
+            return $sql->result_array('');
+        }
+        else
+        {
+            return array();
+        }
+    }
     
     function getPreviousBillPayment( $bill_type = 1, $account_id=-1,$bill_month=0,$bill_year=0,$tr_code_new=0 )
     {
@@ -783,12 +820,23 @@ class M_bill_item extends CI_Model
         db_select('sum(amount) as total_amount');
         db_from('b_item');
         db_where(' account_id',$account_id);
-        db_where(' tr_code',$tr_code_new);
-        db_where(" substr(tr_code,0,2) = '21' ");
+
+        if ( strlen($tr_code_new) == 5)
+        {
+            db_where(' tr_code_old',$tr_code_new);
+            db_where(" substr(tr_code_old,0,1) = '2' ");           
+        }
+        else if ( strlen($tr_code_new) > 5)
+        {
+            db_where(' tr_code',$tr_code_new);            
+            db_where(" substr(tr_code,0,1) = '2' ");
+        }
+
 
         if ( $bill_type == 1 )
         {
-            db_where(" bill_id in (select bill_id from b_master where account_id = ".$account_id." and bill_year = ".$bill_year." and bill_month < ".$bill_month." ) ");
+            // db_where(" bill_id in (select bill_id from b_master where account_id = ".$account_id." and bill_year = ".$bill_year." and bill_month < ".$bill_month." ) ");
+            db_where(" bill_id not in (select bill_id from b_master where bill_type = 1 and account_id = ".$account_id." and bill_year = ".$bill_year." and bill_month = ".$bill_month." ) ");
         }
         else if ( $bill_type == 2 )
         {
@@ -817,6 +865,41 @@ class M_bill_item extends CI_Model
         db_where(" substr(tr_code,0,2) in ('11','21') ");
         db_where(" bill_id in (select bill_id from b_master where account_id = ".$account_id." and bill_year = ".$bill_year." and bill_month < ".$bill_month." ) ");
         db_group(" tr_code,bill_category");
+        $sql = db_get('');
+
+        if($sql)
+        {
+            return $sql->result_array('');
+        }
+        else
+        {
+            return array();
+        }
+    }
+    */
+
+    /* *************** EXTREME NOTICE / ALERT *************** */
+    /*  Please edit this function "groupAmountByYearTrcode($account_id)" carefully
+     *  Any Changes has HIGH PROBABILTY to make bill generation to calculate wrongly 
+     *  and make generated bill is invalid
+     */
+    /* *************** BE WARNED *************** */
+    function groupAmountByYearTrcode($account_id)
+    {
+        db_select('sum(a.amount) as total_amount');
+        db_select('b.account_id');
+        db_select('b.bill_year');
+        db_select('a.tr_code');
+        db_select('a.tr_code_old');
+        db_select('a.BILL_CATEGORY');
+        db_from('b_item a,b_master b');
+        db_where('a.bill_id = b.bill_id');
+        db_where('a.account_id = b.account_id ');
+        db_where('b.account_id',$account_id);
+        db_group("b.bill_year,b.account_id,a.tr_code_old,a.tr_code,a.BILL_CATEGORY");
+        db_order('b.BILL_YEAR', 'asc');
+        db_order('a.BILL_CATEGORY', 'asc');
+        db_order('a.TR_CODE_OLD', 'desc');
         $sql = db_get('');
 
         if($sql)

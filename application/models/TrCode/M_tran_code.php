@@ -35,6 +35,9 @@ class M_tran_code extends CI_Model
     function get_tr_code($data_search = array()){
         $this->admin_trcode->select('*');
         $this->admin_trcode->from('MCTRANCODE');
+        if(isset($data_search['MCT_TRCODE']) && having_value($data_search['MCT_TRCODE'])):
+            $this->admin_trcode->where('MCT_TRCODE',$data_search['MCT_TRCODE']);
+        endif;
         if(isset($data_search['MCT_TRCODENEW']) && having_value($data_search['MCT_TRCODENEW'])):
             $this->admin_trcode->where('MCT_TRCODENEW',$data_search['MCT_TRCODENEW']);
         endif;
