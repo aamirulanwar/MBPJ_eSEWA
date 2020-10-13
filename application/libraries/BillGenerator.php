@@ -508,12 +508,15 @@ class BillGenerator
             $tr_code_old        =   $monthly_charge_item["KOD_CAJ_LAMA"];
             $tr_code_new        =   $monthly_charge_item["KOD_CAJ_BARU"];
             $tr_desc            =   $monthly_charge_item["PERIHAL_CAJ_BARU"];
-            $caj                =   $monthly_charge_item["CAJ_ANGGARAN"];
+            $caj                =   $monthly_charge_item["CAJ_ANGGARAN"] ;
             $tunggakan_tr_code  =   '12'.substr($monthly_charge_item["KOD_CAJ_BARU"], 2);
 
             if ( isset($temp_outstanding_charges[ $tunggakan_tr_code ] ) )
             {
-                $caj = $caj + $temp_outstanding_charges[ $tunggakan_tr_code ];
+                if ( $temp_outstanding_charges[ $tunggakan_tr_code ] <=0 )
+                {
+                    $caj = $caj + $temp_outstanding_charges[ $tunggakan_tr_code ];
+                }
             }
 
             $data[] = array( 
