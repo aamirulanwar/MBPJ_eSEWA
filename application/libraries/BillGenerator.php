@@ -465,27 +465,20 @@ class BillGenerator
         $list_outstanding_charges    =  $this->getCurrentMonthOutstandingCharge($account_id);
         $list_of_other_charges       =  $this->getOtherCharge($account_id);
 
-        // echo "<pre>";
-        // var_dump($list_outstanding_charges);
-        // die();
-
-        // Calculate monthly charges
-        // ---- Current charge ----        
-        foreach ($list_monthly_charges as $monthly_charge_item) 
+        // ---- Other Charge ----
+        if ( $list_of_other_charges !== false)
         {
-            # code...
-            $tr_code_old = $monthly_charge_item["KOD_CAJ_LAMA"];
-            $tr_code_new = $monthly_charge_item["KOD_CAJ_BARU"];
-            $tr_desc     = $monthly_charge_item["PERIHAL_CAJ_BARU"];
-            $caj         = $monthly_charge_item["CAJ_ANGGARAN"];
-
-            $data[] = array( 
-                                'TR_CODE_OLD'      =>  $tr_code_old,
-                                'TR_CODE_NEW'      =>  $tr_code_new,
-                                'TR_DESC'          =>  $tr_desc,
-                                'AMOUNT'           =>  $caj,
-                                'DISPLAY_PRIORITY' =>  '1',
-                            );
+            foreach ($list_of_other_charges as $other_charge) 
+            {
+                # code...
+                $data[] = array( 
+                                    'TR_CODE_OLD'      =>  $other_charge["TR_CODE_OLD"],
+                                    'TR_CODE_NEW'      =>  $other_charge["TR_CODE_NEW"],
+                                    'TR_DESC'          =>  $other_charge["TR_DESC"],
+                                    'AMOUNT'           =>  $other_charge["AMOUNT"],
+                                    'DISPLAY_PRIORITY' =>  '2',
+                                );
+            }
         }
 
         // ---- Outstanding Charge ----
@@ -503,24 +496,38 @@ class BillGenerator
                                         'DISPLAY_PRIORITY' =>  '3',
                                     );
                 }
+                $temp_outstanding_charges[ $outstanding_charges["TR_CODE_TUNGGAKAN"] ] = $outstanding_charges["BALANCE_AMOUNT"];
             }
         }
 
-        // ---- Other Charge ----
-        if ( $list_of_other_charges !== false)
+        // Calculate monthly charges
+        // ---- Current charge ----        
+        foreach ($list_monthly_charges as $monthly_charge_item) 
         {
-            foreach ($list_of_other_charges as $other_charge) 
+            # code...
+            $tr_code_old        =   $monthly_charge_item["KOD_CAJ_LAMA"];
+            $tr_code_new        =   $monthly_charge_item["KOD_CAJ_BARU"];
+            $tr_desc            =   $monthly_charge_item["PERIHAL_CAJ_BARU"];
+            $caj                =   $monthly_charge_item["CAJ_ANGGARAN"];
+            $tunggakan_tr_code  =   '12'.substr($monthly_charge_item["KOD_CAJ_BARU"], 2);
+
+            if ( isset($temp_outstanding_charges[ $tunggakan_tr_code ] ) )
             {
-                # code...
-                $data[] = array( 
-                                    'TR_CODE_OLD'      =>  $other_charge["TR_CODE_OLD"],
-                                    'TR_CODE_NEW'      =>  $other_charge["TR_CODE_NEW"],
-                                    'TR_DESC'          =>  $other_charge["TR_DESC"],
-                                    'AMOUNT'           =>  $other_charge["AMOUNT"],
-                                    'DISPLAY_PRIORITY' =>  '2',
-                                );
+                $caj = $caj + $temp_outstanding_charges[ $tunggakan_tr_code ];
             }
+
+            $data[] = array( 
+                                'TR_CODE_OLD'      =>  $tr_code_old,
+                                'TR_CODE_NEW'      =>  $tr_code_new,
+                                'TR_DESC'          =>  $tr_desc,
+                                'AMOUNT'           =>  $caj,
+                                'DISPLAY_PRIORITY' =>  '1',
+                            );
         }
+
+        // echo "<pre>";
+        // var_dump( $data );
+        // die();
 
         // Select list of column that we need to sort by
         foreach ($data as $key => $row) 
