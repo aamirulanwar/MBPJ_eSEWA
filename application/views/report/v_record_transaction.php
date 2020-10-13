@@ -181,6 +181,21 @@
                             $debitAmount = NULL;
                             $creditAmount = $row["AMOUNT"];
                         }
+                        else if ( $row["MASTER_BILL_CATEGORY"] == 'J' && $row["BILL_CATEGORY"] == 'J' )
+                        {
+                            if ( substr($row["TR_CODE"],0,1) == "1" || substr($row["TR_CODE_OLD"],0,1) == "1" )
+                            {
+                                $totalAmount = $totalAmount + $row["AMOUNT"];
+                                $debitAmount = NULL;
+                                $creditAmount = $row["AMOUNT"];
+                            }
+                            else if ( substr($row["TR_CODE"],0,1) == "2" || substr($row["TR_CODE_OLD"],0,1) == "2" )
+                            {
+                                $totalAmount = $totalAmount - $row["AMOUNT"];
+                                $debitAmount = NULL;
+                                $creditAmount = $row["AMOUNT"];
+                            }
+                        }
 
                         // $totalAmount = ($row["BILL_CATEGORY"] == 'B' ? ($totalAmount + $row["AMOUNT"]) : ($totalAmount - $row["AMOUNT"]));
 

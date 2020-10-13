@@ -616,6 +616,7 @@ class M_bill_item extends CI_Model
     {
         db_select('i.ITEM_ID');
         db_select('i.TR_CODE');
+        db_select('i.TR_CODE_OLD');
         db_select('i.ITEM_DESC');
         db_select('i.ACCOUNT_ID');
         db_select('a.ACCOUNT_NUMBER');
@@ -637,7 +638,7 @@ class M_bill_item extends CI_Model
             db_where('i.tr_code',$data_search['tr_code']);
         endif;
         if(isset($data_search['date_end']) && having_value($data_search['date_end'])):
-            db_where("i.dt_added <= to_date('".$data_search['date_end']."','DD-MM-YYYY')+1");
+            db_where("i.dt_added < to_date('".$data_search['date_end']."','DD-MM-YYYY')+1");
         endif;
         if(isset($data_search['account_id']) && having_value($data_search['account_id'])):
             db_where('m.account_id',$data_search['account_id']);

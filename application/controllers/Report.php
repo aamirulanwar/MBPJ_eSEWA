@@ -769,7 +769,9 @@ class Report extends CI_Controller
         templates('/report/v_highest_overdue',$data);
     }
 
-    function record_transaction(){
+    function record_transaction()
+    {
+        $this->output->enable_profiler(TRUE);
         $this->auth->restrict_access($this->curuser,array(8007));
         $data['link_1'] = 'Laporan';
         $data['link_2'] = 'Rekod transaksi';
