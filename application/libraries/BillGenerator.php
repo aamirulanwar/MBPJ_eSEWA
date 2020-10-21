@@ -120,10 +120,12 @@ class BillGenerator
 
                 if ( $bill_transaction["TR_CODE"] != "" && strlen( $bill_transaction["TR_CODE"] ) > 5 )
                 {
+                    $original_trcode = $bill_transaction["TR_CODE"];
                     $temp_trcode = $bill_transaction["TR_CODE"];
                 }
                 else if ( $bill_transaction["TR_CODE"] == "" && strlen( $bill_transaction["TR_CODE_OLD"] ) == 5 )
                 {
+                    $original_trcode = $bill_transaction["TR_CODE_OLD"];
                     $temp_trcode = $bill_transaction["TR_CODE_OLD"];
                 }
 
@@ -142,9 +144,13 @@ class BillGenerator
                         }
                         else if ( isset( $outstandingBill[ $temp_trcode ] ) )
                         {
-                            if ( isset( $outstandingBill[$temp_trcode] ) && substr( $temp_trcode,0,2 ) == '12' && $outstandingBill[$temp_trcode] == $bill_transaction["TOTAL_AMOUNT"] )
+                            if ( isset( $outstandingBill[$temp_trcode] ) && substr( $temp_trcode,0,2 ) == '12' && $outstandingBill[$temp_trcode] == $bill_transaction["TOTAL_AMOUNT"] && substr( $original_trcode,0,2 ) == '12' )
                             {
                                 $outstandingBill[$temp_trcode] = $outstandingBill[$temp_trcode] + 0;
+                            }
+                            else if ( isset( $outstandingBill[$temp_trcode] ) && substr( $temp_trcode,0,2 ) == '12' && $outstandingBill[$temp_trcode] != $bill_transaction["TOTAL_AMOUNT"] && substr( $original_trcode,0,2 ) == '12' )
+                            {
+                                $outstandingBill[$temp_trcode] = $bill_transaction["TOTAL_AMOUNT"];
                             }
                             else
                             {

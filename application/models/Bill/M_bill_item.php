@@ -632,7 +632,7 @@ class M_bill_item extends CI_Model
         db_where("i.display_status != 'X'");
 
         if(isset($data_search['date_start']) && having_value($data_search['date_start'])):
-            db_where("i.dt_added >= to_date('".$data_search['date_start']."','DD-MM-YYYY')-1");
+            db_where("i.dt_added > to_date('".$data_search['date_start']."','DD-MM-YYYY')-1");
         endif;
         if(isset($data_search['tr_code']) && having_value($data_search['tr_code'])):
             db_where('i.tr_code',$data_search['tr_code']);
