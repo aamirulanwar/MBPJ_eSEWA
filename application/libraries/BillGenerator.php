@@ -148,7 +148,7 @@ class BillGenerator
                             {
                                 $outstandingBill[$temp_trcode] = $outstandingBill[$temp_trcode] + 0;
                             }
-                            else if ( isset( $outstandingBill[$temp_trcode] ) && substr( $temp_trcode,0,2 ) == '12' && $outstandingBill[$temp_trcode] != $bill_transaction["TOTAL_AMOUNT"] && substr( $original_trcode,0,2 ) == '12' )
+                            else if ( isset( $outstandingBill[$temp_trcode] ) && substr( $temp_trcode,0,2 ) == '12' && $outstandingBill[$temp_trcode] != $bill_transaction["TOTAL_AMOUNT"] && substr( $original_trcode,0,2 ) == '12' && $bill_transaction["BILL_CATEGORY"] == "B" )
                             {
                                 $outstandingBill[$temp_trcode] = $bill_transaction["TOTAL_AMOUNT"];
                             }

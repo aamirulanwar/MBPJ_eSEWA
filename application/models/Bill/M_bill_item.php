@@ -897,6 +897,7 @@ class M_bill_item extends CI_Model
         db_where('a.bill_id = b.bill_id');
         db_where('a.account_id = b.account_id ');
         db_where('b.account_id',$account_id);
+        db_where('b.bill_id in (select bill_id from b_master where dt_added < to_date('."'01/".date('m')."/".date('Y')."',"."'dd/mm/yyyy'".') )');
         db_group("b.bill_year,b.account_id,a.tr_code_old,a.tr_code,a.BILL_CATEGORY");
         db_order('b.BILL_YEAR', 'asc');
         db_order('a.BILL_CATEGORY', 'asc');
