@@ -913,4 +913,34 @@ class M_bill_item extends CI_Model
             return array();
         }
     }
+
+    function getLastAmountTrcode($account_id)
+    {
+        db_select('sum(a.amount) as total_amount');
+        db_select('b.account_id');
+        db_select('b.bill_year');
+        db_select('a.tr_code');
+        db_select('a.tr_code_old');
+        db_select('a.BILL_CATEGORY');
+        db_from('b_item a,b_master b');
+        db_where('a.bill_id = b.bill_id');
+        db_where('a.account_id = b.account_id ');
+        db_where('b.account_id',$account_id);
+        db_where('b.bill_year in (select max(bill_year) from b_master where account_id = '.$account_id.')');
+        db_where('b.bill_id in (select bill_id from b_master where dt_added < to_date('."'01/".date('m')."/".date('Y')."',"."'dd/mm/yyyy'".') )');
+        db_group("b.bill_year,b.account_id,a.tr_code_old,a.tr_code,a.BILL_CATEGORY");
+        db_order('b.BILL_YEAR', 'asc');
+        db_order('a.BILL_CATEGORY', 'asc');
+        db_order('a.TR_CODE_OLD', 'desc');
+        $sql = db_get('');
+
+        if($sql)
+        {
+            return $sql->result_array('');
+        }
+        else
+        {
+            return array();
+        }
+    }
 }

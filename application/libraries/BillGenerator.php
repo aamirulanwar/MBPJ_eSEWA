@@ -86,6 +86,11 @@ class BillGenerator
             $data = false;
         }
 
+        if ( $account_detail["STATUS_ACC"] == 2 )
+        {
+            $data = false;
+        }
+
         return $data;
     }
 
@@ -360,6 +365,56 @@ class BillGenerator
             $data = false;
         }
 
+        // Check if account do not have outstanding balance greater than 0
+        /* This check is required to ensure that if inactive account that have no outstanding balance
+           must not have lod or notis mahkamah charge
+        */
+        $check_balance_amount = $this->CI->m_bill_item->getLastAmountTrcode( $account_id );
+        
+        foreach ($check_balance_amount as $detail) 
+        {
+            if ( $detail["TR_CODE"] != "" )
+            {
+                $tr_code = $detail["TR_CODE"];
+            }
+            else if ( $detail["TR_CODE"] == "" && $detail["TR_CODE_OLD"] != "" )
+            {
+                $tr_code = $detail["TR_CODE_OLD"];
+            }
+            
+            if ( substr($tr_code, 0, 2) == "12" )
+            {
+                if ( isset($data_test[ $tr_code ]) )
+                {
+                    $data_test[ $tr_code ] =  $data_test[ $tr_code ] + $detail["TOTAL_AMOUNT"];
+                }
+                else if ( empty($data_test[ $tr_code ]) )
+                {
+                    $data_test[ $tr_code ] =  $detail["TOTAL_AMOUNT"];
+                }
+            }
+            else if ( substr($tr_code, 0, 2) == "22" )
+            {
+                $tr_code = "12".substr($tr_code, 2);
+
+                if ( isset($data_test[ $tr_code ]) )
+                {
+                    $data_test[ $tr_code ] =  $data_test[ $tr_code ] - $detail["TOTAL_AMOUNT"];
+                }
+                else if ( empty($data_test[ $tr_code ]) )
+                {
+                    $data_test[ $tr_code ] = $detail["TOTAL_AMOUNT"];
+                }
+            }
+        }
+        
+        if ( array_sum($data_test) == 0 )
+        {
+            $data_update["NOTICE_LEVEL"] = 0;
+            $this->CI->m_acc_account->update_account($data_update,$account_id);
+            $data = false;
+        }
+
         return $data;
     }
 
@@ -507,48 +562,56 @@ class BillGenerator
         }
 
         // Calculate monthly charges
-        // ---- Current charge ----        
-        foreach ($list_monthly_charges as $monthly_charge_item) 
-        {
-            # code...
-            $tr_code_old        =   $monthly_charge_item["KOD_CAJ_LAMA"];
-            $tr_code_new        =   $monthly_charge_item["KOD_CAJ_BARU"];
-            $tr_desc            =   $monthly_charge_item["PERIHAL_CAJ_BARU"];
-            $caj                =   $monthly_charge_item["CAJ_ANGGARAN"] ;
-            $tunggakan_tr_code  =   '12'.substr($monthly_charge_item["KOD_CAJ_BARU"], 2);
-
-            if ( isset($temp_outstanding_charges[ $tunggakan_tr_code ] ) )
+        // ---- Current charge ----  
+        if ( $list_monthly_charges !== false )
+        {      
+            foreach ($list_monthly_charges as $monthly_charge_item) 
             {
-                if ( $temp_outstanding_charges[ $tunggakan_tr_code ] <=0 )
+                # code...
+                $tr_code_old        =   $monthly_charge_item["KOD_CAJ_LAMA"];
+                $tr_code_new        =   $monthly_charge_item["KOD_CAJ_BARU"];
+                $tr_desc            =   $monthly_charge_item["PERIHAL_CAJ_BARU"];
+                $caj                =   $monthly_charge_item["CAJ_ANGGARAN"] ;
+                $tunggakan_tr_code  =   '12'.substr($monthly_charge_item["KOD_CAJ_BARU"], 2);
+
+                if ( isset($temp_outstanding_charges[ $tunggakan_tr_code ] ) )
                 {
-                    $caj = $caj + $temp_outstanding_charges[ $tunggakan_tr_code ];
+                    if ( $temp_outstanding_charges[ $tunggakan_tr_code ] <=0 )
+                    {
+                        $caj = $caj + $temp_outstanding_charges[ $tunggakan_tr_code ];
+                    }
                 }
+
+                $data[] = array( 
+                                    'TR_CODE_OLD'      =>  $tr_code_old,
+                                    'TR_CODE_NEW'      =>  $tr_code_new,
+                                    'TR_DESC'          =>  $tr_desc,
+                                    'AMOUNT'           =>  $caj,
+                                    'DISPLAY_PRIORITY' =>  '1',
+                                );
+            }
+        }
+
+        // Check if data array is generated. If not return empty array
+        if( isset($data) )
+        {
+            // Select list of column that we need to sort by
+            foreach ($data as $key => $row) 
+            {
+                # code...
+                $display_priority_1[$key]  = $row['DISPLAY_PRIORITY'];
+                $display_priority_2[$key]  = $row['TR_CODE_NEW'];
             }
 
-            $data[] = array( 
-                                'TR_CODE_OLD'      =>  $tr_code_old,
-                                'TR_CODE_NEW'      =>  $tr_code_new,
-                                'TR_DESC'          =>  $tr_desc,
-                                'AMOUNT'           =>  $caj,
-                                'DISPLAY_PRIORITY' =>  '1',
-                            );
+            // Sort the data retrieved from function with out custom sort by column above
+            array_multisort($display_priority_1, SORT_ASC, $display_priority_2, SORT_ASC, $data);
         }
-
-        // echo "<pre>";
-        // var_dump( $data );
-        // die();
-
-        // Select list of column that we need to sort by
-        foreach ($data as $key => $row) 
+        else
         {
-            # code...
-            $display_priority_1[$key]  = $row['DISPLAY_PRIORITY'];
-            $display_priority_2[$key]  = $row['TR_CODE_NEW'];
+            $data = array();
         }
 
-        // Sort the data retrieved from function with out custom sort by column above
-        array_multisort($display_priority_1, SORT_ASC, $display_priority_2, SORT_ASC, $data);
-        
+                
         return $data;
     }
 
