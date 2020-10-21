@@ -23,6 +23,10 @@ class M_journal extends CI_Model
             
             return $result;
         }
+        else
+        {
+            return array();
+        }
     }
 
     function journal_code_lists($bill_category="B"){
@@ -48,8 +52,16 @@ class M_journal extends CI_Model
     }
 
     function insert_journal_temp($data)
-    {
-        db_set_date_time('dt_added',timenow());
+    {   
+        if ( isset($data["date_process"]) )
+        {
+            db_set_date_v2('dt_added',$data["date_process"]);
+            unset($data["date_process"]);
+        }
+        else
+        {
+            db_set_date_time('dt_added',timenow());
+        }
         
         $insert = db_insert('b_journal_temp',$data);
 
