@@ -181,10 +181,10 @@ class Cron extends CI_Controller
 
     function generate_tunggakan($data_item){
         #tunggakan thaun lepas - cari item dengan no bermula 12 counter no 22. - display
-//        pre($data_item);
+        // pre($data_item);
         $account_id = $data_item['account_id'];
         $cur_data = $this->get_item_tunggakan_cur_year_by_type($account_id,'B');
-//        $cur_data = array();
+        // $cur_data = array();
         if($cur_data):
             return true;
         endif;
@@ -192,8 +192,8 @@ class Cron extends CI_Controller
         $all_amount_need_paid = 0;
         $tunggakan_tahun_lepas = $this->get_item_tunggakan_last_year_by_type($account_id,'B');
 
-//        pre($tunggakan_tahun_lepas);
-//        echo 'tahun lepas';
+        // pre($tunggakan_tahun_lepas);
+        // echo 'tahun lepas';
 
         $bill_item = array();
         if($tunggakan_tahun_lepas):
@@ -232,10 +232,10 @@ class Cron extends CI_Controller
 
         #tunggakan semasa
         $tunggakan_semasa = $this->get_item_tunggakan_semasa($account_id,'B');
-//        echo last_query();
-//
-//        pre($tunggakan_semasa);
-//        echo 'tahun semasa';
+        // echo last_query();
+
+        // pre($tunggakan_semasa);
+        // echo 'tahun semasa';
 
         if($tunggakan_semasa):
             foreach ($tunggakan_semasa as $row):
@@ -255,7 +255,7 @@ class Cron extends CI_Controller
                 $code_tunggakan   = substr($row['TR_CODE'],2);
                 $code_tunggakan   = '12'.$code_tunggakan;
 
-//                echo $total_amount.'<br>';
+                // echo $total_amount.'<br>';
 
                 if($total_amount>0):
                     $all_amount_need_paid = $all_amount_need_paid+$total_amount;
@@ -292,8 +292,8 @@ class Cron extends CI_Controller
 
         $new_bill_item = array();
 
-//        echo 'new lebihan';
-//        pre($new_bill_item);
+        // echo 'new lebihan';
+        // pre($new_bill_item);
 
         if($bill_item):
             #order by priority
@@ -381,14 +381,14 @@ class Cron extends CI_Controller
 
             foreach ($data_account as $row):
                 #check already get lebihan or tunggakan
-//                $row['ACCOUNT_ID'] = 8064;
+                // $row['ACCOUNT_ID'] = 8064;
                 $lebihan = $this->m_bill_item->get_lebihan_current_year($row['ACCOUNT_ID']);
-//                $lebihan = array();
+                // $lebihan = array();
                 if(empty($lebihan)):
                     $lebihan_data    = $this->get_lebihan($row['ACCOUNT_ID']);
 
                     if($lebihan_data):
-//                        load_library('Bill_lib');
+                        // load_library('Bill_lib');
                         $amount_lebihan = (($lebihan_data['BILL']+($lebihan_data['JOURNAL_B'])) - $lebihan_data['RESIT']+($lebihan_data['JOURNAL_R']));
                         if($amount_lebihan<0):
                             #insert at new bill
@@ -463,7 +463,7 @@ class Cron extends CI_Controller
     }
 
     function generate_bil_01($last_acc_id=''){
-//        load_library('Bill_lib');
+        // load_library('Bill_lib');
 
         $data_acc_search['status_bill'] = STATUS_BILL_ACTIVE;
         $data_acc_search['last_acc_id'] = $last_acc_id;
@@ -493,7 +493,7 @@ class Cron extends CI_Controller
     }
 
     function generate_bil_08($last_acc_id=''){
-//        load_library('Bill_lib');
+        // load_library('Bill_lib');
 
         $data_acc_search['status_bill'] = STATUS_BILL_ACTIVE;
         $data_acc_search['last_acc_id'] = $last_acc_id;
@@ -542,10 +542,10 @@ class Cron extends CI_Controller
         db_select("SUM(i.TOTAL_PAID) as TOTAL_PAID");
         db_select("SUM(i.TOTAL_JOURNAL) as TOTAL_JOURNAL");
         db_select("TR_CODE,ITEM_DESC,TR_GST_STATUS,TR_CODE_OLD");
-//        db_select('sum(AMOUNT) as total_amount,TR_CODE,ITEM_DESC,i.GST_TYPE');
+        // db_select('sum(AMOUNT) as total_amount,TR_CODE,ITEM_DESC,i.GST_TYPE');
         db_from('B_ITEM i');
         db_join('b_master m','m.bill_id = i.bill_id');
-//        db_where("substr(i.TR_CODE,0,2)",'11');
+        // db_where("substr(i.TR_CODE,0,2)",'11');
         db_where('m.bill_year',$this->last_year);
         db_where('m.account_id',$account_id);
         db_where('i.bill_category',$type);
@@ -582,7 +582,7 @@ class Cron extends CI_Controller
         db_where('m.account_id',$account_id);
         db_where('i.bill_category',$type);
         db_where("i.PREV_YEAR_OUTSTANDING",1);
-//        db_group('TR_CODE,ITEM_DESC');
+        // db_group('TR_CODE,ITEM_DESC');
 
         $sql = db_get();
         if($sql):
@@ -599,7 +599,7 @@ class Cron extends CI_Controller
         db_where('m.account_id',$account_id);
         db_where('i.bill_category',$type);
         db_where("i.PREV_YEAR_OUTSTANDING",1);
-//        db_group('TR_CODE,ITEM_DESC');
+        // db_group('TR_CODE,ITEM_DESC');
 
         $sql = db_get();
         if($sql):
