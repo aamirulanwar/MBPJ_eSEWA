@@ -89,7 +89,16 @@
             // data: {param1: 'value1'},
         })
         .done(function(data) {
-            // console.log(data);
+            data = JSON.parse(data);
+            console.log(data.status);
+            if ( data.status == false )
+            {
+                alert(data.message);
+            }
+            else if ( data.status == true )
+            {
+                alert(data.message);
+            }
         })
         .fail(function() {
             // console.log("error");

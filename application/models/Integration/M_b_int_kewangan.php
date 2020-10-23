@@ -25,14 +25,14 @@ class M_b_int_kewangan extends CI_Model
 
             $response = array(
                                 "status" => $this->sistem_perakaunan->insert( 'AKRU_SEWAAN', $data_insert ),
-                                "message" => "Berjaya"
+                                "message" => "Akru bil bulan ini berjaya dihantar. No siri ".$data_search["SIRI"]
                             );
         }
         else
         {
             $response = array(
                                 "status" => FALSE,
-                                "message" => "Akru bil bulan ini, no siri ".$data_search["SIRI"]." telah dihantar"
+                                "message" => "Akru bil bulan ini, no siri ".$data_search["SIRI"]." telah pernah dihantar"
                             );
         }
 
