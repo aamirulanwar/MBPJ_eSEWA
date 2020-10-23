@@ -382,8 +382,9 @@ class BillGenerator
                 $tr_code = $detail["TR_CODE_OLD"];
             }
             
-            if ( substr($tr_code, 0, 2) == "12" )
+            if ( substr($tr_code, 0, 1) == "1" )
             {
+                $tr_code = "12".substr($tr_code, 2);
                 if ( isset($data_test[ $tr_code ]) )
                 {
                     $data_test[ $tr_code ] =  $data_test[ $tr_code ] + $detail["TOTAL_AMOUNT"];
@@ -393,7 +394,7 @@ class BillGenerator
                     $data_test[ $tr_code ] =  $detail["TOTAL_AMOUNT"];
                 }
             }
-            else if ( substr($tr_code, 0, 2) == "22" )
+            else if ( substr($tr_code, 0, 1) == "2" )
             {
                 $tr_code = "12".substr($tr_code, 2);
 
