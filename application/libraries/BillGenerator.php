@@ -12,6 +12,7 @@ class BillGenerator
         $this->CI->load->model('Asset/M_a_category', 'm_a_category');
         $this->CI->load->model('Asset/M_a_asset', 'm_a_asset');
         $this->CI->load->model('Integration/M_b_int_payment', 'm_b_int_payment');
+        $this->CI->load->model('Integration/M_b_int_latest', 'm_b_int_latest');
         $this->CI->load->model('Bill/M_bill_master', 'm_bill_master');
         $this->CI->load->model('Bill/M_bill_item', 'm_bill_item');
         $this->CI->load->model('TrCode/M_tran_code', 'm_tr_code');
@@ -481,6 +482,31 @@ class BillGenerator
                 $data_insert_b_item['BILL_CATEGORY']   = "B";
 
                 $this->CI->m_bill_item->insert_bill_item($data_insert_b_item);
+
+                // After add record on b_item, add to b_int_latest for system "KUTIPAN" to retreive bill record and process
+                $data_insert_b_int_latest['ACCOUNT_NUMBER']  = $account_detail["ACCOUNT_NUMBER"];
+                $data_insert_b_int_latest['TR_CODE']         = $item['KOD_CAJ_LAMA'];
+                $data_insert_b_int_latest['TR_CODE_NEW']     = $item['KOD_CAJ_BARU'];
+                $data_insert_b_int_latest['AMOUNT']          = $item['CAJ_ANGGARAN'];
+                $data_insert_b_int_latest['PROSES_STATUS']   = "0";
+
+                // Check bill item in b_int_latest before add. If no record then add new record else update record
+                $data_condition = $data_insert_b_int_latest;
+                $data_condition["CURRENT_MONTH"] = date('n');
+                $data_condition["CURRENT_YEAR"] = date('Y');
+                unset( $data_condition['AMOUNT'] );
+                $b_int_latest_status = $this->CI->m_b_int_latest->get($data_condition);
+
+                if ( isset($b_int_latest_status) && count($b_int_latest_status) == 0 )
+                {
+                    $this->CI->m_b_int_latest->insert($data_insert_b_int_latest);
+                }
+                else if ( isset($b_int_latest_status) && count($b_int_latest_status) > 0 )
+                {
+                    // $dt_added = DateTime::createFromFormat('d/m/Y', $b_int_latest_status[0]["CUSTOM_DT_ADDED"]);                    
+                    $this->CI->m_b_int_latest->update( $data_condition, $data_insert_b_int_latest );
+                }
+
             }
 
             // Get other charges and save with master record
@@ -501,6 +527,29 @@ class BillGenerator
                     $data_insert['BILL_CATEGORY']   = "B";
 
                     $this->CI->m_bill_item->insert_bill_item($data_insert);
+
+                    // After add record on b_item, add to b_int_latest for system "KUTIPAN" to retreive bill record and process
+                    $data_insert_b_int_latest['ACCOUNT_NUMBER']  = $account_detail["ACCOUNT_NUMBER"];
+                    $data_insert_b_int_latest['TR_CODE']         = $other_charge['TR_CODE_OLD'];
+                    $data_insert_b_int_latest['TR_CODE_NEW']     = $other_charge['TR_CODE_NEW'];
+                    $data_insert_b_int_latest['AMOUNT']          = $other_charge['AMOUNT'];
+                    $data_insert_b_int_latest['PROSES_STATUS']   = "0";
+
+                    // Check bill item in b_int_latest before add. If no record then add new record else update record
+                    $data_condition = $data_insert_b_int_latest;
+                    $data_condition["CURRENT_MONTH"] = date('n');
+                    $data_condition["CURRENT_YEAR"] = date('Y');
+                    unset( $data_condition['AMOUNT'] );
+                    $b_int_latest_status = $this->CI->m_b_int_latest->get($data_condition);
+
+                    if ( isset($b_int_latest_status) && count($b_int_latest_status) == 0 )
+                    {
+                        $this->CI->m_b_int_latest->insert($data_insert_b_int_latest);
+                    }
+                    else if ( isset($b_int_latest_status) && count($b_int_latest_status) > 0 )
+                    {
+                        $this->CI->m_b_int_latest->update( $data_condition, $data_insert_b_int_latest );
+                    }
                 }
             }
 

@@ -50,6 +50,10 @@ class M_tran_code extends CI_Model
         if(isset($data_search['MCT_TSTATS']) && having_value($data_search['MCT_TSTATS'])):
             $this->admin_trcode->where('MCT_TSTATS',$data_search['MCT_TSTATS']);
         endif;
+        if(isset($data_search['MCT_MDCODE']) && having_value($data_search['MCT_MDCODE'])):
+            $this->admin_trcode->where('MCT_MDCODE',$data_search['MCT_MDCODE']);
+        endif;
+
         $sql = $this->admin_trcode->get();
         if($sql):
             return $sql->row_array();

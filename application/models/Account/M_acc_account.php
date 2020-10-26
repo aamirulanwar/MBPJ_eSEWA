@@ -11,6 +11,34 @@ class M_acc_account extends CI_Model
         parent::__construct();
     }
 
+    function get($data_search)
+    {
+        db_select('acc_account.*');
+        db_from('acc_account');
+
+        if ( isset($data_search["ACCOUNT_ID"]) && $data_search["ACCOUNT_ID"] != "" )
+        {
+            db_where('ACCOUNT_ID',$data_search['ACCOUNT_ID']);
+        }
+
+        if ( isset($data_search["ACCOUNT_NUMBER"]) && $data_search["ACCOUNT_NUMBER"] != "" )
+        {
+            db_where('ACCOUNT_NUMBER',$data_search['ACCOUNT_NUMBER']);
+        }
+
+        if ( isset($data_search["USER_ID"]) && $data_search["USER_ID"] != "" )
+        {
+            db_where('USER_ID',$data_search['USER_ID']);
+        }
+
+        $sql = db_get('');
+
+        if($sql)
+        {
+            return $sql->result_array();
+        }
+    }
+
     function insert_account($data_insert){
         if(!empty($data_update['date_start'])):
             db_set_date('date_start',$data_update['date_start']);

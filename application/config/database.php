@@ -75,10 +75,10 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	// 'hostname' => '94.237.67.25:1521/mpkj',
-    // 'hostname' => '95.111.192.90:1521/mpkj',
-    'hostname' => '(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=94.237.67.25)(PORT=1521))(CONNECT_DATA=(SID=mpkj)))',
-	// 'hostname' => '(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=127.0.0.1)(PORT=1521))(CONNECT_DATA=(SID=mpkj)))',
+	'hostname' => '127.0.0.1:1521/mpkj',
+    // 'hostname' => '94.237.67.25:1521/mpkj',
+    // 'hostname' => '(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=94.237.67.25)(PORT=1521))(CONNECT_DATA=(SID=mpkj)))',
+	// 'hostname' => '(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=127.0.0.1)(PORT=1521))(CONNECT_DATA=(SID=mpkjmigrasi)))',
 	'username' => 'sewaan',
 	'password' => 'password1',
 	'database' => 'mpkj',
@@ -100,9 +100,10 @@ $db['default'] = array(
 
 $db['admin'] = array(
     'dsn'	=> '',
-    // 'hostname' => '94.237.67.25',
-    'hostname' => '(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=94.237.67.25)(PORT=1521))(CONNECT_DATA=(SID=mpkj)))',
-	// 'hostname' => '(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=127.0.0.1)(PORT=1521))(CONNECT_DATA=(SID=mpkj)))',
+    'hostname' => '127.0.0.1:1521/mpkj',
+    // 'hostname' => '94.237.67.25:1521/mpkj',
+    // 'hostname' => '(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=94.237.67.25)(PORT=1521))(CONNECT_DATA=(SID=mpkj)))',
+	// 'hostname' => '(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=127.0.0.1)(PORT=1521))(CONNECT_DATA=(SID=mpkjmigrasi)))',
     'username' => 'admin',
 	'password' => 'password1',
 	'database' => 'mpkj',
@@ -124,9 +125,10 @@ $db['admin'] = array(
 
 $db['payroll'] = array(
     'dsn'	=> '',
-    // 'hostname' => '94.237.67.25',
-    // 'hostname' => '(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=95.111.192.90)(PORT=1521))(CONNECT_DATA=(SID=mpkj)))',
-	'hostname' => '(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=94.237.67.25)(PORT=1521))(CONNECT_DATA=(SID=mpkj)))',
+    'hostname' => '127.0.0.1:1521/mpkj',
+    // 'hostname' => '94.237.67.25:1521/mpkj',
+	// 'hostname' => '(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=94.237.67.25)(PORT=1521))(CONNECT_DATA=(SID=mpkj)))',
+    // 'hostname' => '(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=127.0.0.1)(PORT=1521))(CONNECT_DATA=(SID=mpkj)))',
     'username' => 'subsistem',
     'password' => 'Mpkj1234',
 	'database' => 'mpkj',
@@ -148,9 +150,10 @@ $db['payroll'] = array(
 
 $db['sistem_perakaunan'] = array(
     'dsn'   => '',
-    // 'hostname' => '94.237.67.25',
-    // 'hostname' => '(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=95.111.192.90)(PORT=1521))(CONNECT_DATA=(SID=mpkj)))',
-    'hostname' => '(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=94.237.67.25)(PORT=1521))(CONNECT_DATA=(SID=mpkj)))',
+    'hostname' => '127.0.0.1:1521/mpkj',
+    // 'hostname' => '94.237.67.25:1521/mpkj',
+    // 'hostname' => '(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=94.237.67.25)(PORT=1521))(CONNECT_DATA=(SID=mpkj)))',
+    // 'hostname' => '(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=127.0.0.1)(PORT=1521))(CONNECT_DATA=(SID=mpkj)))',
     'username' => 'subsistem',
     'password' => 'Mpkj1234',
     'database' => 'mpkj',

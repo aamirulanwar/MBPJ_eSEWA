@@ -11,6 +11,29 @@ class M_acc_user extends CI_Model
         parent::__construct();
     }
 
+    function get($data_search)
+    {
+        db_select('acc_user.*');
+        db_from('acc_user');
+
+        if ( isset($data_search["USER_ID"]) && $data_search["USER_ID"] != "" )
+        {
+            db_where('USER_ID',$data_search['USER_ID']);
+        }
+
+        if ( isset($data_search["IC_NUMBER"]) && $data_search["IC_NUMBER"] != "" )
+        {
+            db_where("trim(replace(IC_NUMBER,'-',''))",$data_search['IC_NUMBER']);
+        }
+
+        $sql = db_get('');
+
+        if($sql)
+        {
+            return $sql->result_array();
+        }
+    }
+
     function insert_user($data_insert){
         db_set_date_time('dt_added',timenow());
         db_set_date_time('dt_update',timenow());
@@ -68,11 +91,11 @@ class M_acc_user extends CI_Model
 
     function get_account_base_on_ic($ic){
         db_select('a.account_id,a.bill_type,c.TRCODE_CATEGORY');
-//        db_select("to_char(a.dt_added, 'yyyy-mm-dd hh24:mi:ss') as dt_create_acc",false);
+        // db_select("to_char(a.dt_added, 'yyyy-mm-dd hh24:mi:ss') as dt_create_acc",false);
         db_join('acc_account a','acc.user_id = a.user_id');
         db_join('a_type t','t.type_id = a.type_id');
         db_join('a_category c','c.category_id = a.category_id');
-//        db_join('a_rental_use r','r.rental_use_id = a.rental_use_id','LEFT');
+        // db_join('a_rental_use r','r.rental_use_id = a.rental_use_id','LEFT');
         db_from('acc_user acc');
         db_where('IC_NUMBER',$ic);
         db_where('t.type_id',8);

@@ -792,29 +792,64 @@ class Bill extends CI_Controller
     // Do not enable this function unless for custom usage
     function updateBillAmount()
     {
-        $account_id     = 6930;
+        // $data_search["ACCOUNT_ID"] = 6949;
+        // $data_search["CUSTOM_COLUMN"] = "BILL_ID,ACCOUNT_ID";
 
-        $data_search["ACCOUNT_ID"] = 6949;
-        $data_search["CUSTOM_COLUMN"] = "BILL_ID";
+        // $list_bill_master = $this->m_bill_master->get($data_search);
 
-        $list_bill_master = $this->m_bill_master->get($data_search);
+        // var_dump($list_bill_master);
+        // die();
+        // $i = 1;
+        // $temp = 0;
+        // foreach ($list_bill_master as $bill) 
+        // {
+        //     # code...
+        //     $bill_items = $this->m_bill_item->getBillItemTotalAmount( $bill["BILL_ID"] );
+        //     $bill_master_update["TOTAL_AMOUNT"] = $bill_items["TOTAL_AMOUNT"];
+        //     $this->m_bill_master->updateBillMasterTotalAmount( $bill["BILL_ID"], $bill["ACCOUNT_ID"], $bill_master_update );
 
-        foreach ($list_bill_master as $bill) 
+        //     if ( $bill["ACCOUNT_ID"] != $temp )
+        //     {
+        //         echo $i." - ".$bill["BILL_ID"]." - ".$bill["ACCOUNT_ID"]."</br>";
+        //         $temp = $bill["ACCOUNT_ID"];
+        //         $i++;
+        //     }
+
+        // }
+
+        if ( isset($_GET["account_id"]) )
         {
-            # code...
-            $bill_items = $this->m_bill_item->getBillItemTotalAmount( $bill["BILL_ID"] );
-            $bill_master_update["TOTAL_AMOUNT"] = $bill_items["TOTAL_AMOUNT"];
-            $this->m_bill_master->updateBillMasterTotalAmount( $bill["BILL_ID"], $account_id, $bill_master_update );
-        }
+            $data_search["ACCOUNT_ID"] = $_GET["account_id"];
+            $data_search["CUSTOM_COLUMN"] = "BILL_ID";
+            $list_bill_master = $this->m_bill_master->get($data_search);
 
-        if ( isset($list_bill_master) )
-        {
-            echo "DONE";
+            foreach ($list_bill_master as $bill) 
+            {
+                # code...
+                $bill_items = $this->m_bill_item->getBillItemTotalAmount( $bill["BILL_ID"] );
+                $bill_master_update["TOTAL_AMOUNT"] = $bill_items["TOTAL_AMOUNT"];
+                $this->m_bill_master->updateBillMasterTotalAmount( $bill["BILL_ID"], $_GET["account_id"], $bill_master_update );
+            }
+
+            echo "Bill Master for Account No : ".$_GET["account_id"]." is updated</br>".PHP_EOL;
         }
         else
         {
-            echo "NO RECORD TO BE UPDATED";
+            echo "Failed";
         }
+
+        
+        
+
+
+        // if ( isset($list_bill_master) )
+        // {
+        //     echo "DONE";
+        // }
+        // else
+        // {
+        //     echo "NO RECORD TO BE UPDATED";
+        // }
 
 
         // $bill_month     = 4;

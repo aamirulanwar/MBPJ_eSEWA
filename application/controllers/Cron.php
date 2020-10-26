@@ -17,9 +17,11 @@ class Cron extends CI_Controller
         load_model('Account/M_acc_account', 'm_acc_account');
         load_model('Cron/M_cron_config', 'm_cron_config');
         load_model('Bill/M_bill_item', 'm_bill_item');
+        load_model('Bill/M_bill_master', 'm_bill_master');
         load_model('Payroll/M_payroll', 'm_payroll');
         load_model('Account/M_acc_user', 'm_acc_user');
         load_model('Integration/M_b_int_payment', 'm_b_int_payment');
+        load_model('TrCode/M_tran_code', 'm_tr_code');
 
         $this->admin_trcode     = $this->load->database('admin',TRUE);
         load_library('Bill_lib');
@@ -29,7 +31,8 @@ class Cron extends CI_Controller
     {
         $array = array(
             'payment',
-            'daily_cron'
+            'daily_cron',
+            'update_payment_transaction',
         );
         #set pages data
         (in_array($method,$array)) ? $this->$method() : $this->index();
@@ -617,5 +620,175 @@ class Cron extends CI_Controller
         if($sql):
             return $sql->row_array();
         endif;
+    }
+
+    function update_payment_transaction()
+    {
+        // Check payment transaction on payroll.sewa_staging for account "SEWAAN KUARTERS" bill
+        // PAYROLL.SEWA_STAGING
+
+        $payment_kuarters = $this->m_payroll->get_payroll_new();
+
+        foreach ($payment_kuarters as $payment_details) 
+        {
+            // Get USER ID based on IC number
+            $data_search_user["IC_NUMBER"] = $payment_details["NO_KP"];
+            $user_details = $this->m_acc_user->get($data_search_user);
+            $user_id = $user_details[0]["USER_ID"];
+
+            // Get account detail based on USER ID
+            $data_search_account["USER_ID"] = $user_id;
+            $account_detail = $this->m_acc_account->get( $data_search_account );
+            $account_id = $account_detail[0]["ACCOUNT_ID"];
+
+            // Payment Details
+            $bill_month      =   $payment_details["BULAN"];
+            $bill_year       =   $payment_details["TAHUN"];
+            $bill_amount     =   $payment_details["AMAUN"];
+            $bill_dt_added   =   $payment_details["TKH_HANTAR"];
+            
+            // Check if a master record already exist for current month
+            $data_search_b_master1["BILL_YEAR"]       =  $bill_year;
+            $data_search_b_master1["BILL_MONTH"]      =  $bill_month;
+            $data_search_b_master1["ACCOUNT_ID"]      =  $account_id;
+            $data_search_b_master1["BILL_CATEGORY"]   =  "R";
+            $data_search_b_master1["CUSTOM_COLUMN"]   =  "BILL_ID";      
+
+            $exist = count( $this->m_bill_master->get($data_search_b_master1) );
+
+            if ( $exist == 0 )
+            {
+                $data_insert_b_master["ACCOUNT_ID"]      =  $account_id;
+                $data_insert_b_master["BILL_YEAR"]       =  $bill_year;
+                $data_insert_b_master["BILL_MONTH"]      =  $bill_month;
+                $data_insert_b_master["BILL_CATEGORY"]   =  "R";
+                $data_insert_b_master["BILL_NUMBER"]     =  $bill_year.$bill_month.str_pad($account_id,6,"0",STR_PAD_LEFT).'1';
+                $data_insert_b_master["BILL_TYPE"]       =  $account_detail[0]["BILL_TYPE"]; // 1 =  Monthly, 2 =  Yearly, 3 = Rumah Tmn mudun
+                $data_insert_b_master["TOTAL_PAID"]      =  "0";
+                $data_insert_b_master["TOTAL_AMOUNT"]    =  $bill_amount;
+                $data_insert_b_master["NUMBER_GENERATE"] =  "1";
+
+                $this->m_bill_master->insert_bill_master($data_insert_b_master);
+            }
+
+            $b_master = $this->m_bill_master->get($data_search_b_master1)[0];
+
+            // This code is currently the default transaction code for SEWAAN KUARTERS
+            $data_search_kuarters["MCT_TRCODE"] = "21044";
+            $data_search_kuarters["MCT_MDCODE"] = "B";
+            $tr_code_details = $this->m_tr_code->get_tr_code( $data_search_kuarters );
+
+            $data_insert_item['BILL_ID']         = $b_master["BILL_ID"];
+            $data_insert_item['TR_CODE']         = $tr_code_details['MCT_TRCODENEW'];
+            $data_insert_item['TR_CODE_OLD']     = $tr_code_details['MCT_TRCODE'];
+            $data_insert_item['AMOUNT']          = $bill_amount;
+            $data_insert_item['PRIORITY']        = $tr_code_details['MCT_PRIORT'];
+            $data_insert_item['ACCOUNT_ID']      = $account_id;
+            $data_insert_item['ITEM_DESC']       = $tr_code_details['MCT_TRDESC'];
+            $data_insert_item['BILL_CATEGORY']   = "R";
+
+            $this->m_bill_item->insert_bill_item($data_insert_item);
+
+            // Update table PAYROLL.SEWA_STAGING
+            $data_update_payroll["TBACA"] = "Y";
+            $this->m_payroll->update_payroll_process($payment_details,$data_update_payroll);
+
+            // Update total amount in b_master
+            $total_amount_resit = $this->m_bill_item->getBillItemTotalAmount($b_master["BILL_ID"]);
+
+            $data_update_b_master1["TOTAL_AMOUNT"] = $total_amount_resit["TOTAL_AMOUNT"];
+            $this->m_bill_master->updateBillMasterTotalAmount( $b_master["BILL_ID"], $account_id, $data_update_b_master1);
+
+            // Add audit log to record b_naster and B_item db transaction
+
+            // -----------------------------------------------------------------------------------
+        }
+
+
+
+        // Check payment transaction on b_int_payment for all account except account "SEWAAN KUARTERS" bill
+        // B_INT_PAYMENT
+        $data_search_int_pay["PROCESS_STATUS"] = "0";
+        $payment_sewaan = $this->m_b_int_payment->get($data_search_int_pay);
+
+        foreach ($payment_sewaan as $payment_sewaan_details) 
+        {
+            // Get account detail based on USER ID
+            $data_search_account["ACCOUNT_NUMBER"] = $payment_sewaan_details["ACCOUNT_NUMBER"];
+            $account_detail = $this->m_acc_account->get( $data_search_account );
+            $account_id = $account_detail[0]["ACCOUNT_ID"];
+
+            // Payment Details
+            $dt_added = DateTime::createFromFormat('d/m/Y', $payment_sewaan_details["CUSTOM_DT_ADDED"]); 
+            $bill_month         =   $dt_added->format('m');
+            $bill_year          =   $dt_added->format('Y');
+            $bill_amount        =   $payment_sewaan_details["AMOUNT"];
+            $bill_dt_added      =   $payment_sewaan_details["DT_ADDED"];
+            $bill_resit_no      =   $payment_sewaan_details["NO_RESIT"];
+            $bill_trcode_old    =   '2'.substr($payment_sewaan_details["TR_CODE"],1);
+            $bill_trcode_new    =   '2'.substr($payment_sewaan_details["TR_CODE_NEW"],1);
+            
+            // Check if a master record already exist for current month
+            $data_search_b_master2["BILL_YEAR"]       =  $bill_year;
+            $data_search_b_master2["BILL_MONTH"]      =  $bill_month;
+            $data_search_b_master2["ACCOUNT_ID"]      =  $account_id;
+            $data_search_b_master2["BILL_CATEGORY"]   =  "R";
+            $data_search_b_master2["CUSTOM_COLUMN"]   =  "BILL_ID";
+
+            $exist = count( $this->m_bill_master->get($data_search_b_master2) );
+
+            if ( $exist == 0 )
+            {
+                $data_insert_b_master["ACCOUNT_ID"]      =  $account_id;
+                $data_insert_b_master["BILL_YEAR"]       =  $bill_year;
+                $data_insert_b_master["BILL_MONTH"]      =  $bill_month;
+                $data_insert_b_master["BILL_CATEGORY"]   =  "R";
+                $data_insert_b_master["BILL_NUMBER"]     =  $bill_resit_no;
+                $data_insert_b_master["BILL_TYPE"]       =  $account_detail[0]["BILL_TYPE"]; // 1 =  Monthly, 2 =  Yearly, 3 = Rumah Tmn mudun
+                $data_insert_b_master["TOTAL_PAID"]      =  "0";
+                $data_insert_b_master["TOTAL_AMOUNT"]    =  $bill_amount;
+                $data_insert_b_master["NUMBER_GENERATE"] =  "1";
+
+                $this->m_bill_master->insert_bill_master($data_insert_b_master);
+            }
+
+            $b_master = $this->m_bill_master->get($data_search_b_master2)[0];
+
+            // This code is currently the default transaction code for SEWAAN
+            $data_search_trcode["MCT_TRCODE"]     = $bill_trcode_old;
+            $data_search_trcode["MCT_TRCODENEW"]  = $bill_trcode_new;
+            $data_search_trcode["MCT_MDCODE"]     = "B";
+            $tr_code_details2 = $this->m_tr_code->get_tr_code( $data_search_trcode );
+
+            $data_insert_item['BILL_ID']         = $b_master["BILL_ID"];
+            $data_insert_item['TR_CODE']         = $bill_trcode_new;
+            $data_insert_item['TR_CODE_OLD']     = $bill_trcode_old;
+            $data_insert_item['AMOUNT']          = $bill_amount;
+            $data_insert_item['PRIORITY']        = $tr_code_details2['MCT_PRIORT'];
+            $data_insert_item['ACCOUNT_ID']      = $account_id;
+            $data_insert_item['ITEM_DESC']       = $tr_code_details2['MCT_TRDESC'];
+            $data_insert_item['BILL_CATEGORY']   = "R";
+
+            $this->m_bill_item->insert_bill_item($data_insert_item);
+
+            // Update table B_INT_PAYMENT
+            $data_condition2['ACCOUNT_NUMBER']   = $payment_sewaan_details["ACCOUNT_NUMBER"];
+            $data_condition2['TR_CODE']          = $payment_sewaan_details["TR_CODE"];
+            $data_condition2['TR_CODE_NEW']      = $payment_sewaan_details["TR_CODE_NEW"];
+            $data_condition2['PROCESS_STATUS']   = "0";
+
+            $data_update_int_payment["PROCESS_STATUS"] = "1";
+            $this->m_b_int_payment->update($data_condition2,$data_update_int_payment);
+
+            // Update total amount in b_master
+            $total_amount_resit = $this->m_bill_item->getBillItemTotalAmount($b_master["BILL_ID"]);
+
+            $data_update_b_master2["TOTAL_AMOUNT"] = $total_amount_resit["TOTAL_AMOUNT"];
+            $this->m_bill_master->updateBillMasterTotalAmount( $b_master["BILL_ID"], $account_id, $data_update_b_master2);
+
+            // Add audit log to record b_naster and B_item db transaction
+
+            // -----------------------------------------------------------------------------------
+        }
     }
 }
