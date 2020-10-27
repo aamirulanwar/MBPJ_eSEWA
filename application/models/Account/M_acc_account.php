@@ -13,7 +13,15 @@ class M_acc_account extends CI_Model
 
     function get($data_search)
     {
-        db_select('acc_account.*');
+        if ( isset($data_search["CUSTOM_COLUMN"]) && $data_search["CUSTOM_COLUMN"] != "" )
+        {
+            db_select( $data_search["CUSTOM_COLUMN"] );
+        }
+        else
+        {
+            db_select('acc_account.*');
+        }
+
         db_from('acc_account');
 
         if ( isset($data_search["ACCOUNT_ID"]) && $data_search["ACCOUNT_ID"] != "" )
@@ -29,6 +37,16 @@ class M_acc_account extends CI_Model
         if ( isset($data_search["USER_ID"]) && $data_search["USER_ID"] != "" )
         {
             db_where('USER_ID',$data_search['USER_ID']);
+        }
+
+        if ( isset($data_search["STATUS_ACC"]) && $data_search["STATUS_ACC"] != "" )
+        {
+            db_where('STATUS_ACC',$data_search['STATUS_ACC']);
+        }
+
+        if ( isset($data_search["CUSTOM_TYPE"]) && $data_search["CUSTOM_TYPE"] != "" )
+        {
+            db_where("TYPE_ID NOT IN (6,7,8,11) ");
         }
 
         $sql = db_get('');

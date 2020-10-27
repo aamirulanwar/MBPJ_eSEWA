@@ -25,7 +25,14 @@ date_default_timezone_set('Asia/Kuala_Lumpur');
 |
 */
 //$config['base_url'] = 'http://kajang/';
-$server_name        = $_SERVER['SERVER_NAME'];
+if ( isset($_SERVER['SERVER_NAME']) )
+{
+	$server_name        = $_SERVER['SERVER_NAME'];
+}
+else if ( empty($_SERVER['SERVER_NAME']) )
+{
+	$server_name        = "";
+}
 $config['base_url'] = "http://$server_name/";
 
 /*

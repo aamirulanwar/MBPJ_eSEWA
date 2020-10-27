@@ -410,11 +410,20 @@ class BillGenerator
             }
         }
         
-        if ( array_sum($data_test) == 0 )
+        if ( isset($data_test) )
+        {
+            if ( array_sum($data_test) == 0 )
+            {
+                $data_update["NOTICE_LEVEL"] = 0;
+                $this->CI->m_acc_account->update_account($data_update,$account_id);
+                $data = false;
+            }
+        }
+        else if ( empty($data_test) )
         {
             $data_update["NOTICE_LEVEL"] = 0;
             $this->CI->m_acc_account->update_account($data_update,$account_id);
-            $data = false;
+            $data = false;            
         }
 
         return $data;
@@ -506,7 +515,6 @@ class BillGenerator
                     // $dt_added = DateTime::createFromFormat('d/m/Y', $b_int_latest_status[0]["CUSTOM_DT_ADDED"]);                    
                     $this->CI->m_b_int_latest->update( $data_condition, $data_insert_b_int_latest );
                 }
-
             }
 
             // Get other charges and save with master record

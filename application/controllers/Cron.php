@@ -33,6 +33,7 @@ class Cron extends CI_Controller
             'payment',
             'daily_cron',
             'update_payment_transaction',
+            'generate_bill',
         );
         #set pages data
         (in_array($method,$array)) ? $this->$method() : $this->index();
@@ -790,5 +791,61 @@ class Cron extends CI_Controller
 
             // -----------------------------------------------------------------------------------
         }
+    }
+
+    function generate_bill()
+    {
+        $this->ci =& get_instance();
+        $this->ci->load->library('BillGenerator');
+
+        $test = $this->ci->billgenerator->listCurrentBill(1);
+
+        // Get list of account that active that is not under SEWAAN KUARTERS and SEWAAN BILLBOARD
+        // Do not generate all account under type_id 6,7,8,11
+        $data_search_account["STATUS_ACC"] = "1";
+        $data_search_account["CUSTOM_COLUMN"] = "ACCOUNT_ID";
+        $data_search_account["CUSTOM_TYPE"] = "6,7,8,11";
+        $list_of_account = $this->m_acc_account->get( $data_search_account );
+
+        if ( isset($list_of_account) )
+        {
+            $total_record = count($list_of_account);
+        }
+        else if ( empty($list_of_account) )
+        {
+            $total_record = 0;
+        }
+
+        $i = 1;
+        foreach ($list_of_account as $account_detail) 
+        {
+            $account_id = $account_detail["ACCOUNT_ID"];
+            $month = date('m');
+            $year = date('Y');
+
+            $perc = number_format( ($i/$total_record*100) , 2, '.', ',');
+
+            $str_test = str_repeat("=", round($perc/2)).">";
+            $str_test = str_pad($str_test,51," ");
+
+            echo "[".$str_test."] ".$perc." % "."(".$i."/".$total_record.")"."\r";
+            flush();
+
+            $this->ci->billgenerator->generateCurrentBill($account_id,$month,$year);
+            $i++;
+        }
+
+        echo "\r".PHP_EOL;
+
+        if ( $total_record > 0)
+        {
+            echo $total_record." bil akaun telah berjaya diproses.".PHP_EOL;
+        }
+        else if ( $total_record == 0 )
+        {
+            echo "Tiada bil akaun diproses".PHP_EOL;
+        }
+
+        die();
     }
 }
