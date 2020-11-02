@@ -891,7 +891,7 @@ class Report extends CI_Controller
                         $data_search['date_start'] = $new_startDate;
                     }
                     
-                    if ( $backupSearch_endDate > $new_endDate ) 
+                    if ( $backupSearch_endDate < $new_endDate ) 
                     {
                         $data_search['date_end'] = $backupSearch_endDate;
                     }
