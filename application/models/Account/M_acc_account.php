@@ -44,9 +44,19 @@ class M_acc_account extends CI_Model
             db_where('STATUS_ACC',$data_search['STATUS_ACC']);
         }
 
+        if ( isset($data_search["STATUS_BILL"]) && $data_search["STATUS_BILL"] != "" )
+        {
+            db_where('STATUS_BILL',$data_search['STATUS_BILL']);
+        }
+
         if ( isset($data_search["CUSTOM_TYPE"]) && $data_search["CUSTOM_TYPE"] != "" )
         {
             db_where("TYPE_ID NOT IN (6,7,8,11) ");
+        }
+
+        if ( isset($data_search["CUSTOM_CONDITION1"]) && $data_search["CUSTOM_CONDITION1"] == true )
+        {
+            db_where(" STATUS_ACC = 1 or  STATUS_BILL = 1");
         }
 
         $sql = db_get('');

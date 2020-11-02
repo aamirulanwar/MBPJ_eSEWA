@@ -68,6 +68,11 @@ class M_bill_master extends CI_Model
             db_where(" BILL_YEAR between ".$data_search["BILL_YEAR_FIRST"]." and ".$data_search["BILL_YEAR_LAST"]." " );
         }
 
+        if ( isset($data_search["CUSTOM_DT_ADDED"]) && $data_search["CUSTOM_DT_ADDED"] != "" )
+        {
+            db_where("to_char(dt_added,'dd/mm/yyyy') = '".$data_search["CUSTOM_DT_ADDED"]."'" );
+        }
+
 
         $sql = db_get('');
 

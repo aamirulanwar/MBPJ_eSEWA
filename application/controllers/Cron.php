@@ -34,6 +34,7 @@ class Cron extends CI_Controller
             'daily_cron',
             'update_payment_transaction',
             'generate_bill',
+            'generate_bill_awal_tahun',
         );
         #set pages data
         (in_array($method,$array)) ? $this->$method() : $this->index();
@@ -823,13 +824,7 @@ class Cron extends CI_Controller
             $month = date('m');
             $year = date('Y');
 
-            $perc = number_format( ($i/$total_record*100) , 2, '.', ',');
-
-            $str_test = str_repeat("=", round($perc/2)).">";
-            $str_test = str_pad($str_test,51," ");
-
-            echo "[".$str_test."] ".$perc." % "."(".$i."/".$total_record.")"."\r";
-            flush();
+            $this->generate_progress_bar_CLI($i,$total_record);
 
             $this->ci->billgenerator->generateCurrentBill($account_id,$month,$year);
             $i++;
@@ -847,5 +842,25 @@ class Cron extends CI_Controller
         }
 
         die();
+    }
+
+    function generate_bill_awal_tahun()
+    {
+        $this->ci =& get_instance();
+        $this->ci->load->library('BillGenerator');
+
+        $this->ci->billgenerator->generate_bil_awal_tahun();
+    }
+
+    public function generate_progress_bar_CLI($current_count,$total_count)
+    {
+        # code...
+        $perc = number_format( ($current_count/$total_count*100) , 2, '.', ',');
+
+        $loading_arrow = str_repeat("=", round($perc/2)).">";
+        $loading_bar = str_pad($loading_arrow,51," ");
+
+        echo "[".$loading_bar."] ".$perc." % "."(".$current_count."/".$total_count.")"."\r";
+        flush();
     }
 }
