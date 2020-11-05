@@ -1031,6 +1031,19 @@ class BillGenerator
                 $this->generate_progress_bar_CLI($i,$total_row);
                 $i++;
             }
+
+            if ( $total_row > 0)
+            {
+                echo $total_row." bil akaun telah berjaya diproses.".PHP_EOL;
+            }
+            else if ( $total_row == 0 )
+            {
+                echo "Tiada bil akaun diproses".PHP_EOL;
+            }
+        }
+        else
+        {
+            echo "!!! Proses ini hanya berjalan pada 1 Januari setiap tahun !!!".PHP_EOL;
         }
     }
 
