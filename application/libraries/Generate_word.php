@@ -1,4 +1,3 @@
-        //     $address = $get_details['ADDRESS_1'];
 <?php (! defined('BASEPATH')) and exit('No direct script access allowed');
 
 /**
@@ -477,13 +476,17 @@ class Generate_word {
         if($get_details['FORM_TYPE']==1):
             if($get_details['ASSET_ID']>0):
                 $get_file    = $this->ci->m_file_gallery->get_file_by_asset_id($get_details['ASSET_ID']);
-                $image_path = $_SERVER['DOCUMENT_ROOT'].'/'.$get_file['PATH'].'/'.$get_file['FILENAME'];
-                $templateProcessor->setImageValue('asset_image', array(
-                  'path'  => $image_path,
-                  'width' => 650,
-                  'height' => 650,
-                  'ratio' => true //px
-                ));
+
+                if ( isset($get_file) )
+                {
+                    $image_path = $_SERVER['DOCUMENT_ROOT'].'/'.$get_file['PATH'].'/'.$get_file['FILENAME'];
+                    $templateProcessor->setImageValue('asset_image', array(
+                      'path'  => $image_path,
+                      'width' => 650,
+                      'height' => 650,
+                      'ratio' => true //px
+                    ));
+                }
             endif;
         endif;
 
