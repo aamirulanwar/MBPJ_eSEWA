@@ -102,7 +102,7 @@ checking_validation(validation_errors());
                         <label class="col-sm-4 col-form-label"><?php echo $date?> </label>
                         <div class="col-sm-2">
                             <p class="form-control-plaintext"><?php echo (date_display($bill_master['DT_ADDED']))?></p>
-                            <input type="hidden" id="DT_ADDED" name="DT_ADDED" value="<?=$bill_master['DT_ADDED']?>" />
+                            <input type="hidden" id="DT_ADDED" name="DT_ADDED" value="<?=$bill_master['CUSTOM_DT_ADDED']?>" />
                         </div>
                         <input type="hidden" id="b_master_bill_category" name="b_master_bill_category" value="<?=$bill_master['BILL_CATEGORY']?>">
                     </div>

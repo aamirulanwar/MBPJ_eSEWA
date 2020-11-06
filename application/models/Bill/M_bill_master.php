@@ -149,6 +149,7 @@ class M_bill_master extends CI_Model
     {
         db_select('m.*,a.*');
         db_select("to_char(m.dt_added, 'yyyy-mm-dd') as dt_added",false);
+        db_select("to_char(m.dt_added, 'dd/mm/yyyy') as custom_dt_added");
         db_join('acc_account a','a.account_id=m.account_id');
         db_from('b_master m');
         db_where('m.bill_id',$id);

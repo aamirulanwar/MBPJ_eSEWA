@@ -182,7 +182,7 @@ class Journal extends CI_Controller
                                             "BILL_MONTH"    => $bulan_resit, 
                                             "BILL_YEAR"     => $tahun_resit, 
                                             "BILL_NUMBER"   => "NEW_RESIT_JOURNAL_R02", 
-                                            "DT_ADDED"      => $tarikh_resit, 
+                                            "CUSTOM_DT_ADDED"      => $tarikh_resit, 
                                         );
             $data['bill_item'] = array();
         }
