@@ -228,6 +228,7 @@ class Journal extends CI_Controller
                     $trCodeOld                      =   $get_trcode_old["MCT_TRCODE"];
 
                     $this->m_journal->insert_journal_temp([
+                        'date_process' => input_data('DT_ADDED'),
                         'created_by' => $this->curuser["USER_ID"],
                         'bill_number' => $bill_number,
                         'bill_month' => input_data('journal_month'),
@@ -286,6 +287,7 @@ class Journal extends CI_Controller
             $journal_trdesc = $journalDetail["ITEM_DESC"];
             $journal_trcode_old = $journalDetail["TR_CODE_OLD"];
             $journal_bill_category = $journalDetail["BILL_CATEGORY"];
+            $journal_date = $journalDetail["DT_ADDED"];
 
             $journalTypeSearch["JOURNAL_ID"]    = $journal_id;
             $journalType = $this->m_journal->get_a_journal_detail($journalTypeSearch);
@@ -315,13 +317,14 @@ class Journal extends CI_Controller
                     $accountDetail = $this->m_acc_account->getAccountDetailOnlyById($journal_transfer_id);
                     $bill_type = $accountDetail["BILL_TYPE"];
 
-                    $bill_master_insert["ACCOUNT_ID"] = $journal_transfer_id;
-                    $bill_master_insert["BILL_NUMBER"] = $bill_number;
-                    $bill_master_insert["BILL_MONTH"] = $bill_month;
-                    $bill_master_insert["BILL_YEAR"] = $bill_year;
-                    $bill_master_insert["TOTAL_AMOUNT"] = $bill_amount;
-                    $bill_master_insert["BILL_TYPE"] = $bill_type;
-                    $bill_master_insert["BILL_CATEGORY"] = $journal_bill_category;
+                    $bill_master_insert["ACCOUNT_ID"]    =  $journal_transfer_id;
+                    $bill_master_insert["BILL_NUMBER"]   =  $bill_number;
+                    $bill_master_insert["BILL_MONTH"]    =  $bill_month;
+                    $bill_master_insert["BILL_YEAR"]     =  $bill_year;
+                    $bill_master_insert["TOTAL_AMOUNT"]  =  $bill_amount;
+                    $bill_master_insert["BILL_TYPE"]     =  $bill_type;
+                    $bill_master_insert["BILL_CATEGORY"] =  $journal_bill_category;
+                    $bill_master_insert["DT_ADDED"]      =  $journal_date;
 
                     $bill_id = $this->m_bill_master->insertBillMaster($bill_master_insert);
                 }
@@ -330,13 +333,14 @@ class Journal extends CI_Controller
                     $accountDetail = $this->m_acc_account->getAccountDetailOnlyById($account_id);
                     $bill_type = $accountDetail["BILL_TYPE"];
 
-                    $bill_master_insert["ACCOUNT_ID"] = $account_id;
-                    $bill_master_insert["BILL_NUMBER"] = $bill_number;
-                    $bill_master_insert["BILL_MONTH"] = $bill_month;
-                    $bill_master_insert["BILL_YEAR"] = $bill_year;
-                    $bill_master_insert["TOTAL_AMOUNT"] = $bill_amount;
-                    $bill_master_insert["BILL_TYPE"] = $bill_type;
-                    $bill_master_insert["BILL_CATEGORY"] = $journal_bill_category;
+                    $bill_master_insert["ACCOUNT_ID"]    =  $account_id;
+                    $bill_master_insert["BILL_NUMBER"]   =  $bill_number;
+                    $bill_master_insert["BILL_MONTH"]    =  $bill_month;
+                    $bill_master_insert["BILL_YEAR"]     =  $bill_year;
+                    $bill_master_insert["TOTAL_AMOUNT"]  =  $bill_amount;
+                    $bill_master_insert["BILL_TYPE"]     =  $bill_type;
+                    $bill_master_insert["BILL_CATEGORY"] =  $journal_bill_category;
+                    $bill_master_insert["DT_ADDED"]      =  $journal_date;
 
                     $bill_id = $this->m_bill_master->insertBillMaster($bill_master_insert);
                 }
@@ -344,13 +348,14 @@ class Journal extends CI_Controller
 
             // Insert journal item into bill_item
             $bill_item_insert["BILL_ID"]        = $bill_id;
-            $bill_item_insert["B_JOURNAL_ID"]     = $b_journal_id;
+            $bill_item_insert["B_JOURNAL_ID"]   = $b_journal_id;
             $bill_item_insert["ACCOUNT_ID"]     = $account_id;
             $bill_item_insert["AMOUNT"]         = $bill_amount;
             $bill_item_insert["BILL_CATEGORY"]  = 'J';
             $bill_item_insert["TR_CODE"]        = $journal_trcode;
             $bill_item_insert["ITEM_DESC"]      = $journal_trdesc;
             $bill_item_insert["TR_CODE_OLD"]    = $journal_trcode_old;
+            $bill_item_insert["DT_ADDED"]       = $journal_date;
 
             if ( $journalType[0]["JOURNAL_CODE"] == "B01" )
             {

@@ -208,7 +208,11 @@ class M_bill_master extends CI_Model
 
     function insertBillMaster($data_insert)
     {
-        db_set_date_time('dt_added',timenow());
+        if ( empty($data_insert["dt_added"]) && empty($data_insert["DT_ADDED"]) )
+        {
+            db_set_date_time('dt_added',timenow());
+        }
+
         db_insert('b_master',$data_insert);
         return get_insert_id('b_master');
     }

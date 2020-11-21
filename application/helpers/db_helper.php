@@ -125,6 +125,13 @@ function db_set_date($field='',$date='')
 
     return $ci->db->set(strtoupper($field),"TO_DATE('".$date."','dd-mm-yyyy')",FALSE);
 }
+function db_set_date_v2($field='',$date='')
+{
+    if(!$field) die('No Field provided for db_avg function!');
+    $ci =& get_instance();
+
+    return $ci->db->set(strtoupper($field),"TO_DATE('".$date."','dd/mm/yyyy')",FALSE);
+}
 
 
 /**
