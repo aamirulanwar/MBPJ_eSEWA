@@ -136,6 +136,7 @@ class M_acc_account extends CI_Model
         db_join('a_category c','c.category_id = a.category_id');
         db_join('a_rental_use r','r.rental_use_id = a.rental_use_id','LEFT');
         db_from('acc_account a');
+        db_where('a.STATUS_ACC != 0 ');
         if(isset($data_search['account_number']) && having_value($data_search['account_number'])):
             db_where("a.account_number like '%".$data_search['account_number']."%'");
         endif;
@@ -183,6 +184,7 @@ class M_acc_account extends CI_Model
         db_join('a_category c','c.category_id = a.category_id');
         db_join('a_rental_use r','r.rental_use_id = a.rental_use_id','LEFT');
         db_from('acc_account a');
+        db_where('a.STATUS_ACC != 0 ');
         if(isset($data_search['account_number']) && having_value($data_search['account_number'])):
             db_where("a.account_number like '%".$data_search['account_number']."%'");
         endif;
