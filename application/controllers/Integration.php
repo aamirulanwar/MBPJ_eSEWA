@@ -62,7 +62,7 @@ class Integration extends CI_Controller
         }
 
         $data_insert["TARIKH"] = date('d/m/Y');
-        $data_insert["PERAKAUNAN"] = "91505";
+        $data_insert["PERAKAUNAN"] = "91502"; // change code from 91505 to 91502
         $data_insert["AMAUN"] = $total_bill_amount;
         $data_insert["SAH"] = "N";
         $data_insert["TARIKH_SAH"] = null;
