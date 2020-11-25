@@ -173,7 +173,7 @@ class BillGenerator
     public function getCurrentMonthOutstandingCharge($account_id)
     {
         $this->calcPastTransaction($account_id);
-        die();
+        
         // Get account detail
         $account_detail = $this->CI->m_acc_account->getAccountDetailOnlyById( $account_id );
 
@@ -350,11 +350,6 @@ class BillGenerator
             $data = false;
             // $data = $list_of_transaction;
         }
-
-        echo "<pre>";
-        var_dump($outstandingBill);
-
-        die();
 
         return $data;
     }
