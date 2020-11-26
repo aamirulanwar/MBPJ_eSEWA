@@ -172,7 +172,7 @@ class BillGenerator
 
     public function getCurrentMonthOutstandingCharge($account_id)
     {
-        $this->calcPastTransaction($account_id);
+        // $this->calcPastTransaction($account_id);
         
         // Get account detail
         $account_detail = $this->CI->m_acc_account->getAccountDetailOnlyById( $account_id );
@@ -195,6 +195,8 @@ class BillGenerator
         $list_of_transaction = $this->CI->m_bill_item->groupAmountByYearTrcode( $account_id );
 
         // var_dump( $this->getLebihanBayaranTahunan($account_id,0) );
+        // echo "<pre>";
+        // var_dump( $list_of_transaction );
         // die();
 
         
@@ -377,6 +379,7 @@ class BillGenerator
 
             foreach ($list_of_transaction as $bill_transaction) 
             {
+                // echo json_encode($bill_transaction)."</br>";
                 // echo "</br>";
                 if ( $prev_year != $bill_transaction["BILL_YEAR"] )
                 {
@@ -390,7 +393,7 @@ class BillGenerator
                     $last_year_extra = $this->getLebihanBayaranTahunan( $account_id, $bill_transaction["BILL_YEAR"] - 1 );
                     $new_year_tunggakan_trcode = "12".substr( $default_trcode,2 );
 
-                    // echo "Triggered"." => ".$last_year_extra."</br>";
+                    // echo "--> Triggered"." => ".$last_year_extra."</br>";
 
                     // Check if lebihan tahunan already exist
                     // If exist then delete all transaction in variable $outstandingBill and only leave lebihan transaction
@@ -402,6 +405,68 @@ class BillGenerator
                         $tr_code_lebihan_tahunan_new = "11119999";
                         $outstandingBill[ $new_year_tunggakan_trcode ] = $last_year_extra;
                         $outstandingBill[$tr_code_lebihan_tahunan_new] = $last_year_extra;
+                    }
+
+                    // Check if extra payment on standard gst tr_code exist, then change to extra payment for default account tr_code
+                    // if ( $bill_transaction["TR_CODE"] == "12110025" || $bill_transaction["TR_CODE_OLD"] == "12037" )
+                    if ( isset($outstandingBill[ "12110025" ]) )
+                    {
+                        $extra_gst_payment = $outstandingBill[ "12110025" ];
+                    }
+                    else if ( isset($outstandingBill[ "12037" ]) )
+                    {
+                        $extra_gst_payment = $outstandingBill[ "12037" ];
+                    }
+                    else
+                    {
+                        $extra_gst_payment = 0;
+                    }
+
+                    if ( $extra_gst_payment < 0)
+                    {
+                        $tr_code_tunggakan_default = "12".substr( $default_trcode,2 );
+                        $outstandingBill[ $tr_code_tunggakan_default ] = $outstandingBill[ $tr_code_tunggakan_default ] + $extra_gst_payment;
+
+                        // Update tr_code gst to 0 after the deduction to default tr_code
+                        if ( isset($outstandingBill[ "12110025" ]) )
+                        {
+                            $outstandingBill[ "12110025" ] = 0;
+                        }
+                        else if ( isset($outstandingBill[ "12037" ]) )
+                        {
+                            $outstandingBill[ "12037" ] = 0;
+                        }
+                    }
+
+                    // Check if extra payment on zero rated gst tr_code exist, then change to extra payment for default account tr_code
+                    // if ( $bill_transaction["TR_CODE"] == "12110025" || $bill_transaction["TR_CODE_OLD"] == "12037" )
+                    if ( isset($outstandingBill[ "12110029" ]) )
+                    {
+                        $extra_zero_rated_gst_payment = $outstandingBill[ "12110029" ];
+                    }
+                    else if ( isset($outstandingBill[ "12041" ]) )
+                    {
+                        $extra_zero_rated_gst_payment = $outstandingBill[ "12041" ];
+                    }
+                    else
+                    {
+                        $extra_zero_rated_gst_payment = 0;
+                    }
+
+                    if ( $extra_zero_rated_gst_payment < 0)
+                    {
+                        $tr_code_tunggakan_default = "12".substr( $default_trcode,2 );
+                        $outstandingBill[ $tr_code_tunggakan_default ] = $outstandingBill[ $tr_code_tunggakan_default ] + $extra_zero_rated_gst_payment;
+
+                        // Update tr_code zero rated gst to 0 after the deduction to default tr_code
+                        if ( isset($outstandingBill[ "12110029" ]) )
+                        {
+                            $outstandingBill[ "12110029" ] = 0;
+                        }
+                        else if ( isset($outstandingBill[ "12041" ]) )
+                        {
+                            $outstandingBill[ "12041" ] = 0;
+                        }
                     }
 
                     $already_check = 1; // Disable check for next row with the same bill_year value
@@ -500,9 +565,13 @@ class BillGenerator
                     }
                 }
 
+                // echo " ==============> ".json_encode($outstandingBill)."<br>";
+
                 $prev_year = $bill_transaction["BILL_YEAR"];
                 // $i++;
             }
+
+            // die();
 
 
             // var_dump( array_sum($outstandingBill) );
