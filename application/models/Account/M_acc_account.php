@@ -232,6 +232,7 @@ class M_acc_account extends CI_Model
 
     function get_account_details($id){
         db_select('a.*,acc.*,t.*,c.*,r.*,asset.asset_name,asset.asset_add');
+        db_select("to_char(a.date_agreement, 'dd-mm-yyyy hh:mi:ss') as date_agreement");        
         db_select('a.bill_type as bill_type');
         db_select("to_char(a.dt_added, 'yyyy-mm-dd hh24:mi:ss') as dt_create_acc",false);
         db_select("to_char(acc.date_of_birth, 'dd-mm-yyyy') as date_of_birth",false);

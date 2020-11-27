@@ -520,16 +520,18 @@ class Generate_word {
         //     endif;
         // endif;
 
-        $date_time = ($get_details['DATE_AGREEMENT']);
+        // $date_time = ($get_details['DATE_AGREEMENT']);
         // $address = display_address($get_details['MAIL_ADDRESS_1'],$get_details['MAIL_ADDRESS_2'],$get_details['MAIL_ADDRESS_3'],$get_details['MAIL_POSTCODE'],strtolower($get_details['MAIL_STATE']));
         // if(empty($address)):
         //     $address = display_address($get_details['ADDRESS_1'],$get_details['ADDRESS_2'],$get_details['ADDRESS_3'],$get_details['POSTCODE'],ucwords(strtolower($get_details['STATE'])));
         // endif;
-        $date_time = str_replace(".000000 ","", $date_time);
+        // $date_time = str_replace(".000000 ","", $date_time);
         $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($_SERVER['DOCUMENT_ROOT'].'/file_download/perjanjian/'.$template);
 
-        $templateProcessor->setValue('letter_date',date_display(timenow(),'d-M-y'));
-        $templateProcessor->setValue('letter_time',date_display(timenow(),'h:i:sa'));
+        // $templateProcessor->setValue('letter_date',date_display(timenow(),'d-M-y'));
+        $templateProcessor->setValue('date_agreement',$get_details['DATE_AGREEMENT']);
+        $templateProcessor->setValue('letter_date', date('d-m-Y h:i:s'));
+        // $templateProcessor->setValue('letter_time',date_display(timenow(),'h.i.sA'));
         $templateProcessor->setValue('letter_date_hijri',date_display_hijri(timenow()));
         // $templateProcessor->setValue('file_number_juu',$get_details['FILE_NUMBER_JUU']);
         $templateProcessor->setValue('name',$get_details['NAME']);
