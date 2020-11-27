@@ -406,6 +406,10 @@ class BillGenerator
                         $outstandingBill[ $new_year_tunggakan_trcode ] = $last_year_extra;
                         $outstandingBill[$tr_code_lebihan_tahunan_new] = $last_year_extra;
                     }
+                    else if ( $last_year_extra == 0 )
+                    {
+                        unset($outstandingBill);
+                    }
 
                     // Check if extra payment on standard gst tr_code exist, then change to extra payment for default account tr_code
                     // if ( $bill_transaction["TR_CODE"] == "12110025" || $bill_transaction["TR_CODE_OLD"] == "12037" )
@@ -572,7 +576,6 @@ class BillGenerator
             }
 
             // die();
-
 
             // var_dump( array_sum($outstandingBill) );
             // die();
@@ -1122,11 +1125,46 @@ class BillGenerator
 
         $month = date('n');
         $year = date('Y');
-        $list_processed_transaction  =  false;
-        $list_monthly_charges        =  $this->getCurrentMonthBillCharge($account_id);
-        // $list_outstanding_charges    =  $this->getCurrentMonthOutstandingCharge($account_id);
-        $list_outstanding_charges    =  $this->calcPastTransaction($account_id);
-        $list_of_other_charges       =  $this->getOtherCharge($account_id);
+        $list_processed_transaction         =  false;
+        $list_monthly_charges               =  $this->getCurrentMonthBillCharge($account_id);
+        // $list_outstanding_charges        =  $this->getCurrentMonthOutstandingCharge($account_id);
+        $list_outstanding_charges           =  $this->calcPastTransaction($account_id);
+        $list_of_other_charges              =  $this->getOtherCharge($account_id);
+        $list_of_tr_code_exist_last_year    =  $this->CI->m_bill_item->getLastYearTrCodeThatExists( date('Y') - 1, $account_id );
+
+        // Add list tr_code that already exist in the past year to be compare in this year
+        if ( isset( $list_of_tr_code_exist_last_year ) )
+        {
+            $list_tr = array();
+            foreach ( $list_of_tr_code_exist_last_year as $tr_code ) 
+            {
+                # code...
+                $outstanding_tr_code_sewaan              = "11".substr( $tr_code["LIST_TR_CODE"] , 2) ;
+                $outstanding_tr_code_tungk_sewaan        = "12".substr( $tr_code["LIST_TR_CODE"] , 2) ;
+                $outstanding_tr_code_byrn_sewaan         = "21".substr( $tr_code["LIST_TR_CODE"] , 2) ;
+                $outstanding_tr_code_byrn__tungk_sewaan  = "22".substr( $tr_code["LIST_TR_CODE"] , 2) ;
+
+                if ( !in_array( $outstanding_tr_code_sewaan, $list_tr) )
+                {
+                    array_push( $list_tr, $outstanding_tr_code_sewaan ); // Add tr_code for current bill
+                }
+
+                if ( !in_array( $outstanding_tr_code_tungk_sewaan, $list_tr) )
+                {
+                    array_push( $list_tr, $outstanding_tr_code_tungk_sewaan ); // Add tr_code for tunggakan bill
+                }
+
+                if ( !in_array( $outstanding_tr_code_byrn_sewaan, $list_tr) )
+                {
+                    array_push( $list_tr, $outstanding_tr_code_byrn_sewaan ); // Add tr_code for bayaran current bill
+                }
+
+                if ( !in_array( $outstanding_tr_code_byrn_sewaan, $list_tr) )
+                {
+                    array_push( $list_tr, "22".substr( $tr_code["LIST_TR_CODE"] , 2) ); // Add tr_code for  bayaran tunggakan bill
+                }
+            }
+        }
 
         // ---- Other Charge ----
         if ( $list_of_other_charges !== false && $account_detail["TYPE_ID"] != "11" )
@@ -1149,31 +1187,41 @@ class BillGenerator
         {
             foreach ($list_outstanding_charges as $outstanding_charges) 
             {
-                if ( $outstanding_charges["BALANCE_AMOUNT"] > 0 )
+                if ( isset($outstanding_charges["TR_CODE_TUNGGAKAN"]) )
                 {
-                    $data[] = array( 
-                                        'TR_CODE_OLD'      =>  $outstanding_charges["TR_CODE_OLD_TUNGGAKAN"],
-                                        'TR_CODE_NEW'      =>  $outstanding_charges["TR_CODE_TUNGGAKAN"],
-                                        'TR_DESC'          =>  $outstanding_charges["TR_DESC_TUNGGAKAN"],
-                                        'AMOUNT'           =>  $outstanding_charges["BALANCE_AMOUNT"],
-                                        'DISPLAY_PRIORITY' =>  '3',
-                                    );
+                    $tr_code_outstanding_charges = $outstanding_charges["TR_CODE_TUNGGAKAN"];
+                }
+                else if ( isset($outstanding_charges["TR_CODE_OLD_TUNGGAKAN"]) )
+                {
+                    $tr_code_outstanding_charges = $outstanding_charges["TR_CODE_OLD_TUNGGAKAN"];
                 }
 
-                $temp_outstanding_charges[ $outstanding_charges["TR_CODE_TUNGGAKAN"] ] = $outstanding_charges["BALANCE_AMOUNT"];
-                
-                if ( $outstanding_charges["BALANCE_AMOUNT"] < 0 && $outstanding_charges["TR_CODE_TUNGGAKAN"] == "11119999" )
+                // echo $tr_code_outstanding_charges."</br>";
+
+                // Check if tr_code is exist in the pass year
+                if ( in_array( $tr_code_outstanding_charges, $list_tr ) )
                 {
-                    $custom_trcode1  =   '12'.substr( $default_trcode, 2 );
-                    $temp_outstanding_charges[ $custom_trcode1 ] = $outstanding_charges["BALANCE_AMOUNT"];
+                    if ( $outstanding_charges["BALANCE_AMOUNT"] > 0 )
+                    {
+                        $data[] = array( 
+                                            'TR_CODE_OLD'      =>  $outstanding_charges["TR_CODE_OLD_TUNGGAKAN"],
+                                            'TR_CODE_NEW'      =>  $outstanding_charges["TR_CODE_TUNGGAKAN"],
+                                            'TR_DESC'          =>  $outstanding_charges["TR_DESC_TUNGGAKAN"],
+                                            'AMOUNT'           =>  $outstanding_charges["BALANCE_AMOUNT"],
+                                            'DISPLAY_PRIORITY' =>  '3',
+                                        );
+                    }
+
+                    $temp_outstanding_charges[ $outstanding_charges["TR_CODE_TUNGGAKAN"] ] = $outstanding_charges["BALANCE_AMOUNT"];
+                    
+                    if ( $outstanding_charges["BALANCE_AMOUNT"] < 0 && $outstanding_charges["TR_CODE_TUNGGAKAN"] == "11119999" )
+                    {
+                        $custom_trcode1  =   '12'.substr( $default_trcode, 2 );
+                        $temp_outstanding_charges[ $custom_trcode1 ] = $outstanding_charges["BALANCE_AMOUNT"];
+                    }
                 }
-                
             }
         }
-
-        // echo "<pre>";
-        // var_dump( $list_outstanding_charges);
-        // die();
 
         // Calculate monthly charges
         // ---- Current charge ----  

@@ -943,4 +943,25 @@ class M_bill_item extends CI_Model
             return array();
         }
     }
+
+    function getLastYearTrCodeThatExists($year,$account_id)
+    {
+        db_distinct('*');
+        db_select('case when tr_code is null then tr_code_old else tr_code end as list_tr_code', FALSE);
+        db_from('b_item');
+        db_where('account_id',$account_id);
+        db_where("to_char(dt_added,'yyyy')",$year);
+        db_order('list_tr_code', 'asc');
+        
+        $sql = db_get('');
+
+        if($sql)
+        {
+            return $sql->result_array('');
+        }
+        else
+        {
+            return array();
+        }
+    }
 }
