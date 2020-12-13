@@ -50,6 +50,7 @@ class Report extends CI_Controller
             'report_dashboard',
             'category_aging_details',
             'adjustment_statement',
+            'print_penyata_penyesuaian_terperinci',
             'adjustment_statement_ringkasan',
             'payment',
             'journal',
@@ -1213,95 +1214,115 @@ class Report extends CI_Controller
         $data['data_type']      = $this->m_type->get_a_type();
         $data_report = array();
 
-        if($_POST):
-            $data_account = $this->m_acc_account->get_account_by_search($data_search);
-            if($data_account):
-                foreach ($data_account as $row):
-                    #tunggakan
-                    $tr_code_payment_overdue = substr_replace($row['TRCODE_CATEGORY'],'12',0,2);
-                    $data_search_overdue['tr_code_like']    = '12';//$tr_code_payment_overdue;
-                    $data_search_overdue['account_id']      = $row['ACCOUNT_ID'];
-                    $data_search_overdue['bill_category']   = 'B';
-                    $data_search_overdue['date_start']      = $data_search['date_start'];
-                    $data_search_overdue['date_end']        = $data_search['date_end'];
-                    $tunggakan  = $this->m_bill_item->get_bill_by_search($data_search_overdue);
+        if($_POST)
+        {
+            $test = $this->m_bill_item->getPenyataPenyesuaianTerperinci( $data_search );
 
-                    #$bayaran
-                    $tr_code_payment_payment = substr_replace($row['TRCODE_CATEGORY'],'22',0,2);
-                    $data_search_payment['tr_code_like']    = '22';
-                    $data_search_payment['account_id']      = $row['ACCOUNT_ID'];
-                    $data_search_payment['bill_category']   = 'R';
-                    $data_search_payment['date_start']      = $data_search['date_start'];
-                    $data_search_payment['date_end']        = $data_search['date_end'];
-                    $bayaran    = $this->m_bill_item->get_bill_by_search($data_search_payment);
+            // echo "<pre>";
+            // var_dump($test);
+            // die();
 
-                    #lebbihan
-                    $tr_code_payment_payment = substr_replace($row['TRCODE_CATEGORY'],'22',0,2);
-                    $data_search_lebihan['tr_code_like']    = '11119999';
-                    $data_search_lebihan['account_id']      = $row['ACCOUNT_ID'];
-                    $data_search_lebihan['bill_category']   = 'B';
-                    $data_search_lebihan['date_start']      = $data_search['date_start'];
-                    $data_search_lebihan['date_end']        = $data_search['date_end'];
-                    $lebihan    = $this->m_bill_item->get_bill_by_search($data_search_lebihan);
 
-                    #cukai
-                    $tr_code_payment_payment = substr_replace($row['TRCODE_CATEGORY'],'22',0,2);
-                    $data_search_cukai['tr_code_start']   = '11110025';
-                    $data_search_cukai['tr_code_end']     = '11110029';
-                    $data_search_cukai['account_id']      = $row['ACCOUNT_ID'];
-                    $data_search_cukai['bill_category']   = 'B';
-                    $data_search_cukai['date_start']      = $data_search['date_start'];
-                    $data_search_cukai['date_end']        = $data_search['date_end'];
-                    $cukai    = $this->m_bill_item->get_bill_by_search($data_search_cukai);
+            // $data_account = $this->m_acc_account->get_account_by_search($data_search);
+            // if($data_account):
+            //     foreach ($data_account as $row):
+            //         #tunggakan
+            //         $tr_code_payment_overdue = substr_replace($row['TRCODE_CATEGORY'],'12',0,2);
+            //         $data_search_overdue['tr_code_like']    = '12';//$tr_code_payment_overdue;
+            //         $data_search_overdue['account_id']      = $row['ACCOUNT_ID'];
+            //         $data_search_overdue['bill_category']   = 'B';
+            //         $data_search_overdue['date_start']      = $data_search['date_start'];
+            //         $data_search_overdue['date_end']        = $data_search['date_end'];
+            //         $tunggakan  = $this->m_bill_item->get_bill_by_search($data_search_overdue);
 
-                    #bayaran cukai
-                    $tr_code_payment_payment = substr_replace($row['TRCODE_CATEGORY'],'22',0,2);
-                    $data_search_bayaran_cukai['tr_code_start']   = '11110025';
-                    $data_search_bayaran_cukai['tr_code_end']     = '11110029';
-                    $data_search_bayaran_cukai['account_id']      = $row['ACCOUNT_ID'];
-                    $data_search_bayaran_cukai['bill_category']   = 'R';
-                    $data_search_bayaran_cukai['date_start']      = $data_search['date_start'];
-                    $data_search_bayaran_cukai['date_end']        = $data_search['date_end'];
-                    $bayaran_cukai    = $this->m_bill_item->get_bill_by_search($data_search_bayaran_cukai);
+            //         #$bayaran
+            //         $tr_code_payment_payment = substr_replace($row['TRCODE_CATEGORY'],'22',0,2);
+            //         $data_search_payment['tr_code_like']    = '22';
+            //         $data_search_payment['account_id']      = $row['ACCOUNT_ID'];
+            //         $data_search_payment['bill_category']   = 'R';
+            //         $data_search_payment['date_start']      = $data_search['date_start'];
+            //         $data_search_payment['date_end']        = $data_search['date_end'];
+            //         $bayaran    = $this->m_bill_item->get_bill_by_search($data_search_payment);
 
-                    #sewaan semasa
-                    $tr_code_payment_payment = substr_replace($row['TRCODE_CATEGORY'],'22',0,2);
-                    $data_search_semasa['tr_code']           = $row['TRCODE_CATEGORY'];
-                    $data_search_semasa['account_id']        = $row['ACCOUNT_ID'];
-                    $data_search_semasa['bill_category']     = 'B';
-                    $data_search_semasa['date_start']      = $data_search['date_start'];
-                    $data_search_semasa['date_end']        = $data_search['date_end'];
-                    $semasa    = $this->m_bill_item->get_bill_by_search($data_search_semasa);
+            //         #lebbihan
+            //         $tr_code_payment_payment = substr_replace($row['TRCODE_CATEGORY'],'22',0,2);
+            //         $data_search_lebihan['tr_code_like']    = '11119999';
+            //         $data_search_lebihan['account_id']      = $row['ACCOUNT_ID'];
+            //         $data_search_lebihan['bill_category']   = 'B';
+            //         $data_search_lebihan['date_start']      = $data_search['date_start'];
+            //         $data_search_lebihan['date_end']        = $data_search['date_end'];
+            //         $lebihan    = $this->m_bill_item->get_bill_by_search($data_search_lebihan);
 
-                    #bayaran sewaan
-                    $bayaran_semasa = substr_replace($row['TRCODE_CATEGORY'],'21',0,2);
-                    $data_search_bayaran_semasa['tr_code']           = $bayaran_semasa;
-                    $data_search_bayaran_semasa['account_id']        = $row['ACCOUNT_ID'];
-                    $data_search_bayaran_semasa['bill_category']     = 'R';
-                    $data_search_bayaran_semasa['date_start']      = $data_search['date_start'];
-                    $data_search_bayaran_semasa['date_end']        = $data_search['date_end'];
-                    $bayaran_semasa    = $this->m_bill_item->get_bill_by_search($data_search_bayaran_semasa);
+            //         #cukai
+            //         $tr_code_payment_payment = substr_replace($row['TRCODE_CATEGORY'],'22',0,2);
+            //         $data_search_cukai['tr_code_start']   = '11110025';
+            //         $data_search_cukai['tr_code_end']     = '11110029';
+            //         $data_search_cukai['account_id']      = $row['ACCOUNT_ID'];
+            //         $data_search_cukai['bill_category']   = 'B';
+            //         $data_search_cukai['date_start']      = $data_search['date_start'];
+            //         $data_search_cukai['date_end']        = $data_search['date_end'];
+            //         $cukai    = $this->m_bill_item->get_bill_by_search($data_search_cukai);
 
-                    $row['tunggakan']       = $tunggakan;
-                    $row['bayaran']         = $bayaran;
-                    $row['lebihan']         = $lebihan;
-                    $row['cukai']           = $cukai;
-                    $row['bayaran_cukai']   = $bayaran_cukai;
-                    $row['semasa']          = $semasa;
-                    $row['bayaran_semasa']  = $bayaran_semasa;
+            //         #bayaran cukai
+            //         $tr_code_payment_payment = substr_replace($row['TRCODE_CATEGORY'],'22',0,2);
+            //         $data_search_bayaran_cukai['tr_code_start']   = '11110025';
+            //         $data_search_bayaran_cukai['tr_code_end']     = '11110029';
+            //         $data_search_bayaran_cukai['account_id']      = $row['ACCOUNT_ID'];
+            //         $data_search_bayaran_cukai['bill_category']   = 'R';
+            //         $data_search_bayaran_cukai['date_start']      = $data_search['date_start'];
+            //         $data_search_bayaran_cukai['date_end']        = $data_search['date_end'];
+            //         $bayaran_cukai    = $this->m_bill_item->get_bill_by_search($data_search_bayaran_cukai);
 
-                    $data_report[] = $row;
-                endforeach;
-            endif;
+            //         #sewaan semasa
+            //         $tr_code_payment_payment = substr_replace($row['TRCODE_CATEGORY'],'22',0,2);
+            //         $data_search_semasa['tr_code']           = $row['TRCODE_CATEGORY'];
+            //         $data_search_semasa['account_id']        = $row['ACCOUNT_ID'];
+            //         $data_search_semasa['bill_category']     = 'B';
+            //         $data_search_semasa['date_start']      = $data_search['date_start'];
+            //         $data_search_semasa['date_end']        = $data_search['date_end'];
+            //         $semasa    = $this->m_bill_item->get_bill_by_search($data_search_semasa);
 
-            $data['data_report']    = $data_report;
-            $data['data_search']    = $data_search;
-        else:
-            $data['data_report']       = array();
-            $data['data_search']    = $data_search;
-        endif;
+            //         #bayaran sewaan
+            //         $bayaran_semasa = substr_replace($row['TRCODE_CATEGORY'],'21',0,2);
+            //         $data_search_bayaran_semasa['tr_code']           = $bayaran_semasa;
+            //         $data_search_bayaran_semasa['account_id']        = $row['ACCOUNT_ID'];
+            //         $data_search_bayaran_semasa['bill_category']     = 'R';
+            //         $data_search_bayaran_semasa['date_start']      = $data_search['date_start'];
+            //         $data_search_bayaran_semasa['date_end']        = $data_search['date_end'];
+            //         $bayaran_semasa    = $this->m_bill_item->get_bill_by_search($data_search_bayaran_semasa);
+
+            //         $row['tunggakan']       = $tunggakan;
+            //         $row['bayaran']         = $bayaran;
+            //         $row['lebihan']         = $lebihan;
+            //         $row['cukai']           = $cukai;
+            //         $row['bayaran_cukai']   = $bayaran_cukai;
+            //         $row['semasa']          = $semasa;
+            //         $row['bayaran_semasa']  = $bayaran_semasa;
+
+            //         $data_report[] = $row;
+            //     endforeach;
+            // endif;
+
+            $data['test']  = $test;
+            $data['data_report']  = $data_report;
+            $data['data_search']  = $data_search;
+        }
+        else
+        {
+            $data['data_report']  = array();
+            $data['data_search']  = $data_search;
+        }
 
         templates('/report/v_statement_adjustment',$data);
+    }
+
+    function print_penyata_penyesuaian_terperinci()
+    {
+        $data_search = get_session('arr_filter_adjustment_report');
+        
+        $data["data_search"] = $data_search;
+        $data["test"] = $this->m_bill_item->getPenyataPenyesuaianTerperinci( $data_search );
+        $this->load->view('/report/v_print_penyata_penyesuaian_terperinci',$data);
     }
 
     function adjustment_statement_ringkasan(){

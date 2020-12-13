@@ -13,6 +13,13 @@
  * @param string $data
  * @return mixed
  */
+
+function db_escape($var)
+{
+    $ci =& get_instance();
+    return $ci->db->escape($var);
+}
+
 function db_from($data='')
 {
     if(!$data) die('No Data Provided for db_from function!');
