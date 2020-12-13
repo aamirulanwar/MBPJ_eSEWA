@@ -218,12 +218,12 @@
             window.print();
         });
 
-        // $(function()
-        // {
-        // $("body").hover(function(){
-        //     window.close();
-        // });
-        // });
+        $(function()
+        {
+        $("body").hover(function(){
+            window.close();
+        });
+        });
     </script>
 </body>
 </html>
