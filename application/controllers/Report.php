@@ -52,6 +52,7 @@ class Report extends CI_Controller
             'adjustment_statement',
             'print_penyata_penyesuaian_terperinci',
             'adjustment_statement_ringkasan',
+            'print_penyata_penyesuaian_ringkasan',
             'payment',
             'journal',
             'print_journal',
@@ -1195,20 +1196,28 @@ class Report extends CI_Controller
 
         $post           = $this->input->post();
         $filter_session = get_session('arr_filter_adjustment_report');
-        if(!empty($post)):
+        if(!empty($post))
+        {
             $this->session->set_userdata('arr_filter_adjustment_report',$post);
             $data_search = $post;
-        else:
+
+            if ( $data_search['date_end'] == "") 
+            { 
+                $data_search['date_end'] = date_display(timenow(),'d M Y'); 
+            }
+        }
+        else
+        {
             if(!empty($filter_session)):
                 $data_search = $filter_session;
             else:
                 $data_search['date_start']  = date_display(timenow(),'d M Y');
-                $data_search['date_end']    = '';
+                $data_search['date_end']    = date_display(timenow(),'d M Y');
                 $data_search['category_id'] = '';
                 $data_search['status_acc']  = '';
                 $data_search['type_id']     = '';
             endif;
-        endif;
+        }
 
         $data['data_category']  = $this->m_category->get_a_category('','');
         $data['data_type']      = $this->m_type->get_a_type();
@@ -1249,150 +1258,96 @@ class Report extends CI_Controller
 
         $post           = $this->input->post();
         $filter_session = get_session('arr_filter_adjustment_report_ringkasan');
-        if(!empty($post)):
+
+        if(!empty($post))
+        {
             $this->session->set_userdata('arr_filter_adjustment_report_ringkasan',$post);
             $data_search = $post;
-        else:
+            if ( $data_search['date_end'] == "") 
+            { 
+                $data_search['date_end'] = date_display(timenow(),'d M Y'); 
+            }
+        }
+        else
+        {
             if(!empty($filter_session)):
                 $data_search = $filter_session;
             else:
                 $data_search['date_start']  = date_display(timenow(),'d M Y');
-                $data_search['date_end']    = '';
+                $data_search['date_end']    = date_display(timenow(),'d M Y');
                 $data_search['category_id'] = '';
                 $data_search['status_acc']  = '';
                 $data_search['type_id']     = '';
             endif;
-        endif;
+        }
 
         $data['data_category']  = $this->m_category->get_a_category('','');
         $data['data_type']      = $this->m_type->get_a_type();
         $data_report = array();
 
-        if($_POST):
-            if(input_data('type_id')==''):
-                $data_type_loop = $data['data_type'];
-            else:
-                $data_type_loop[] =
-                    array(
-                        'TYPE_ID'=>input_data('type_id')
-                    );
-            endif;
+        if($_POST)
+        {
+            $data_report = $this->m_bill_item->getPenyataPenyesuaianRingkasan( $data_search );
+            $type_id = -1;
 
-            if($data_type_loop):
-                $j=0;
-                foreach ($data_type_loop as $row):
-                    $j = $j+1;
-                    if($j==4):
-                        break;
-                    endif;
-                    $data_type_details          = $this->m_type->get_a_type_details($row['TYPE_ID']);
-                    $data_search_cat['type_id']     = $row['TYPE_ID'];
-                    $data_search_cat['category_id'] = input_data('category_id');
-                    $data_category              = $this->m_category->get_a_category('','',$data_search_cat);
-                    $row['data_type_details']   = $data_type_details;
+            if ( count($data_report) > 0 )
+            {
+                foreach ($data_report as $row) 
+                {
+                    if ( $type_id != $row["TYPE_NAME"] )
+                    {
+                        $type_id = $row["TYPE_NAME"];
+                    }
 
-                    if($data_category):
-                        $loop_category = array();
-                        $i=0;
-                        foreach ($data_category as $category):
-                                $i = $i+1;
-                            /*
-                                if($i==4):
-                                    break;
-                                endif;
-                              */
-                            #tunggakan
-                            // $tr_code_payment_overdue = substr_replace($row['TRCODE_CATEGORY'],'12',0,2);
-                            $data_search_overdue['tr_code_like']    = '12';//$tr_code_payment_overdue;
-                            $data_search_overdue['category_id']     = $category['CATEGORY_ID'];
-                            $data_search_overdue['bill_category']   = 'B';
-                            $data_search_overdue['date_start']      = $data_search['date_start'];
-                            $data_search_overdue['date_end']        = $data_search['date_end'];
-                            $tunggakan  = $this->m_bill_item->get_bill_by_search($data_search_overdue);
-
-                            #$bayaran
-                            // $tr_code_payment_payment = substr_replace($row['TRCODE_CATEGORY'],'22',0,2);
-                            $data_search_payment['tr_code_like']    = '22';
-                            $data_search_payment['category_id']     = $category['CATEGORY_ID'];
-                            $data_search_payment['bill_category']   = 'R';
-                            $data_search_payment['date_start']      = $data_search['date_start'];
-                            $data_search_payment['date_end']        = $data_search['date_end'];
-                            $bayaran    = $this->m_bill_item->get_bill_by_search($data_search_payment);
-
-                            #lebbihan
-                            // $tr_code_payment_payment = substr_replace($row['TRCODE_CATEGORY'],'22',0,2);
-                            $data_search_lebihan['tr_code_like']    = '11119999';
-                            $data_search_lebihan['category_id']      = $category['CATEGORY_ID'];
-                            $data_search_lebihan['bill_category']   = 'B';
-                            $data_search_lebihan['date_start']      = $data_search['date_start'];
-                            $data_search_lebihan['date_end']        = $data_search['date_end'];
-                            $lebihan    = $this->m_bill_item->get_bill_by_search($data_search_lebihan);
-
-                            #cukai
-                            // $tr_code_payment_payment = substr_replace($row['TRCODE_CATEGORY'],'22',0,2);
-                            $data_search_cukai['tr_code_start']   = '11110025';
-                            $data_search_cukai['tr_code_end']     = '11110029';
-                            $data_search_cukai['category_id']     = $category['CATEGORY_ID'];
-                            $data_search_cukai['bill_category']   = 'B';
-                            $data_search_cukai['date_start']      = $data_search['date_start'];
-                            $data_search_cukai['date_end']        = $data_search['date_end'];
-                            $cukai    = $this->m_bill_item->get_bill_by_search($data_search_cukai);
-
-                            #bayaran cukai
-                            // $tr_code_payment_payment = substr_replace($row['TRCODE_CATEGORY'],'22',0,2);
-                            $data_search_bayaran_cukai['tr_code_start']   = '11110025';
-                            $data_search_bayaran_cukai['tr_code_end']     = '11110029';
-                            $data_search_bayaran_cukai['category_id']     = $category['CATEGORY_ID'];
-                            $data_search_bayaran_cukai['bill_category']   = 'R';
-                            $data_search_bayaran_cukai['date_start']      = $data_search['date_start'];
-                            $data_search_bayaran_cukai['date_end']        = $data_search['date_end'];
-                            $bayaran_cukai    = $this->m_bill_item->get_bill_by_search($data_search_bayaran_cukai);
-
-                            #sewaan semasa
-                            // $tr_code_payment_payment = substr_replace($row['TRCODE_CATEGORY'],'22',0,2);
-                            $data_search_semasa['tr_code']           = $category['TRCODE_CATEGORY'];
-                            $data_search_semasa['category_id']       = $category['CATEGORY_ID'];
-                            $data_search_semasa['bill_category']     = 'B';
-                            $data_search_semasa['date_start']      = $data_search['date_start'];
-                            $data_search_semasa['date_end']        = $data_search['date_end'];
-                            $semasa    = $this->m_bill_item->get_bill_by_search($data_search_semasa);
-
-                            #bayaran sewaan
-                            $bayaran_semasa = substr_replace($category['TRCODE_CATEGORY'],'21',0,2);
-                            $data_search_bayaran_semasa['tr_code']          = $bayaran_semasa;
-                            $data_search_bayaran_semasa['category_id']      = $category['CATEGORY_ID'];
-                            $data_search_bayaran_semasa['bill_category']    = 'R';
-                            $data_search_bayaran_semasa['date_start']       = $data_search['date_start'];
-                            $data_search_bayaran_semasa['date_end']         = $data_search['date_end'];
-                            $bayaran_semasa    = $this->m_bill_item->get_bill_by_search($data_search_bayaran_semasa);
-
-                            $loop_category_1['tunggakan']       = $tunggakan;
-                            $loop_category_1['bayaran']         = $bayaran;
-                            $loop_category_1['lebihan']         = $lebihan;
-                            $loop_category_1['cukai']           = $cukai;
-                            $loop_category_1['bayaran_cukai']   = $bayaran_cukai;
-                            $loop_category_1['semasa']          = $semasa;
-                            $loop_category_1['bayaran_semasa']  = $bayaran_semasa;
-
-
-                            $loop_category_1['category_details']      = $this->m_category->get_a_category_details($category['CATEGORY_ID']);
-                            $loop_category[] = $loop_category_1;
-
-                        endforeach;
-                        $row['category'] = $loop_category;
-                        $data_report[] = $row;
-                    endif;
-                endforeach;
-            endif;
-
-            $data['data_report']    = $data_report;
-            $data['data_search']    = $data_search;
-        else:
-            $data['data_report']       = array();
-            $data['data_search']    = $data_search;
-        endif;
+                    $data_report_group[$type_id][] = $row;
+                }
+            }
+            else
+            {
+                $data_report_group[""] = array();
+            }
+            
+            $data['data_report']  = $data_report_group;
+            $data['data_search']  = $data_search;
+        }
+        else
+        {
+            $data['data_report']  = array();
+            $data['data_search']  = $data_search;
+        }
 
         templates('/report/v_statement_adjustment_ringkasan',$data);
+    }
+
+    function print_penyata_penyesuaian_ringkasan()
+    {
+        $data_search = get_session('arr_filter_adjustment_report_ringkasan');
+
+        $data["data_search"] = $data_search;
+        $data_report = $this->m_bill_item->getPenyataPenyesuaianRingkasan( $data_search );
+        $type_id = -1;
+
+        if ( count($data_report) > 0 )
+        {
+            foreach ($data_report as $row) 
+            {
+                if ( $type_id != $row["TYPE_NAME"] )
+                {
+                    $type_id = $row["TYPE_NAME"];
+                }
+
+                $data_report_group[$type_id][] = $row;
+            }
+        }
+        else
+        {
+            $data_report_group[""] = array();
+        }
+
+        $data['data_report']  = $data_report_group;
+        $data['data_search']  = $data_search;
+
+        $this->load->view('/report/v_print_penyata_penyesuaian_ringkasan',$data);
     }
 
     function payment(){

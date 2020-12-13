@@ -7,7 +7,7 @@
     <meta name="description" content="CoreUI - Open Source Bootstrap Admin Template">
     <meta name="author" content="Łukasz Holeczek">
     <meta name="keyword" content="Bootstrap,Admin,Template,Open,Source,jQuery,CSS,HTML,RWD,Dashboard">
-    <title>LAPORAN PENYATA PENYESUAIAN TERPERINCI</title>
+    <title>LAPORAN PENYATA PENYESUAIAN RINGKASAN</title>
     <!-- Icons-->
     <link rel="icon" href="<?=base_url()?>/favicon.ico" type="image/x-icon">
     <link href="/assets/node_modules/@coreui/icons/css/coreui-icons.min.css" rel="stylesheet">
@@ -41,7 +41,7 @@
                 <tr><td style="height:20px;"></td></tr>
                 <tr>
                     <td colspan="2" style="text-align: center;font-weight: bold;font-size: 18px">
-                        <span>LAPORAN PENYATA PENYESUAIAN TERPERINCI</span></br>
+                        <span>LAPORAN PENYATA PENYESUAIAN RINGKASAN</span></br>
                         <?php
                             $date_start = $data_search['date_start'] ;
                             $date_end = $data_search['date_end'] ;
@@ -53,117 +53,148 @@
         </div>
         </br>
         <div>
-            <table class="table table-bordered" style="font-size: 10px; min-width: 1458.4px;margin: 0.1cm" >
-                <thead>
-                    <tr>
-                        <th colspan="4">Akaun</th>
-                        <th width="5%" rowspan="2">Tunggakan sewa (RM)</th>
-                        <th colspan="2">Pelarasan</th>
-                        <th width="5%" rowspan="2">Terimaan Tunggakan (RM)</th>
-                        <th colspan="2">Pelarasan</th>
-                        <th width="5%" rowspan="2">Lebihan (RM)</th>
-                        <th colspan="2">Pelarasan</th>
-                        <th width="5%" rowspan="2">Sewaan semasa (RM)</th>
-                        <th colspan="2">Pelarasan</th>
-                        <th width="5%" rowspan="2">Terimaan semasa (RM)</th>
-                        <th colspan="2">Pelarasan</th>
-                        <th colspan="2">Jumlah</th>
-                        <th width="5%" rowspan="2">Baki Bawa Kehadapan (RM)</th>
-                    </tr>
-                    <tr>
-                        <th width="5%">Akaun No.</th>
-                        <th width="6%">Nama Penyewa</th>
-                        <th width="5%">Jenis Harta</th>
-                        <th width="6%">Kod Kategori</th>
-                        <th width="4%">Debit (RM)</th>
-                        <th width="4%">Kredit (RM)</th>
-                        <th width="4%">Debit (RM)</th>
-                        <th width="4%">Kredit (RM)</th>
-                        <th width="4%">Debit (RM)</th>
-                        <th width="4%">Kredit (RM)</th>
-                        <th width="4%">Debit (RM)</th>
-                        <th width="4%">Kredit (RM)</th>
-                        <th width="4%">Debit (RM)</th>
-                        <th width="4%">Kredit (RM)</th>
-                        <th width="4%">Jumlah (Debit) (RM)</th>
-                        <th width="4%">Jumlah (Kredit) (RM)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                        $total_row_debit = 0;
-                        $total_row_credit = 0;
-                        $total_row_balance = 0;
+            <?php
 
-                        if ( count($data_report) > 0 )
+                $type_id = 0;
+                $total_group_debit = 0;
+                $total_group_credit = 0;
+                $total_group_balance = 0;
+                
+
+                foreach ($data_report as $group => $data_list) 
+                {
+                    $total_row_debit = 0;
+                    $total_row_credit = 0;
+                    $total_row_balance = 0;
+
+                    echo '<h3 style="text-decoration: underline;margin: 0.1cm">'.$group.'</h3>';
+                    echo '
+                        <table class="table table-hover table-bordered table-adjustment" style="margin-bottom: 0px; font-size: 10px; min-width: 1458.4px;margin: 0.1cm">
+                            <thead>
+                                <tr>
+                                    <th width="5%" rowspan="2">Kod Kategori</th>
+                                    <th width="5%" rowspan="2">Tunggakan Sewa (RM)</th>
+                                    <th colspan="2">Pelarasan</th>
+                                    <th width="5%" rowspan="2">Terimaan Tunggakan (RM)</th>
+                                    <th colspan="2">Pelarasan</th>
+                                    <th width="5%" rowspan="2">Lebihan (RM)</th>
+                                    <th colspan="2">Pelarasan</th>
+                                    <th width="5%" rowspan="2">Sewaan Semasa (RM)</th>
+                                    <th colspan="2">Pelarasan</th>
+                                    <th width="5%" rowspan="2">Terimaan Semasa (RM)</th>
+                                    <th colspan="2">Pelarasan</th>
+                                    <th colspan="2">Jumlah </th>
+                                    <th width="5%" rowspan="2">Baki Bawa Kehadapan (RM)</th>
+                                </tr>
+                                <tr>
+                                    <th width="5%">Debit (RM)</th>
+                                    <th width="5%">Kredit (RM)</th>
+                                    <th width="5%">Debit (RM)</th>
+                                    <th width="5%">Kredit (RM)</th>
+                                    <th width="5%">Debit (RM)</th>
+                                    <th width="5%">Kredit (RM)</th>
+                                    <th width="5%">Debit (RM)</th>
+                                    <th width="5%">Kredit (RM)</th>
+                                    <th width="5%">Debit (RM)</th>
+                                    <th width="5%">Kredit (RM)</th>
+                                    <th width="5%">Jumlah (Debit) (RM)</th>
+                                    <th width="5%">Jumlah (Kredit) (RM)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                    ';
+
+                    if ( count($data_list) > 0 )
+                    {
+                        foreach ($data_list as $row) 
                         {
-                            foreach ($data_report as $row) 
-                            {
-                                $account_number                   =  $row["ACCOUNT_NUMBER"];
-                                $account_name                     =  $row["ACCOUNT_NAME"];
-                                $type_name                        =  $row["TYPE_NAME"];
-                                $category_name                    =  $row["CATEGORY_NAME"];
-                                $total_tunggakan                  =  ( $row["TOTAL_TUNGGAKAN"] == "" ? 0 : $row["TOTAL_TUNGGAKAN"] );
-                                $total_jurnal_tunggakan_db        =  ( $row["TOTAL_JURNAL_TUNGGAKAN_DB"] == "" ? 0 : $row["TOTAL_JURNAL_TUNGGAKAN_DB"] );
-                                $total_jurnal_tunggakan_cr        =  abs( $row["TOTAL_JURNAL_TUNGGAKAN_CR"] == "" ? 0 : $row["TOTAL_JURNAL_TUNGGAKAN_CR"] );
-                                $total_byrn_tunggakan             =  ( $row["TOTAL_BYRN_TUNGGAKAN"] == "" ? 0 : $row["TOTAL_BYRN_TUNGGAKAN"] );
-                                $total_jurnal_byrn_tunggakan_db   =  ( $row["TOTAL_JURNAL_BYRN_TUNGGAKAN_DB"] == "" ? 0 : $row["TOTAL_JURNAL_BYRN_TUNGGAKAN_DB"] );
-                                $total_jurnal_byrn_tunggakan_cr   =  abs( $row["TOTAL_JURNAL_BYRN_TUNGGAKAN_CR"] == "" ? 0 : $row["TOTAL_JURNAL_BYRN_TUNGGAKAN_CR"] );
-                                $total_lebihan                    =  ( $row["TOTAL_LEBIHAN_TAHUN_LEPAS"] == "" ? 0 : $row["TOTAL_LEBIHAN_TAHUN_LEPAS"] );
-                                $total_jurnal_lebihan_db          =  ( $row["TOTAL_JURNAL_LEBIHAN_TAHUN_LEPAS_DB"] == "" ? 0 : $row["TOTAL_JURNAL_LEBIHAN_TAHUN_LEPAS_DB"] );
-                                $total_jurnal_lebihan_cr          =  abs( $row["TOTAL_JURNAL_LEBIHAN_TAHUN_LEPAS_CR"] == "" ? 0 : $row["TOTAL_JURNAL_LEBIHAN_TAHUN_LEPAS_CR"] );
+                            $category_name                    =  $row["CATEGORY_NAME"];
+                            $category_code                    =  $row["CATEGORY_CODE"];
+                            $total_tunggakan                  =  ( $row["TOTAL_TUNGGAKAN"] == "" ? 0 : $row["TOTAL_TUNGGAKAN"] );
+                            $total_jurnal_tunggakan_db        =  ( $row["TOTAL_JURNAL_TUNGGAKAN_DB"] == "" ? 0 : $row["TOTAL_JURNAL_TUNGGAKAN_DB"] );
+                            $total_jurnal_tunggakan_cr        =  abs( $row["TOTAL_JURNAL_TUNGGAKAN_CR"] == "" ? 0 : $row["TOTAL_JURNAL_TUNGGAKAN_CR"] );
+                            $total_byrn_tunggakan             =  ( $row["TOTAL_BYRN_TUNGGAKAN"] == "" ? 0 : $row["TOTAL_BYRN_TUNGGAKAN"] );
+                            $total_jurnal_byrn_tunggakan_db   =  ( $row["TOTAL_JURNAL_BYRN_TUNGGAKAN_DB"] == "" ? 0 : $row["TOTAL_JURNAL_BYRN_TUNGGAKAN_DB"] );
+                            $total_jurnal_byrn_tunggakan_cr   =  abs( $row["TOTAL_JURNAL_BYRN_TUNGGAKAN_CR"] == "" ? 0 : $row["TOTAL_JURNAL_BYRN_TUNGGAKAN_CR"] );
+                            $total_lebihan                    =  ( $row["TOTAL_LEBIHAN_TAHUN_LEPAS"] == "" ? 0 : $row["TOTAL_LEBIHAN_TAHUN_LEPAS"] );
+                            $total_jurnal_lebihan_db          =  ( $row["TOTAL_JURNAL_LEBIHAN_TAHUN_LEPAS_DB"] == "" ? 0 : $row["TOTAL_JURNAL_LEBIHAN_TAHUN_LEPAS_DB"] );
+                            $total_jurnal_lebihan_cr          =  abs( $row["TOTAL_JURNAL_LEBIHAN_TAHUN_LEPAS_CR"] == "" ? 0 : $row["TOTAL_JURNAL_LEBIHAN_TAHUN_LEPAS_CR"] );
 
-                                $total_bil_semasa                 =  ( $row["TOTAL_BIL_SEMASA"] == "" ? 0 : $row["TOTAL_BIL_SEMASA"] );
-                                $total_jurnal_bil_semasa_db       =  ( $row["TOTAL_JURNAL_BIL_SEMASA_DB"] == "" ? 0 : $row["TOTAL_JURNAL_BIL_SEMASA_DB"] );
-                                $total_jurnal_bil_semasa_cr       =  abs( $row["TOTAL_JURNAL_BIL_SEMASA_CR"] == "" ? 0 : $row["TOTAL_JURNAL_BIL_SEMASA_CR"] );
+                            $total_bil_semasa                 =  ( $row["TOTAL_BIL_SEMASA"] == "" ? 0 : $row["TOTAL_BIL_SEMASA"] );
+                            $total_jurnal_bil_semasa_db       =  ( $row["TOTAL_JURNAL_BIL_SEMASA_DB"] == "" ? 0 : $row["TOTAL_JURNAL_BIL_SEMASA_DB"] );
+                            $total_jurnal_bil_semasa_cr       =  abs( $row["TOTAL_JURNAL_BIL_SEMASA_CR"] == "" ? 0 : $row["TOTAL_JURNAL_BIL_SEMASA_CR"] );
 
-                                $total_byrn_bil_semasa            =  ( $row["TOTAL_BYRN_BIL_SEMASA"] == "" ? 0 : $row["TOTAL_BYRN_BIL_SEMASA"] );
-                                $total_jurnal_byrn_bil_semasa_db  =  ( $row["TOTAL_JURNAL_BYRN_BIL_SEMASA_DB"] == "" ? 0 : $row["TOTAL_JURNAL_BYRN_BIL_SEMASA_DB"] );
-                                $total_jurnal_byrn_bil_semasa_cr  =  abs( $row["TOTAL_JURNAL_BYRN_BIL_SEMASA_CR"] == "" ? 0 : $row["TOTAL_JURNAL_BYRN_BIL_SEMASA_CR"] );
+                            $total_byrn_bil_semasa            =  ( $row["TOTAL_BYRN_BIL_SEMASA"] == "" ? 0 : $row["TOTAL_BYRN_BIL_SEMASA"] );
+                            $total_jurnal_byrn_bil_semasa_db  =  ( $row["TOTAL_JURNAL_BYRN_BIL_SEMASA_DB"] == "" ? 0 : $row["TOTAL_JURNAL_BYRN_BIL_SEMASA_DB"] );
+                            $total_jurnal_byrn_bil_semasa_cr  =  abs( $row["TOTAL_JURNAL_BYRN_BIL_SEMASA_CR"] == "" ? 0 : $row["TOTAL_JURNAL_BYRN_BIL_SEMASA_CR"] );
 
 
-                                $total_debit   = $total_tunggakan + $total_jurnal_tunggakan_db + $total_jurnal_byrn_tunggakan_cr + $total_jurnal_lebihan_cr + $total_bil_semasa + $total_jurnal_bil_semasa_db + $total_jurnal_byrn_bil_semasa_cr;
-                                $total_credit  = $total_jurnal_tunggakan_cr + $total_byrn_tunggakan + $total_jurnal_byrn_tunggakan_db + $total_lebihan + $total_jurnal_lebihan_db + $total_jurnal_bil_semasa_cr + $total_byrn_bil_semasa + $total_jurnal_byrn_bil_semasa_db;
-                                $total_balance = $total_debit - $total_credit;
+                            $total_debit   = $total_tunggakan + $total_jurnal_tunggakan_db + $total_jurnal_byrn_tunggakan_cr + $total_jurnal_lebihan_cr + $total_bil_semasa + $total_jurnal_bil_semasa_db + $total_jurnal_byrn_bil_semasa_cr;
+                            $total_credit  = $total_jurnal_tunggakan_cr + $total_byrn_tunggakan + $total_jurnal_byrn_tunggakan_db + $total_lebihan + $total_jurnal_lebihan_db + $total_jurnal_bil_semasa_cr + $total_byrn_bil_semasa + $total_jurnal_byrn_bil_semasa_db;
+                            $total_balance = $total_debit - $total_credit;
 
-                                $total_row_debit = $total_row_debit + $total_debit;
-                                $total_row_credit = $total_row_credit + $total_credit;
-                                $total_row_balance = $total_row_balance + $total_balance;
+                            $total_row_debit = $total_row_debit + $total_debit;
+                            $total_row_credit = $total_row_credit + $total_credit;
+                            $total_row_balance = $total_row_balance + $total_balance;
 
-                                echo "<tr>";
-                                echo "  <td>".$account_number."</td>";
-                                echo "  <td>".$account_name."</td>";
-                                echo "  <td>".$type_name."</td>";
-                                echo "  <td>".$category_name."</td>";
-                                echo "  <td style='vertical-align: middle; text-align: right'>".number_format( $total_tunggakan , 2, '.', ',')."</td>";
-                                echo "  <td style='vertical-align: middle; text-align: right'>".number_format( $total_jurnal_tunggakan_db , 2, '.', ',')."</td>";
-                                echo "  <td style='vertical-align: middle; text-align: right'>".number_format( $total_jurnal_tunggakan_cr , 2, '.', ',')."</td>";
-                                echo "  <td style='vertical-align: middle; text-align: right'>".number_format( $total_byrn_tunggakan , 2, '.', ',')."</td>";
-                                echo "  <td style='vertical-align: middle; text-align: right'>".number_format( $total_jurnal_byrn_tunggakan_db , 2, '.', ',')."</td>";
-                                echo "  <td style='vertical-align: middle; text-align: right'>".number_format( $total_jurnal_byrn_tunggakan_cr , 2, '.', ',')."</td>";
-                                echo "  <td style='vertical-align: middle; text-align: right'>".number_format( $total_lebihan , 2, '.', ',')."</td>";
-                                echo "  <td style='vertical-align: middle; text-align: right'>".number_format( $total_jurnal_lebihan_db , 2, '.', ',')."</td>";
-                                echo "  <td style='vertical-align: middle; text-align: right'>".number_format( $total_jurnal_lebihan_cr , 2, '.', ',')."</td>";
-                                echo "  <td style='vertical-align: middle; text-align: right'>".number_format( $total_bil_semasa , 2, '.', ',')."</td>";
-                                echo "  <td style='vertical-align: middle; text-align: right'>".number_format( $total_jurnal_bil_semasa_db , 2, '.', ',')."</td>";
-                                echo "  <td style='vertical-align: middle; text-align: right'>".number_format( $total_jurnal_bil_semasa_cr , 2, '.', ',')."</td>";
-                                echo "  <td style='vertical-align: middle; text-align: right'>".number_format( $total_byrn_bil_semasa , 2, '.', ',')."</td>";
-                                echo "  <td style='vertical-align: middle; text-align: right'>".number_format( $total_jurnal_byrn_bil_semasa_db , 2, '.', ',')."</td>";
-                                echo "  <td style='vertical-align: middle; text-align: right'>".number_format( $total_jurnal_byrn_bil_semasa_cr , 2, '.', ',')."</td>";
-                                echo "  <td style='vertical-align: middle; text-align: right'>".number_format( $total_debit , 2, '.', ',')."</td>";
-                                echo "  <td style='vertical-align: middle; text-align: right'>".number_format( $total_credit , 2, '.', ',')."</td>";
-                                echo "  <td style='vertical-align: middle; text-align: right'>".number_format( $total_balance , 2, '.', ',')."</td>";
-                                echo "</tr>";
-                            }
+                            echo '<tr>';
+                            echo '  <td width="5%">'.$category_name.' - '.$category_code.'</td>';
+                            echo "  <td width='5%' style='vertical-align: middle; text-align: right'>".number_format( $total_tunggakan , 2, '.', ',')."</td>";
+                            echo "  <td width='5%' style='vertical-align: middle; text-align: right'>".number_format( $total_jurnal_tunggakan_db , 2, '.', ',')."</td>";
+                            echo "  <td width='5%' style='vertical-align: middle; text-align: right'>".number_format( $total_jurnal_tunggakan_cr , 2, '.', ',')."</td>";
+                            echo "  <td width='5%' style='vertical-align: middle; text-align: right'>".number_format( $total_byrn_tunggakan , 2, '.', ',')."</td>";
+                            echo "  <td width='5%' style='vertical-align: middle; text-align: right'>".number_format( $total_jurnal_byrn_tunggakan_db , 2, '.', ',')."</td>";
+                            echo "  <td width='5%' style='vertical-align: middle; text-align: right'>".number_format( $total_jurnal_byrn_tunggakan_cr , 2, '.', ',')."</td>";
+                            echo "  <td width='5%' style='vertical-align: middle; text-align: right'>".number_format( $total_lebihan , 2, '.', ',')."</td>";
+                            echo "  <td width='5%' style='vertical-align: middle; text-align: right'>".number_format( $total_jurnal_lebihan_db , 2, '.', ',')."</td>";
+                            echo "  <td width='5%' style='vertical-align: middle; text-align: right'>".number_format( $total_jurnal_lebihan_cr , 2, '.', ',')."</td>";
+                            echo "  <td width='5%' style='vertical-align: middle; text-align: right'>".number_format( $total_bil_semasa , 2, '.', ',')."</td>";
+                            echo "  <td width='5%' style='vertical-align: middle; text-align: right'>".number_format( $total_jurnal_bil_semasa_db , 2, '.', ',')."</td>";
+                            echo "  <td width='5%' style='vertical-align: middle; text-align: right'>".number_format( $total_jurnal_bil_semasa_cr , 2, '.', ',')."</td>";
+                            echo "  <td width='5%' style='vertical-align: middle; text-align: right'>".number_format( $total_byrn_bil_semasa , 2, '.', ',')."</td>";
+                            echo "  <td width='5%' style='vertical-align: middle; text-align: right'>".number_format( $total_jurnal_byrn_bil_semasa_db , 2, '.', ',')."</td>";
+                            echo "  <td width='5%' style='vertical-align: middle; text-align: right'>".number_format( $total_jurnal_byrn_bil_semasa_cr , 2, '.', ',')."</td>";
+                            echo "  <td width='5%' style='vertical-align: middle; text-align: right'>".number_format( $total_debit , 2, '.', ',')."</td>";
+                            echo "  <td width='5%' style='vertical-align: middle; text-align: right'>".number_format( $total_credit , 2, '.', ',')."</td>";
+                            echo "  <td width='5%' style='vertical-align: middle; text-align: right'>".number_format( $total_balance , 2, '.', ',')."</td>";
+                            echo "</tr>";
                         }
-                        else
-                        {
-                            echo "<tr><td colspan = '22' style = 'text-align: center;'> -- TIADA DATA -- </td></tr>";
-                        }
-                    ?>
-                </tbody>
-            </table>
+                    }
+                    else
+                    {
+                        echo "<tr><td colspan = '19' style = 'text-align: center;'> -- TIADA DATA -- </td></tr>";
+                    }
 
+                    echo "  </tbody>";
+                    echo "</table>";
+                    
+                    echo '
+                        <table class="table table-hover table-bordered " style="font-size: 10px; min-width: 1458.4px;margin: 0.1cm" >
+                            <thead>
+                                <tr>
+                                    <th style="vertical-align: middle; text-align: right" >Jumlah Keseluruhan (Debit) (RM)</th>
+                                    <th style="vertical-align: middle; text-align: right" >Jumlah Keseluruhan (Kredit) (RM)</th>
+                                    <th style="vertical-align: middle; text-align: right" >Jumlah Baki Bawa Kehadapan (RM)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="vertical-align: middle; text-align: right" > '.number_format( $total_row_debit, 2, '.', ',').'</td>
+                                    <td style="vertical-align: middle; text-align: right" > '.number_format( $total_row_credit, 2, '.', ',').'</td>
+                                    <td style="vertical-align: middle; text-align: right" > '.number_format( $total_row_balance, 2, '.', ',').'</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    ';
+
+                    $total_group_debit = $total_group_debit + $total_row_debit;
+                    $total_group_credit = $total_group_credit + $total_row_credit;
+                    $total_group_balance = $total_group_balance + $total_row_balance;
+                }
+            ?>
+
+            <br>
+            <h3 style="text-decoration: underline;margin: 0.1cm">Jumlah Keseluruhan</h3>
             <table class="table table-hover table-bordered " style="font-size: 10px; min-width: 1458.4px;margin: 0.1cm" >
                 <thead>
                     <tr>
@@ -174,9 +205,9 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td style="vertical-align: middle; text-align: right; width: 33%;" > <?=number_format( $total_row_debit, 2, '.', ',')  ?> </td>
-                        <td style="vertical-align: middle; text-align: right; width: 33%;" > <?=number_format( $total_row_credit, 2, '.', ',') ?> </td>
-                        <td style="vertical-align: middle; text-align: right; width: 34%;" > <?=number_format( $total_row_balance, 2, '.', ',')   ?> </td>
+                        <td style="vertical-align: middle; text-align: right; width: 33%;" > <?=number_format( $total_group_debit, 2, '.', ',')  ?> </td>
+                        <td style="vertical-align: middle; text-align: right; width: 33%;" > <?=number_format( $total_group_credit, 2, '.', ',') ?> </td>
+                        <td style="vertical-align: middle; text-align: right; width: 34%;" > <?=number_format( $total_group_balance, 2, '.', ',')   ?> </td>
                     </tr>
                 </tbody>
             </table>
@@ -187,12 +218,12 @@
             window.print();
         });
 
-        $(function()
-        {
-        $("body").hover(function(){
-            window.close();
-        });
-        });
+        // $(function()
+        // {
+        // $("body").hover(function(){
+        //     window.close();
+        // });
+        // });
     </script>
 </body>
 </html>

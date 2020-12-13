@@ -1076,6 +1076,7 @@ class M_bill_item extends CI_Model
                   from b_item,acc_account
                   where
                   acc_account.account_id = b_item.account_id and 
+                  acc_account.category_id is not null and 
                   ".$customWhere."
                   b_item.dt_added between to_date( ".db_escape($start_date).", 'dd mon yyyy') and to_date( ".db_escape($end_date).", 'dd mon yyyy' )
                 )
@@ -1083,6 +1084,133 @@ class M_bill_item extends CI_Model
                 account_id,account_number, account_name,
                 category_code,category_name, asset_name, type_name
                 order by account_id,category_code asc ";
+
+        $result = db_query( $sql );
+
+        if($result)
+        {
+            return $result->result_array('');
+        }
+        else
+        {
+            return array();
+        }
+    }
+
+    function getPenyataPenyesuaianRingkasan($data_search)
+    {
+        $start_date = $data_search["date_start"];
+        $end_date = $data_search["date_end"];
+        $type_id = 0;
+        $category_id = 0;
+        $status_acc = -1;
+        $customWhere = "";
+
+        if ( isset( $data_search["type_id"] ) && $data_search["type_id"] != 0 )
+        {
+            $type_id = $data_search["type_id"];
+            $customWhere = $customWhere." acc_account.type_id = ".db_escape($type_id)." and ";
+        }
+
+        if ( isset( $data_search["category_id"] ) && $data_search["category_id"] != 0 )
+        {
+            $category_id = $data_search["category_id"];
+            $customWhere = $customWhere." acc_account.category_id = ".db_escape($category_id)." and ";
+        }
+
+        if ( isset( $data_search["acc_status"] ) && $data_search["acc_status"] != 0 )
+        {
+            $status_acc = $data_search["acc_status"];
+            $customWhere = $customWhere." acc_account.status_acc = ".db_escape($status_acc)." and ";
+        }
+
+        $sql = "select
+                category_code,
+                category_name,
+                asset_name,
+                type_name,
+                type_id,
+                sum(lebihan_tahun_lepas) as total_lebihan_tahun_lepas,
+                sum(jurnal_lebihan_tahun_lepas_db) as total_jurnal_lebihan_tahun_lepas_db,
+                sum(jurnal_lebihan_tahun_lepas_cr) as total_jurnal_lebihan_tahun_lepas_cr,
+                sum(bil_semasa) as total_bil_semasa,
+                sum(bil_semasa_db) as total_bil_semasa_db,
+                sum(bil_semasa_cr) as total_bil_semasa_cr,
+                sum(jurnal_bil_semasa) as total_jurnal_bil_semasa,
+                sum(jurnal_bil_semasa_db) as total_jurnal_bil_semasa_db,
+                sum(jurnal_bil_semasa_cr) as total_jurnal_bil_semasa_cr,
+                sum(tunggakan) as total_tunggakan,
+                sum(tunggakan_db) as total_tunggakan_db,
+                sum(tunggakan_cr) as total_tunggakan_cr,
+                sum(jurnal_tunggakan) as total_jurnal_tunggakan,
+                sum(jurnal_tunggakan_db) as total_jurnal_tunggakan_db,
+                sum(jurnal_tunggakan_cr) as total_jurnal_tunggakan_cr,
+                sum(byrn_bil_semasa) as total_byrn_bil_semasa,
+                sum(byrn_bil_semasa_db) as total_byrn_bil_semasa_db,
+                sum(byrn_bil_semasa_cr) as total_byrn_bil_semasa_cr,
+                sum(jurnal_byrn_bil_semasa) as total_jurnal_byrn_bil_semasa,
+                sum(jurnal_byrn_bil_semasa_db) as total_jurnal_byrn_bil_semasa_db,
+                sum(jurnal_byrn_bil_semasa_cr) as total_jurnal_byrn_bil_semasa_cr,
+                sum(byrn_tunggakan) as total_byrn_tunggakan,
+                sum(byrn_tunggakan_db) as total_byrn_tunggakan_db,
+                sum(byrn_tunggakan_cr) as total_byrn_tunggakan_cr,
+                sum(jurnal_byrn_tunggakan) as total_jurnal_byrn_tunggakan,
+                sum(jurnal_byrn_tunggakan_db) as total_jurnal_byrn_tunggakan_db,
+                sum(jurnal_byrn_tunggakan_cr) as total_jurnal_byrn_tunggakan_cr,
+                sum(amount) as total_amount
+                from
+                (
+                  select 
+                  acc_account.account_id,
+                  acc_account.account_number,
+                  (select name from acc_user where user_id = acc_account.user_id) as account_name,
+                  (select category_code from a_category where category_id = acc_account.category_id) as category_code,
+                  (select category_name from a_category where category_id = acc_account.category_id) as category_name,
+                  (select asset_name from a_asset where asset_id = acc_account.asset_id) as asset_name,
+                  (select type_name from a_type where type_id = acc_account.type_id) as type_name,
+                  acc_account.type_id,
+                  tr_code,
+                  tr_code_old,
+                  (case when substr(tr_code_old,1,2) = '11' and bill_category = 'B' and tr_code_old = '11090' then amount end ) as lebihan_tahun_lepas,
+                  (case when substr(tr_code_old,1,2) = '11' and bill_category = 'J' and tr_code_old = '11090' and amount > 0 then amount end ) as jurnal_lebihan_tahun_lepas_db,
+                  (case when substr(tr_code_old,1,2) = '11' and bill_category = 'J' and tr_code_old = '11090' and amount < 0 then amount end ) as jurnal_lebihan_tahun_lepas_cr,
+                  (case when substr(tr_code_old,1,2) = '11' and bill_category = 'B' and tr_code_old <> '11090' then amount end ) as bil_semasa,
+                  (case when substr(tr_code_old,1,2) = '11' and bill_category = 'B' and tr_code_old <> '11090' and amount > 0 then amount end ) as bil_semasa_db,
+                  (case when substr(tr_code_old,1,2) = '11' and bill_category = 'B' and tr_code_old <> '11090' and amount < 0 then amount end ) as bil_semasa_cr,
+                  (case when substr(tr_code_old,1,2) = '11' and bill_category = 'J' then amount end ) as jurnal_bil_semasa,
+                  (case when substr(tr_code_old,1,2) = '11' and bill_category = 'J' and amount > 0 then amount end ) as jurnal_bil_semasa_db,
+                  (case when substr(tr_code_old,1,2) = '11' and bill_category = 'J' and amount < 0 then amount end ) as jurnal_bil_semasa_cr,
+                  (case when substr(tr_code_old,1,2) = '12' and bill_category = 'B' then amount end ) as tunggakan,
+                  (case when substr(tr_code_old,1,2) = '12' and bill_category = 'B' and amount > 0 then amount end ) as tunggakan_db,
+                  (case when substr(tr_code_old,1,2) = '12' and bill_category = 'B' and amount < 0 then amount end ) as tunggakan_cr,
+                  (case when substr(tr_code_old,1,2) = '12' and bill_category = 'J' then amount end ) as jurnal_tunggakan,
+                  (case when substr(tr_code_old,1,2) = '12' and bill_category = 'J' and amount > 0 then amount end ) as jurnal_tunggakan_db,
+                  (case when substr(tr_code_old,1,2) = '12' and bill_category = 'J' and amount < 0 then amount end ) as jurnal_tunggakan_cr,
+                  (case when substr(tr_code_old,1,2) = '21' and bill_category = 'R' then amount end ) as byrn_bil_semasa,
+                  (case when substr(tr_code_old,1,2) = '21' and bill_category = 'R' and amount > 0 then amount end ) as byrn_bil_semasa_db,
+                  (case when substr(tr_code_old,1,2) = '21' and bill_category = 'R' and amount < 0 then amount end ) as byrn_bil_semasa_cr,
+                  (case when substr(tr_code_old,1,2) = '21' and bill_category = 'J' then amount end ) as jurnal_byrn_bil_semasa,
+                  (case when substr(tr_code_old,1,2) = '21' and bill_category = 'J' and amount > 0 then amount end ) as jurnal_byrn_bil_semasa_db,
+                  (case when substr(tr_code_old,1,2) = '21' and bill_category = 'J' and amount < 0 then amount end ) as jurnal_byrn_bil_semasa_cr,
+                  (case when substr(tr_code_old,1,2) = '22' and bill_category = 'R' then amount end ) as byrn_tunggakan,
+                  (case when substr(tr_code_old,1,2) = '22' and bill_category = 'R' and amount > 0 then amount end ) as byrn_tunggakan_db,
+                  (case when substr(tr_code_old,1,2) = '22' and bill_category = 'R' and amount < 0 then amount end ) as byrn_tunggakan_cr,
+                  (case when substr(tr_code_old,1,2) = '22' and bill_category = 'J' then amount end ) as jurnal_byrn_tunggakan,
+                  (case when substr(tr_code_old,1,2) = '22' and bill_category = 'J' and amount > 0 then amount end ) as jurnal_byrn_tunggakan_db,
+                  (case when substr(tr_code_old,1,2) = '22' and bill_category = 'J' and amount < 0 then amount end ) as jurnal_byrn_tunggakan_cr,
+                  amount,
+                  bill_category,
+                  b_item.dt_added
+                  from b_item,acc_account
+                  where
+                  acc_account.account_id = b_item.account_id and 
+                  acc_account.category_id is not null and 
+                  ".$customWhere."
+                  b_item.dt_added between to_date( ".db_escape($start_date).", 'dd mon yyyy') and to_date( ".db_escape($end_date).", 'dd mon yyyy' )
+                )
+                group by 
+                category_code,category_name, asset_name, type_name, type_id
+                order by type_id,category_code asc ";
 
         $result = db_query( $sql );
 
