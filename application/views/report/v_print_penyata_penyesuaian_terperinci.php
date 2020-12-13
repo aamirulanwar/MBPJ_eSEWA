@@ -95,9 +95,9 @@
                         $total_row_credit = 0;
                         $total_row_balance = 0;
 
-                        if ( count($test) > 0 )
+                        if ( count($data_report) > 0 )
                         {
-                            foreach ($test as $row) 
+                            foreach ($data_report as $row) 
                             {
                                 $account_number                   =  $row["ACCOUNT_NUMBER"];
                                 $account_name                     =  $row["ACCOUNT_NAME"];
