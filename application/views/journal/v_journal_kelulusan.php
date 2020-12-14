@@ -68,8 +68,8 @@ checking_validation(validation_errors());
                                 </td>
                                 <td style="width:17%;">
                                     <?php if($d['STATUS_APPROVAL']==0): ?>
-                                    <button type="button" class="btn btn-success" onclick="showApprovalConfirmation(<?php echo $d['ID']; ?>)">Lulus <i class="fa fa-check-circle"></i></button>
-                                    <button type="button" class="btn btn-danger" onclick="showDeclineConfirmation(<?php echo $d['ID']; ?>)">Batal <i class="fa fa-times-circle"></i></button>
+                                    <button type="button" class="btn btn-success" onclick="showApprovalConfirmation(<?php echo $d['B_JOURNAL_TEMP_ID']; ?>)">Lulus <i class="fa fa-check-circle"></i></button>
+                                    <button type="button" class="btn btn-danger" onclick="showDeclineConfirmation(<?php echo $d['B_JOURNAL_TEMP_ID']; ?>)">Batal <i class="fa fa-times-circle"></i></button>
                                     <?php endif; ?>
                                 </td>
                             </tr>

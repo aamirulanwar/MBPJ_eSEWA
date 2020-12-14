@@ -11,7 +11,7 @@ class M_journal extends CI_Model
     {
         $model =& get_instance();
 
-        $query = $model->db->query("SELECT b.*,a.account_number,u.user_name,j.journal_code,j.journal_desc,
+        $query = $model->db->query("SELECT b.*,b.id as b_journal_temp_id,a.account_number,u.user_name,j.journal_code,j.journal_desc,
                                     (SELECT account_number FROM acc_account WHERE account_id=b.transfer_account_id) as new_account
                                     FROM b_journal_temp b, acc_account a, users u, a_journal j 
                                     WHERE b.account_id=a.account_id AND u.user_id=b.CREATED_BY And b.journal_id=j.journal_id
