@@ -1198,6 +1198,11 @@ class Report extends CI_Controller
         $filter_session = get_session('arr_filter_adjustment_report');
         if(!empty($post))
         {
+            if ( $post['date_end'] == "") 
+            { 
+                $post['date_end'] = date_display(timenow(),'d M Y'); 
+            }
+
             $this->session->set_userdata('arr_filter_adjustment_report',$post);
             $data_search = $post;
 
@@ -1261,8 +1266,14 @@ class Report extends CI_Controller
 
         if(!empty($post))
         {
+            if ( $post['date_end'] == "") 
+            { 
+                $post['date_end'] = date_display(timenow(),'d M Y'); 
+            }
+
             $this->session->set_userdata('arr_filter_adjustment_report_ringkasan',$post);
             $data_search = $post;
+            
             if ( $data_search['date_end'] == "") 
             { 
                 $data_search['date_end'] = date_display(timenow(),'d M Y'); 
