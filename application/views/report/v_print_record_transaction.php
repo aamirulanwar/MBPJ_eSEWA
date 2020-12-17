@@ -60,7 +60,7 @@
                     <td style='min-width: 80px;'></td>
                     <td style='margin-right: 1em;text-align:left;width:150px;font-size:14px;'>Kadar Sewaan (RM)</td>
                     <td style='margin-right: 1em;text-align:left;width:10px;font-size:14px;'>:</td>
-                    <td style='margin-right: 1em;text-align:left;font-size:14px;'><?=isset($account_details['ESTIMATION_RENTAL_CHARGE']) ? $account_details['ESTIMATION_RENTAL_CHARGE'] : "";?></td>
+                    <td style='margin-right: 1em;text-align:left;font-size:14px;'><?=isset($account_details['ESTIMATION_RENTAL_CHARGE']) ? number_format( $account_details['ESTIMATION_RENTAL_CHARGE'], 2, '.', ',') : "0.00";?></td>
                 </tr>
                 <tr>
                     <td style="font-size:14px;">Nama</td>
@@ -129,18 +129,27 @@
             </table>
         </div>
         <div id="reportContainer">
-            <?php 
+            <?php
+                if ( isset( $_GET["year"] ) )
+                {
+                    $specific_year = $_GET["year"];
+                }
+                else
+                {
+                    $specific_year = 0;
+                }
+
                 $filterStartDate    = $data_search["date_start"];
                 $filterEndDate      = $data_search["date_end"];
                 $startYear          = DateTime::createFromFormat('d M Y', $filterStartDate)->format('Y');
                 $endYear            = DateTime::createFromFormat('d M Y', $filterEndDate)->format('Y');
                 $nextYear           = $endYear;
 
-                while ($nextYear >= $startYear)
+                if ( $specific_year > 0 )
                 {
-                    echo '<h5 class="card-title" style="text-align:center;padding-top:30px;font-weight:bold;">REKOD TAHUN '.$nextYear.'</h5>';
+                    echo '<h5 class="card-title" style="text-align:center;padding-top:30px;font-weight:bold;">REKOD TAHUN '.$specific_year.'</h5>';
                     echo '<div class="table-responsive">';
-                    echo '  <table id="tablePenyataRekod'.$nextYear.'" class="table test1" style="width:100%">';
+                    echo '  <table id="tablePenyataRekod'.$specific_year.'" class="table test1 table-bordered" style="width:100%">';
                     echo '      <thead>';
                     echo '          <tr>';
                     echo '              <th align="center" style="text-align:center;vertical-align:middle;font-size:14px;">No. Bil/ No. Resit</th>';
@@ -155,70 +164,156 @@
                     echo '          </tr>';
                     echo '      </thead>';
                     echo '      <tbody>';
-                    $totalAmount = 0;
-                    if ( isset($data_report["$nextYear"] ) )
+                    if ( isset($data_report["$specific_year"] ) )
                     {
-                        foreach ($data_report["$nextYear"] as $row)
+                        $totalAmount = 0;
+
+                        foreach ($data_report["$specific_year"] as $row)
                         {
                             $debitAmount = 0;
                             $creditAmount = 0;
 
-                            if ( $row["MASTER_BILL_CATEGORY"] == 'B' && $row["BILL_CATEGORY"] == 'B' )
+                            $account_no = $row["ACCOUNT_NUMBER"];
+                            $item_desc = $row["ITEM_DESC"];
+                            $bill_category = $row["BILL_CATEGORY"];
+
+                            if ( $row["TR_CODE"] == "" && $row["TR_CODE_OLD"] != ""  )
                             {
-                                $totalAmount = $totalAmount + $row["AMOUNT"];
-                                $debitAmount = $row["AMOUNT"];
-                                $creditAmount = NULL;
+                                $tr_code = $row["TR_CODE_OLD"];
                             }
-                            else if ( $row["MASTER_BILL_CATEGORY"] == 'B' && $row["BILL_CATEGORY"] == 'J' )
+                            else
                             {
-                                $totalAmount = $totalAmount + $row["AMOUNT"];
-                                $debitAmount = $row["AMOUNT"];
-                                $creditAmount = NULL;
-                            }
-                            else if ( $row["MASTER_BILL_CATEGORY"] == 'R' && $row["BILL_CATEGORY"] == 'R' )
-                            {
-                                $totalAmount = $totalAmount - $row["AMOUNT"];
-                                $debitAmount = NULL;
-                                $creditAmount = $row["AMOUNT"];
-                            }
-                            else if ( $row["MASTER_BILL_CATEGORY"] == 'R' && $row["BILL_CATEGORY"] == 'J' )
-                            {
-                                $totalAmount = $totalAmount - $row["AMOUNT"];
-                                $debitAmount = NULL;
-                                $creditAmount = $row["AMOUNT"];
+                                $tr_code = $row["TR_CODE"];
                             }
 
-                            // $totalAmount = ($row["BILL_CATEGORY"] == 'B' ? ($totalAmount + $row["AMOUNT"]) : ($totalAmount - $row["AMOUNT"]));
+                            if ( substr($tr_code,0,1) == "1" )
+                            {
+                                $debitAmount = $row["AMOUNT"];
+                                $totalAmount = $totalAmount + $debitAmount;
+
+                                // Format style amount to be display
+                                $debitAmount_display = number_format($debitAmount,2,'.',',');
+                                $creditAmount_display = NULL;
+                                $totalAmount_display = number_format($totalAmount,2,'.',',');
+                            }
+                            else if ( substr($tr_code,0,1) == "2" )
+                            {
+                                $creditAmount = $row["AMOUNT"];
+                                $totalAmount = $totalAmount - $creditAmount;
+                                
+                                // Format style amount to be display
+                                $debitAmount_display = NULL;
+                                $creditAmount_display = number_format($creditAmount,2,'.',',');
+                                $totalAmount_display = number_format($totalAmount,2,'.',',');
+                            }
 
                             echo '      <tr>';
-                            echo '          <td align="center" style="text-align:center;font-size:14px;">'.$row["REFERENCE_NO"].'</td>';
-                            echo '          <td align="center" style="text-align:center;font-size:14px;">'.$row["TKH_BIL"].'</td>';
-                            echo '          <td style="text-align:center;font-size:14px;">'.$row["TR_CODE"].'</td>';
-                            echo '          <td style="text-align:center;font-size:14px;">'.$row["ITEM_DESC"].'</td>';
-                            echo '          <td align="center" style="text-align:center;font-size:14px;">'.$row["ACCOUNT_NUMBER"].'</td>';
-                            echo '          <td align="center" style="text-align:center;font-size:14px;">'.$row["BILL_CATEGORY"].'</td>';
-                            echo '          <td align="center" style="text-align:center;font-size:14px;">'.$debitAmount.'</td>';
-                            echo '          <td align="center" style="text-align:center;font-size:14px;">'.$creditAmount.'</td>';
-                            echo '          <td align="center" style="text-align:center;font-size:14px;">'.$totalAmount.'</td>';
+                            echo '          <td align="center">'.$row["REFERENCE_NO"].'</td>';
+                            echo '          <td align="center">'.$row["TKH_BIL"].'</td>';
+                            echo '          <td align="left">'.$tr_code.'</td>';
+                            echo '          <td align="left">'.$item_desc.'</td>';
+                            echo '          <td align="center">'.$account_no.'</td>';
+                            echo '          <td align="center">'.$bill_category.'</td>';
+                            echo '          <td align="right">'.$debitAmount_display.'</td>';
+                            echo '          <td align="right">'.$creditAmount_display.'</td>';
+                            echo '          <td align="right">'.$totalAmount_display.'</td>';
                             echo '      </tr>';
                         }
-
-                        if ( count($data_report["$nextYear"]) == 0 )
-                        {                    
-                            echo "<tr><td colspan='9' style='text-align:center;font-size:14px;'>Tiada Rekod</td></tr>";                    
-                        }
-                    }
-                    else 
-                    {
-                        echo "<tr><td colspan='9'>Tiada Rekod</td></tr>";
                     }
                     echo '      </tbody>';                
                     echo '  </table>';
                     echo '</div>';
                     echo '</br>';
                     echo '<div class="breaker"></div>';
-                    $nextYear = $nextYear - 1;
                 }
+                else
+                {
+                    while ($nextYear >= $startYear)
+                    {
+                        echo '<h5 class="card-title" style="text-align:center;padding-top:30px;font-weight:bold;">REKOD TAHUN '.$nextYear.'</h5>';
+                        echo '<div class="table-responsive">';
+                        echo '  <table id="tablePenyataRekod'.$nextYear.'" class="table test1 table-bordered" style="width:100%">';
+                        echo '      <thead>';
+                        echo '          <tr>';
+                        echo '              <th align="center" style="text-align:center;vertical-align:middle;font-size:14px;">No. Bil/ No. Resit</th>';
+                        echo '              <th align="center" style="text-align:center;vertical-align:middle;font-size:14px;">Tarikh Bil</th>';
+                        echo '              <th align="center" style="text-align:center;vertical-align:middle;font-size:14px;">Kod Transaksi</th>';
+                        echo '              <th align="center" style="text-align:center;vertical-align:middle;font-size:14px;">Perihal Transaksi</th>';
+                        echo '              <th align="center" style="text-align:center;vertical-align:middle;font-size:14px;">Maklumat Akaun</th>';
+                        echo '              <th align="center" style="text-align:center;vertical-align:middle;font-size:14px;">Jenis</th>';
+                        echo '              <th align="center" style="text-align:center;vertical-align:middle;font-size:14px;">Amaun Debit (RM)</th>';
+                        echo '              <th align="center" style="text-align:center;vertical-align:middle;font-size:14px;">Amaun Kredit (RM)</th>';
+                        echo '              <th align="center" style="text-align:center;vertical-align:middle;font-size:14px;">Jumlah (RM)</th>';
+                        echo '          </tr>';
+                        echo '      </thead>';
+                        echo '      <tbody>';
+                        
+                        if ( isset($data_report["$nextYear"] ) )
+                        {
+                            $totalAmount = 0;
+
+                            foreach ($data_report["$nextYear"] as $row)
+                            {
+                                $debitAmount = 0;
+                                $creditAmount = 0;
+
+                                $account_no = $row["ACCOUNT_NUMBER"];
+                                $item_desc = $row["ITEM_DESC"];
+                                $bill_category = $row["BILL_CATEGORY"];
+
+                                if ( $row["TR_CODE"] == "" && $row["TR_CODE_OLD"] != ""  )
+                                {
+                                    $tr_code = $row["TR_CODE_OLD"];
+                                }
+                                else
+                                {
+                                    $tr_code = $row["TR_CODE"];
+                                }
+
+                                if ( substr($tr_code,0,1) == "1" )
+                                {
+                                    $debitAmount = $row["AMOUNT"];
+                                    $totalAmount = $totalAmount + $debitAmount;
+
+                                    // Format style amount to be display
+                                    $debitAmount_display = number_format($debitAmount,2,'.',',');
+                                    $creditAmount_display = NULL;
+                                    $totalAmount_display = number_format($totalAmount,2,'.',',');
+                                }
+                                else if ( substr($tr_code,0,1) == "2" )
+                                {
+                                    $creditAmount = $row["AMOUNT"];
+                                    $totalAmount = $totalAmount - $creditAmount;
+                                    
+                                    // Format style amount to be display
+                                    $debitAmount_display = NULL;
+                                    $creditAmount_display = number_format($creditAmount,2,'.',',');
+                                    $totalAmount_display = number_format($totalAmount,2,'.',',');
+                                }
+
+                                echo '      <tr>';
+                                echo '          <td align="center">'.$row["REFERENCE_NO"].'</td>';
+                                echo '          <td align="center">'.$row["TKH_BIL"].'</td>';
+                                echo '          <td align="left">'.$tr_code.'</td>';
+                                echo '          <td align="left">'.$item_desc.'</td>';
+                                echo '          <td align="center">'.$account_no.'</td>';
+                                echo '          <td align="center">'.$bill_category.'</td>';
+                                echo '          <td align="right">'.$debitAmount_display.'</td>';
+                                echo '          <td align="right">'.$creditAmount_display.'</td>';
+                                echo '          <td align="right">'.$totalAmount_display.'</td>';
+                                echo '      </tr>';
+                            }
+                        }
+                
+                        echo '      </tbody>';                
+                        echo '  </table>';
+                        echo '</div>';
+                        echo '</br>';
+                        echo '<div class="breaker"></div>';
+                        $nextYear = $nextYear - 1;
+                    }
+                }
+                
 
                 if (isset($account_details[0]))
                 {
