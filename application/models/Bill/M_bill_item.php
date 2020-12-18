@@ -1223,4 +1223,96 @@ class M_bill_item extends CI_Model
             return array();
         }
     }
+
+    function getAgingSewaanTerperinci($data_search)
+    {
+        $category_id = $data_search["category_id"];
+        $status_acc = -1;
+        $customWhere1 = "";
+        $customWhere2 = "";
+
+        if ( isset( $data_search["category_id"] ) && $data_search["category_id"] != 0 )
+        {
+            $category_id = $data_search["category_id"];
+            $customWhere2 = $customWhere2." acc_account.category_id = ".db_escape($category_id)." and ";
+        }
+
+        if ( isset( $data_search["status_acc"] ) && $data_search["status_acc"] != 0 )
+        {
+            $status_acc = $data_search["status_acc"];
+            $customWhere2 = $customWhere2." acc_account.status_acc = ".db_escape($status_acc)." and ";
+        }
+
+        if ( isset( $data_search["year_search"] ) && $data_search["year_search"] != 0 )
+        {
+            $year_search = $data_search["year_search"];
+            $customWhere1 = "b_master.bill_year = ".db_escape($year_search)." ";
+        }
+        else
+        {
+            $customWhere1 = "b_master.bill_year = to_char(sysdate,'yyyy')";
+        }
+
+        $sql = "
+                select
+                acc_account.account_id,
+                acc_account.account_number,
+                acc_account.account_number_old,
+                acc_account.category_id,
+                acc_account.waste_management_charge,
+                acc_account.rental_charge,
+                (
+                    case 
+                        when acc_account.status_acc = 1 then 'AKTIF' 
+                        when acc_account.status_acc = 2 then 'TIDAK AKTIF' 
+                        else 'TIDAK AKTIF'
+                    end
+                ) status_acc,
+                ( select name from acc_user where user_id = acc_account.user_id ) as account_name,
+                ( select asset_name from a_asset where asset_id = acc_account.asset_id ) as asset_name,
+                sum(billed_amount) as billed_amount,
+                sum(payment_amount) as payment_amount,
+                ( sum(billed_amount) - sum(payment_amount) ) as balance_amount
+                from
+                (
+                    select 
+                    b_item.account_id,
+                    (
+                        case
+                            when substr(tr_code,1,1) = '1' and tr_code_old not in ('11033','12033') then nvl(amount,0)
+                            else 0
+                        end
+                    ) as billed_amount,
+                    (
+                        case
+                            when substr(tr_code,1,1) = '2' and tr_code_old not in ('21033','22033') then nvl(amount,0)
+                            else 0
+                        end
+                    ) as payment_amount,
+                    tr_code,
+                    tr_code_old
+                    from b_item, b_master 
+                    where 
+                    b_item.bill_id = b_master.bill_id and 
+                    ".$customWhere1."
+                ) custom_table right join acc_account on custom_table.account_id = acc_account.account_id
+                where 
+                acc_account.status_acc != 0 and 
+                ".$customWhere2."
+                category_id is not null
+                group by acc_account.account_id,acc_account.account_number,acc_account.account_number_old,acc_account.category_id,acc_account.user_id,asset_id,acc_account.waste_management_charge,acc_account.rental_charge,acc_account.status_acc
+                order by account_id asc
+                ";
+
+        $result = db_query( $sql );
+
+        if($result)
+        {
+            return $result->result_array('');
+        }
+        else
+        {
+            return array();
+        }
+    }
 }

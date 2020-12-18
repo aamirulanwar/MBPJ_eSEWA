@@ -169,7 +169,8 @@ class Report extends CI_Controller
         templates('/report/v_category_aging_search',$data);
     }
 
-    function category_aging_details(){
+    function category_aging_details()
+    {
         $this->auth->restrict_access($this->curuser,array(8001));
         $data['link_1']     = 'Laporan';
         $data['link_2']     = 'Aging Sewaan (Terperinci)';
@@ -181,116 +182,68 @@ class Report extends CI_Controller
 
         $post           = $this->input->post();
         $filter_session = get_session('arr_filter_category_aging_details');
-        if(!empty($post)):
+
+        $list_of_category = $this->m_category->get_a_category_all();
+
+        if(!empty($post))
+        {
+            if ( $post["date_start"] == "" )
+            {
+                $post["date_start"] = date('d-m-Y');
+            }
             $this->session->set_userdata('arr_filter_category_aging_details',$post);
             $data_search = $post;
-        else:
-            if(!empty($filter_session)):
+        }
+        else
+        {
+            if(!empty($filter_session))
+            {
+                if ( $filter_session["date_start"] == "" )
+                {
+                    $filter_session["date_start"] = date('d-m-Y');
+                }
                 $data_search = $filter_session;
-            else:
-                $data_search['asset_code']  = '';
-                $data_search['acc_status']  = '';
-                $data_search['date_start']  = '';
-            endif;
-        endif;
+            }
+            else
+            {
+                $data_search['asset_code']  = '0';
+                $data_search['acc_status']  = '0';
+                $data_search['date_start']  = date('d-m-Y');
+            }
+        }
+        if($_POST)
+        {
+            $data_search_aging["category_id"] = $_POST["category_id"];
+            $data_search_aging["status_acc"] = $_POST["acc_status"];
+            
 
-        $data_category = $this->m_category->get_a_category('','');
+            $data_report = $this->m_bill_item->getAgingSewaanTerperinci($data_search_aging);
 
-        $data_report    = array();
-        $date_start = input_data('date_start');
+            // if ( isset( $_POST["date_start"] ) )
+            // {
+            //     $date_start = DateTime::createFromFormat( 'd M Y', $_POST["date_start"]);
+            // }
 
-        if(empty($date_start)):
-            $date_calculate = date('Y-m-d');
-        else:
-            $date_calculate = date('Y-m-d',strtotime($date_start));
-        endif;
-        $new_data_asset = array();
-        $result_report  = array();
-        if($_POST):
-            if(input_data('asset_code')=='semua'):
-                $data_category_loop = $data_category;
-            elseif(input_data('asset_code')==''):
-                $data_category_loop = array();
-            else:
-                $data_category_loop[] =
-                array(
-                    'CATEGORY_ID'=>input_data('asset_code')
-                );
-            endif;
+            // $start_loop_year = $date_start->format('Y');
 
-            $x=0;
-            if($data_category_loop):
-                $i = 0;
-                foreach ($data_category_loop as $row_cat):
-                    $data_category_report = $this->m_category->get_a_category_details($row_cat['CATEGORY_ID']);
-                    $data_asset = $this->m_acc_account->get_account_aging_report($row_cat['CATEGORY_ID'],input_data('acc_status'));
-                    if($data_asset):
-                        foreach ($data_asset as $row):
-                            $data_bill = $this->m_bill_item->get_item_amount_not_equal($row['ACCOUNT_ID'],$date_calculate);
-                            if($data_bill):
-                                $data_1 = 0;
-                                $data_2 = 0;
-                                $data_3 = 0;
-                                $data_4 = 0;
-                                $data_5 = 0;
-                                $data_6 = 0;
-                                $data_7 = 0;
-                                $data_8 = 0;
-                                $data_9 = 0;
-                                $data_10 = 0;
-                                foreach ($data_bill as $row_bill):
-                                    $x = $x+1;
+            // while ( $start_loop_year <= date('Y') )
+            // {
+            //     $data_search_aging["year_search"] = $start_loop_year;
+            //     $data_report[$start_loop_year] = $this->m_bill_item->getAgingSewaanTerperinci($data_search_aging);
+            //     $start_loop_year = $start_loop_year + 1;
+            // }
 
-                                    #1-3
-                                    if($row_bill['DT_ADDED'] <=$date_calculate && $row_bill['DT_ADDED'] > date('Y-m-d',strtotime('-3 month',strtotime($date_calculate)))):
-                                        $data_1 = $data_1+($row_bill['AMOUNT']-$row_bill['TOTAL_PAID']);
-                                    elseif($row_bill['DT_ADDED'] <= date('Y-m-d',strtotime('-3 month',strtotime($date_calculate))) && $row_bill['DT_ADDED'] > date('Y-m-d',strtotime('-6 month',strtotime($date_calculate)))):
-                                        $data_2 = $data_2+($row_bill['AMOUNT']-$row_bill['TOTAL_PAID']);
-                                    elseif($row_bill['DT_ADDED'] <= date('Y-m-d',strtotime('-6 month',strtotime($date_calculate))) && $row_bill['DT_ADDED'] > date('Y-m-d',strtotime('-9 month',strtotime($date_calculate)))):
-                                        $data_3 = $data_3+($row_bill['AMOUNT']-$row_bill['TOTAL_PAID']);
-                                    elseif($row_bill['DT_ADDED'] <= date('Y-m-d',strtotime('-9 month',strtotime($date_calculate))) && $row_bill['DT_ADDED'] > date('Y-m-d',strtotime('-12 month',strtotime($date_calculate)))):
-                                        $data_4 = $data_4+($row_bill['AMOUNT']-$row_bill['TOTAL_PAID']);
-                                    elseif($row_bill['DT_ADDED'] <= date('Y-m-d',strtotime('-12 month',strtotime($date_calculate))) && $row_bill['DT_ADDED'] > date('Y-m-d',strtotime('-2 year',strtotime($date_calculate)))):
-                                        $data_5 = $data_5+($row_bill['AMOUNT']-$row_bill['TOTAL_PAID']);
-                                    elseif($row_bill['DT_ADDED'] <= date('Y-m-d',strtotime('-2 year',strtotime($date_calculate))) && $row_bill['DT_ADDED'] > date('Y-m-d',strtotime('-3 year',strtotime($date_calculate)))):
-                                        $data_6 = $data_6+($row_bill['AMOUNT']-$row_bill['TOTAL_PAID']);
-                                    elseif($row_bill['DT_ADDED'] <= date('Y-m-d',strtotime('-3 year',strtotime($date_calculate))) && $row_bill['DT_ADDED'] > date('Y-m-d',strtotime('-4 year',strtotime($date_calculate)))):
-                                        $data_7 = $data_7+($row_bill['AMOUNT']-$row_bill['TOTAL_PAID']);
-                                    elseif($row_bill['DT_ADDED'] <= date('Y-m-d',strtotime('-4 year',strtotime($date_calculate))) && $row_bill['DT_ADDED'] > date('Y-m-d',strtotime('-5 year',strtotime($date_calculate)))):
-                                        $data_8 = $data_8+($row_bill['AMOUNT']-$row_bill['TOTAL_PAID']);
-                                    elseif($row_bill['DT_ADDED'] <= date('Y-m-d',strtotime('-5 year',strtotime($date_calculate))) && $row_bill['DT_ADDED'] > date('Y-m-d',strtotime('-6 year',strtotime($date_calculate)))):
-                                        $data_9 = $data_9+($row_bill['AMOUNT']-$row_bill['TOTAL_PAID']);
-                                    elseif($row_bill['DT_ADDED'] <= date('Y-m-d',strtotime('-6 year',strtotime($date_calculate)))):
-                                        $data_10 = $data_10+($row_bill['AMOUNT']-$row_bill['TOTAL_PAID']);
-                                    endif;
-                                endforeach;
-                                $row['data_1'] = $data_1;
-                                $row['data_2'] = $data_2;
-                                $row['data_3'] = $data_3;
-                                $row['data_4'] = $data_4;
-                                $row['data_5'] = $data_5;
-                                $row['data_6'] = $data_6;
-                                $row['data_7'] = $data_7;
-                                $row['data_8'] = $data_8;
-                                $row['data_9'] = $data_9;
-                                $row['data_10'] = $data_10;
 
-                                $new_data_asset[] = $row;
-                            endif;
-                        endforeach;
-                        if($new_data_asset):
-                            $row_cat['data_category']   = $data_category_report;
-                            $row_cat['data_report']     = $new_data_asset;
-                            $result_report[]            = $row_cat;
-                        endif;
-                    endif;
-                endforeach;
-            endif;
-        endif;
+            $data['data_report'] = $data_report;
+        }
+        else
+        {
+            $data['data_report']    = array();
+        }
 
-        $data['data_category'] = $data_category;
-        $data['data_search']   = $data_search;
-        $data['data_report']   = $result_report;
+        $data['data_search']    = $data_search;
+        $data['data_category']  = $list_of_category;
+        // $data['data_report']   = $result_report;
 
         templates('/report/v_category_aging_details_search',$data);
     }
@@ -1273,7 +1226,7 @@ class Report extends CI_Controller
 
             $this->session->set_userdata('arr_filter_adjustment_report_ringkasan',$post);
             $data_search = $post;
-            
+
             if ( $data_search['date_end'] == "") 
             { 
                 $data_search['date_end'] = date_display(timenow(),'d M Y'); 
