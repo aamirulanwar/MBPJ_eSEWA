@@ -55,6 +55,7 @@ class Report extends CI_Controller
             'adjustment_statement_ringkasan',
             'print_penyata_penyesuaian_ringkasan',
             'payment',
+            'print_pembayaran_penyewa',
             'journal',
             'print_journal',
             'dataTable4RekodTransaksi',
@@ -1374,6 +1375,39 @@ class Report extends CI_Controller
         endif;
 
         templates('/report/v_payment',$data);
+    }
+
+    function print_pembayaran_penyewa()
+    {
+        $data_search = get_session('arr_filter_payment');
+        $get_code_category = $this->m_category->get_a_category('','',$data_search);
+        if($get_code_category):
+                foreach ($get_code_category as $row):
+                    $data_search_acc['category_id'] = $row['CATEGORY_ID'];
+                    $data_search_acc['status_acc']  = $data_search['acc_status'];
+                    $get_data_acc = $this->m_acc_account->get_account_by_search($data_search_acc);
+                    if($get_data_acc):
+                        foreach ($get_data_acc as $acc):
+                            $asset_name = $this->m_asset->get_a_asset_by_id($acc['ASSET_ID']);
+
+                            $data_search_trans['date_start']    = $data_search['date_start'];
+                            $data_search_trans['date_end']      = $data_search['date_end'];
+                            $data_search_trans['account_id']    = $acc['ACCOUNT_ID'];
+                            $data_search_trans['order_by']      = 'i.dt_added';
+                            $data_report_trans = $this->m_bill_item->record_transaction($data_search_trans);
+                            $acc['data_asset'] = $asset_name;
+                            $acc['account_details_trans'] = $data_report_trans;
+                            $row['acc'][] = $acc;
+                        endforeach;
+                        $data_report[] = $row;
+                    endif;
+                endforeach;
+            endif;
+
+        $data["data_search"] = $data_search;
+        // $data["data_report"] = $this->m_acc_account->get_account_by_search($data_search);
+        $data["data_report"] = $this->m_bill_item->record_transaction($data_search);
+        $this->load->view('/report/v_print_pembayar_penyewa',$data);
     }
 
     function journal(){

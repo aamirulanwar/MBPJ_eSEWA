@@ -2,6 +2,10 @@
     th{
         text-align: center;
     }
+    table{
+     height:300px;              // <-- Select the height of the table
+     display: -moz-groupbox;    // For firefox bad effect
+    }
     @media print{
         .table th, .table td{
             padding: 4px !important;
@@ -105,7 +109,7 @@
                 if($data_report):
                     ?>
                     <div class="pull-right">
-                        <button onclick="window.print()" class="btn btn-warning btn-sm pull-right">Print</button>
+                        <a class="btn btn-warning btn-sm pull-right" href="/report/print_pembayaran_penyewa" target="_blank">Cetak</a>
                     </div>
                     <br>
                     <br>

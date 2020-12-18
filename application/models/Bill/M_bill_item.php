@@ -482,6 +482,7 @@ class M_bill_item extends CI_Model
         db_join('acc_account acc','acc.account_id = m.account_id');
         db_join('acc_user usr','acc.user_id = usr.user_id');
         db_where("(i.tr_code NOT LIKE '12%') ");
+        db_where('i.bill_category','R');
         if(isset($data_search['date_start']) && having_value($data_search['date_start'])):
             db_where("i.dt_added >= to_date('".date('d-M-y',strtotime($data_search['date_start']))."')");
         endif;
