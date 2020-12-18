@@ -49,6 +49,7 @@ class Report extends CI_Controller
             'print_all_record_transaction',
             'report_dashboard',
             'category_aging_details',
+            'print_category_aging_details',
             'adjustment_statement',
             'print_penyata_penyesuaian_terperinci',
             'adjustment_statement_ringkasan',
@@ -215,25 +216,8 @@ class Report extends CI_Controller
         {
             $data_search_aging["category_id"] = $_POST["category_id"];
             $data_search_aging["status_acc"] = $_POST["acc_status"];
-            
 
             $data_report = $this->m_bill_item->getAgingSewaanTerperinci($data_search_aging);
-
-            // if ( isset( $_POST["date_start"] ) )
-            // {
-            //     $date_start = DateTime::createFromFormat( 'd M Y', $_POST["date_start"]);
-            // }
-
-            // $start_loop_year = $date_start->format('Y');
-
-            // while ( $start_loop_year <= date('Y') )
-            // {
-            //     $data_search_aging["year_search"] = $start_loop_year;
-            //     $data_report[$start_loop_year] = $this->m_bill_item->getAgingSewaanTerperinci($data_search_aging);
-            //     $start_loop_year = $start_loop_year + 1;
-            // }
-
-
             $data['data_report'] = $data_report;
         }
         else
@@ -243,9 +227,23 @@ class Report extends CI_Controller
 
         $data['data_search']    = $data_search;
         $data['data_category']  = $list_of_category;
-        // $data['data_report']   = $result_report;
 
         templates('/report/v_category_aging_details_search',$data);
+    }
+
+    function print_category_aging_details()
+    {
+        $data_search = get_session('arr_filter_category_aging_details');
+        $data["data_search"] = $data_search;
+        
+        $data_search_aging["category_id"] = $data_search["category_id"];
+        $data_search_aging["status_acc"] = $data_search["acc_status"];
+        $data_report = $this->m_bill_item->getAgingSewaanTerperinci($data_search_aging);
+        
+        $data['data_report'] = $data_report;
+        $data['data_search']  = $data_search;
+
+        $this->load->view('/report/v_print_category_aging_details',$data);
     }
 
     function category_aging(){
