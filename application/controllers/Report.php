@@ -1382,6 +1382,7 @@ class Report extends CI_Controller
             $data_search_trans["date_start"]    =   DateTime::createFromFormat('d M Y', $data_search['date_start'])->format('d-m-Y');
             $data_search_trans["date_end"]      =   DateTime::createFromFormat('d M Y', $data_search['date_end'])->format('d-m-Y');
             $data_search_trans["category_id"]   =   $data_search["category_id"];
+            $data_search_trans["acc_status"]    =   $data_search["acc_status"];
 
             $payment_record = $this->m_bill_item->getLaporanPembayaranPenyewa( $data_search_trans );
 

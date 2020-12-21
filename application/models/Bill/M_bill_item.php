@@ -1439,7 +1439,12 @@ class M_bill_item extends CI_Model
 
         if ( isset( $data_search["category_id"] ) && $data_search["category_id"] != "" )
         {
-            $customWhere1 = " and acc_account.category_id = ".db_escape($data_search["category_id"] )." ";
+            $customWhere1 = $customWhere1." and acc_account.category_id = ".db_escape($data_search["category_id"] )." ";
+        }
+
+        if ( isset( $data_search["acc_status"] ) && $data_search["acc_status"] != "" )
+        {
+            $customWhere1 = $customWhere1." and acc_account.status_acc = ".db_escape($data_search["acc_status"] )." ";
         }
 
         $sql = "
