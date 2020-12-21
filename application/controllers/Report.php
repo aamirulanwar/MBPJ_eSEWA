@@ -1322,92 +1322,178 @@ class Report extends CI_Controller
         $data['pagetitle']  = 'Laporan Pembayaran Penyewa';
 
         $search_segment = uri_segment(3);
-
-        $post           = $this->input->post();
         $filter_session = get_session('arr_filter_payment');
-        if(!empty($post)):
-            $this->session->set_userdata('arr_filter_payment',$post);
-            $data_search = $post;
-        else:
-            if(!empty($filter_session)):
-                $data_search = $filter_session;
-            else:
-                $data_search['date_start']  = date_display(timenow(),'d M Y');
-                $data_search['date_end']    = '';
-                $data_search['type_id']     = '';
-                $data_search['category_id'] = '';
-                $data_search['acc_status']  = '';
-            endif;
-        endif;
-        $data['data_type']   = $this->m_type->get_a_type();
-        $data['data_report']    = array();
 
-        if($_POST):
-            $get_code_category = $this->m_category->get_a_category('','',$data_search);
+        if($_POST)
+        {
+            // Set variable $data_Search [START]
+            if ( $_POST["date_start"] == "" )
+            {
+                $_POST["date_start"] = date('d M Y');
+            }
+
+            if ( $_POST["date_end"] == "" )
+            {
+                $_POST['date_end']   = date('d M Y');
+            }
+
+            $this->session->set_userdata('arr_filter_payment',$_POST);
+
+            $data_search = $_POST;
+            
+            // Set variable $data_Search [END]
+
+
+
+            if ($_POST["type_id"] == "")
+            {
+                $data_search["type_name"] = "Semua";
+                $list_of_category = $this->m_category->get_a_category_all();
+            }
+            else if ($_POST["type_id"] != "")
+            {
+                $data_search["type_name"] = $this->m_type->get_a_type_details($_POST["type_id"])["TYPE_NAME"];
+            }
+
+            if ($data_search["category_id"] == "")
+            {
+                $data_search["category_name"] = "Semua";
+            }
+            else if ($data_search["category_id"] != "0")
+            {
+                $data_search["category_name"] = $this->m_category->get_a_category_details($data_search["category_id"])["CATEGORY_NAME"];
+            }
+
+            if ($_POST["acc_status"] == "")
+            {
+                $data_search["status_type"] = "Semua";
+            }
+            else if ($_POST["acc_status"] == "1")
+            {
+                $data_search["status_type"] = "Aktif";
+            }
+            else if ($_POST["acc_status"] == "2")
+            {
+                $data_search["status_type"] = "Tidak Aktif";
+            }
+
             $data_report = array();
-            if($get_code_category):
-                foreach ($get_code_category as $row):
-                    $data_search_acc['category_id'] = $row['CATEGORY_ID'];
-                    $data_search_acc['status_acc']  = $data_search['acc_status'];
-                    $get_data_acc = $this->m_acc_account->get_account_by_search($data_search_acc);
-                    if($get_data_acc):
-                        foreach ($get_data_acc as $acc):
-                            $asset_name = $this->m_asset->get_a_asset_by_id($acc['ASSET_ID']);
 
-                            $data_search_trans['date_start']    = $data_search['date_start'];
-                            $data_search_trans['date_end']      = $data_search['date_end'];
-                            $data_search_trans['account_id']    = $acc['ACCOUNT_ID'];
-                            $data_search_trans['order_by']      = 'i.dt_added';
-                            $data_report_trans = $this->m_bill_item->record_transaction($data_search_trans);
-                            $acc['data_asset'] = $asset_name;
-                            $acc['account_details_trans'] = $data_report_trans;
-                            $row['acc'][] = $acc;
-                        endforeach;
-                        $data_report[] = $row;
-                    endif;
-                endforeach;
-            endif;
+            $data_search_trans["date_start"]    =   DateTime::createFromFormat('d M Y', $data_search['date_start'])->format('d-m-Y');
+            $data_search_trans["date_end"]      =   DateTime::createFromFormat('d M Y', $data_search['date_end'])->format('d-m-Y');
+            $data_search_trans["category_id"]   =   $data_search["category_id"];
+
+            $payment_record = $this->m_bill_item->getLaporanPembayaranPenyewa( $data_search_trans );
+
+            if ( count($payment_record) > 0 )
+            {
+                foreach ($payment_record as $row) 
+                {
+                    $account_id = $row["ACCOUNT_ID"];
+                    $category = $row["CATEGORY_NAME"]." - ".$row["CATEGORY_CODE"];
+                    $data_report[$category][$account_id][] = $row;
+                }
+            }
+            else
+            {
+                $data_report = array();
+            }            
 
             $data['data_report']    = $data_report;
             $data['data_search']    = $data_search;
-        else:
-            $data['data_gst']       = array();
-            $data['data_search']    = $data_search;
-        endif;
+        }
+        else
+        {
+            if( !empty($filter_session) )
+            {
+                if ( $filter_session["date_start"] == "" )
+                {
+                    $filter_session["date_start"] = date('d M Y');
+                }
 
+                if ( $filter_session["date_end"] == "" )
+                {
+                    $filter_session['date_end']   = date('d M Y');
+                }
+                $data_search = $filter_session;
+            }
+            else
+            {
+                $data_search['date_start']  = date('d M Y');
+                $data_search['date_end']    = date('d M Y');
+                $data_search['type_id']     = '';
+                $data_search['category_id'] = '';
+                $data_search['acc_status']  = '';
+            }
+
+            $data['data_report']    = array();
+            $data['data_search']    = $data_search;
+        }
+
+        $data['data_type']   = $this->m_type->get_a_type();
         templates('/report/v_payment',$data);
     }
 
     function print_pembayaran_penyewa()
     {
         $data_search = get_session('arr_filter_payment');
-        $get_code_category = $this->m_category->get_a_category('','',$data_search);
-        if($get_code_category):
-                foreach ($get_code_category as $row):
-                    $data_search_acc['category_id'] = $row['CATEGORY_ID'];
-                    $data_search_acc['status_acc']  = $data_search['acc_status'];
-                    $get_data_acc = $this->m_acc_account->get_account_by_search($data_search_acc);
-                    if($get_data_acc):
-                        foreach ($get_data_acc as $acc):
-                            $asset_name = $this->m_asset->get_a_asset_by_id($acc['ASSET_ID']);
+        if ($data_search["type_id"] == "")
+        {
+            $data_search["type_name"] = "Semua";
+            $list_of_category = $this->m_category->get_a_category_all();
+        }
+        else if ($data_search["type_id"] != "")
+        {
+            $data_search["type_name"] = $this->m_type->get_a_type_details($data_search["type_id"])["TYPE_NAME"];
+        }
 
-                            $data_search_trans['date_start']    = $data_search['date_start'];
-                            $data_search_trans['date_end']      = $data_search['date_end'];
-                            $data_search_trans['account_id']    = $acc['ACCOUNT_ID'];
-                            $data_search_trans['order_by']      = 'i.dt_added';
-                            $data_report_trans = $this->m_bill_item->record_transaction($data_search_trans);
-                            $acc['data_asset'] = $asset_name;
-                            $acc['account_details_trans'] = $data_report_trans;
-                            $row['acc'][] = $acc;
-                        endforeach;
-                        $data_report[] = $row;
-                    endif;
-                endforeach;
-            endif;
+        if ($data_search["category_id"] == "")
+        {
+            $data_search["category_name"] = "Semua";
+        }
+        else if ($data_search["category_id"] != "0")
+        {
+            $data_search["category_name"] = $this->m_category->get_a_category_details($data_search["category_id"])["CATEGORY_NAME"];
+        }
 
-        $data["data_search"] = $data_search;
-        // $data["data_report"] = $this->m_acc_account->get_account_by_search($data_search);
-        $data["data_report"] = $this->m_bill_item->record_transaction($data_search);
+        if ($data_search["acc_status"] == "")
+        {
+            $data_search["status_type"] = "Semua";
+        }
+        else if ($data_search["acc_status"] == "1")
+        {
+            $data_search["status_type"] = "Aktif";
+        }
+        else if ($data_search["acc_status"] == "2")
+        {
+            $data_search["status_type"] = "Tidak Aktif";
+        }
+
+        $data_report = array();
+
+        $data_search_trans["date_start"]    =   DateTime::createFromFormat('d M Y', $data_search['date_start'])->format('d-m-Y');
+        $data_search_trans["date_end"]      =   DateTime::createFromFormat('d M Y', $data_search['date_end'])->format('d-m-Y');
+        $data_search_trans["category_id"]   =   $data_search["category_id"];
+
+        $payment_record = $this->m_bill_item->getLaporanPembayaranPenyewa( $data_search_trans );
+
+        if ( count($payment_record) > 0 )
+        {
+            foreach ($payment_record as $row) 
+            {
+                $account_id = $row["ACCOUNT_ID"];
+                $category = $row["CATEGORY_NAME"]." - ".$row["CATEGORY_CODE"];
+                $data_report[$category][$account_id][] = $row;
+            }
+        }
+        else
+        {
+            $data_report = array();
+        }            
+
+        $data['data_report']    = $data_report;
+        $data['data_search']    = $data_search;
+
         $this->load->view('/report/v_print_pembayar_penyewa',$data);
     }
 

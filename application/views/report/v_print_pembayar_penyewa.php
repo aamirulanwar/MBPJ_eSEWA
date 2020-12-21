@@ -7,7 +7,7 @@
     <meta name="description" content="CoreUI - Open Source Bootstrap Admin Template">
     <meta name="author" content="Łukasz Holeczek">
     <meta name="keyword" content="Bootstrap,Admin,Template,Open,Source,jQuery,CSS,HTML,RWD,Dashboard">
-    <title>LAPORAN PENYATA PENYESUAIAN TERPERINCI</title>
+    <title>LAPORAN PEMBAYARAN PENYEWA</title>
     <!-- Icons-->
     <link rel="icon" href="<?=base_url()?>/favicon.ico" type="image/x-icon">
     <link href="/assets/node_modules/@coreui/icons/css/coreui-icons.min.css" rel="stylesheet">
@@ -40,135 +40,120 @@
                 </tr>
                 <tr><td style="height:20px;"></td></tr>
                 <tr>
-                    <td colspan="2" style="text-align: center;font-weight: bold;font-size: 18px">
-                        <span>LAPORAN PEMBAYARAN PENYEWA</span></br>
-                        <?php
-                            $date_start = $data_search['date_start'] ;
-                            $date_end = $data_search['date_end'] ;
-                            echo "<span> DARI ".strtoupper( $date_start )." HINGGA ".strtoupper( $date_end )."</span></br>";
-                        ?>
+                    <td>&nbsp;</td>
+                    <td style="text-align: left;font-weight: bold;font-size: 18px">
+                        <span style="padding-left: 0.8cm">LAPORAN PEMBAYARAN PENYEWA</span></br>
+                        <br>
+                        <table>
+                            <tr>
+                                <td style="text-align: left;font-weight: bold;font-size: 16px"><span>BAGI JENIS HARTA: <?=strtoupper( $data_search['type_name'])?></span></td>
+                                <td style="text-align: left;font-weight: bold;font-size: 16px"><span> ,STATUS AKAUN: <?=strtoupper( $data_search['status_type'])?></td>
+                            </tr>
+                            <tr>
+                                <td colspan = "2" style="text-align: center;font-weight: bold;font-size: 16px"><span>DARI <?=strtoupper( $data_search['date_start'] )?> HINGGA <?=strtoupper( $data_search['date_end'] )?></span></td>
+                            </tr>
+                        </table>
                     </td>
                 </tr>
             </table>
         </div>
         </br>
+        </br>
+        </br>
         <div>
-           <div class="card card-accent-info">
-            <div class="card-body">
-            <?php
-                // echo 
-                // "<pre>",
-                // var_dump($data_report);
-                // die();
-                if($data_report):
-                    ?>
-                    <br>
-                    <?php
-                    foreach ($data_report as $row):
-                        echo '<h1 style="text-decoration: underline">'.$row['CATEGORY_NAME'].' - '.$row['CATEGORY_CODE'].'</h1>';
-                        if($row['acc']):
-                            $j = 0;
-                            foreach ($row['acc'] as $acc):
-                                if($acc['account_details_trans']):
-                                    echo '<table class="table table-hover table-bordered table-aging" style="margin-bottom: 0px">';
-                                    echo '<thead>';
-                                    echo '<tr>';
-                                    echo '<th width="5%">No.</th>';
-                                    echo '<th width="7%">No akaun</th>';
-                                    echo '<th width="9%">Nama</th>';
-                                    echo '<th width="9%">Kod Harta</th>';
-                                    echo '<th width="9%">No. Bil</th>';
-                                    echo '<th width="8%">Tarikh Bil/Resit</th>';
-                                    echo '<th width="8%">Kod</th>';
-                                    echo '<th width="11%">Keterangan</th>';
-                                    echo '<th width="7%">Jenis</th>';
-                                    echo '<th width="9%">Amaun Debit (RM)</th>';
-                                    echo '<th width="9%">Amaun Kredit (RM)</th>';
-                                    echo '<th width="9%">Jumlah (RM)</th>';
-                                    echo '</tr>';
-                                    echo '</thead>';
-                                    echo '</table>';
-                                    echo '<div class="table-own" style="height: 300px; overflow: overlay">';
-                                    echo '<table class="table table-hover table-bordered table-adjustment">';
-                                    echo '<tbody>';
-                                    $data_amount = 0;
-                                    $i = 0;
-                                    $j = $j+1;
-                                    foreach ($acc['account_details_trans'] as $trans):
-                                        $i = $i+1;
-                                        echo '<tr>';
-                                        if($i==1):
-                                            echo '<td width="5%" rowspan="'.count($acc['account_details_trans']).'">'.$j.'<br>';
-                                            echo '<td width="7%" rowspan="'.count($acc['account_details_trans']).'">'.$acc['ACCOUNT_NUMBER'].'<br>';
-                                            echo get_status_active($acc['STATUS_ACC']);
-                                            echo '</td>';
-                                            echo '<td width="9%" rowspan="'.count($acc['account_details_trans']).'">'.$acc['NAME'].'</td>';
-                                            if($acc['data_asset']):
-                                                $data_asset = $acc['data_asset']['ASSET_NAME'];
-                                            else:
-                                                $data_asset = '-';
-                                            endif;
-                                            echo '<td width="9%" rowspan="'.count($acc['account_details_trans']).'">'.$data_asset.'</td>';
-                                        endif;
-                                        echo '<td width="9%">'.$trans['BILL_NUMBER'].'</td>';
-                                        echo '<td width="8%">'.date('d/m/y',strtotime($trans['DT_BILL'])).'</td>';
-                                        echo '<td width="8%">'.$trans['TR_CODE'].'</td>';
-                                        echo '<td width="11%">'.$trans['ITEM_DESC'].'</td>';
+           <?php
+                if($data_report)
+                {
+                    $category_code = "";
+                    foreach ($data_report as $category => $account )
+                    {
+                        // echo '<h1 style="text-decoration: underline">'.$category.'</h1>';
+                        echo '<h2 style="min-width:1458.4px; text-decoration: underline;margin-bottom: 15px; text-align: center">'.$category.'</h2>';
+                        
+                        $account_number = "";
+                        $account_name = "";
+                        $asset_name = "";
+                        $total_transaction = 0;
+                        $i = 0;
 
-                                        $bill_cat       = '';
-                                        $amount_debit   = 0;
-                                        $amount_kredit  = 0;
+                        echo '<table class="table table-bordered " style="font-size: 10px; min-width: 1458.4px;margin: 0.1cm; ">';
+                        echo '  <thead>';
+                        echo '      <tr>';
+                        echo '          <th width="5%">No.</th>';
+                        echo '          <th width="7%">No akaun</th>';
+                        echo '          <th width="9%">Nama</th>';
+                        echo '          <th width="9%">Kod Harta</th>';
+                        echo '          <th width="9%">No. Bil</th>';
+                        echo '          <th width="8%">Tarikh Bil/Resit</th>';
+                        echo '          <th width="8%">Kod</th>';
+                        echo '          <th width="11%">Keterangan</th>';
+                        echo '          <th width="7%">Jenis</th>';
+                        echo '          <th width="9%">Amaun Debit (RM)</th>';
+                        echo '          <th width="9%">Amaun Kredit (RM)</th>';
+                        echo '          <th width="9%">Jumlah (RM)</th>';
+                        echo '      </tr>';
+                        echo '  </thead>';
+                        echo '  <tbody>';
 
-                                        if($trans['BILL_CATEGORY']=='B'):
-                                            $bill_cat = 'Bil';
-                                            $amount_debit   = $trans['TOTAL_AMOUNT'];
-                                            $data_amount    = $data_amount+($amount_debit);
-                                        elseif ($trans['BILL_CATEGORY']=='R'):
-                                            $bill_cat = 'Resit';
-                                            $amount_kredit = $trans['TOTAL_AMOUNT'];
-                                            $data_amount    = $data_amount-($amount_kredit);
-                                        elseif ($trans['BILL_CATEGORY']=='J'):
-                                            $bill_cat = 'Jernel';
-                                            if(substr($trans['TR_CODE'],0,1)==1):
-                                                $amount_debit = $trans['TOTAL_AMOUNT'];
-                                                $data_amount    = $data_amount+($amount_debit);
-                                            elseif (substr($trans['TR_CODE'],0,1)==2):
-                                                $amount_kredit = $trans['TOTAL_AMOUNT'];
-                                                $data_amount   = $data_amount-($amount_kredit);
-                                            endif;
-                                        endif;
-                                        echo '<td width="7%">'.$bill_cat.'</td>';
-                                        echo '<td width="9%" style="text-align: right">'.num($amount_debit,3).'</td>';
-                                        echo '<td width="9%" style="text-align: right">'.num($amount_kredit,3).'</td>';
-                                        echo '<td width="9%" style="text-align: right">'.num($data_amount,3).'</td>';
-                                        echo '</tr>';
-                                    endforeach;
-                                    echo '</tbody>';
-                                    echo '</table>';
-                                    echo '</div>';
-//                                else:
-//                                    echo '<table class="table table-hover table-bordered table-aging">';
-//                                    echo '<tr><td class="text-center"> - Tiada data - </td></tr>';
-//                                    echo '</table>';
-                                endif;
-                            endforeach;
-                        else:
-                            echo '<table class="table table-hover table-bordered table-aging">';
-                            echo '<tr><td class="text-center"> - Tiada data - </td></tr>';
-                            echo '</table>';
-                        endif;
-                    endforeach;
-                else:
+                        foreach ($account as $account_id => $account_details) 
+                        {
+                            $i = $i + 1;
+                            $data_amount = 0;
+
+                            foreach ($account_details as $single_row) 
+                            {
+                                
+                                $reference_no = $single_row["REFERENCE_NO"];
+                                $tkh_bil = $single_row["TKH_BIL"];
+                                $tr_code_new = $single_row["TR_CODE"];
+                                $tr_code_old = $single_row["TR_CODE_OLD"];
+                                $tr_item_desc = $single_row["TR_DESC"];
+                                $bill_category = $single_row["BILL_CATEGORY"];
+                                $amount_credit = floatval( $single_row["AMOUNT"] );
+                                $data_amount = floatval($data_amount)  - floatval($single_row["AMOUNT"]);
+
+                                echo '      <tr>';
+                                if ( $account_number != $single_row["ACCOUNT_NUMBER"] )
+                                {
+                                    $total_transaction = count($account_details);
+                                    $account_number = $single_row["ACCOUNT_NUMBER"];
+                                    $account_name = $single_row["NAME"];
+                                    $asset_name = $single_row["ASSET_NAME"];
+
+                                    echo '     <td width="5%" rowspan="'.$total_transaction.'"> '.$i.' </td>';
+                                    echo '     <td width="7%" rowspan="'.$total_transaction.'"> '.$account_number.' </td>';
+                                    echo '     <td width="9%" rowspan="'.$total_transaction.'"> '.$account_name.' </td>';
+                                    echo '     <td width="9%" rowspan="'.$total_transaction.'"> '.$asset_name.' </td>';
+                                }
+                                echo '         <td width="9%">'.$reference_no.'</td>';
+                                echo '         <td width="8%">'.$tkh_bil.'</td>';
+                                echo '         <td width="8%">'.$tr_code_new.'</td>';
+                                echo '         <td width="11%">'.$tr_item_desc.'</td>';
+                                echo '         <td width="7%">'.$bill_category.'</td>';
+                                echo '         <td width="9%" style="text-align: right"> 0.00 </td>';
+                                echo '         <td width="9%" style="text-align: right">'.num($amount_credit,4,2).'</td>';
+                                echo '         <td width="9%" style="text-align: right">'.num($data_amount,4,2).'</td>';
+
+                                echo '      </tr>';
+                            }
+                        }
+
+                        echo '  </tbody>';
+                        echo '</table>';
+                        echo '<br>';
+                        echo '<br>';
+                    }
+                }
+                else
+                {
                     echo '<table class="table table-hover table-bordered table-aging">';
                     echo '<tr><td class="text-center"> - Tiada data - </td></tr>';
                     echo '</table>';
-                endif;
+                }
             ?>
         </div>
     </div>
-</div>
-    </div>
-    <!-- <script>
+    <script>
         $( window ).on('load', '', function(event) {
             window.print();
         });
@@ -179,6 +164,6 @@
             window.close();
         });
         });
-    </script> -->
+    </script>
 </body>
 </html>

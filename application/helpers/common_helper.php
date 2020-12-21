@@ -258,7 +258,7 @@ function num($num='',$currencyFormat=0,$decimal=2)
         endif;
     elseif($currencyFormat==4):
         if($num<0):
-            return '('.number_format(abs($num),2).')';
+            return '('.number_format(abs($num),$decimal).')';
         else:
             return number_format($num,$decimal,'.',',');
         endif;

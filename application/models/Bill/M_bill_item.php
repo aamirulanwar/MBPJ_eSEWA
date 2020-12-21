@@ -1413,4 +1413,76 @@ class M_bill_item extends CI_Model
             return array();
         }
     }
+
+    function getLaporanPembayaranPenyewa($data_search)
+    {
+        $status_acc = -1;
+        $customWhere1 = "";
+
+        if ( isset( $data_search["date_start"] ) && $data_search["date_start"] != "" )
+        {
+            $date_start = $data_search["date_start"];
+        }
+        else
+        {
+            $date_start = date('d-m-Y');
+        }
+
+        if ( isset( $data_search["date_end"] ) && $data_search["date_end"] != "" )
+        {
+            $date_end = $data_search["date_end"];
+        }
+        else
+        {
+            $date_end = date('d-m-Y');
+        }
+
+        if ( isset( $data_search["category_id"] ) && $data_search["category_id"] != "" )
+        {
+            $customWhere1 = " and acc_account.category_id = ".db_escape($data_search["category_id"] )." ";
+        }
+
+        $sql = "
+                    select customTable.*,acc_account.account_id,acc_account.account_number,acc_user.name,a_category.category_code,a_category.category_name,a_asset.asset_name,to_char(b_master.dt_added,'dd-mm-yyyy') as TKH_BIL,
+                    (
+                      case 
+                          when customTable.BILL_CATEGORY = 'J' and customTable.b_journal_id is not null then 
+                              (select bill_number from b_journal_temp where id = customTable.b_journal_id) 
+                          else 
+                              b_master.BILL_NUMBER 
+                      end
+                    ) as reference_no,
+                    (
+                      select mct_trdesc from admin.mctrancode where mct_mdcode = 'B' and mct_trcode = customTable.tr_code_old
+                    ) as tr_desc
+                    from
+                    (
+                      select i.bill_id,i.item_id,i.account_id,i.amount,i.tr_code,i.tr_code_old,i.bill_category,i.b_journal_id
+                      from b_item i
+                      where 
+                      length(tr_code_old) > 4 and length(tr_code) > 4 and 
+                      substr(tr_code_old,1,1) = '2' and substr(tr_code,1,1) = '2' and 
+                      i.dt_added between to_date(".db_escape($date_start).",'dd/mm/yyyy') and to_date(".db_escape($date_end).",'dd/mm/yyyy')
+                    ) customTable, b_master, acc_account, a_category, a_asset, acc_user
+                    where 
+                    customTable.bill_id = b_master.bill_id
+                    and customTable.account_id = acc_account.account_id
+                    and acc_account.category_id = a_category.category_id
+                    and acc_account.asset_id = a_asset.asset_id
+                    and acc_account.user_id = acc_user.user_id
+                    ".$customWhere1." 
+                    order by acc_account.type_id,acc_account.category_id,acc_account.account_id,b_master.dt_added
+                ";
+
+        $result = db_query( $sql );
+
+        if($result)
+        {
+            return $result->result_array('');
+        }
+        else
+        {
+            return array();
+        }
+    }
 }

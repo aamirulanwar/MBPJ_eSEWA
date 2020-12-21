@@ -59,6 +59,11 @@ class M_acc_account extends CI_Model
             db_where(" STATUS_ACC = 1 or  STATUS_BILL = 1");
         }
 
+        if ( isset($data_search["CATEGORY_ID"]) && $data_search["CATEGORY_ID"] != "" )
+        {
+            db_where('CATEGORY_ID',$data_search['CATEGORY_ID']);
+        }
+
         $sql = db_get('');
 
         if($sql)
