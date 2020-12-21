@@ -184,7 +184,7 @@
                     </tr>
                 </thead>
             </table>
-            <div class="table-own" style="height: <?=(count($data_report) > 0 ? "300px;" : "auto" )?>; overflow: overlay">
+            <div class="table-own" style="max-height: <?=(count($data_report) > 0 ? "300px;" : "auto" )?>; overflow: overlay">
                 <table class="table table-hover table-bordered table-adjustment">
                     <tbody>
                         <?php
