@@ -65,9 +65,9 @@
                     </select>
                 </div>
                 <div class="col-sm-4">
-                    <label class="col-form-label">Tarikh mula</label>
+                    <!-- <label class="col-form-label">Tarikh mula</label>
                     <input type="input" name="date_start" id="date_start" class="form-control date_class" placeholder="Tarikh mula" value="<?php echo set_value('date_start', search_default($data_search,'date_start')) ?>">
-                    <label class="no-need-print"><a href="javascript:;" onclick="document.getElementById('date_start').value=''">Kosongkan tarikh mula</a></label>
+                    <label class="no-need-print"><a href="javascript:;" onclick="document.getElementById('date_start').value=''">Kosongkan tarikh mula</a></label> -->
                 </div>
             </div>
 
@@ -111,7 +111,7 @@
             </tr>
             </thead>
         </table>
-        <div class="table-own" style="height: 300px; overflow: overlay">
+        <div class="table-own" style="max-height: 300px; overflow: overlay">
             <table class="table table-hover table-bordered">
                 <tbody>
                     <?php

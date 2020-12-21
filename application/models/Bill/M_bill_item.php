@@ -1316,4 +1316,101 @@ class M_bill_item extends CI_Model
             return array();
         }
     }
+
+    function getAgingSewaanRingkasan($data_search)
+    {
+        $status_acc = -1;
+        $customWhere1 = "";
+        $customWhere2 = "";
+
+        if ( isset( $data_search["type_id"] ) && $data_search["type_id"] != 0 )
+        {
+            $type_id = $data_search["type_id"];
+            $customWhere2 = $customWhere2." acc_account.type_id = ".db_escape($type_id)." and ";
+        }
+
+        if ( isset( $data_search["status_acc"] ) && $data_search["status_acc"] != 0 )
+        {
+            $status_acc = $data_search["status_acc"];
+            $customWhere2 = $customWhere2." acc_account.status_acc = ".db_escape($status_acc)." and ";
+        }
+
+        $sql = "
+                select 
+                category_code,
+                category_name,
+                type_name,
+                sum(waste_management_charge) as waste_management_charge,
+                sum(rental_charge) as rental_charge,
+                sum(billed_amount) as billed_amount,
+                sum(payment_amount) as payment_amount,
+                sum(balance_amount) as balance_amount
+                from
+                (
+                  select
+                  acc_account.account_id,
+                  acc_account.account_number,
+                  acc_account.account_number_old,
+                  acc_account.category_id,
+                  acc_account.type_id,
+                  ( select type_name from a_type where type_id = acc_account.type_id ) as type_name,
+                  ( select category_code from a_category where category_id = acc_account.category_id ) as category_code,
+                  ( select category_name from a_category where category_id = acc_account.category_id ) as category_name,
+                  acc_account.waste_management_charge,
+                  acc_account.rental_charge,
+                  ( select name from acc_user where user_id = acc_account.user_id ) as account_name,
+                  ( select asset_name from a_asset where asset_id = acc_account.asset_id ) as asset_name,
+                  sum(billed_amount) as billed_amount,
+                  sum(payment_amount) as payment_amount,
+                  (
+                    case 
+                    when ( sum(billed_amount) - sum(payment_amount) ) < 0 then 0
+                    else( sum(billed_amount) - sum(payment_amount) )
+                    end
+                  )as balance_amount
+                  from
+                  (
+                      select 
+                      b_item.account_id,
+                      (
+                          case
+                              when substr(tr_code,1,1) = '1' and tr_code_old not in ('11033','12033') then nvl(amount,0)
+                              else 0
+                          end
+                      ) as billed_amount,
+                      (
+                          case
+                              when substr(tr_code,1,1) = '2' and tr_code_old not in ('21033','22033') then nvl(amount,0)
+                              else 0
+                          end
+                      ) as payment_amount,
+                      tr_code,
+                      tr_code_old
+                      from b_item, b_master 
+                      where 
+                      b_item.bill_id = b_master.bill_id and b_master.bill_year = to_char(sysdate,'yyyy')
+                  ) custom_table right join acc_account on custom_table.account_id = acc_account.account_id
+                  where acc_account.status_acc != 0 and
+                  ".$customWhere2." 
+                  category_id is not null
+                  group by acc_account.account_id,acc_account.account_number,acc_account.account_number_old,acc_account.type_id,acc_account.category_id,acc_account.user_id,asset_id,acc_account.waste_management_charge,acc_account.rental_charge
+                  order by account_id asc
+                )
+                group by
+                category_code,
+                category_name,
+                type_name
+                ";
+
+        $result = db_query( $sql );
+
+        if($result)
+        {
+            return $result->result_array('');
+        }
+        else
+        {
+            return array();
+        }
+    }
 }

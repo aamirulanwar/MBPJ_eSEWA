@@ -2,16 +2,16 @@
     .table-aging{
         font-size: 11px !important;
     }
+
     th{
         text-align: center;
     }
     .table th, .table td{
-        padding: 2px !important;
+        padding: 1px !important;
         font-size: 10px !important;
     }
-
     ::-webkit-scrollbar {
-        width: 8px;
+        width: 5px;
         height: 10px;
         border-radius: 5px;
     }
@@ -32,11 +32,6 @@
             font-size: 9px !important;
         }
     }
-    /*@media print{*/
-        /*@page {*/
-            /*size: landscape*/
-        /*}*/
-    /*}*/
 </style>
 <form method="post" action="/report/category_aging/" >
     <div class="card card-accent-info">
@@ -45,14 +40,14 @@
             <div class="form-group row">
                 <div class="col-sm-4">
                     <label class="col-form-label">Jenis harta</label>
-                    <select name="asset_type" class="form-control">
+                    <select name="type_id" class="form-control">
                         <?php
-                        echo option_value('semua',' - Semua - ','asset_type',search_default($data_search,'asset_type'));
+                        echo option_value('semua',' - Semua - ','type_id',search_default($data_search,'type_id'));
                         ?>
                         <?php
                         if($data_type):
                             foreach ($data_type as $row):
-                                echo option_value($row['TYPE_ID'],$row['TYPE_NAME'],'asset_type',search_default($data_search,'asset_type'));
+                                echo option_value($row['TYPE_ID'],$row['TYPE_NAME'],'type_id',search_default($data_search,'type_id'));
                             endforeach;
                         endif;
                         ?>
@@ -69,21 +64,12 @@
                     </select>
                 </div>
                 <div class="col-sm-4">
-                    <label class="col-form-label">Tarikh mula</label>
+                    <!-- <label class="col-form-label">Tarikh mula</label>
                     <input type="input" name="date_start" id="date_start" class="form-control date_class" placeholder="Tarikh mula" value="<?php echo set_value('date_start', search_default($data_search,'date_start')) ?>">
-                    <label class="no-need-print"><a href="javascript:;" onclick="document.getElementById('date_start').value=''">Kosongkan tarikh mula</a></label>
+                    <label class="no-need-print"><a href="javascript:;" onclick="document.getElementById('date_start').value=''">Kosongkan tarikh mula</a></label> -->
                 </div>
             </div>
 
-            <!--            <div class="form-group row">-->
-            <!--                <div class="col-sm-4">-->
-            <!--                    <input type="input" name="date_start" class="form-control date_class" placeholder="Tarikh mula" value="--><?php //echo set_value('date_start','')?><!--">-->
-            <!--                </div>-->
-            <!--                <label class="col-sm-2 col-form-label text-center"> hingga </label>-->
-            <!--                <div class="col-sm-4">-->
-            <!--                    <input type="input" name="date_end" class="form-control date_class" placeholder="Tarikh tamat" value="--><?php //echo set_value('date_end','')?><!--">-->
-            <!--                </div>-->
-            <!--            </div>-->
         </div>
         <div class="card-footer">
             <div class="col-sm-12">
@@ -95,121 +81,691 @@
 <div class="card card-accent-info">
     <div class="card-body">
         <div class="table-responsive">
-            <?php
-
-            if($data_report):
-            ?>
+   
             <div class="pull-right">
-                <button onclick="window.print()" class="btn btn-warning btn-sm pull-right">Print</button>
+                <a class="btn btn-warning btn-sm pull-right" href="/report/print_category_aging" target="_blank">Cetak</a>
             </div>
             <br>
-            <br>
             <?php
-            foreach ($data_report as $category):
-            echo '<h2 style="text-decoration: underline;margin-bottom: 15px;">'.$category['data_type']['TYPE_NAME'].'</h2>';
-            if($category['data_report']):
-            ?>
-            <table class="table table-hover table-bordered table-aging" style="margin-bottom: 0px;">
-                <tr>
-                    <th width="3%" rowspan="2" style="text-align:center">No.</th>
-                    <th width="7%" rowspan="2" style="text-align:center">Kategory Nama</th>
-                    <th width="7%" rowspan="2" style="text-align:center">Kod Kategori</th>
-                    <th colspan="4" style="text-align:center">Bulan (RM)</th>
-                    <th colspan="6" style="text-align:center">Tahun (RM)</th>
-                    <th width="7%" rowspan="2" style="text-align:center">Baki (RM)</th>
-<!--                    <th rowspan="2" style="text-align:center">Status akaun</th>-->
-                </tr>
-                <tr>
-                    <th width="7%">1-3</th>
-                    <th width="7%">4-6</th>
-                    <th width="7%">7-9</th>
-                    <th width="7%">10-12</th>
-                    <th width="7%">1</th>
-                    <th width="7%">2</th>
-                    <th width="7%">3</th>
-                    <th width="7%">4</th>
-                    <th width="7%">5</th>
-                    <th width="7%">>6</th>
-                </tr>
-            </table>
-            <div class="table-own" style="height: 300px; overflow: overlay">
-            <table class="table table-hover table-bordered table-aging">
-                <?php
-                $cnt = 0;
-                $data_1 = 0;
-                $data_2 = 0;
-                $data_3 = 0;
-                $data_4 = 0;
-                $data_5 = 0;
-                $data_6 = 0;
-                $data_7 = 0;
-                $data_8 = 0;
-                $data_9 = 0;
-                $data_10 = 0;
-                foreach($category['data_report'] as $row):
-                    $cnt=$cnt+1;
-                    $data_1 = $data_1+$row['data_1'];
-                    $data_2 = $data_2+$row['data_2'];
-                    $data_3 = $data_3+$row['data_3'];
-                    $data_4 = $data_4+$row['data_4'];
-                    $data_5 = $data_5+$row['data_5'];
-                    $data_6 = $data_6+$row['data_6'];
-                    $data_7 = $data_7+$row['data_7'];
-                    $data_8 = $data_8+$row['data_8'];
-                    $data_9 = $data_9+$row['data_9'];
-                    $data_10 = $data_10+$row['data_10'];
+                foreach ($data_report as $type_name => $report_by_type)
+                {
+                    $total_current_year_1_3     =   0.00;
+                    $total_current_year_4_6     =   0.00;
+                    $total_current_year_7_9     =   0.00;
+                    $total_current_year_10_12   =   0.00;
+                    $total_last_1_year          =   0.00;
+                    $total_last_2_year          =   0.00;
+                    $total_last_3_year          =   0.00;
+                    $total_last_4_year          =   0.00;
+                    $total_last_5_year          =   0.00;
+                    $total_last_6_year_above    =   0.00;
+                    $sum_total_outstanding      =   0.00;
 
-                    $data_all = $data_1+$data_2+$data_3+$data_4+$data_5+$data_6+$data_7+$data_8+$data_9+$data_10;
-                    ?>
-                    <tr>
-                        <td width="3%" class="text-right"><?php echo $cnt?>.</td>
-                        <td width="7%"><?php echo $row['CATEGORY_NAME']?></td>
-                        <td width="7%"><?php echo $row['CATEGORY_CODE']?></td>
-                        <td width="7%" class="text-right"><?php echo num($row['data_1'],3)?></td>
-                        <td width="7%" class="text-right"><?php echo num($row['data_2'],3)?></td>
-                        <td width="7%" class="text-right"><?php echo num($row['data_3'],3)?></td>
-                        <td width="7%" class="text-right"><?php echo num($row['data_4'],3)?></td>
-                        <td width="7%" class="text-right"><?php echo num($row['data_5'],3)?></td>
-                        <td width="7%" class="text-right"><?php echo num($row['data_6'],3)?></td>
-                        <td width="7%" class="text-right"><?php echo num($row['data_7'],3)?></td>
-                        <td width="7%" class="text-right"><?php echo num($row['data_8'],3)?></td>
-                        <td width="7%" class="text-right"><?php echo num($row['data_9'],3)?></td>
-                        <td width="7%" class="text-right"><?php echo num($row['data_10'],3)?></td>
-                        <td width="7%" class="text-right"><?php echo num($row['data_1']+$row['data_2']+$row['data_3']+$row['data_4']+$row['data_5']+$row['data_6']+$row['data_7']+$row['data_8']+$row['data_9']+$row['data_10'],3)?></td>
-<!--                        <td class="text-center">--><?php //echo get_status_active($row['STATUS_ACC'])?><!--</td>-->
-                    </tr>
-                <?php
-                endforeach;
-                ?>
-                <tr>
-                    <td colspan="3" align="right"><strong>JUMLAH (RM)</strong></td>
-                    <td class="text-right"><?php echo num($data_1,3)?></td>
-                    <td class="text-right"><?php echo num($data_2,3)?></td>
-                    <td class="text-right"><?php echo num($data_3,3)?></td>
-                    <td class="text-right"><?php echo num($data_4,3)?></td>
-                    <td class="text-right"><?php echo num($data_5,3)?></td>
-                    <td class="text-right"><?php echo num($data_6,3)?></td>
-                    <td class="text-right"><?php echo num($data_7,3)?></td>
-                    <td class="text-right"><?php echo num($data_8,3)?></td>
-                    <td class="text-right"><?php echo num($data_9,3)?></td>
-                    <td class="text-right"><?php echo num($data_10,3)?></td>
-                    <td class="text-right"><?php echo num($data_all,3)?></td>
-<!--                    <td class="text-right"></td>-->
-                </tr>
-                <tbody>
-                <?php
-                endif;
-                echo '</table>';
-                echo '</div>';
-                endforeach;
-                else:
-                    if($_POST):
-                        echo '<table class="table table-hover table-bordered table-aging">';
-                        echo '<tr><td class="text-center"> - Tiada data - </td></tr>';
-                        echo '</table>';
-                    endif;
-                endif;
-                ?>
+
+                    echo '<h2 style="text-decoration: underline;margin-bottom: 15px;">'.$type_name.'</h2>';
+                    echo '
+                        <table class="table table-hover table-bordered " style="margin-bottom: 0px;">
+                            <thead>
+                                <tr>
+                                    <th width="3%" rowspan="2" style="text-align:center">No.</th>
+                                    <th width="11%" rowspan="2" style="text-align:center">Kategory Nama</th>
+                                    <th width="6%" rowspan="2" style="text-align:center">Kod Kategori</th>
+                                    <th colspan="4" width="28%" style="text-align:center">Bulan (RM)</th>
+                                    <th colspan="6" width="42%" style="text-align:center">Tahun (RM)</th>
+                                    <th width="10%" rowspan="2" style="text-align:center">Baki (RM)</th>
+                                </tr>
+                                <tr>
+                                    <th width="7%">1-3</th>
+                                    <th width="7%">4-6</th>
+                                    <th width="7%">7-9</th>
+                                    <th width="7%">10-12</th>
+                                    <th width="7%">1</th>
+                                    <th width="7%">2</th>
+                                    <th width="7%">3</th>
+                                    <th width="7%">4</th>
+                                    <th width="7%">5</th>
+                                    <th width="7%">>6</th>
+                                </tr>
+                            </thead>
+                        </table>
+                        <div class="table-own" style="max-height: 300px; overflow: overlay">
+                            <table class="table table-hover table-bordered " >
+                                <tbody>
+                    ';
+
+                    if ( count($report_by_type) > 0 )
+                    {
+                        $cnt = 1;
+
+                        foreach ($report_by_type as $row) 
+                        {
+                            // Calculate aging based on outstanding amount
+                            $total_outstanding = $row["BALANCE_AMOUNT"];
+                            $monthly_charge = floatval($row["RENTAL_CHARGE"]) + floatval($row["WASTE_MANAGEMENT_CHARGE"]);
+                            $current_month = date('n');
+
+                            // Set value to allocated field
+                            // Check if the rental charge is empty in table acc_account then skip
+                            if ( $monthly_charge > 0 )
+                            {
+                                $total_month_is_unpaid = ( $total_outstanding / $monthly_charge ) - 1; // Minus 1 is used to exclude current month bill
+                            }
+                            else
+                            {
+                                $total_month_is_unpaid = 1;
+                            }
+
+
+                            if ( $total_outstanding > 0 )
+                            {
+                                if ( $current_month >= 1 && $current_month <= 3 )
+                                {
+                                    if ( $total_month_is_unpaid > 4 )
+                                    {
+                                        /* Formula
+                                         * y = T - xi
+                                         *
+                                         * y = Value to be carried to previous year 
+                                         * T = Total outstanding value excluding current month bill
+                                         * x = Current rental charge including Tipping fee
+                                         * i = total month in current year excluding current month
+                                         *  
+                                         *  
+                                        */
+
+                                        /* $new_total_outstanding == xi as mention above formula
+                                         *
+                                         * xi also equal to the amount that need to be fill in 
+                                         * the quarterly month in current year fields
+                                         * 
+                                         */
+
+                                        $new_total_outstanding  =   ( $monthly_charge * ($current_month-1) );
+                                        $current_year_1_3       =   $new_total_outstanding;
+                                        $current_year_4_6       =   0.00;
+                                        $current_year_7_9       =   0.00;
+                                        $current_year_10_12     =   0.00;
+
+                                        // $previous_year_outstanding == T as mention above formula
+                                        $previous_year_outstanding = $total_outstanding - $new_total_outstanding;
+
+                                        // Check if amount is exceed one year rental outstanding amount then carry to next two previous year
+                                        $previous_year_total_month_is_unpaid = $previous_year_outstanding/$monthly_charge;
+
+                                        if ( $previous_year_total_month_is_unpaid > 60)
+                                        {
+                                            $last_1_year               =   ( $monthly_charge * 12 );
+                                            $last_2_year               =   ( $monthly_charge * 12 );
+                                            $last_3_year               =   ( $monthly_charge * 12 );
+                                            $last_4_year               =   ( $monthly_charge * 12 );
+                                            $last_5_year               =   ( $monthly_charge * 12 );
+                                            $remaining_unpaid_amount   =   ( $previous_year_outstanding - $last_1_year - $last_2_year -$last_3_year - $last_4_year - $last_5_year );
+                                            $last_6_year_above         =   $remaining_unpaid_amount;
+                                        }
+                                        else if ( $previous_year_total_month_is_unpaid > 48 && $previous_year_total_month_is_unpaid <= 60)
+                                        {
+                                            $last_1_year               =   ( $monthly_charge * 12 );
+                                            $last_2_year               =   ( $monthly_charge * 12 );
+                                            $last_3_year               =   ( $monthly_charge * 12 );
+                                            $last_4_year               =   ( $monthly_charge * 12 );
+                                            $remaining_unpaid_amount   =   ( $previous_year_outstanding - $last_1_year - $last_2_year -$last_3_year - $last_4_year );
+                                            $last_5_year               =   $remaining_unpaid_amount; 
+                                            $last_6_year_above         =   0.00;
+                                        }
+                                        else if ( $previous_year_total_month_is_unpaid > 36 && $previous_year_total_month_is_unpaid <= 48)
+                                        {
+                                            $last_1_year               =   ( $monthly_charge * 12 );
+                                            $last_2_year               =   ( $monthly_charge * 12 );
+                                            $last_3_year               =   ( $monthly_charge * 12 );
+                                            $remaining_unpaid_amount   =   ( $previous_year_outstanding - $last_1_year - $last_2_year -$last_3_year );
+                                            $last_4_year               =   $remaining_unpaid_amount; 
+                                            $last_5_year               =   0.00;
+                                            $last_6_year_above         =   0.00;
+                                        }
+                                        else if ( $previous_year_total_month_is_unpaid > 24 && $previous_year_total_month_is_unpaid <= 36)
+                                        {
+                                            $last_1_year               =   ( $monthly_charge * 12 );
+                                            $last_2_year               =   ( $monthly_charge * 12 );
+                                            $remaining_unpaid_amount   =   ( $previous_year_outstanding - $last_1_year - $last_2_year );
+                                            $last_3_year               =   $remaining_unpaid_amount; 
+                                            $last_4_year               =   0.00;
+                                            $last_5_year               =   0.00;
+                                            $last_6_year_above         =   0.00;
+                                        }
+                                        else if ( $previous_year_total_month_is_unpaid > 12 && $previous_year_total_month_is_unpaid <= 24)
+                                        {
+                                            $last_1_year               =   ( $monthly_charge * 12 );
+                                            $remaining_unpaid_amount   =   ( $previous_year_outstanding - $last_1_year );
+                                            $last_2_year               =   $remaining_unpaid_amount; 
+                                            $last_3_year               =   0.00;
+                                            $last_4_year               =   0.00;
+                                            $last_5_year               =   0.00;
+                                            $last_6_year_above         =   0.00;
+                                        }
+                                        else if ( $previous_year_total_month_is_unpaid <= 12 )
+                                        {
+                                            // Multiply with the remaining unpaid month for the previous 1 year
+                                            $last_1_year        =   $previous_year_outstanding; 
+                                            $last_2_year        =   0.00;
+                                            $last_3_year        =   0.00;
+                                            $last_4_year        =   0.00;
+                                            $last_5_year        =   0.00;
+                                            $last_6_year_above  =   0.00;
+                                        }
+                                    }
+                                    else if ( $total_month_is_unpaid <= 3 )
+                                    {
+                                        if ( $total_outstanding > ( $monthly_charge * 9 ) )
+                                        {
+                                            $current_year_1_3   =   ( $monthly_charge * 3 );
+                                            $current_year_4_6   =   ( $monthly_charge * 3 );
+                                            $current_year_7_9   =   ( $monthly_charge * 3 );
+                                            $current_year_10_12 =   ( $total_outstanding - $current_year_1_3 - $current_year_4_6 - $current_year_7_9 );
+                                        }
+                                        else if ( $total_outstanding > ( $monthly_charge * 6 ) )
+                                        {
+                                            $current_year_1_3   =   ( $monthly_charge * 3 );
+                                            $current_year_4_6   =   ( $monthly_charge * 3 );
+                                            $current_year_7_9   =   ( $total_outstanding - $current_year_1_3 - $current_year_4_6 );
+                                            $current_year_10_12 =   0.00;
+                                        }
+                                        else if ( $total_outstanding > ( $monthly_charge * 3 ) )
+                                        {
+                                            $current_year_1_3   =   ( $monthly_charge * 3 );
+                                            $current_year_4_6   =   ( $total_outstanding - $current_year_1_3 );
+                                            $current_year_7_9   =   0.00;
+                                            $current_year_10_12 =   0.00;
+                                        }
+                                        else if ( $total_outstanding <= ( $monthly_charge * 3 ) )
+                                        {
+                                            $current_year_1_3   =   $total_outstanding;
+                                            $current_year_4_6   =   0.00;
+                                            $current_year_7_9   =   0.00;
+                                            $current_year_10_12 =   0.00;
+                                        }
+                                        
+                                        $last_1_year        =   0.00;
+                                        $last_2_year        =   0.00;
+                                        $last_3_year        =   0.00;
+                                        $last_4_year        =   0.00;
+                                        $last_5_year        =   0.00;
+                                        $last_6_year_above  =   0.00;
+                                    }
+                                }
+                                else if( $current_month >= 4 && $current_month <= 6 )
+                                {
+                                    if ( $total_month_is_unpaid > 6 )
+                                    {
+                                        /* Formula
+                                         * y = T - xi
+                                         *
+                                         * y = Value to be carried to previous year 
+                                         * T = Total outstanding value excluding current month bill
+                                         * x = Current rental charge including Tipping fee
+                                         * i = total month in current year excluding current month
+                                         *  
+                                         *  
+                                        */
+
+                                        /* $new_total_outstanding == xi as mention above formula
+                                         *
+                                         * xi also equal to the amount that need to be fill in 
+                                         * the quarterly month in current year fields
+                                         * 
+                                         */
+
+                                        $new_total_outstanding  =   ( $monthly_charge * ($current_month-1) );
+                                        $current_year_1_3       =   ( $monthly_charge * 3 );
+                                        $current_year_4_6       =   ( $new_total_outstanding - $current_year_1_3 );
+                                        $current_year_7_9       =   0.00;
+                                        $current_year_10_12     =   0.00;
+
+                                        // $previous_year_outstanding == T as mention above formula
+                                        $previous_year_outstanding = $total_outstanding - $new_total_outstanding;
+
+                                        // Check if amount is exceed one year rental outstanding amount then carry to next two previous year
+                                        $previous_year_total_month_is_unpaid = $previous_year_outstanding/$monthly_charge;
+
+                                        if ( $previous_year_total_month_is_unpaid > 60)
+                                        {
+                                            $last_1_year               =   ( $monthly_charge * 12 );
+                                            $last_2_year               =   ( $monthly_charge * 12 );
+                                            $last_3_year               =   ( $monthly_charge * 12 );
+                                            $last_4_year               =   ( $monthly_charge * 12 );
+                                            $last_5_year               =   ( $monthly_charge * 12 );
+                                            $remaining_unpaid_amount   =   ( $previous_year_outstanding - $last_1_year - $last_2_year -$last_3_year - $last_4_year - $last_5_year );
+                                            $last_6_year_above         =   $remaining_unpaid_amount;
+                                        }
+                                        else if ( $previous_year_total_month_is_unpaid > 48 && $previous_year_total_month_is_unpaid <= 60)
+                                        {
+                                            $last_1_year               =   ( $monthly_charge * 12 );
+                                            $last_2_year               =   ( $monthly_charge * 12 );
+                                            $last_3_year               =   ( $monthly_charge * 12 );
+                                            $last_4_year               =   ( $monthly_charge * 12 );
+                                            $remaining_unpaid_amount   =   ( $previous_year_outstanding - $last_1_year - $last_2_year -$last_3_year - $last_4_year );
+                                            $last_5_year               =   $remaining_unpaid_amount; 
+                                            $last_6_year_above         =   0.00;
+                                        }
+                                        else if ( $previous_year_total_month_is_unpaid > 36 && $previous_year_total_month_is_unpaid <= 48)
+                                        {
+                                            $last_1_year               =   ( $monthly_charge * 12 );
+                                            $last_2_year               =   ( $monthly_charge * 12 );
+                                            $last_3_year               =   ( $monthly_charge * 12 );
+                                            $remaining_unpaid_amount   =   ( $previous_year_outstanding - $last_1_year - $last_2_year -$last_3_year );
+                                            $last_4_year               =   $remaining_unpaid_amount; 
+                                            $last_5_year               =   0.00;
+                                            $last_6_year_above         =   0.00;
+                                        }
+                                        else if ( $previous_year_total_month_is_unpaid > 24 && $previous_year_total_month_is_unpaid <= 36)
+                                        {
+                                            $last_1_year               =   ( $monthly_charge * 12 );
+                                            $last_2_year               =   ( $monthly_charge * 12 );
+                                            $remaining_unpaid_amount   =   ( $previous_year_outstanding - $last_1_year - $last_2_year );
+                                            $last_3_year               =   $remaining_unpaid_amount; 
+                                            $last_4_year               =   0.00;
+                                            $last_5_year               =   0.00;
+                                            $last_6_year_above         =   0.00;
+                                        }
+                                        else if ( $previous_year_total_month_is_unpaid > 12 && $previous_year_total_month_is_unpaid <= 24)
+                                        {
+                                            $last_1_year               =   ( $monthly_charge * 12 );
+                                            $remaining_unpaid_amount   =   ( $previous_year_outstanding - $last_1_year );
+                                            $last_2_year               =   $remaining_unpaid_amount; 
+                                            $last_3_year               =   0.00;
+                                            $last_4_year               =   0.00;
+                                            $last_5_year               =   0.00;
+                                            $last_6_year_above         =   0.00;
+                                        }
+                                        else if ( $previous_year_total_month_is_unpaid <= 12 )
+                                        {
+                                            $last_1_year        =   $previous_year_outstanding; 
+                                            $last_2_year        =   0.00;
+                                            $last_3_year        =   0.00;
+                                            $last_4_year        =   0.00;
+                                            $last_5_year        =   0.00;
+                                            $last_6_year_above  =   0.00;
+                                        }
+                                    }
+                                    else if ( $total_month_is_unpaid <= 6 )
+                                    {
+                                        if ( $total_outstanding > ( $monthly_charge * 9 ) )
+                                        {
+                                            $current_year_1_3   =   ( $monthly_charge * 3 );
+                                            $current_year_4_6   =   ( $monthly_charge * 3 );
+                                            $current_year_7_9   =   ( $monthly_charge * 3 );
+                                            $current_year_10_12 =   ( $total_outstanding - $current_year_1_3 - $current_year_4_6 - $current_year_7_9 );
+                                        }
+                                        else if ( $total_outstanding > ( $monthly_charge * 6 ) )
+                                        {
+                                            $current_year_1_3   =   ( $monthly_charge * 3 );
+                                            $current_year_4_6   =   ( $monthly_charge * 3 );
+                                            $current_year_7_9   =   ( $total_outstanding - $current_year_1_3 - $current_year_4_6 );
+                                            $current_year_10_12 =   0.00;
+                                        }
+                                        else if ( $total_outstanding > ( $monthly_charge * 3 ) )
+                                        {
+                                            $current_year_1_3   =   ( $monthly_charge * 3 );
+                                            $current_year_4_6   =   ( $total_outstanding - $current_year_1_3 );
+                                            $current_year_7_9   =   0.00;
+                                            $current_year_10_12 =   0.00;
+                                        }
+                                        else if ( $total_outstanding <= ( $monthly_charge * 3 ) )
+                                        {
+                                            $current_year_1_3   =   $total_outstanding;
+                                            $current_year_4_6   =   0.00;
+                                            $current_year_7_9   =   0.00;
+                                            $current_year_10_12 =   0.00;
+                                        }
+                                        
+                                        $last_1_year        =   0.00;
+                                        $last_2_year        =   0.00;
+                                        $last_3_year        =   0.00;
+                                        $last_4_year        =   0.00;
+                                        $last_5_year        =   0.00;
+                                        $last_6_year_above  =   0.00;
+                                    }
+                                }
+                                else if( $current_month >= 7 && $current_month <= 9 )
+                                {
+                                    if ( $total_month_is_unpaid > 9 )
+                                    {
+                                        /* Formula
+                                         * y = T - xi
+                                         *
+                                         * y = Value to be carried to previous year 
+                                         * T = Total outstanding value excluding current month bill
+                                         * x = Current rental charge including Tipping fee
+                                         * i = total month in current year excluding current month
+                                         *  
+                                         *  
+                                        */
+
+                                        /* $new_total_outstanding == xi as mention above formula
+                                         *
+                                         * xi also equal to the amount that need to be fill in 
+                                         * the quarterly month in current year fields
+                                         * 
+                                         */
+
+                                        $new_total_outstanding  =   ( $monthly_charge * ($current_month-1) );
+                                        $current_year_1_3       =   ( $monthly_charge * 3 );
+                                        $current_year_4_6       =   ( $monthly_charge * 3 );
+                                        $current_year_7_9       =   ( $new_total_outstanding - $current_year_1_3 - $current_year_4_6 );
+                                        $current_year_10_12     =   0.00;
+
+                                        // $previous_year_outstanding == T as mention above formula
+                                        $previous_year_outstanding = $total_outstanding - $new_total_outstanding;
+
+                                        // Check if amount is exceed one year rental outstanding amount then carry to next two previous year
+                                        $previous_year_total_month_is_unpaid = $previous_year_outstanding/$monthly_charge;
+
+                                        if ( $previous_year_total_month_is_unpaid > 60)
+                                        {
+                                            $last_1_year               =   ( $monthly_charge * 12 );
+                                            $last_2_year               =   ( $monthly_charge * 12 );
+                                            $last_3_year               =   ( $monthly_charge * 12 );
+                                            $last_4_year               =   ( $monthly_charge * 12 );
+                                            $last_5_year               =   ( $monthly_charge * 12 );
+                                            $remaining_unpaid_amount   =   ( $previous_year_outstanding - $last_1_year - $last_2_year -$last_3_year - $last_4_year - $last_5_year );
+                                            $last_6_year_above         =   $remaining_unpaid_amount;
+                                        }
+                                        else if ( $previous_year_total_month_is_unpaid > 48 && $previous_year_total_month_is_unpaid <= 60)
+                                        {
+                                            $last_1_year               =   ( $monthly_charge * 12 );
+                                            $last_2_year               =   ( $monthly_charge * 12 );
+                                            $last_3_year               =   ( $monthly_charge * 12 );
+                                            $last_4_year               =   ( $monthly_charge * 12 );
+                                            $remaining_unpaid_amount   =   ( $previous_year_outstanding - $last_1_year - $last_2_year -$last_3_year - $last_4_year );
+                                            $last_5_year               =   $remaining_unpaid_amount; 
+                                            $last_6_year_above         =   0.00;
+                                        }
+                                        else if ( $previous_year_total_month_is_unpaid > 36 && $previous_year_total_month_is_unpaid <= 48)
+                                        {
+                                            $last_1_year               =   ( $monthly_charge * 12 );
+                                            $last_2_year               =   ( $monthly_charge * 12 );
+                                            $last_3_year               =   ( $monthly_charge * 12 );
+                                            $remaining_unpaid_amount   =   ( $previous_year_outstanding - $last_1_year - $last_2_year -$last_3_year );
+                                            $last_4_year               =   $remaining_unpaid_amount; 
+                                            $last_5_year               =   0.00;
+                                            $last_6_year_above         =   0.00;
+                                        }
+                                        else if ( $previous_year_total_month_is_unpaid > 24 && $previous_year_total_month_is_unpaid <= 36)
+                                        {
+                                            $last_1_year               =   ( $monthly_charge * 12 );
+                                            $last_2_year               =   ( $monthly_charge * 12 );
+                                            $remaining_unpaid_amount   =   ( $previous_year_outstanding - $last_1_year - $last_2_year );
+                                            $last_3_year               =   $remaining_unpaid_amount; 
+                                            $last_4_year               =   0.00;
+                                            $last_5_year               =   0.00;
+                                            $last_6_year_above         =   0.00;
+                                        }
+                                        else if ( $previous_year_total_month_is_unpaid > 12 && $previous_year_total_month_is_unpaid <= 24)
+                                        {
+                                            $last_1_year               =   ( $monthly_charge * 12 );
+                                            $remaining_unpaid_amount   =   ( $previous_year_outstanding - $last_1_year );
+                                            $last_2_year               =   $remaining_unpaid_amount; 
+                                            $last_3_year               =   0.00;
+                                            $last_4_year               =   0.00;
+                                            $last_5_year               =   0.00;
+                                            $last_6_year_above         =   0.00;
+                                        }
+                                        else if ( $previous_year_total_month_is_unpaid <= 12 )
+                                        {
+                                            $last_1_year        =   $previous_year_outstanding; 
+                                            $last_2_year        =   0.00;
+                                            $last_3_year        =   0.00;
+                                            $last_4_year        =   0.00;
+                                            $last_5_year        =   0.00;
+                                            $last_6_year_above  =   0.00;
+                                        }
+                                    }
+                                    else if ( $total_month_is_unpaid <= 9 )
+                                    {
+                                        if ( $total_outstanding > ( $monthly_charge * 9 ) )
+                                        {
+                                            $current_year_1_3   =   ( $monthly_charge * 3 );
+                                            $current_year_4_6   =   ( $monthly_charge * 3 );
+                                            $current_year_7_9   =   ( $monthly_charge * 3 );
+                                            $current_year_10_12 =   ( $total_outstanding - $current_year_1_3 - $current_year_4_6 - $current_year_7_9 );
+                                        }
+                                        else if ( $total_outstanding > ( $monthly_charge * 6 ) )
+                                        {
+                                            $current_year_1_3   =   ( $monthly_charge * 3 );
+                                            $current_year_4_6   =   ( $monthly_charge * 3 );
+                                            $current_year_7_9   =   ( $total_outstanding - $current_year_1_3 - $current_year_4_6 );
+                                            $current_year_10_12 =   0.00;
+                                        }
+                                        else if ( $total_outstanding > ( $monthly_charge * 3 ) )
+                                        {
+                                            $current_year_1_3   =   ( $monthly_charge * 3 );
+                                            $current_year_4_6   =   ( $total_outstanding - $current_year_1_3 );
+                                            $current_year_7_9   =   0.00;
+                                            $current_year_10_12 =   0.00;
+                                        }
+                                        else if ( $total_outstanding <= ( $monthly_charge * 3 ) )
+                                        {
+                                            $current_year_1_3   =   $total_outstanding;
+                                            $current_year_4_6   =   0.00;
+                                            $current_year_7_9   =   0.00;
+                                            $current_year_10_12 =   0.00;
+                                        }
+                                        
+                                        $last_1_year        =   0.00;
+                                        $last_2_year        =   0.00;
+                                        $last_3_year        =   0.00;
+                                        $last_4_year        =   0.00;
+                                        $last_5_year        =   0.00;
+                                        $last_6_year_above  =   0.00;
+                                    }
+                                }
+                                else if( $current_month >= 10 && $current_month <= 12 )
+                                {
+                                    if ( $total_month_is_unpaid > 12 )
+                                    {
+                                        /* Formula
+                                         * y = T - xi
+                                         *
+                                         * y = Value to be carried to previous year 
+                                         * T = Total outstanding value excluding current month bill
+                                         * x = Current rental charge including Tipping fee
+                                         * i = total month in current year excluding current month
+                                         *  
+                                         *  
+                                        */
+
+                                        /* $new_total_outstanding == xi as mention above formula
+                                         *
+                                         * xi also equal to the amount that need to be fill in 
+                                         * the quarterly month in current year fields
+                                         * 
+                                         */
+
+                                        $new_total_outstanding  =   ( $monthly_charge * ($current_month-1) );
+                                        $current_year_1_3       =   ( $monthly_charge * 3 );
+                                        $current_year_4_6       =   ( $monthly_charge * 3 );
+                                        $current_year_7_9       =   ( $monthly_charge * 3 );
+                                        $current_year_10_12     =   ( $new_total_outstanding - $current_year_1_3 - $current_year_4_6 - $current_year_7_9 );
+
+                                        // $previous_year_outstanding == T as mention above formula
+                                        $previous_year_outstanding = $total_outstanding - $new_total_outstanding;
+
+                                        // Check if amount is exceed one year rental outstanding amount then carry to next two previous year
+                                        $previous_year_total_month_is_unpaid = $previous_year_outstanding/$monthly_charge;
+
+                                        if ( $previous_year_total_month_is_unpaid > 60)
+                                        {
+                                            $last_1_year               =   ( $monthly_charge * 12 );
+                                            $last_2_year               =   ( $monthly_charge * 12 );
+                                            $last_3_year               =   ( $monthly_charge * 12 );
+                                            $last_4_year               =   ( $monthly_charge * 12 );
+                                            $last_5_year               =   ( $monthly_charge * 12 );
+                                            $remaining_unpaid_amount   =   ( $previous_year_outstanding - $last_1_year - $last_2_year -$last_3_year - $last_4_year - $last_5_year );
+                                            $last_6_year_above         =   $remaining_unpaid_amount;
+                                        }
+                                        else if ( $previous_year_total_month_is_unpaid > 48 && $previous_year_total_month_is_unpaid <= 60)
+                                        {
+                                            $last_1_year               =   ( $monthly_charge * 12 );
+                                            $last_2_year               =   ( $monthly_charge * 12 );
+                                            $last_3_year               =   ( $monthly_charge * 12 );
+                                            $last_4_year               =   ( $monthly_charge * 12 );
+                                            $remaining_unpaid_amount   =   ( $previous_year_outstanding - $last_1_year - $last_2_year -$last_3_year - $last_4_year );
+                                            $last_5_year               =   $remaining_unpaid_amount; 
+                                            $last_6_year_above         =   0.00;
+                                        }
+                                        else if ( $previous_year_total_month_is_unpaid > 36 && $previous_year_total_month_is_unpaid <= 48)
+                                        {
+                                            $last_1_year               =   ( $monthly_charge * 12 );
+                                            $last_2_year               =   ( $monthly_charge * 12 );
+                                            $last_3_year               =   ( $monthly_charge * 12 );
+                                            $remaining_unpaid_amount   =   ( $previous_year_outstanding - $last_1_year - $last_2_year -$last_3_year );
+                                            $last_4_year               =   $remaining_unpaid_amount; 
+                                            $last_5_year               =   0.00;
+                                            $last_6_year_above         =   0.00;
+                                        }
+                                        else if ( $previous_year_total_month_is_unpaid > 24 && $previous_year_total_month_is_unpaid <= 36)
+                                        {
+                                            $last_1_year               =   ( $monthly_charge * 12 );
+                                            $last_2_year               =   ( $monthly_charge * 12 );
+                                            $remaining_unpaid_amount   =   ( $previous_year_outstanding - $last_1_year - $last_2_year );
+                                            $last_3_year               =   $remaining_unpaid_amount; 
+                                            $last_4_year               =   0.00;
+                                            $last_5_year               =   0.00;
+                                            $last_6_year_above         =   0.00;
+                                        }
+                                        else if ( $previous_year_total_month_is_unpaid > 12 && $previous_year_total_month_is_unpaid <= 24)
+                                        {
+                                            $last_1_year               =   ( $monthly_charge * 12 );
+                                            $remaining_unpaid_amount   =   ( $previous_year_outstanding - $last_1_year );
+                                            $last_2_year               =   $remaining_unpaid_amount; 
+                                            $last_3_year               =   0.00;
+                                            $last_4_year               =   0.00;
+                                            $last_5_year               =   0.00;
+                                            $last_6_year_above         =   0.00;
+                                        }
+                                        else if ( $previous_year_total_month_is_unpaid <= 12 )
+                                        {
+                                            $last_1_year        =   $previous_year_outstanding; 
+                                            $last_2_year        =   0.00;
+                                            $last_3_year        =   0.00;
+                                            $last_4_year        =   0.00;
+                                            $last_5_year        =   0.00;
+                                            $last_6_year_above  =   0.00;
+                                        }
+                                    }
+                                    else if ( $total_month_is_unpaid <= 12 )
+                                    {
+                                        if ( $total_outstanding > ( $monthly_charge * 9 ) )
+                                        {
+                                            $current_year_1_3   =   ( $monthly_charge * 3 );
+                                            $current_year_4_6   =   ( $monthly_charge * 3 );
+                                            $current_year_7_9   =   ( $monthly_charge * 3 );
+                                            $current_year_10_12 =   ( $total_outstanding - $current_year_1_3 - $current_year_4_6 - $current_year_7_9 );
+                                        }
+                                        else if ( $total_outstanding > ( $monthly_charge * 6 ) )
+                                        {
+                                            $current_year_1_3   =   ( $monthly_charge * 3 );
+                                            $current_year_4_6   =   ( $monthly_charge * 3 );
+                                            $current_year_7_9   =   ( $total_outstanding - $current_year_1_3 - $current_year_4_6 );
+                                            $current_year_10_12 =   0.00;
+                                        }
+                                        else if ( $total_outstanding > ( $monthly_charge * 3 ) )
+                                        {
+                                            $current_year_1_3   =   ( $monthly_charge * 3 );
+                                            $current_year_4_6   =   ( $total_outstanding - $current_year_1_3 );
+                                            $current_year_7_9   =   0.00;
+                                            $current_year_10_12 =   0.00;
+                                        }
+                                        else if ( $total_outstanding <= ( $monthly_charge * 3 ) )
+                                        {
+                                            $current_year_1_3   =   $total_outstanding;
+                                            $current_year_4_6   =   0.00;
+                                            $current_year_7_9   =   0.00;
+                                            $current_year_10_12 =   0.00;
+                                        }
+
+                                        $last_1_year        =   0.00;
+                                        $last_2_year        =   0.00;
+                                        $last_3_year        =   0.00;
+                                        $last_4_year        =   0.00;
+                                        $last_5_year        =   0.00;
+                                        $last_6_year_above  =   0.00;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                // Kalau amaoun negative set value kepada 0
+                                $current_year_1_3   =   0.00;
+                                $current_year_4_6   =   0.00;
+                                $current_year_7_9   =   0.00;
+                                $current_year_10_12 =   0.00;
+                                $last_1_year        =   0.00;
+                                $last_2_year        =   0.00;
+                                $last_3_year        =   0.00;
+                                $last_4_year        =   0.00;
+                                $last_5_year        =   0.00;
+                                $last_6_year_above  =   0.00;
+                                $total_outstanding  =   0.00;
+                            }
+
+                            echo "<tr>";
+                            echo    '<td width="3%" style="vertical-align: middle; text-align: center;">'.$cnt.'</td>';
+                            echo    '<td width="11%" style="vertical-align: middle; text-align: left;" >'.$row['CATEGORY_NAME'].'</td>';
+                            echo    '<td width="6%" style="vertical-align: middle; text-align: left;" >'.$row['CATEGORY_CODE'].'</td>';
+                            echo    '<td width="7%" style="vertical-align: middle; text-align: right;" > '.number_format($current_year_1_3,2,'.',',').' </td>';
+                            echo    '<td width="7%" style="vertical-align: middle; text-align: right;" > '.number_format($current_year_4_6,2,'.',',').' </td>';
+                            echo    '<td width="7%" style="vertical-align: middle; text-align: right;" > '.number_format($current_year_7_9,2,'.',',').' </td>';
+                            echo    '<td width="7%" style="vertical-align: middle; text-align: right;" > '.number_format($current_year_10_12,2,'.',',').' </td>';
+                            echo    '<td width="7%" style="vertical-align: middle; text-align: right;" > '.number_format($last_1_year,2,'.',',').' </td>';
+                            echo    '<td width="7%" style="vertical-align: middle; text-align: right;" > '.number_format($last_2_year,2,'.',',').' </td>';
+                            echo    '<td width="7%" style="vertical-align: middle; text-align: right;" > '.number_format($last_3_year,2,'.',',').' </td>';
+                            echo    '<td width="7%" style="vertical-align: middle; text-align: right;" > '.number_format($last_4_year,2,'.',',').' </td>';
+                            echo    '<td width="7%" style="vertical-align: middle; text-align: right;" > '.number_format($last_5_year,2,'.',',').' </td>';
+                            echo    '<td width="7%" style="vertical-align: middle; text-align: right;" > '.number_format($last_6_year_above,2,'.',',').' </td>';
+                            echo    '<td width="10%" style="vertical-align: middle; text-align: right;" > '.number_format($total_outstanding,2,'.',',').' </td>';
+                            echo "</tr>";
+
+                            $total_current_year_1_3     =   $total_current_year_1_3 + $current_year_1_3 ;
+                            $total_current_year_4_6     =   $total_current_year_4_6 + $current_year_4_6 ;
+                            $total_current_year_7_9     =   $total_current_year_7_9 + $current_year_7_9 ;
+                            $total_current_year_10_12   =   $total_current_year_10_12 + $current_year_10_12 ;
+                            $total_last_1_year          =   $total_last_1_year + $last_1_year ;
+                            $total_last_2_year          =   $total_last_2_year + $last_2_year ;
+                            $total_last_3_year          =   $total_last_3_year + $last_3_year ;
+                            $total_last_4_year          =   $total_last_4_year + $last_4_year ;
+                            $total_last_5_year          =   $total_last_5_year + $last_5_year ;
+                            $total_last_6_year_above    =   $total_last_6_year_above + $last_6_year_above ;
+                            $sum_total_outstanding      =   $sum_total_outstanding + $total_outstanding ;
+                            $cnt = $cnt + 1;
+                        }
+                    }
+                    else
+                    {
+                        echo '      <tr><td colspan="14" class="text-center"> - Tiada data - </td></tr>';
+                    }
+
+                    echo '  
+                                    <tr>
+                                        <td colspan="3" align="right"><strong>JUMLAH (RM)</strong></td>
+                                        <td width="7%" style="vertical-align: middle; text-align: right;"> '.number_format($total_current_year_1_3,2,'.',',').' </td>
+                                        <td width="7%" style="vertical-align: middle; text-align: right;"> '.number_format($total_current_year_4_6,2,'.',',').' </td>
+                                        <td width="7%" style="vertical-align: middle; text-align: right;"> '.number_format($total_current_year_7_9,2,'.',',').' </td>
+                                        <td width="7%" style="vertical-align: middle; text-align: right;"> '.number_format($total_current_year_10_12,2,'.',',').' </td>
+                                        <td width="7%" style="vertical-align: middle; text-align: right;"> '.number_format($total_last_1_year,2,'.',',').' </td>
+                                        <td width="7%" style="vertical-align: middle; text-align: right;"> '.number_format($total_last_2_year,2,'.',',').' </td>
+                                        <td width="7%" style="vertical-align: middle; text-align: right;"> '.number_format($total_last_3_year,2,'.',',').' </td>
+                                        <td width="7%" style="vertical-align: middle; text-align: right;"> '.number_format($total_last_4_year,2,'.',',').' </td>
+                                        <td width="7%" style="vertical-align: middle; text-align: right;"> '.number_format($total_last_5_year,2,'.',',').' </td>
+                                        <td width="7%" style="vertical-align: middle; text-align: right;"> '.number_format($total_last_6_year_above,2,'.',',').' </td>
+                                        <td width="10%" style="vertical-align: middle; text-align: right;"> '.number_format($sum_total_outstanding,2,'.',',').' </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        ';
+
+                    echo "</div><br>";
+                }
+            ?>
         </div>
     </div>
 </div>

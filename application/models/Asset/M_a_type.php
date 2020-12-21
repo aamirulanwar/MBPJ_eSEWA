@@ -8,7 +8,8 @@ class M_a_type extends CI_Model
         load_library('Audit_trail_lib');
     }
 
-    function get_a_type($per_page=0,$search_segment=''){
+    function get_a_type($per_page=0,$search_segment='')
+    {
         db_select('*');
         db_from('a_type');
         db_order('type_name');
@@ -20,14 +21,16 @@ class M_a_type extends CI_Model
         endif;
     }
 
-    function count_a_type(){
+    function count_a_type()
+    {
         db_select('*');
         db_from('a_type');
         db_where('soft_delete',SOFT_DELETE_FALSE);
         return db_count_results();
     }
 
-    function insert_a_type($data_insert){
+    function insert_a_type($data_insert)
+    {
         db_insert('a_type',$data_insert);
         $user_id = get_insert_id('a_type');
 
@@ -41,7 +44,8 @@ class M_a_type extends CI_Model
         return $user_id;
     }
 
-    function get_a_type_details($id){
+    function get_a_type_details($id)
+    {
         db_select('*');
         db_from('a_type');
         db_where('type_id',$id);
@@ -85,7 +89,8 @@ class M_a_type extends CI_Model
           }
       }
 
-    function get_a_type_active(){
+    function get_a_type_active()
+    {
         db_select('*');
         db_from('a_type');
         db_where('active',STATUS_ACTIVE);
@@ -97,10 +102,11 @@ class M_a_type extends CI_Model
         endif;
     }
 
-    function get_a_type_application(){
+    function get_a_type_application()
+    {
         db_select('*');
         db_from('a_type');
-//        db_where('form_type != 0');
+        // db_where('form_type != 0');
         db_where('active',STATUS_ACTIVE);
         db_where('soft_delete',SOFT_DELETE_FALSE);
         db_order('form_type, type_name','desc');
