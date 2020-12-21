@@ -71,7 +71,7 @@
     <div class="card-body">
         <div class="table-responsive">
             <div class="pull-right">
-                <button onclick="window.print()" class="btn btn-warning btn-sm pull-right">Print</button>
+                <button onclick="window.print()" class="btn btn-warning btn-sm pull-right">Cetak</button>
             </div>
             <br>
             <br>

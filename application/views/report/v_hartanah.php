@@ -51,7 +51,7 @@ checking_validation(validation_errors());
         </div>
             <div class="card-body">
                 <div class="pull-right">
-                    <a class="btn btn-warning btn-sm pull-right" href="/report/print_hartanah?year=<?=$data_search["year"]?>" target="_blank">Print</a>
+                    <a class="btn btn-warning btn-sm pull-right" href="/report/print_hartanah?year=<?=$data_search["year"]?>" target="_blank">Cetak</a>
                 </div>
                         <table class="table table-hover table-bordered table-aging" style="margin-bottom: 0px;">
                             <tr>

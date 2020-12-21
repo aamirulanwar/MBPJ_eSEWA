@@ -43,6 +43,12 @@
                     <td colspan="2" style="text-align: center;font-weight: bold;font-size: 30px">
                         <span>LAPORAN PERJANJIAN SEWA HARTANAH</span></br>
                         <span>JANUARI - DISEMBER</span></br>
+                        <?php
+                        $year = $filter_session["year"];
+                        // var_dump($data_search);
+                        // die();
+                        echo "<span>JANUARI - DISEMBER ".$year."</span></br>";
+                        ?>
                         <span>HARTANAH</span>
                     </td>
                 </tr>
