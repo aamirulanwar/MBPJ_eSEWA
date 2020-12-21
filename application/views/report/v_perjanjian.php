@@ -76,7 +76,7 @@ checking_validation(validation_errors());
     </div>
     <div class="card-body">
         <div class="card-text pull-right">
-            <button onclick="print_report_perjanjian_kutipan()" class="btn btn-warning btn-sm pull-right">Print</button>
+            <button onclick="print_report_perjanjian_kutipan()" class="btn btn-warning btn-sm pull-right">Cetak</button>
             </br>
         </div>
         </br>

@@ -610,7 +610,7 @@
                         <?php if($this->auth->access_view($this->curuser,array(8012))):?>
                         <li class="nav-item">
                             <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('hartanah'))?>" href="/report/hartanah">
-                                <i class="nav-icon fa fa-circle fa-sm"></i> Laporan Perjanjian Sewa Hartanah</a>
+                                <i class="nav-icon fa fa-circle fa-sm"></i> Laporan Perjanjian Sewaan Hartanah</a>
                         </li>
                         <?php endif;?>
                         <?php if($this->auth->access_view($this->curuser,array(8013))):?>

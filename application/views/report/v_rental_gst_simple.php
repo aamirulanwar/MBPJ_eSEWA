@@ -78,7 +78,7 @@
                 if($data_gst):
                     ?>
                     <div class="pull-right">
-                        <button onclick="print_report()" class="btn btn-warning btn-sm pull-right">Print</button>
+                        <button onclick="print_report()" class="btn btn-warning btn-sm pull-right">Cetak</button>
                     </div>
                     <br>
                     <br>

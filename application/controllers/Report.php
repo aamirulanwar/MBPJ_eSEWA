@@ -1556,7 +1556,9 @@ class Report extends CI_Controller
             if(!empty($filter_session)):
                 $data_search = $filter_session;
             else:
-                $data_search['year']  = '';
+                $post["year"] = '2020';
+                $data_search['year']  = '2020';
+                $this->session->set_userdata('arr_filter_hartanah',$post);
             endif;
         endif;
         // pre($data_search);
@@ -1587,7 +1589,9 @@ class Report extends CI_Controller
             $year = date('Y');
         }
 
+        $filter_session = get_session('arr_filter_hartanah');
         $data_search["year"] = $year;
+        $data['filter_session']  = $filter_session;
         $data["hartanah_record"] = $this->m_acc_account->sewaan_hartanah($data_search);
         $this->load->view('/report/v_print_report_hartanah',$data);
     }
@@ -1595,9 +1599,9 @@ class Report extends CI_Controller
     function papaniklan(){
         $this->auth->restrict_access($this->curuser,array(8013));
         $data['link_1']     = 'Laporan';
-        $data['link_2']     = 'Perjanjian Sewa';
+        $data['link_2']     = 'Perjanjian Sewa Papan Iklan';
         $data['link_3']     = '';
-        $data['pagetitle']  = 'Laporan Perjanjian Sewa';
+        $data['pagetitle']  = 'Laporan Perjanjian Sewa Papan Iklan';
 
         $search_segment = uri_segment(3);
 

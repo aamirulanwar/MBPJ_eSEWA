@@ -53,7 +53,7 @@ checking_validation(validation_errors());
         </div>
             <div class="card-body">
                 <div class="pull-right">
-                    <button onclick="print_report_hasil()" class="btn btn-warning btn-sm pull-right">Print</button>
+                    <button onclick="print_report_hasil()" class="btn btn-warning btn-sm pull-right">Cetak</button>
                 </div>
                 <table class="table table-hover table-bordered table-aging" style="margin-bottom: 0px;">
                     <tr>
