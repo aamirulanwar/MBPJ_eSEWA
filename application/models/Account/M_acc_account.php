@@ -64,6 +64,11 @@ class M_acc_account extends CI_Model
             db_where('CATEGORY_ID',$data_search['CATEGORY_ID']);
         }
 
+        if ( isset($data_search["TYPE_ID"]) && $data_search["TYPE_ID"] != "" )
+        {
+            db_where('TYPE_ID',$data_search['TYPE_ID']);
+        }
+
         $sql = db_get('');
 
         if($sql)
@@ -703,6 +708,7 @@ class M_acc_account extends CI_Model
             return $sql->result_array();
         endif;
     }
+
     public function iso($data_search){
         db_select ('COUNT(A.ACCOUNT_ID) as bil');
         db_select ('A.TYPE_ID');

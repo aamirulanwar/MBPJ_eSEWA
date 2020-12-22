@@ -1,3 +1,38 @@
+<style>
+    .table-aging{
+        font-size: 11px !important;
+    }
+
+    th{
+        text-align: center;
+    }
+    .table th, .table td{
+        padding: 1px !important;
+        font-size: 11px !important;
+    }
+    ::-webkit-scrollbar {
+        width: 5px;
+        height: 10px;
+        border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: rgba(90, 90, 90,0.1);
+    }
+    ::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.2);
+    }
+    @media print{
+        @page {
+            size: landscape;
+            margin: 0.2in;
+        }
+        .table th, .table td{
+            padding: 1px !important;
+            font-size: 9px !important;
+        }
+    }
+</style>
 <form method="post" action="/report/highest_overdue/<?php echo uri_segment(3)?>">
     <div class="card card-accent-info">
         <div class="card-body">
@@ -6,7 +41,7 @@
                 <div class="col-sm-4">
                     <label class="col-form-label">Jenis harta</label>
                     <select onchange="get_category_by_type('')" name="type_id" id="type_id" class="form-control">
-                        <option value=""> - Semua - </option>
+                        <option value="-1"> - Semua - </option>
                         <?php
                         if($data_type):
                             foreach ($data_type as $row):
@@ -19,48 +54,19 @@
                 <div class="col-sm-4">
                     <label class="col-form-label">Kod kategori</label>
                     <select name="category_id" id="category_id" class="form-control js-example-basic-single">
-                        <option value=""> - Semua - </option>
+                        <option value="-1"> - Semua - </option>
                     </select>
                 </div>
                 <div class="col-sm-4">
                     <label class="col-form-label">Status akaun</label>
-                    <select name="acc_status" class="form-control">
-                        <option value=""> - Semua - </option>
+                    <select id="acc_status" name="acc_status" class="form-control">
+                        <option value="-1"> - Semua - </option>
                         <?php
                         echo option_value(STATUS_ACCOUNT_ACTIVE,'Aktif','acc_status',search_default($data_search,'acc_status'));
                         echo option_value(STATUS_ACCOUNT_NONACTIVE,'Tidak aktif','acc_status',search_default($data_search,'acc_status'));
                         ?>
                     </select>
                 </div>
-<!--                <div class="col-sm-4">-->
-<!--                    <label class="col-form-label">Susun mengikut</label>-->
-<!--                    <select name="order_by" class="form-control">-->
-<!--                        --><?php
-//                        echo option_value('1','Tunggakan tertinggi','order_by',search_default($data_search,'order_by'));
-//                        echo option_value('2','Senarai tunggakan','order_by',search_default($data_search,'order_by'));
-//                        ?>
-<!--                    </select>-->
-<!--                </div>-->
-            </div>
-<!--            <div class="form-group row">-->
-<!--                <div class="col-sm-4">-->
-<!--                    <label class="col-form-label">Tarikh mula</label>-->
-<!--                    <input type="input" name="date_start" class="form-control date_class" placeholder="Tarikh mula" value="--><?php //echo set_value('date_start',$data_search['date_start'])?><!--">-->
-<!--                </div>-->
-<!--                <div class="col-sm-4">-->
-<!--                    <label class="col-form-label">Tarikh tamat</label>-->
-<!--                    <input type="input" name="date_end" class="form-control date_class" placeholder="Tarikh tamat" value="--><?php //echo set_value('date_end',$data_search['date_end'])?><!--">-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="form-group row">-->
-<!--                <div class="col-sm-4">-->
-<!--                    <input type="input" name="date_start" class="form-control date_class" placeholder="Tarikh mula" value="--><?php //echo set_value('date_start',$data_search['date_start'])?><!--">-->
-<!--                </div>-->
-<!--                <label class="col-sm-2 col-form-label text-center"> hingga </label>-->
-<!--                <div class="col-sm-4">-->
-<!--                    <input type="input" name="date_end" class="form-control date_class" placeholder="Tarikh tamat" value="--><?php //echo set_value('date_end',$data_search['date_end'])?><!--">-->
-<!--                </div>-->
-<!--            </div>-->
         </div>
         <div class="card-footer">
             <div class="col-sm-12">
@@ -72,100 +78,130 @@
 <div class="card card-accent-info">
     <div class="card-body">
         <div class="table-responsive">
-            <?php
-//                pre($data_gst);
-                $i = 0;
-                $all_rental_charge      = 0;
-                $all_tahun_lepas        = 0;
-                $all_tahun_semasa       = 0;
-                $all_jumlah_tunggakan   = 0;
-                if($data_report):
-                    ?>
-                    <div class="pull-right">
-                        <button onclick="print_report()" class="btn btn-warning btn-sm pull-right">Cetak</button>
-                    </div>
-                    <br>
-                    <br>
+            <div class="pull-right">
+                <?php 
+                    if ( $data_search["search_segment"] == "two")
+                    {
+                        echo '<a class="btn btn-warning btn-sm pull-right" href="/report/print_highest_overdue/two" target="_blank">Cetak</a>';
+                    }
+                    else if ( $data_search["search_segment"] == "")
+                    {
+                        echo '<a class="btn btn-warning btn-sm pull-right" href="/report/print_highest_overdue" target="_blank">Cetak</a>';
+                    }
+                    
+                ?>
+            </div>
+            <br>
+            <br>                    
+            <table class="table table-hover table-bordered" style="margin-bottom: 0px;">
+                <thead>
+                    <tr>
+                        <th width="04%" style="text-align: center; vertical-align: top; " >Bil</th>
+                        <th width="06%" style="text-align: center; vertical-align: top; " >Jenis Harta</th>
+                        <th width="08%" style="text-align: center; vertical-align: top; " >No Akaun</th>
+                        <th width="10%" style="text-align: center; vertical-align: top; " >Nama</th>
+                        <th width="06%" style="text-align: center; vertical-align: top; " >Kod Harta</th>
+                        <th width="08%" style="text-align: center; vertical-align: top; " >Status Akaun</th>
+                        <th width="14%" style="text-align: center; vertical-align: top; " >Alamat Perniagaan Harta</th>
+                        <th width="11%" style="text-align: center; vertical-align: top; " >Kadar Sewaan Bulanan (RM)</th>
+                        <th width="11%" style="text-align: center; vertical-align: top; " >Tunggakan Sewaan (RM)</th>
+                        <th width="11%" style="text-align: center; vertical-align: top; " >Tunggakan Sewaan Tahun Semasa (RM)</th>
+                        <th width="11%" style="text-align: center; vertical-align: top; " >Jumlah Keseluruhan Tunggakan (RM)</th>
+                    </tr>
+                </thead>
+            </table>
+            <div class="table-own" style="max-height: 300px; overflow: overlay">
+                <table class="table table-hover table-bordered">
+                    <tbody>
                     <?php
-                    echo '<table class="table table-hover table-bordered table-scroll data-print" style="font-size: 9px;">';
-                    echo '<thead>';
-                    echo '<tr>';
-                    echo '<th width="4%">Bil</th>';
-                    echo '<th width="6%">Jenis Harta</th>';
-                    echo '<th width="8%">No Akaun</th>';
-                    echo '<th width="9%">Nama</th>';
-                    echo '<th width="5%">Kod Harta</th>';
-                    echo '<th width="10%">Alamat Perniagaan Harta</th>';
-                    echo '<th width="9%">Tarikh Mula</th>';
-                    echo '<th width="9%">Tarikh Akhir</th>';
-                    echo '<th width="10%">Kadar Sewaan Bulanan (RM)</th>';
-                    echo '<th width="10%">Tunggakan Sewaan (RM)</th>';
-                    echo '<th width="10%">Tunggakan Sewaan Tahun Semasa (RM)</th>';
-                    echo '<th width="10%">Jumlah Keseluruhan Tunggakan (RM)</th>';
-                    echo '</tr>';
-                    echo '</thead>';
-                    echo '</body>';
-                    foreach ($data_report as $row):
-                        $i = $i+1;
-                        echo '<tr>';
-                        echo '<td width="4%">'.$i.'</td>';
-                        echo '<td width="6%">'.$row['account_details']['TYPE_NAME'].'</td>';
-                        echo '<td width="8%">'.$row['account_details']['ACCOUNT_NUMBER'].'<br>';
-                            get_status_active($row['account_details']['STATUS_ACC']);
-                        echo '</td>';
-                        echo '<td width="9%">'.$row['account_details']['NAME'].'</td>';
-                        echo '<td width="5%">'.$row['account_details']['CATEGORY_CODE'].'</td>';
-                        echo '<td width="10%">'.$row['account_details']['ASSET_ADD'].'</td>';
-                        $date_start = '-';
-                        $date_end   = '-';
-                        if($row['account_details']['FIRST_DATE_START']):
-                            $date_start = date_display($row['account_details']['FIRST_DATE_START']);
-                        endif;
-                        if($row['account_details']['DATE_END']):
-                            $date_end   = date_display($row['account_details']['DATE_END']);
-                        endif;
-                        echo '<td width="9%">'.$date_start.'</td>';
-                        echo '<td width="9%">'.$date_end.'</td>';
-                        echo '<td width="10%" style="text-align: right">'.num($row['account_details']['RENTAL_CHARGE'],3).'</td>';
-                        echo '<td width="10%" style="text-align: right">'.num($row['TAHUN_LEPAS'],3).'</td>';
-                        echo '<td width="10%" style="text-align: right">'.num($row['TAHUN_SEMASA'],3).'</td>';
-                        echo '<td width="10%" style="text-align: right">'.num($row['JUMLAH_TUNGGAKAN'],3).'</td>';
-                        echo '</tr>';
+                        $i = 0;
+                        $all_rental_charge     = 0.00;
+                        $all_tahun_lepas       = 0.00;
+                        $all_tahun_semasa      = 0.00;
+                        $all_jumlah_tunggakan  = 0.00;
 
-                        $all_rental_charge      += $row['account_details']['RENTAL_CHARGE'];
-                        $all_tahun_lepas        += $row['TAHUN_LEPAS'];
-                        $all_tahun_semasa       += $row['TAHUN_SEMASA'];
-                        $all_jumlah_tunggakan   += $row['JUMLAH_TUNGGAKAN'];
-                    endforeach;
-                    echo '</tbody>';
-                    echo '</table>';
+                        if ( count($data_report) > 0 )
+                        {
+                            foreach ($data_report as $row)
+                            {
+                                $i = $i+1;
 
-                    echo '<table class="table table-hover table-bordered">';
-                    echo '<thead>';
-                    echo '<tr>';
-                    echo '<th class="text-center">Bil Akaun</th>';
-                    echo '<th class="text-right">Jumlah Kadar Sewaan Bulanan</th>';
-                    echo '<th class="text-right">Jumlah Tunggakan Sewaan (RM)</th>';
-                    echo '<th class="text-right">Jumlah Tunggakan Sewaan Tahun Semasa (RM)</th>';
-                    echo '<th class="text-right">Jumlah Keseluruhan Tunggakan (RM)</th>';
-                    echo '</tr>';
-                    echo '</thead>';
-                    echo '<tbody>';
-                    echo '<tr>';
-                    echo '<td class="text-center">'.$i.'</td>';
-                    echo '<td class="text-right">'.num($all_rental_charge,3).'</td>';
-                    echo '<td class="text-right">'.num($all_tahun_lepas,3).'</td>';
-                    echo '<td class="text-right">'.num($all_tahun_semasa,3).'</td>';
-                    echo '<td class="text-right">'.num($all_jumlah_tunggakan,3).'</td>';
-                    echo '</tr>';
-                    echo '</tbody>';
-                    echo '</table>';
-                else:
-                    if($_POST):
-                        echo '<div class="text-center"> - Tiada data - </div>';
-                    endif;
-                endif;
-            ?>
+
+                                if( $row['ASSET_ADD'] != "" && $row['ASSET_NAME'] != "" )
+                                {
+                                    $asset_address = $row['ASSET_NAME'].'<br>'.$row['CATEGORY_NAME'].'<br>'.$row['ADDRESS'].'<br>';
+                                }
+                                else
+                                {
+                                    $asset_address = $row['ASSET_ADD'].'<br>'.$row['CATEGORY_NAME'].'<br>'.$row['ADDRESS'].'<br>';
+                                }
+
+                                $monthly_charge = floatval($row["RENTAL_CHARGE"]) + floatval($row["WASTE_MANAGEMENT_CHARGE"]);
+                                $total_outstanding_amount = ( floatval($row["CURRENT_BILLED_AMOUNT"]) + floatval($row["OUTSTANDING_AMOUNT"]) ) - ( floatval($row["PAY_CURRENT_BILLED_AMOUNT"]) + floatval($row["PAY_OUTSTANDING_AMOUNT"]) );
+
+                                if ( $total_outstanding_amount > 0 )
+                                {
+                                    $total_current_year_outstanding_charge = floatval($row["CURRENT_BILLED_AMOUNT"]) - floatval($row["PAY_CURRENT_BILLED_AMOUNT"]);
+                                    $previous_year_outstanding_charge = floatval($row["OUTSTANDING_AMOUNT"]) - floatval($row["PAY_OUTSTANDING_AMOUNT"]);
+                                }
+                                else
+                                {
+                                    $total_outstanding_amount = 0.00;
+                                    $total_current_year_outstanding_charge = 0.00;
+                                    $previous_year_outstanding_charge = 0.00;
+                                }
+                                
+
+                                echo '<tr>';
+                                echo '  <td width="04%" style="text-align: center; vertical-align: middle ">'.$i.'</td>';
+                                echo '  <td width="06%" style="text-align: center; vertical-align: middle ">'.$row['TYPE_NAME'].'</td>';
+                                echo '  <td width="08%" style="text-align: center; vertical-align: middle ">'.$row['ACCOUNT_NUMBER'].'</td>';
+                                echo '  <td width="10%" style="text-align: center; vertical-align: middle ">'.$row['NAME'].'</td>';
+                                echo '  <td width="06%" style="text-align: center; vertical-align: middle ">'.$row['CATEGORY_CODE'].'</td>';
+                                echo '  <td width="08%" style="text-align: center; vertical-align: middle ">'.($row['STATUS_ACC'] == "1" ? "Aktif" : "Tidak Aktif").'</td>';
+                                echo '  <td width="14%" style="text-align: center; vertical-align: middle ">'.$asset_address.'</td>';
+                                echo '  <td width="11%" style="text-align: right; vertical-align: middle ">'.num($monthly_charge,3).'</td>';
+                                echo '  <td width="11%" style="text-align: right; vertical-align: middle ">'.num($previous_year_outstanding_charge,3).'</td>';
+                                echo '  <td width="11%" style="text-align: right; vertical-align: middle ">'.num($total_current_year_outstanding_charge,3).'</td>';
+                                echo '  <td width="11%" style="text-align: right; vertical-align: middle ">'.num($total_outstanding_amount,3).'</td>';
+                                echo '</tr>';
+
+                                $all_rental_charge     = $all_rental_charge + $monthly_charge;
+                                $all_tahun_lepas       = $all_tahun_lepas + $previous_year_outstanding_charge;
+                                $all_tahun_semasa      = $all_tahun_semasa + $total_current_year_outstanding_charge;
+                                $all_jumlah_tunggakan  = $all_jumlah_tunggakan + $total_outstanding_amount;
+                            }
+                        }
+                        else
+                        {
+                            echo '<tr><td colspan="11" style="text-align: center; font-size: 11pt;"> - Tiada data - </td></tr>';
+                        }
+                    ?>
+                    </tbody>
+                </table>
+            </div>
+            <br>
+            <table class="table table-hover table-bordered">
+                <thead>
+                    <tr>
+                        <th class="text-center">Bil Akaun</th>
+                        <th class="text-right">Jumlah Kadar Sewaan Bulanan</th>
+                        <th class="text-right">Jumlah Tunggakan Sewaan (RM)</th>
+                        <th class="text-right">Jumlah Tunggakan Sewaan Tahun Semasa (RM)</th>
+                        <th class="text-right">Jumlah Keseluruhan Tunggakan (RM)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="text-center"> <?=$i?> </td>
+                        <td class="text-right"> <?=num($all_rental_charge,3)?>      </td>
+                        <td class="text-right"> <?=num($all_tahun_lepas,3)?>        </td>
+                        <td class="text-right"> <?=num($all_tahun_semasa,3)?>       </td>
+                        <td class="text-right"> <?=num($all_jumlah_tunggakan,3)?>   </td>
+                    </tr>
+                </tbody>
+            </table>
+                
         </div>
     </div>
 </div>

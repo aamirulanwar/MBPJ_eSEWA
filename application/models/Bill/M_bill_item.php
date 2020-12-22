@@ -1490,4 +1490,104 @@ class M_bill_item extends CI_Model
             return array();
         }
     }
+
+    function getLaporanTunggakan( $data_search=array() )
+    {
+        $customWhere1 = "";
+        
+
+        if ( isset( $data_search["account_id"] ) && $data_search["account_id"] != "" )
+        {
+            $customWhere1 = $customWhere1." and acc_account.account_id = ".db_escape($data_search["account_id"] )." ";
+        }
+
+        if ( isset( $data_search["acc_status"] ) && $data_search["acc_status"] != "-1" )
+        {
+            $customWhere1 = $customWhere1." and acc_account.status_acc = ".db_escape($data_search["acc_status"] )." ";
+        }
+
+        if ( isset( $data_search["category_id"] ) && $data_search["category_id"] != "-1" )
+        {
+            $customWhere1 = $customWhere1." and acc_account.category_id = ".db_escape($data_search["category_id"] )." ";
+        }
+
+        if ( isset( $data_search["type_id"] ) && $data_search["type_id"] != "-1" )
+        {
+            $customWhere1 = $customWhere1." and acc_account.type_id = ".db_escape($data_search["type_id"] )." ";
+        }
+
+        if ( isset( $data_search["search_segment"] ) && $data_search["search_segment"] != "two" || $data_search["search_segment"] == null)
+        {
+            $orderBy = "order by SUM_COUNTS desc";
+        }
+        else if ( isset( $data_search["search_segment"] ) && $data_search["search_segment"] == "two" )
+        {
+            $orderBy = " order by type_id,category_code,account_id asc ";
+        }
+
+        $sql = " 
+                    select 
+                        customTable.*,
+                        ( ( current_billed_amount + outstanding_amount ) - ( pay_current_billed_amount + pay_outstanding_amount ) ) AS SUM_COUNTS 
+                    from
+                    (
+                        select 
+                        acc_account.account_id,
+                        acc_account.ACCOUNT_NUMBER,
+                        acc_account.STATUS_ACC,
+                        nvl(acc_account.rental_charge,0) as rental_charge,
+                        nvl(acc_account.waste_management_charge,0) as waste_management_charge,
+                        nvl((
+                          select sum(b_item.amount) from b_item, b_master
+                          where b_item.bill_id = b_master.bill_id and b_item.account_id = acc_account.account_id and b_master.bill_year = 2020 and substr(b_item.tr_code_old,1,2) = '11'
+                          group by substr(b_item.tr_code_old,1,2)
+                        ),0) as current_billed_amount,
+                        nvl((
+                          select sum(b_item.amount) from b_item, b_master
+                          where b_item.bill_id = b_master.bill_id and b_item.account_id = acc_account.account_id and b_master.bill_year = 2020 and substr(b_item.tr_code_old,1,2) = '12'
+                          group by substr(b_item.tr_code_old,1,2)
+                        ),0) as outstanding_amount,
+                        nvl((
+                          select sum(b_item.amount) from b_item, b_master
+                          where b_item.bill_id = b_master.bill_id and b_item.account_id = acc_account.account_id and b_master.bill_year = 2020 and substr(b_item.tr_code_old,1,2) = '21'
+                          group by substr(b_item.tr_code_old,1,2)
+                        ),0) as pay_current_billed_amount,
+                        nvl((
+                          select sum(b_item.amount) from b_item, b_master
+                          where b_item.bill_id = b_master.bill_id and b_item.account_id = acc_account.account_id and b_master.bill_year = 2020 and substr(b_item.tr_code_old,1,2) = '22'
+                          group by substr(b_item.tr_code_old,1,2)
+                        ),0) as pay_outstanding_amount,
+                        acc_account.type_id,
+                        a_type.type_name,
+                        acc_account.asset_id,
+                        a_asset.asset_name,
+                        a_asset.asset_add,
+                        acc_account.category_id,
+                        a_category.category_code,
+                        a_category.category_name,
+                        a_category.address,
+                        acc_account.user_id,
+                        acc_user.name
+                        from acc_account, a_asset, a_type, a_category, acc_user
+                        where
+                        acc_account.type_id = a_type.type_id and 
+                        acc_account.asset_id = a_asset.asset_id and 
+                        acc_account.category_id = a_category.category_id and 
+                        acc_account.user_id = acc_user.user_id
+                        ".$customWhere1." 
+                    ) customTable 
+                    ".$orderBy." 
+                ";
+
+        $result = db_query( $sql );
+
+        if($result)
+        {
+            return $result->result_array('');
+        }
+        else
+        {
+            return array();
+        }
+    }
 }

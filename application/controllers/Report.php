@@ -46,6 +46,7 @@ class Report extends CI_Controller
             'gst_rental_simple',
             'code_gl',
             'highest_overdue',
+            'print_highest_overdue',
             'record_transaction',
             'print_all_record_transaction',
             'report_dashboard',
@@ -668,8 +669,10 @@ class Report extends CI_Controller
         templates('/report/v_code_gl',$data);
     }
 
-    function highest_overdue(){
+    function highest_overdue()
+    {
         $this->auth->restrict_access($this->curuser,array(8006));
+
         $data['link_1']     = 'Laporan';
         $data['link_2']     = (uri_segment(3)=='two')?'Tunggakan Sewaan':'Tunggakan Sewaan Tertinggi';
         $data['link_3']     = '';
@@ -679,49 +682,98 @@ class Report extends CI_Controller
 
         $post           = $this->input->post();
         $filter_session = get_session('arr_filter_code_highest_overdue');
-        if(!empty($post)):
+
+        if( !empty($post) )
+        {
+            if ( $post["category_id"] == "" )
+            {
+                $post["category_id"] = "-1";
+            }
+            $post["search_segment"] = ( $search_segment == null ? "" : $search_segment );
             $this->session->set_userdata('arr_filter_code_highest_overdue',$post);
             $data_search = $post;
-        else:
-            if(!empty($filter_session)):
+
+        }
+        else
+        {
+            if(!empty($filter_session))
+            {
+                if ( $filter_session["category_id"] == "" )
+                {
+                    $filter_session["category_id"] = "-1";
+                }
+                $filter_session["search_segment"] = ( $search_segment == null ? "" : $search_segment );
                 $data_search = $filter_session;
-            else:
-                // $data_search['date_start']  = date_display(timenow(),'d M Y');
-                // $data_search['date_end']    = '';
-                $data_search['type_id']     = '';
-                $data_search['category_id'] = '';
-                $data_search['acc_status']  = '';
-            endif;
-        endif;
+            }
+            else
+            {
+                $data_search['type_id']     = '-1';
+                $data_search['category_id'] = '-1';
+                $data_search['acc_status']  = '-1';
+                $data_search["search_segment"] = ( $search_segment == null ? "" : $search_segment );
+            }
+        }
+
+        if($_POST)
+        {
+            $data_report = $this->m_bill_item->getLaporanTunggakan($data_search);
+            
+            $data['data_report']    = $data_report;
+            $data['data_search']    = $data_search;
+        }
+        else
+        {
+            $data['data_report']    = array();
+            $data['data_search']    = $data_search;
+        }
+
         $data['data_type']  = $this->m_type->get_a_type();
-        $new_data_report    = array();
-
-        if(uri_segment(3)=='two'):
-            $data_search['order_by']    = '2';
-        else:
-            $data_search['order_by']    = '1';
-        endif;
-
-        if($_POST):
-            $data_report = $this->m_bill_item->report_highest_overdue($data_search);
-            if($data_report):
-                foreach ($data_report as $row):
-                    $get_data_account = $this->m_acc_account->get_account_details($row['ACCOUNT_ID']);
-                    $row['account_details'] = $get_data_account;
-                    $new_data_report[] = $row;
-                endforeach;
-            endif;
-            //     echo last_query();
-            // pre($new_data_report);
-            // exit;
-            $data['data_report']    = $new_data_report;
-            $data['data_search']    = $data_search;
-        else:
-            $data['data_report']       = array();
-            $data['data_search']    = $data_search;
-        endif;
 
         templates('/report/v_highest_overdue',$data);
+    }
+
+    function print_highest_overdue()
+    {
+        $data_search = get_session('arr_filter_code_highest_overdue');
+        $search_segment = uri_segment(3);
+        $data_search["search_segment"] = ( $search_segment == null ? "" : $search_segment );
+
+
+        if ($data_search["type_id"] == -1)
+        {
+            $data_search["type_name"] = "Semua";
+        }
+        else if ( $data_search["type_id"] > 0 )
+        {
+            $data_search["type_name"] = $this->m_type->get_a_type_details($data_search["type_id"])["TYPE_NAME"];
+        }
+
+        if ($data_search["category_id"] == -1)
+        {
+            $data_search["category_name"] = "Semua";
+        }
+        else if ($data_search["category_id"] > 0 )
+        {
+            $data_search["category_name"] = $this->m_category->get_a_category_details($data_search["category_id"])["CATEGORY_NAME"];
+        }
+
+        if ($data_search["acc_status"] == -1)
+        {
+            $data_search["status_type"] = "Semua";
+        }
+        else if ($data_search["acc_status"] == "1")
+        {
+            $data_search["status_type"] = "Aktif";
+        }
+        else if ($data_search["acc_status"] == "2")
+        {
+            $data_search["status_type"] = "Tidak Aktif";
+        }
+
+        $data_report = $this->m_bill_item->getLaporanTunggakan($data_search);            
+        $data['data_report']    = $data_report;
+        $data['data_search']    = $data_search;
+        $this->load->view('/report/v_print_highest_overdue',$data);
     }
 
     function record_transaction()
