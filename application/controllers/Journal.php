@@ -384,10 +384,22 @@ class Journal extends CI_Controller
 
                 // Please ensure that the result only return one row only. 
                 // Anymore than 1 then this function will return error and need to further check.
-                // All transaction under R05 must be hidden from all view
+                // All transaction under R05 must be hidden from all view [Obsolete : Request changes by Pn Normaslina during FAT 3 on 14/12/2020]
+                // All transaction under R05 must be shown but add its own pair to cancel the amount by add new record with negative existing amount
+
                 $item_id = $billItem[0]["ITEM_ID"];
-                $bill_item_update["DISPLAY_STATUS"] = "X";
-                $this->m_bill_item->update_bill_item($item_id,$bill_item_update);
+
+                $bill_item_update                   =   $billItem[0];
+                $bill_item_update["DT_ADDED"]       =   $bill_item_update["ORIGINAL_DT_ADDED"];
+                $bill_item_update["AMOUNT"]         =   $billItem[0]["AMOUNT"] * -1;
+                $bill_item_update["B_JOURNAL_ID"]   =   $b_journal_id;
+                $bill_item_update["BILL_CATEGORY"]  =   'J';
+                // $bill_item_update["DISPLAY_STATUS"] = "X";
+                // $this->m_bill_item->update_bill_item($item_id,$bill_item_update);
+
+                unset( $bill_item_update["ORIGINAL_DT_ADDED"] );  // Remove custom selected column but not exist in b_item
+                unset( $bill_item_update["ITEM_ID"] );            // Remove because item_id will be auto generated
+                $this->m_bill_item->insert_bill_item($bill_item_update);
 
                 $bill_item_insert["DISPLAY_STATUS"] = "Y";
                 $bill_item_insert["ACCOUNT_ID"]     = $journal_transfer_id;

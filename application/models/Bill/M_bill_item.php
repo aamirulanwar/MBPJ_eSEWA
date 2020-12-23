@@ -625,7 +625,7 @@ class M_bill_item extends CI_Model
         db_select('m.BILL_CATEGORY as master_bill_category');
         db_select('i.AMOUNT');
         db_select('m.BILL_NUMBER');
-        db_select(" case when i.BILL_CATEGORY = 'J' then (select bill_number from b_journal_temp where id = i.b_journal_id) else m.BILL_NUMBER end as reference_no");
+        db_select(" case when i.BILL_CATEGORY = 'J' and i.b_journal_id is not null then (select bill_number from b_journal_temp where id = i.b_journal_id) else m.BILL_NUMBER end as reference_no");
         db_select("to_char(i.DT_ADDED,'dd/mm/yyyy') as TKH_BIL");
         db_from('b_item i');
         db_join('b_master m','m.bill_id = i.bill_id');
