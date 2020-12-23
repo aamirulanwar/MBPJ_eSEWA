@@ -116,7 +116,7 @@ class Asset extends CI_Controller
         validation_rules('category_name','<strong>nama harta</strong>','required');
         validation_rules('address','<strong>alamat</strong>');
         validation_rules('area','<strong>area</strong>');
-//        validation_rules('total_unit','<strong>jumlah unit</strong>','integer');
+        // validation_rules('total_unit','<strong>jumlah unit</strong>','integer');
         validation_rules('current_value');
         validation_rules('value_perunit','<strong>nilai perunit</strong>','');
         validation_rules('status','<strong>status</strong>');
@@ -131,9 +131,9 @@ class Asset extends CI_Controller
             $data_update['category_code']       = strtoupper(input_data('category_code'));
             $data_update['category_name']       = ucfirst(input_data('category_name'));
             $data_update['address']             = input_data('address');
-//            $data_insert['area']                = input_data('area');
-//            $data_update['total_unit']          = input_data('total_unit');
-//            $data_update['total_available_unit']= 0;
+            // $data_insert['area']                = input_data('area');
+            // $data_update['total_unit']          = input_data('total_unit');
+            // $data_update['total_available_unit']= 0;
             $data_update['current_value']       = currencyToDouble(input_data('current_value'));
             $data_update['value_perunit']       = currencyToDouble(input_data('value_perunit'));
             $data_update['RENTAL_FEE_DEFAULT']  = currencyToDouble(input_data('value_perunit'));
@@ -161,7 +161,7 @@ class Asset extends CI_Controller
 
     function add_category(){
         $this->auth->restrict_access($this->curuser,array(3006));
-//
+
         $data['link_1']     = 'Kod Fail';
         $data['link_2']     = '<a href="/asset/category">Kod Kategori</a>';
         $data['link_3']     = 'Tambah Kod Kategori ';
@@ -171,15 +171,13 @@ class Asset extends CI_Controller
         $data['asset_location'] = $this->m_a_location->get_a_location_active();
         $data['code_trans']     = $this->m_tran_code->get_tr_code_list();
 
-//        pre($data['code_trans']);
-
         validation_rules('type','<strong>jenis harta</strong>','required');
         validation_rules('location','<strong>lokasi</strong>','required');
         validation_rules('category_code','<strong>kod harta</strong>','required');
         validation_rules('category_name','<strong>nama harta</strong>','required');
         validation_rules('address','<strong>alamat</strong>');
         validation_rules('area','<strong>area</strong>');
-//        validation_rules('total_unit','<strong>jumlah unit</strong>','integer');
+        // validation_rules('total_unit','<strong>jumlah unit</strong>','integer');
         validation_rules('current_value');
         validation_rules('value_perunit','<strong>harga sewaan</strong>','required');
         validation_rules('trans_code','<strong>kod transaksi</strong>','required');
@@ -192,8 +190,8 @@ class Asset extends CI_Controller
             $data_insert['category_code']          = strtoupper(input_data('category_code'));
             $data_insert['category_name']          = ucfirst(input_data('category_name'));
             $data_insert['address']             = input_data('address');
-//            $data_insert['area']                = input_data('area');
-//            $data_insert['total_unit']          = input_data('total_unit');
+           // $data_insert['area']                = input_data('area');
+           // $data_insert['total_unit']          = input_data('total_unit');
             $data_insert['total_available_unit']    = 0;
             $data_insert['current_value']       = currencyToDouble(input_data('current_value'));
             $data_insert['value_perunit']       = currencyToDouble(input_data('value_perunit'));
@@ -333,7 +331,7 @@ class Asset extends CI_Controller
     }
 
     function add_asset_location(){
-//        $this->auth->restrict_access($this->curuser,array(2002));
+        // $this->auth->restrict_access($this->curuser,array(2002));
 
         $data['link_1']     = 'Kod Fail';
         $data['link_2']     = '<a href="/asset/asset_location">Kawasan</a>';
@@ -491,7 +489,7 @@ class Asset extends CI_Controller
             redirect('/asset/add_asset_rental_use');
         endif;
     }
-//
+
     function edit_asset_rental_use(){
         $this->auth->restrict_access($this->curuser,array(3015));
 
@@ -657,31 +655,24 @@ class Asset extends CI_Controller
     }
 
     function delete_asset_type(){
+
         if(is_ajax()):
             $delete_id = input_data('delete_id');
-//            $check_available_user = $this->m_user->check_available_user($delete_id);
-//            if($check_available_user):
-                $data_update['soft_delete'] = SOFT_DELETE_TRUE;
-                $delete = $this->m_a_type->update_asset_type($data_update,$delete_id);
-                if($delete):
-                    set_notify('user',TEXT_DELETE_RECORD,1);
-                    echo TEXT_DELETE_RECORD;
-                else:
-                    set_notify('user',TEXT_DELETE_UNSUCCESSFUL,2);
-                    echo TEXT_DELETE_UNSUCCESSFUL;
-                endif;
-//            else:
-//                set_notify('user','Data tidak boleh dipadam kerana terdapat pengguna menggunakan kumpulan pengguna ini',2);
-//            endif;
-//            echo 1;
+            $data_update['soft_delete'] = SOFT_DELETE_TRUE;
+            $delete = $this->m_a_type->update_asset_type($data_update,$delete_id);
+            if($delete):
+                set_notify('user',TEXT_DELETE_RECORD,1);
+                echo TEXT_DELETE_RECORD;
+            else:
+                set_notify('user',TEXT_DELETE_UNSUCCESSFUL,2);
+                echo TEXT_DELETE_UNSUCCESSFUL;
+            endif;
         endif;
     }
 
     function delete_asset_tenant_type(){
         if(is_ajax()):
             $delete_id = input_data('delete_id');
-//            $check_available_user = $this->m_user->check_available_user($delete_id);
-//            if($check_available_user):
             $data_update['soft_delete'] = SOFT_DELETE_TRUE;
             $delete = $this->m_a_tenant_type->update_a_tenant_type($data_update,$delete_id);
             if($delete):
@@ -691,18 +682,12 @@ class Asset extends CI_Controller
                 set_notify('user',TEXT_DELETE_UNSUCCESSFUL,2);
                 echo TEXT_DELETE_UNSUCCESSFUL;
             endif;
-//            else:
-//                set_notify('user','Data tidak boleh dipadam kerana terdapat pengguna menggunakan kumpulan pengguna ini',2);
-//            endif;
-//            echo 1;
         endif;
     }
 
     function delete_asset_rental_use(){
         if(is_ajax()):
             $delete_id = input_data('delete_id');
-//            $check_available_user = $this->m_user->check_available_user($delete_id);
-//            if($check_available_user):
             $data_update['soft_delete'] = SOFT_DELETE_TRUE;
             $delete = $this->m_a_rental_use->update_a_rental_use($data_update,$delete_id);
             if($delete):
@@ -712,18 +697,12 @@ class Asset extends CI_Controller
                 set_notify('user',TEXT_DELETE_UNSUCCESSFUL,2);
                 echo TEXT_DELETE_UNSUCCESSFUL;
             endif;
-//            else:
-//                set_notify('user','Data tidak boleh dipadam kerana terdapat pengguna menggunakan kumpulan pengguna ini',2);
-//            endif;
-//            echo 1;
         endif;
     }
 
     function delete_asset_unit(){
         if(is_ajax()):
             $delete_id = input_data('delete_id');
-//            $check_available_user = $this->m_user->check_available_user($delete_id);
-//            if($check_available_user):
             $data_update['soft_delete'] = SOFT_DELETE_TRUE;
             $delete = $this->m_a_asset->update_a_asset($data_update,$delete_id);
             if($delete):
@@ -733,18 +712,13 @@ class Asset extends CI_Controller
                 set_notify('user',TEXT_DELETE_UNSUCCESSFUL,2);
                 echo TEXT_DELETE_UNSUCCESSFUL;
             endif;
-//            else:
-//                set_notify('user','Data tidak boleh dipadam kerana terdapat pengguna menggunakan kumpulan pengguna ini',2);
-//            endif;
-//            echo 1;
         endif;
     }
 
     function delete_asset_category(){
         if(is_ajax()):
             $delete_id = input_data('delete_id');
-//            $check_available_user = $this->m_user->check_available_user($delete_id);
-//            if($check_available_user):
+
             $data_update['soft_delete'] = SOFT_DELETE_TRUE;
             $delete = $this->m_a_category->update_a_category($data_update,$delete_id);
             if($delete):
@@ -754,10 +728,6 @@ class Asset extends CI_Controller
                 set_notify('user',TEXT_DELETE_UNSUCCESSFUL,2);
                 echo TEXT_DELETE_UNSUCCESSFUL;
             endif;
-//            else:
-//                set_notify('user','Data tidak boleh dipadam kerana terdapat pengguna menggunakan kumpulan pengguna ini',2);
-//            endif;
-//            echo 1;
         endif;
     }
 }
