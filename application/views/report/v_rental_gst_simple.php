@@ -78,7 +78,7 @@
                 if($data_gst):
                     ?>
                     <div class="pull-right">
-                        <button onclick="print_report()" class="btn btn-warning btn-sm pull-right">Cetak</button>
+                        <a class="btn btn-warning btn-sm pull-right" href="/report/print_gst_rental_simple" target="_blank">Cetak</a>
                     </div>
                     <br>
                     <br>

@@ -44,6 +44,7 @@ class Report extends CI_Controller
             'category_adjustment',
             'gst_rental',
             'gst_rental_simple',
+            'print_gst_rental_simple',
             'code_gl',
             'highest_overdue',
             'print_highest_overdue',
@@ -625,6 +626,55 @@ class Report extends CI_Controller
         // pre($data_report_new);
 
         templates('/report/v_rental_gst_simple',$data);
+    }
+
+    function print_gst_rental_simple()
+    {
+        $data_search = get_session('arr_filter_rental_gst_simple');
+        $data['data_type']   = $this->m_type->get_a_type();
+        if($data_search):
+            $data_report        = $this->m_bill_item->report_rental_gst_simple($data_search);
+            // echo '<br>';
+            // echo '<br>';
+            // echo '<br>';
+            // echo '<br>';
+            // echo '<br>';
+            // echo '<br>';
+            // echo '<br>';
+            // echo '<br>';
+            // echo last_query();
+            // pre($data_report);
+            // exit;
+            // pre($data_report);
+            $data_report_new = array();
+
+
+            if($data_report):
+                foreach ($data_report as $row):
+                    $data_report_prv        = $this->m_bill_item->report_rental_gst_simple_prv($data_search,$row['CATEGORY_ID']);
+                    // echo '<br>';
+                    // echo '<br>';
+                    // echo '<br>';
+                    // echo '<br>';
+                    // echo '<br>';
+                    // echo '<br>';
+                    // echo '<br>';
+                    // echo '<br>';
+                    // pre($data_report_prv);
+                    $row['data_report_prv'] = $data_report_prv;
+
+                    // pre($row);
+                    $data_report_new[$row['TYPE_NAME']][] = $row;
+                endforeach;
+            endif;
+            $data['data_gst']       = $data_report_new;
+            $data['data_search']    = $data_search;
+        else:
+            $data['data_gst']       = array();
+            $data['data_search']    = $data_search;
+        endif;
+
+        $this->load->view('/report/v_print_gst_rental_simple',$data);
     }
 
     function code_gl(){
