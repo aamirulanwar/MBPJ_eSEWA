@@ -7,7 +7,7 @@
     <meta name="description" content="CoreUI - Open Source Bootstrap Admin Template">
     <meta name="author" content="Łukasz Holeczek">
     <meta name="keyword" content="Bootstrap,Admin,Template,Open,Source,jQuery,CSS,HTML,RWD,Dashboard">
-    <title>>LAPORAN BIL GST (RINGKASAN)</title>
+    <title>LAPORAN BIL GST</title>
     <!-- Icons-->
     <link rel="icon" href="<?=base_url()?>/favicon.ico" type="image/x-icon">
     <link href="/assets/node_modules/@coreui/icons/css/coreui-icons.min.css" rel="stylesheet">
@@ -42,166 +42,316 @@
                 <tr>
                     <td>&nbsp;</td>
                     <td style="text-align: left;font-weight: bold;font-size: 18px">
-                        <span style="padding-left:50px;">LAPORAN BIL GST (RINGKASAN)</span></br>
+                        <span style="padding-left:50px;">LAPORAN BIL GST</span></br>
                         <br>
                     </table>
-                        <table>
-                            <?php
-                               // "<pre>";
-                               // var_dump($data_gst);
-                               // die();
-                                if($data_gst):
-                                    ?>
-                                    <?php
-                                    echo '<table class="table table-hover table-bordered data-print table-scroll table-aging">';
-                //                        echo '<thead>';
-                //                        echo '<tr>';
-                //                        echo '<th>&nbsp;</th>';
-                //                        echo '<th>Jumlah bil</th>';
-                //                        echo '<th>Penyelarasan bil</th>';
-                //                        echo '<th>Jumlah resit</th>';
-                //                        echo '<th>Penyelarasan resit</th>';
-                //                        echo '</tr>';
-                //                        echo '</thead>';
-                                    $k=0;
-                                    $bill               = 0;
-                                    $bill_pelarasan     = 0;
-                                    $resit              = 0;
-                                    $resit_pelarasan    = 0;
-                                    $baki_all           = 0;
-                                    $baki_tunggakan     = 0;
-                                    foreach ($data_gst as $key=>$row):
-                                        echo '<thead>';
+                        <table class="table table-hover table-bordered">
+                <tr>
+                    <th style="text-align:center">No.</th>
+                    <th style="text-align:center">Maklumat Akaun</th>
+                    <th style="text-align:center">Maklumat Transaksi</th>
+<!--                    <th style="text-align:center">Bil sewaan</th>-->
+<!--                    <th style="text-align:center">Jumlah bil (RM)</th>-->
+<!--                    <th style="text-align:center">Resit sewaan</th>-->
+<!--                    <th style="text-align:center">Jumlah resit (RM)</th>-->
+<!--                    <th style="text-align:center">Baki perlu bayar</th>-->
+                </tr>
+                <tbody>
+                <?php
+                $cnt = 0;
 
+                $total_all_b        = 0;
+                $total_all_r        = 0;
+                $total_all_jurnal_r = 0;
+                $total_all_jurnal_b = 0;
+                $total_balance      = 0;
+                $z = 0;
+
+
+                $total_all_amount_b         = 0;
+                $total_all_amount_b_jurnal  = 0;
+                $total_all_amount_r         = 0;
+                $total_all_amount_r_jurnal  = 0;
+
+                if($data_gst):
+                    foreach($data_gst as $row):
+                        $cnt = $cnt+1;
+                        ?>
+                        <tr>
+                            <td><?php echo $cnt?></td>
+                            <td>
+                                <strong>No. akaun&nbsp;:&nbsp;</strong><br><?php echo $row['data_acc']['ACCOUNT_NUMBER']?>
+                                <br>
+                                <br>
+                                <strong>Nama&nbsp;:&nbsp;</strong><br><?php echo $row['data_acc']['NAME']?>
+                                <br>
+                                <br>
+                                <?php
+                                if(!empty($row['data_acc']['IC_NUMBER'])):
+                                    echo '<strong>No&nbsp;kad&nbsp;pengenalan&nbsp;:</strong><br>'.$row['data_acc']['IC_NUMBER'];
+                                elseif (!empty($row['data_acc']['COMPANY_REGISTRATION_NUMBER'])):
+                                    echo '<strong>No&nbsp;pendaftaran&nbsp;syarikat&nbsp;:</strong><br>'.$row['data_acc']['COMPANY_REGISTRATION_NUMBER'];
+                                endif;
+                                ?>
+                                <br>
+                                <br>
+                                <strong>Jenis harta&nbsp;:&nbsp;</strong><br><?php echo $row['data_acc']['TYPE_NAME']?>
+                                <br>
+                                <br>
+                                <strong>Kod kategori&nbsp;:&nbsp;</strong><br><?php echo $row['data_acc']['CATEGORY_CODE']?> - <?php echo $row['data_acc']['CATEGORY_NAME']?>
+                                <br>
+                                <br>
+                                <strong>Status Akaun&nbsp;:&nbsp;</strong><br><?php echo get_status_active($row['data_acc']['STATUS_ACC'])?>
+                            </td>
+                            <td>
+                                <table>
+                                    <tr>
+                                        <th>
+                                            No. Bil / Tarikh Bil
+                                        </th>
+                                        <th>
+                                            Kod Transaksi / Keterangan
+                                        </th>
+<!--                                        <th>-->
+<!--                                            Anggaran bil (RM)-->
+<!--                                        </th>-->
+                                        <th>
+                                            Jumlah Bil (RM)
+                                        </th>
+                                        <th>
+                                            Jumlah Bil Pelarasan (RM)
+                                        </th>
+                                        <th>
+                                            Jumlah Bayaran / Resit (RM)
+                                        </th>
+                                        <th>
+                                            Jumlah Bayaran / Resit Pelarasan (RM)
+                                        </th>
+<!--                                        <th>-->
+<!--                                            Baki perlu dibayar-->
+<!--                                        </th>-->
+                                    </tr>
+                                <?php
+                                    $total_amount_b         = 0;
+                                    $total_amount_b_jurnal  = 0;
+                                    $total_amount_r         = 0;
+                                    $total_amount_r_jurnal  = 0;
+
+                                    $amount_b2   = 0;
+                                    $amount_r2   = 0;
+                                    $jurnal_b2   = 0;
+                                    $jurnal_r2   = 0;
+
+                                    if($row['prv_data']['BILL']>0 || $row['prv_data']['RESIT']>0 || $row['prv_data']['JOURNAL_B']>0 || $row['prv_data']['JOURNAL_R']>0):
                                         echo '<tr>';
-                                        echo '<th width="5%">Bil</th>';
-                                        echo '<th width="20%"><strong>'.$key.'</strong></th>';
-                                        echo '<th width="12%">Jumlah Bil (RM)</th>';
-                                        echo '<th width="13%">Jumlah Bil Pelarasan (RM)</th>';
-                                        echo '<th width="12%">Jumlah Bayaran / Resit (RM)</th>';
-                                        echo '<th width="12%">Jumlah Bayaran / Resit Pelarasan (RM)</th>';
-                                        echo '<th width="12%">Baki Tunggakan</th>';
-                                        echo '<th width="17%">Baki Perlu Dibayar (RM)</th>';
-                                        echo '</tr>';
-                                        echo '</thead>';
-                                        echo '<tbody>';
-                                        if($row):
-                                            $i=0;
 
-                                            foreach ($row as $key_cat=>$category):
-                                                $k = $k + 1;
-                                                $i = $i+1;
-                                                echo '<tr>';
-                                                echo '<td width="5%">'.$i.'</td>';
-                                                echo '<td width="20%" style="padding-left: 10px;">'.$category['CATEGORY_NAME'].'</td>';
-                                                echo '<td width="12%" style="text-align: right">';
-                                                    echo num($category['BILL'],3);
-                                                    $bill +=$category['BILL'];
-                                                echo '</td>';
-                                                echo '<td width="13%" style="text-align: right">';
-                                                    echo num($category['JOURNAL_B'],3);
-                                                    $bill_pelarasan += $category['JOURNAL_B'];
-                                                echo '</td>';
-                                                echo '<td width="12%" style="text-align: right">';
-                                                    echo num($category['RESIT'],3);
-                                                    $resit += $category['RESIT'];
-                                                echo '</td>';
-                                                echo '<td width="12%" style="text-align: right">';
-                                                    echo num($category['JOURNAL_R'],3);
-                                                    $resit_pelarasan += $category['JOURNAL_R'];
-                                                echo '</td>';
-                                                echo '<td width="12%" style="text-align: right">';
-                                                    $total = 0;
-                                                    if($category['data_report_prv']):
-                                                        $total = ($category['data_report_prv']['BILL']+$category['data_report_prv']['JOURNAL_B'])-($category['data_report_prv']['RESIT']+$category['data_report_prv']['JOURNAL_R']);
-                                                        echo num($total,3);
-                                                    else:
-                                                        echo num($total,3);
-                                                    endif;
-                                                    $baki_tunggakan += $total;
-                                                echo '</td>';
-                                                echo '<td width="17%" style="text-align: right">';
-                                                    $baki = ($category['BILL']+($category['JOURNAL_B']))-($category['RESIT']+($category['JOURNAL_R']));
-                                                    $baki_all += $baki;
-                                                    echo num($baki,3);
-                                                    if($total>0):
-                                                        echo '+'.num($total,3);
-                                                        echo '<br>'.num($baki+$total,3);
-                                                    endif;
-                                                echo '</td>';
-                                                echo '</tr>';
-                                            endforeach;
-                                            echo '</tbody>';
-                                        endif;
-                                    endforeach;
-                                    echo '<br> <br> <table>';
-                                    ?>
-                                    <table class="table table-bordered">
-                                        <thead>
-                                        <tr>
-                                            <th>
-                                                Bilangan Bil GST
-                                            </th>
-                                            <th>
-                                                Jumlah Bil (RM)
-                                            </th>
-                                            <th>
-                                                Jumlah Pelarasan Bil (RM)
-                                            </th>
-                                            <th>
-                                                Jumlah Bayaran / Resit (RM)
-                                            </th>
-                                            <th>
-                                                Jumlah Bayaran / Resit Pelarasan (RM)
-                                            </th>
-                                            <th>
-                                                Baki Tunggakan (RM)
-                                            </th>
-                                            <th>
-                                                Baki Perlu Dibayar (RM)
-                                            </th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr>
-                                            <td class="text-center">
-                                                <?php echo $k?>
-                                            </td>
-                                            <td class="text-right">
-                                                <?php echo num($bill,3)?>
-                                            </td>
-                                            <td class="text-right">
-                                                <?php echo num($bill_pelarasan,3)?>
-                                            </td>
-                                            <td class="text-right">
-                                                <?php echo num($resit,3)?>
-                                            </td>
-                                            <td class="text-right">
-                                                <?php echo num($resit_pelarasan,3)?>
-                                            </td>
-                                            <td class="text-right">
-                                                <?php
-                                                echo num($baki_tunggakan,3);
-                                                ?>
-                                            </td><td class="text-right">
-                                                <?php
-                                                echo num($baki_all,3);
-                                                if($baki_tunggakan>0):
-                                                    echo '+'.num($baki_tunggakan,3);
-                                                    echo '<br>'.num($baki_all+$baki_tunggakan,3);
-                                                endif;
-                                                ?>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                    <?php
-                                else:
-                                    if($_POST):
-                                        echo '<div class="text-center"> - Tiada data - </div>';
+                                        $amount_b2      = $row['prv_data']['BILL'];
+//                                        $total_all_b    = $total_all_b+$amount_b2;
+//                                        $total_amount_b = $total_amount_b+$amount_b2;
+
+                                        $amount_r2      = $row['prv_data']['RESIT'];
+//                                        $total_all_r    = $total_all_r+$amount_r2;
+//                                        $total_amount_r = $total_amount_r+$amount_r2;
+
+                                        $jurnal_b2              = $row['prv_data']['JOURNAL_B'];
+//                                        $total_amount_b_jurnal  = $total_amount_b_jurnal+$jurnal_b2;
+//                                        $total_all_jurnal_b     = $total_all_jurnal_b+$jurnal_b2;
+
+                                        $jurnal_r               = $row['prv_data']['JOURNAL_R'];
+//                                        $total_amount_r_jurnal  = $total_amount_r_jurnal+$jurnal_r;
+//                                        $total_all_jurnal_r     = $total_all_jurnal_r+$jurnal_r;
+
+                                        $total_all_amount_b         = $total_all_amount_b+$amount_b2;
+                                        $total_all_amount_b_jurnal  = $total_all_amount_b_jurnal+$jurnal_b2;
+                                        $total_all_amount_r         = $total_all_amount_r+$amount_r2;
+                                        $total_all_amount_r_jurnal  = $total_all_amount_r_jurnal+$jurnal_r;
+
+                                        echo '<td>-</td>';
+                                        echo '<td>JUMLAH SEBELUM</td>';
+                                        echo '<td style="text-align: right">'.num($amount_b2,3).'</td>';
+                                        echo '<td style="text-align: right">'.num($amount_r2,3).'</td>';
+                                        echo '<td style="text-align: right">'.num($jurnal_b2,3).'</td>';
+                                        echo '<td style="text-align: right">'.num($jurnal_r2,3).'</td>';
+                                        echo '</tr>';
                                     endif;
+                                    if($row['data_item']):
+                                        foreach ($row['data_item'] as $data_item):
+
+                                            echo '<tr>';
+                                            $gst_actual = '-';
+                                            if($data_item['gst_actual']):
+                                                $gst_actual = $data_item['gst_actual'][0]['AMOUNT'];
+                                            endif;
+
+                                            $amount_b   = 0;//+$amount_b2;
+                                            $amount_r   = 0;//+$amount_r2;
+                                            $jurnal_b   = 0;//+$jurnal_b2;
+                                            $jurnal_r   = 0;//+$jurnal_r2;
+                                            if($data_item['BILL_CATEGORY']=='B'):
+                                                $amount_b       = $data_item['AMOUNT'];
+                                                $total_all_b    = $total_all_b+$amount_b;
+                                                $total_amount_b = $total_amount_b+$amount_b;
+                                            elseif ($data_item['BILL_CATEGORY']=='R'):
+                                                $amount_r       = $data_item['AMOUNT'];
+                                                $total_all_r    = $total_all_r+$amount_r;
+                                                $total_amount_r = $total_amount_r+$amount_r;
+                                            elseif ($data_item['BILL_CATEGORY']=='J'):
+                                                if(substr($data_item['TR_CODE'],0,1)==1):
+                                                    $jurnal_b               = $data_item['AMOUNT'];
+                                                    $total_amount_b_jurnal  = $total_amount_b_jurnal+$jurnal_b;
+                                                    $total_all_jurnal_b     = $total_all_jurnal_b+$jurnal_b;
+                                                elseif (substr($data_item['TR_CODE'],0,1)==2):
+                                                    $jurnal_r               = $data_item['AMOUNT'];
+                                                    $total_amount_r_jurnal  = $total_amount_r_jurnal+$jurnal_r;
+                                                    $total_all_jurnal_r     = $total_all_jurnal_r+$jurnal_r;
+                                                endif;
+                                            endif;
+
+                                            echo '<td>'.$data_item['BILL_NUMBER'].'<br>('.date_display($data_item['DT_BILL']).')</td>';
+                                            echo '<td>'.$data_item['TR_CODE'].'&nbsp;-&nbsp;'.$data_item['ITEM_DESC'].'</td>';
+                                            echo '<td style="text-align: right">'.num($amount_b,3).'</td>';
+                                            if($jurnal_b>0):
+                                                echo '<td style="text-align: right">'.num($jurnal_b,3).'zzzz</td>';
+                                            else:
+                                            echo '<td style="text-align: right">'.num($jurnal_b,3).'</td>';
+                                            endif;
+                                            echo '<td style="text-align: right">'.num($amount_r,3).'</td>';
+                                            echo '<td style="text-align: right">'.num($jurnal_r,3).'</td>';
+                                            echo '</tr>';
+                                        endforeach;
+//                                        echo $total_amount_b.'----'.$total_amount_b_jurnal.'<br>';
+                                        $b = $total_amount_b+($total_amount_b_jurnal);
+                                        $j = $total_amount_r+($total_amount_r_jurnal);
+                                        echo '<tr>';
+                                        echo '<td colspan="5" style="text-align: right"><strong>Jumlah Bil (RM)</strong></td>';
+                                        echo '<td style="text-align: right">'.num($b,3).'</td>';
+                                        echo '</tr>';
+                                        echo '<tr>';
+                                        echo '<td colspan="5" style="text-align: right"><strong>Jumlah Resit (RM)</strong></td>';
+                                        echo '<td style="text-align: right">'.num($j,3).'</td>';
+                                        echo '</tr>';
+                                        echo '<tr>';
+                                        echo '<td colspan="5" style="text-align: right"><strong>Baki Perlu Dibayar (RM)</strong></td>';
+                                        $total_need_pay = $b - $j;
+                                        echo '<td style="text-align: right">'.num($total_need_pay,3).'</td>';
+                                        echo '</tr>';
+                                    elseif ($row['prv_data']):
+                                        $b = $total_amount_b+($total_amount_b_jurnal);
+                                        $j = $total_amount_r+($total_amount_r_jurnal);
+                                        echo '<tr>';
+                                        echo '<td colspan="5" style="text-align: right"><strong>Jumlah Bil (RM)</strong></td>';
+                                        echo '<td style="text-align: right">'.num($b,3).'</td>';
+                                        echo '</tr>';
+                                        echo '<tr>';
+                                        echo '<td colspan="5" style="text-align: right"><strong>Jumlah Resit (RM)</strong></td>';
+                                        echo '<td style="text-align: right">'.num($j,3).'</td>';
+                                        echo '</tr>';
+                                        echo '<tr>';
+                                        echo '<td colspan="5" style="text-align: right"><strong>Baki Perlu Dibayar (RM)</strong></td>';
+                                        $total_need_pay = $b - $j;
+                                        echo '<td style="text-align: right">'.num($total_need_pay,3).'</td>';
+                                        echo '</tr>';
+                                    endif;
+                                ?>
+                                </table>
+                            </td>
+                        </tr>
+                    <?php
+//                        $total_all_b = $total_all_b+
+                    endforeach;
+                else:
+                    echo '<tr><td colspan="9" class="text-center ">- Tiada rekod - </td></tr>';
+                endif;
+
+                ?>
+                <tbody>
+            </table>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>
+                            Bilangan Bil GST
+                        </th>
+                        <th>
+                            Jumlah Bil (RM)
+                        </th>
+                        <th>
+                            Jumlah Pelarasan Bil (RM)
+                        </th>
+                        <th>
+                            Jumlah Bayaran / Resit (RM)
+                        </th>
+                        <th>
+                            Jumlah Bayaran / Resit Pelarasan (RM)
+                        </th>
+                        <th>
+                            Baki Tunggakan (RM)
+                        </th>
+                        <th>
+                            Baki Perlu Dibayar (RM)
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="text-center">
+                            <?php echo $cnt?>
+                        </td>
+                        <td class="text-right">
+                            <?php
+                                echo num($total_all_b,3);
+//                                if($total_all_amount_b>0):
+//                                    echo '+'.num($total_all_amount_b,3);
+//                                    echo '<br>'.num($total_all_b+$total_all_amount_b,3);
+//                                endif;
+                            ?>
+                        </td>
+                        <td class="text-right">
+                            <?php
+                                echo num($total_all_jurnal_b,3);
+//                                if($total_all_amount_b_jurnal>0):
+//                                    echo '+'.num($total_all_amount_b_jurnal,3);
+//                                    echo '<br>'.num($total_all_amount_b_jurnal+$total_all_jurnal_b,3);
+//                                endif;
+                            ?>
+                        </td>
+                        <td class="text-right">
+                            <?php
+                                echo num($total_all_r,3);
+//                                if($total_all_amount_r>0):
+//                                    echo '+'.num($total_all_amount_r,3);
+//                                    echo '<br>'.num($total_all_amount_r+$total_all_r,3);
+//                                endif;
+                            ?>
+                        </td>
+                        <td class="text-right">
+                            <?php
+                                echo num($total_all_jurnal_r,3);
+//                                if($total_all_amount_r_jurnal>0):
+//                                    echo '+'.num($total_all_amount_r_jurnal,3);
+//                                    echo '<br>'.num($total_all_amount_r_jurnal+$total_all_jurnal_r,3);
+//                                endif;
+                            ?>
+                        </td>
+                        <td class="text-right">
+                            <?php
+                                $baki_2 = ($total_all_amount_b+($total_all_amount_b_jurnal)) - ($total_all_amount_r+($total_all_amount_r_jurnal));
+                                echo num($baki_2,3);
+                            ?>
+                        </td>
+                        <td class="text-right">
+                            <?php
+                                $baki   = ($total_all_b+($total_all_jurnal_b)) - ($total_all_r+($total_all_jurnal_r));
+                                echo num($baki,3);
+                                if($baki_2>0):
+                                    echo '+'.num($baki_2,3);
+                                    echo '<br>'.num($baki_2+$baki,3);
                                 endif;
                             ?>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
     <script>
         $( window ).on('load', '', function(event) {
             window.print();

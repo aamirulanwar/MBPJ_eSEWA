@@ -42,6 +42,7 @@ class Report extends CI_Controller
             'gl_summary',
             'category_adjustment',
             'gst_rental',
+            'print_gst_rental',
             'gst_rental_simple',
             'print_gst_rental_simple',
             'code_gl',
@@ -551,6 +552,117 @@ class Report extends CI_Controller
 
         templates('/report/v_rental_gst',$data);
     }
+
+    function print_gst_rental()
+    {
+        $data_search = get_session('arr_filter_rental_gst');
+        $data['data_type']   = $this->m_type->get_a_type();
+        if($data_search):
+            $get_data_acc = $this->m_acc_account->acc_with_bill_gst($data_search);
+            $data_report = array();
+            if($get_data_acc):
+                foreach ($get_data_acc as $key=>$row):
+                    $data_search['account_id']  = $row['ACCOUNT_ID'];
+                    $data_acc   = $this->m_acc_account->get_account_details($row['ACCOUNT_ID']);
+                    $data_item      = $this->m_bill_item->report_rental_gst($data_search);
+                    $data_item_prv  = $this->m_bill_item->report_rental_gst_prv($data_search);
+
+                    $row['data_acc']    = $data_acc;
+                    if($data_item):
+                        foreach ($data_item as $item):
+                            $data_jurnal        = array();
+                            $data_gst_actual    = array();
+                            $item['gst_actual'] = array();
+                            if($item['BILL_CATEGORY']=='B'):
+                                $data_search_item_jurnal['bill_month']      = $item['BILL_MONTH'];
+                                $data_search_item_jurnal['bill_year']       = $item['BILL_YEAR'];
+                                $data_search_item_jurnal['tr_code']         = $item['TR_CODE'];
+                                $data_search_item_jurnal['account_id']      = $item['ACCOUNT_ID'];
+                                // $data_search_item_jurnal['not_equal_last_year']  = 1;
+                                // pre($data_search_item_jurnal);
+                                // $data_jurnal = $this->m_bill_item->get_item_jurnal($data_search_item_jurnal);
+                            elseif ($item['BILL_CATEGORY']=='R'):
+                                $data_search_item_jurnal['bill_month']      = $item['BILL_MONTH'];
+                                $data_search_item_jurnal['bill_year']       = $item['BILL_YEAR'];
+                                $data_search_item_jurnal['tr_code']         = $item['TR_CODE'];
+                                $data_search_item_jurnal['account_id']      = $item['ACCOUNT_ID'];
+                                // $data_search_item_jurnal['not_equal_last_year']  = 1;
+                                // pre($data_search_item_jurnal);
+                                // $data_jurnal = $this->m_bill_item->get_item_jurnal($data_search_item_jurnal);
+                            endif;
+
+                            if($item['GST_TYPE']==GST_TYPE_RENTAL):
+                                $data_search_item_rental['bill_month']      = $item['BILL_MONTH'];
+                                $data_search_item_rental['bill_year']       = $item['BILL_YEAR'];
+                                $data_search_item_rental['tr_code']         = $item['TR_CODE'];
+                                $data_search_item_rental['account_id']      = $item['ACCOUNT_ID'];
+
+                                $data_search_tr_code['MCT_TRCODENEW'] = $data_acc['TRCODE_CATEGORY'];
+                                $tr_code = $this->m_tran_code->get_tr_code($data_search_tr_code);
+                                // echo last_query().'<br><br>';
+                                // pre($tr_code);
+                                if($tr_code):
+
+                                    $data_search_item_rental['bill_month']      = $item['BILL_MONTH'];
+                                    $data_search_item_rental['bill_year']       = $item['BILL_YEAR'];
+                                    $data_search_item_rental['tr_code']         = $tr_code['MCT_TRCODENEW'];
+                                    $data_search_item_rental['account_id']      = $item['ACCOUNT_ID'];
+                                    $data_search_item_rental['not_equal_last_year']  = 1;
+                                    $data_gst_actual = $this->m_bill_item->get_item_bill($data_search_item_rental);
+                                    // echo last_query();
+                                    $item['gst_actual']     = $data_gst_actual;
+                                endif;
+                            elseif ($item['GST_TYPE']==GST_TYPE_WATER):
+                                $data_search_item_water['bill_month']      = $item['BILL_MONTH'];
+                                $data_search_item_water['bill_year']       = $item['BILL_YEAR'];
+                                $data_search_item_water['tr_code']         = '11110016';
+                                $data_search_item_water['account_id']      = $item['ACCOUNT_ID'];
+                                $data_search_item_water['not_equal_last_year']  = 0;
+                                $data_gst_actual = $this->m_bill_item->get_item_bill($data_search_item_water);
+                                $item['gst_actual']     = $data_gst_actual;
+                            elseif ($item['GST_TYPE']==GST_TYPE_TIPPING):
+                                $data_search_item_tipping['bill_month']      = $item['BILL_MONTH'];
+                                $data_search_item_tipping['bill_year']       = $item['BILL_YEAR'];
+                                $data_search_item_tipping['tr_code']         = '11110014';
+                                $data_search_item_tipping['account_id']      = $item['ACCOUNT_ID'];
+                                $data_search_item_tipping['not_equal_last_year']  = 0;
+                                $data_gst_actual = $this->m_bill_item->get_item_bill($data_search_item_tipping);
+                                // pre($data_gst_actual);
+                                $item['gst_actual']     = $data_gst_actual;
+                            endif;
+
+                            // $item['jurnal']         = $data_jurnal;
+                            $row['prv_data']       = $data_item_prv;
+                            // pre($item['prv_data']);
+                            // $item['gst_actual']     = $data_gst_actual;
+
+                            $row['data_item'][]     = $item;
+                        endforeach;
+                        $data_report[] = $row;
+
+                        // pre($data_report);
+                        // exit;
+                    elseif($data_item_prv):
+                        $row['data_item']       = array();
+                        $row['prv_data']        = $data_item_prv;
+                        $data_report[]          = $row;
+
+                        // pre($data_report);
+                    endif;
+                endforeach;
+            endif;
+            // echo last_query();
+            $data['data_gst']           = $data_report;
+            $data['data_search']        = $data_search;
+        else:
+            $data['data_gst']       = array();
+            $data['data_search']    = $data_search;
+        endif;
+
+        $this->load->view('/report/v_print_gst_rental',$data);
+    }
+
+
 
     function gst_rental_simple(){
         $this->auth->restrict_access($this->curuser,array(8004));
