@@ -170,11 +170,11 @@ function get_status_active($status){
 
 function get_status_rental($status){
     if($status==RENTAL_STATUS_YES):
- // echo '<span class="badge badge-success">Ya</span>';
-    echo '<span class="badge badge-success">Boleh Disewa</span>';
+        // echo '<span class="badge badge-success">Ya</span>';
+        echo '<span class="badge badge-danger">Telah Disewa</span>';
     else:
- // echo '<span class="badge badge-danger">Tidak</span>';
-    echo '<span class="badge badge-danger">Disewa</span>';
+        // echo '<span class="badge badge-danger">Tidak</span>';
+        echo '<span class="badge badge-success">Belum Disewa</span>';
     endif;
 }
 
