@@ -45,7 +45,8 @@ class Asset extends CI_Controller
             'delete_asset_tenant_type',
             'delete_asset_rental_use',
             'delete_asset_unit',
-            'delete_asset_category'
+            'delete_asset_category',
+            'get_asset_status'
         );
         #set pages data
         (in_array($method,$array)) ? $this->$method() : $this->index();
@@ -729,5 +730,24 @@ class Asset extends CI_Controller
                 echo TEXT_DELETE_UNSUCCESSFUL;
             endif;
         endif;
+    }
+
+    function get_asset_status()
+    {
+        if ( isset( $_POST["asset_id"] ) )
+        {
+            $asset_id = $_POST["asset_id"];
+            $status = $this->m_a_asset->get_a_asset_by_id($asset_id)["RENTAL_STATUS"];
+            if ($status == 1)
+            {
+                $status_display = "Asset telah disewakan";
+            }
+        }
+        else
+        {
+            $status_display = false;
+        }
+        
+        echo json_encode($status_display);
     }
 }

@@ -8,7 +8,7 @@
 <div class="form-group row">
     <label class="col-sm-3 col-form-label">Kod harta / no. gerai <span class="mandatory">*</span></label>
     <div class="col-sm-5">
-        <select id="asset_id" onchange="get_rent(),calculate_rental_deposit()" name="asset_id" class="form-control">
+        <select id="asset_id" onchange="get_asset_status(),get_rent(),calculate_rental_deposit()" name="asset_id" class="form-control">
             <?php
             if($asset):
                 echo '<option value=""> - Sila pilih - </option>';
@@ -20,8 +20,10 @@
             endif;
             ?>
         </select>
+        <label id="asset_status" style="color: red"></label>
         <?php echo form_error('asset_id')?>
     </div>
+    <label class="col-4" id="asset_status" style="color: red"></label>
 </div>
 <?php
 if($asset):

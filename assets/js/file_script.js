@@ -315,6 +315,31 @@ function get_rent() {
     });
 }
 
+function get_asset_status()
+{
+    var asset_id = $('#asset_id').val();
+    $.ajax({
+        url: '/asset/get_asset_status',
+        type: 'post', //the way you want to send data to your URL
+        data: {
+            asset_id : asset_id
+        },
+        beforeSend: function () {
+
+        },
+        success: function (data) { //probably this request will return anything, it'll be put in var "data"
+            data = JSON.parse(data);
+            $('#asset_status').html(data);
+        },
+        complete: function () {
+
+        },
+        error: function(jqXHR,error, errorThrown) {
+            ajax_err(jqXHR,error, errorThrown)
+        }
+    });
+}
+
 function calculate_rental_deposit() {
     var rent_fee = $('#rental_charge').val();
     var new_rent_fee = rent_fee.replace(/,/g,'');
