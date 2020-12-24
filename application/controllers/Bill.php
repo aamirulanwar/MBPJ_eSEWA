@@ -129,7 +129,68 @@ class Bill extends CI_Controller
         $data['account']        = $get_details;
         $data['statement_type'] = 'BIL';
         $data['bill_master']    = $data_bill_master;
-        $data['bill_item']      = $this->billgenerator->listCurrentBill($id);
+        $bill_item     = $this->billgenerator->listCurrentBill($id);
+
+        $data_search_manual_bil["BILL_ID"]          =   $bill_master_id['BILL_ID'];
+        $data_search_manual_bil["DISPLAY_STATUS"]   =   "M";
+        $data_search_manual_bil["ACCOUNT_ID"]       =   $id;
+        $manual_added_bil = $this->m_bill_item->get( $data_search_manual_bil );
+
+        // Resorting the bill transaction to be display in current bill
+        foreach ($bill_item as $item) 
+        {
+            $tr_code_old = $item["TR_CODE_OLD"];
+            $tr_code_new = $item["TR_CODE_NEW"];
+
+            $excluded_old_tr_code = array("11033", "11090");
+            $excluded_new_tr_code = array("11110020", "11119999");
+
+            if ( substr( $tr_code_old, 0, 2) == "11" && !in_array( $tr_code_old, $excluded_old_tr_code ) && !in_array( $tr_code_new, $excluded_new_tr_code ) )
+            {
+                $current_bill[] = $item;
+            }
+            else if ( substr( $tr_code_old, 0, 2) == "11" && (in_array( $tr_code_old, $excluded_old_tr_code ) || in_array( $tr_code_new, $excluded_new_tr_code ) ) )
+            {
+                $others_bill[] = $item;
+            }
+            else if ( substr( $tr_code_old, 0, 2) == "12" )
+            {
+                $current_outstanding_bill[] = $item;
+            }
+        }
+
+        foreach ($manual_added_bil as $manual_item) 
+        {
+            $tr_code_old = $manual_item["TR_CODE_OLD"];
+            $tr_code_new = $manual_item["TR_CODE"];
+
+            $manual_bill["TR_CODE_OLD"]        =    $manual_item["TR_CODE_OLD"];
+            $manual_bill["TR_CODE_NEW"]        =    $manual_item["TR_CODE"];
+            $manual_bill["TR_DESC"]            =    $manual_item["ITEM_DESC"];
+            $manual_bill["AMOUNT"]             =    $manual_item["AMOUNT"];
+            $manual_bill["DISPLAY_PRIORITY"]   =    $manual_item["PRIORITY"];
+
+            $excluded_old_tr_code = array("11033", "11090");
+            $excluded_new_tr_code = array("11110020", "11119999");
+
+            if ( substr( $tr_code_old, 0, 2) == "11" && !in_array( $tr_code_old, $excluded_old_tr_code ) && !in_array( $tr_code_new, $excluded_new_tr_code ) )
+            {
+                $current_bill[] = $manual_bill;
+            }
+            else if ( substr( $tr_code_old, 0, 2) == "11" && (in_array( $tr_code_old, $excluded_old_tr_code ) || in_array( $tr_code_new, $excluded_new_tr_code ) ) )
+            {
+                $others_bill[] = $manual_bill;
+            }
+            else if ( substr( $tr_code_old, 0, 2) == "12" )
+            {
+                $current_outstanding_bill[] = $manual_bill;
+            }
+        }
+
+        $data["current_bill"] = $current_bill;
+        $data["outstanding_bill"] = $current_outstanding_bill;
+        $data["others_bill"] = $others_bill;
+
 
         templates('bill/v_current_bill',$data);
     }
@@ -159,29 +220,7 @@ class Bill extends CI_Controller
         
         $data['account'] = $get_details;
 
-        /*
 
-        load_library('Bill_lib');
-        $data_bill_lib['account_id']  = $id;
-
-        // Check current bill need to add LOD charge or not
-        $this->addLODcharge($id);
-
-        $bill_item = $this->bill_lib->generate_bill($data_bill_lib);
-
-
-        $data_bill_master = $this->m_bill_master->get_bill_master($bill_item['bill_id']);
-
-        $data['item_bil']       = $bill_item['item'];
-        $data['account']        = $get_details;
-        $data['statement_type'] = 'BIL';
-        $data['bill_master']    = $data_bill_master;
-        $data['bill_item']      = $bill_item;
-        
-        */
-
-        // Debug Line for new development function 
-        // $this->load->controller('BillGenerator');
         $this->load->library('BillGenerator');
 
         $data['list_of_bill']   =  $this->billgenerator->listCurrentBill($id);
@@ -192,6 +231,11 @@ class Bill extends CI_Controller
         $data_update_master["TOTAL_AMOUNT"] = $new_total_bill_amount["TOTAL_AMOUNT"];
 
         $this->m_bill_master->updateBillMasterTotalAmount( $bill_id_master, $id, $data_update_master);
+
+        $data_search_manual_bil["BILL_ID"]          =   $bill_id_master;
+        $data_search_manual_bil["DISPLAY_STATUS"]   =   "M";
+        $data_search_manual_bil["ACCOUNT_ID"]       =   $id;
+        $data['manual_added_bil'] = $this->m_bill_item->get( $data_search_manual_bil );
 
         if(input_data('MCT_TRCODENEW[]'))
         {
@@ -224,7 +268,7 @@ class Bill extends CI_Controller
                     $insert_code['AMOUNT']          =   currencyToDouble($amount_arr[$i]);
                     $insert_code['PRIORITY']        =   $tr_code['MCT_PRIORT'];
                     $insert_code['BILL_CATEGORY']   =   "B";
-                    $insert_code['DISPLAY_STATUS']  =   "C";
+                    $insert_code['DISPLAY_STATUS']  =   "M";
                     $remark                         =   '';
 
                     if(!empty($remark_arr[$i]))
@@ -253,7 +297,7 @@ class Bill extends CI_Controller
                 }
 
                 $new_total_bill_amount = $this->m_bill_item->getBillItemTotalAmount($id);
-                $data_update_master["TOTAL_AMOUNT"] = $new_total_bill_amount;
+                $data_update_master["TOTAL_AMOUNT"] = $new_total_bill_amount["TOTAL_AMOUNT"];
                 $this->m_bill_master->updateBillMasterTotalAmount( $generate_bill['BILL_ID'], $id, $data_update_master);
             }
 

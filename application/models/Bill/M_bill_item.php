@@ -10,7 +10,7 @@ class M_bill_item extends CI_Model
     function get($data_search)
     {
         db_select('i.*');
-        db_select("to_char(m.dt_added, 'yyyy-mm-dd') as dt_added",false);
+        db_select("to_char(i.dt_added, 'yyyy-mm-dd') as dt_added",false);
         db_from('b_item i');
 
         if (isset($data_search["ITEM_ID"]) && having_value($data_search['ITEM_ID']) )
@@ -33,9 +33,9 @@ class M_bill_item extends CI_Model
             db_where('i.BILL_CATEGORY',$data_search['BILL_CATEGORY']);
         }
 
-        if (isset($data_search["TR_CODE"]) && having_value($data_search['TR_CODE']) )
+        if (isset($data_search["DISPLAY_STATUS"]) && having_value($data_search['DISPLAY_STATUS']) )
         {
-            db_where('i.TR_CODE',$data_search['TR_CODE']);
+            db_where('i.DISPLAY_STATUS',$data_search['DISPLAY_STATUS']);
         }
 
         $sql = db_get('');

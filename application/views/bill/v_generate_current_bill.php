@@ -73,7 +73,7 @@ checking_validation(validation_errors());
                 if($list_of_bill)
                 {
                     foreach ($list_of_bill as $item)
-                    {                        
+                    {
                         echo '<div class="form-group row">';
                         echo '  <label class="col-sm-6 col-form-label">'.$item['TR_DESC'].'</label>';
                         echo '  <div class="col-sm-2">';
@@ -101,6 +101,46 @@ checking_validation(validation_errors());
                             echo '  <label class="col-sm-6 col-form-label">LEBIHAN BAYARAN '.$item['TR_DESC'].'</label>';
                             echo '  <div class="col-sm-2">';
                             echo '      <p class="form-control-plaintext">RM '.num($item['AMOUNT']).'</p>';
+                            echo '  </div>';
+                            echo '  <div class="col-sm-1">';
+                            echo '      <p class="form-control-plaintext">B</p>';
+                            echo '  </div>';
+                            echo '</div>';
+                        }
+                    }
+                }
+
+                if($manual_added_bil)
+                {
+                    foreach ($manual_added_bil as $manual_item)
+                    {
+                        echo '<div class="form-group row">';
+                        echo '  <label class="col-sm-6 col-form-label">'.$manual_item['ITEM_DESC'].'</label>';
+                        echo '  <div class="col-sm-2">';
+                        echo '      <p class="form-control-plaintext">';
+
+                        if ($manual_item['AMOUNT'] < 0) 
+                        { 
+                            echo "RM 0.00";
+                        }
+                        else 
+                        {
+                            echo "RM ".num($manual_item['AMOUNT']);
+                        }
+                        
+                        echo '      </p>';
+                        echo '  </div>';
+                        echo '  <div class="col-sm-1">';
+                        echo '      <p class="form-control-plaintext">B</p>';
+                        echo '  </div>';
+                        echo '</div>';
+
+                        if ( $manual_item['AMOUNT'] < 0)
+                        {
+                            echo '<div class="form-group row">';
+                            echo '  <label class="col-sm-6 col-form-label">LEBIHAN BAYARAN '.$manual_item['ITEM_DESC'].'</label>';
+                            echo '  <div class="col-sm-2">';
+                            echo '      <p class="form-control-plaintext">RM '.num($manual_item['AMOUNT']).'</p>';
                             echo '  </div>';
                             echo '  <div class="col-sm-1">';
                             echo '      <p class="form-control-plaintext">B</p>';

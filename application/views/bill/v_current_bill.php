@@ -207,44 +207,125 @@ notify_msg('notify_msg');
             <div class="col-8">
                 <div class="p-2 border-div" style="min-height: 400px;">
                     <div class="text-center"><strong>BUTIRAN BAYARAN</strong><br><br></div>
-                    <?php
-                        if($bill_item)
-                        {
+                    <table class="table">
+                        <?php
                             $total = 0;
-                            echo '<table class="table">';
-                            foreach ($bill_item as $item)
+
+                            if($current_bill)
                             {
-                                $total = $total+$item['AMOUNT'];                                
-
-                                if ($item['AMOUNT'] < 0) 
-                                { 
-                                    $amount = 0;
-                                }
-                                else 
+                                foreach ($current_bill as $current_bill_item)
                                 {
-                                    $amount = $item['AMOUNT'];
-                                }
+                                    $total = $total + $current_bill_item['AMOUNT'];                                
 
-                                echo '  <tr>';
-                                echo '    <td>'.$item['TR_DESC'].'</td>';
-                                echo '    <td class="text-right">'.num($amount).'</td>';
-                                echo '  </tr>';
+                                    if ($current_bill_item['AMOUNT'] < 0) 
+                                    { 
+                                        $amount = 0;
+                                    }
+                                    else 
+                                    {
+                                        $amount = $current_bill_item['AMOUNT'];
+                                    }
 
-                                if ( $item['AMOUNT'] < 0)
-                                {
                                     echo '  <tr>';
-                                    echo '    <td>LEBIHAN BAYARAN '.$item['TR_DESC'].'</td>';
-                                    echo '    <td class="text-right">'.num($item['AMOUNT']).'</td>';
+                                    echo '    <td>'.$current_bill_item['TR_DESC'].'</td>';
+                                    echo '    <td class="text-right">'.num($amount).'</td>';
                                     echo '  </tr>';
+
+                                    if ( $current_bill_item['AMOUNT'] < 0)
+                                    {
+                                        echo '  <tr>';
+                                        echo '    <td>LEBIHAN BAYARAN '.$current_bill_item['TR_DESC'].'</td>';
+                                        echo '    <td class="text-right">'.num($current_bill_item['AMOUNT']).'</td>';
+                                        echo '  </tr>';
+                                    }
+                                }
+
+                                // Ini sample function bagi line subtotal utk paparan lebih
+                                // Commented as no better view is found
+                                // echo '<tr>';
+                                // echo '    <td></td>';
+                                // echo '    <td class="text-right" style="border-top: 1px solid;border-bottom: 1px double">'.num($total).'</td>';
+                                // echo '</tr>';
+                            }
+
+                            if($outstanding_bill)
+                            {
+                                // Ini sample function bagi line subtotal utk paparan lebih
+                                // Commented as no better view is found
+                                // echo "<tr style='height:5px;' ><td colspan='2'></td></tr>";
+                                foreach ($outstanding_bill as $outstanding_bill_item)
+                                {
+                                    $total = $total + $outstanding_bill_item['AMOUNT'];                                
+
+                                    if ($outstanding_bill_item['AMOUNT'] < 0) 
+                                    { 
+                                        $amount = 0;
+                                    }
+                                    else 
+                                    {
+                                        $amount = $outstanding_bill_item['AMOUNT'];
+                                    }
+
+                                    echo '  <tr>';
+                                    echo '    <td>'.$outstanding_bill_item['TR_DESC'].'</td>';
+                                    echo '    <td class="text-right">'.num($amount).'</td>';
+                                    echo '  </tr>';
+
+                                    if ( $outstanding_bill_item['AMOUNT'] < 0)
+                                    {
+                                        echo '  <tr>';
+                                        echo '    <td>LEBIHAN BAYARAN '.$outstanding_bill_item['TR_DESC'].'</td>';
+                                        echo '    <td class="text-right">'.num($outstanding_bill_item['AMOUNT']).'</td>';
+                                        echo '  </tr>';
+                                    }
+                                }
+
+                                // Ini sample function bagi line subtotal utk paparan lebih
+                                // Commented as no better view is found
+                                // echo '<tr>';
+                                // echo '    <td></td>';
+                                // echo '    <td class="text-right" style="border-top: 1px solid;border-bottom: 1px double">'.num($total).'</td>';
+                                // echo '</tr>';
+                            }
+
+                            if($others_bill)
+                            {
+                                // Ini sample function bagi line subtotal utk paparan lebih
+                                // Commented as no better view is found
+                                // echo "<tr style='height:5px;' ><td colspan='2'></td></tr>";
+                                foreach ($others_bill as $others_bill_item)
+                                {                        
+                                    $total = $total + $others_bill_item['AMOUNT'];                                
+
+                                    if ($others_bill_item['AMOUNT'] < 0) 
+                                    { 
+                                        $amount = 0;
+                                    }
+                                    else 
+                                    {
+                                        $amount = $others_bill_item['AMOUNT'];
+                                    }
+
+                                    echo '  <tr>';
+                                    echo '    <td>'.$others_bill_item['TR_DESC'].'</td>';
+                                    echo '    <td class="text-right">'.num($amount).'</td>';
+                                    echo '  </tr>';
+
+                                    if ( $others_bill_item['AMOUNT'] < 0)
+                                    {
+                                        echo '  <tr>';
+                                        echo '    <td>LEBIHAN BAYARAN '.$others_bill_item['TR_DESC'].'</td>';
+                                        echo '    <td class="text-right">'.num($others_bill_item['AMOUNT']).'</td>';
+                                        echo '  </tr>';
+                                    }
                                 }
                             }
-                            echo '  <tr>';
-                            echo '    <td>JUMLAH BAYARAN</td>';
-                            echo '    <td class="text-right" style="border-top: 1px solid;border-bottom: 1px double">'.num($total).'</td>';
-                            echo '  </tr>';
-                            echo '</table>';
-                        }
-                    ?>
+                        ?>
+                        <tr>
+                            <td>JUMLAH BAYARAN</td>
+                            <td class="text-right" style="border-top: 1px solid;border-bottom: 1px double"><?=num($total)?></td>
+                        </tr>
+                    </table>
                 </div>
             </div>
             <div class="col-4">
@@ -331,44 +412,125 @@ Kadar sewaan bulanan hendaklah dibayar SELEWAT-LEWATNYA SEBELUM ATAU PADA 7HB se
                         <div class="col-8">
                             <div class="text-left"><strong>BUTIRAN BAYARAN</strong><br><br></div>
                             
-                            <?php
-                                if($bill_item)
-                                {
+                            <table class="table">
+                                <?php
                                     $total = 0;
-                                    echo '<table class="table">';
-                                    foreach ($bill_item as $item)
+
+                                    if($current_bill)
                                     {
-                                        $total = $total+$item['AMOUNT'];                                
-
-                                        if ($item['AMOUNT'] < 0) 
-                                        { 
-                                            $amount = 0;
-                                        }
-                                        else 
+                                        foreach ($current_bill as $current_bill)
                                         {
-                                            $amount = $item['AMOUNT'];
-                                        }
+                                            $total = $total + $current_bill['AMOUNT'];                                
 
-                                        echo '  <tr>';
-                                        echo '    <td>'.$item['TR_DESC'].'</td>';
-                                        echo '    <td class="text-right">'.num($amount).'</td>';
-                                        echo '  </tr>';
+                                            if ($current_bill['AMOUNT'] < 0) 
+                                            { 
+                                                $amount = 0;
+                                            }
+                                            else 
+                                            {
+                                                $amount = $current_bill['AMOUNT'];
+                                            }
 
-                                        if ( $item['AMOUNT'] < 0)
-                                        {
                                             echo '  <tr>';
-                                            echo '    <td>LEBIHAN BAYARAN '.$item['TR_DESC'].'</td>';
-                                            echo '    <td class="text-right">'.num($item['AMOUNT']).'</td>';
+                                            echo '    <td>'.$current_bill['TR_DESC'].'</td>';
+                                            echo '    <td class="text-right">'.num($amount).'</td>';
                                             echo '  </tr>';
+
+                                            if ( $current_bill['AMOUNT'] < 0)
+                                            {
+                                                echo '  <tr>';
+                                                echo '    <td>LEBIHAN BAYARAN '.$current_bill['TR_DESC'].'</td>';
+                                                echo '    <td class="text-right">'.num($current_bill['AMOUNT']).'</td>';
+                                                echo '  </tr>';
+                                            }
+                                        }
+
+                                        // Ini sample function bagi line subtotal utk paparan lebih
+                                        // Commented as no better view is found
+                                        // echo '<tr>';
+                                        // echo '    <td></td>';
+                                        // echo '    <td class="text-right" style="border-top: 1px solid;border-bottom: 1px double">'.num($total).'</td>';
+                                        // echo '</tr>';
+                                    }
+
+                                    if($outstanding_bill)
+                                    {
+                                        // Ini sample function bagi line subtotal utk paparan lebih
+                                        // Commented as no better view is found
+                                        // echo "<tr style='height:5px;' ><td colspan='2'></td></tr>";
+                                        foreach ($outstanding_bill as $outstanding_bill_item)
+                                        {
+                                            $total = $total + $outstanding_bill_item['AMOUNT'];                                
+
+                                            if ($outstanding_bill_item['AMOUNT'] < 0) 
+                                            { 
+                                                $amount = 0;
+                                            }
+                                            else 
+                                            {
+                                                $amount = $outstanding_bill_item['AMOUNT'];
+                                            }
+
+                                            echo '  <tr>';
+                                            echo '    <td>'.$outstanding_bill_item['TR_DESC'].'</td>';
+                                            echo '    <td class="text-right">'.num($amount).'</td>';
+                                            echo '  </tr>';
+
+                                            if ( $outstanding_bill_item['AMOUNT'] < 0)
+                                            {
+                                                echo '  <tr>';
+                                                echo '    <td>LEBIHAN BAYARAN '.$outstanding_bill_item['TR_DESC'].'</td>';
+                                                echo '    <td class="text-right">'.num($outstanding_bill_item['AMOUNT']).'</td>';
+                                                echo '  </tr>';
+                                            }
+                                        }
+
+                                        // Ini sample function bagi line subtotal utk paparan lebih
+                                        // Commented as no better view is found
+                                        // echo '<tr>';
+                                        // echo '    <td></td>';
+                                        // echo '    <td class="text-right" style="border-top: 1px solid;border-bottom: 1px double">'.num($total).'</td>';
+                                        // echo '</tr>';
+                                    }
+
+                                    if($others_bill)
+                                    {
+                                        // Ini sample function bagi line subtotal utk paparan lebih
+                                        // Commented as no better view is found
+                                        // echo "<tr style='height:5px;' ><td colspan='2'></td></tr>";
+                                        foreach ($others_bill as $others_bill_item)
+                                        {                        
+                                            $total = $total + $others_bill_item['AMOUNT'];                                
+
+                                            if ($others_bill_item['AMOUNT'] < 0) 
+                                            { 
+                                                $amount = 0;
+                                            }
+                                            else 
+                                            {
+                                                $amount = $others_bill_item['AMOUNT'];
+                                            }
+
+                                            echo '  <tr>';
+                                            echo '    <td>'.$others_bill_item['TR_DESC'].'</td>';
+                                            echo '    <td class="text-right">'.num($amount).'</td>';
+                                            echo '  </tr>';
+
+                                            if ( $others_bill_item['AMOUNT'] < 0)
+                                            {
+                                                echo '  <tr>';
+                                                echo '    <td>LEBIHAN BAYARAN '.$others_bill_item['TR_DESC'].'</td>';
+                                                echo '    <td class="text-right">'.num($others_bill_item['AMOUNT']).'</td>';
+                                                echo '  </tr>';
+                                            }
                                         }
                                     }
-                                    echo '  <tr>';
-                                    echo '    <td>JUMLAH BAYARAN</td>';
-                                    echo '    <td class="text-right" style="border-top: 1px solid;border-bottom: 1px double">'.num($total).'</td>';
-                                    echo '  </tr>';
-                                    echo '</table>';
-                                }
-                            ?>
+                                ?>
+                                <tr>
+                                    <td>JUMLAH BAYARAN</td>
+                                    <td class="text-right" style="border-top: 1px solid;border-bottom: 1px double"><?=num($total)?></td>
+                                </tr>
+                            </table>
                         </div>
                     </div>
                 </div>
