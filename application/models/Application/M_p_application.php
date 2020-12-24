@@ -118,7 +118,8 @@ class M_p_application extends CI_Model
         return db_count_results();
     }
 
-    function get_application_details($id){
+    function get_application_details($id)
+    {
         db_select('a.*,applicant.*,t.*,c.*,r.*,asset.asset_name');
         db_select('a.rental_fee as rental_fee');
         db_select('a.bill_type as bill_type');
