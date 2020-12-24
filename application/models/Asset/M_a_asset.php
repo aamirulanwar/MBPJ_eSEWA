@@ -15,12 +15,12 @@ class M_a_asset extends CI_Model
         db_select('*');
         db_join('a_category c','c.category_id = a.category_id');
         db_from('a_asset a');
-        if(isset($data_search['search']) && having_value($data_search['search'])):
-            db_where("upper(c.category_name) like '%".trim($data_search['search'])."%' or upper(a.asset_name) like '%".trim($data_search['search'])."%'");
-        endif;
-//        if(isset($data_search['search']) && having_value($data_search['search'])):
-//            db_where("upper(a.asset_name) like '%".trim($data_search['search'])."%'");
-//        endif;
+
+        if(isset($data_search['search']) && having_value($data_search['search']))
+        {
+            db_where(" (upper(c.category_name) like '%".trim($data_search['search'])."%' or upper(a.asset_name) like '%".trim($data_search['search'])."%' )");
+        }
+        
         db_where('a.soft_delete',SOFT_DELETE_FALSE);
         $sql = db_get('',$per_page,$search_segment);
         if($sql):
@@ -32,9 +32,22 @@ class M_a_asset extends CI_Model
         db_select('*');
         db_join('a_category c','c.category_id = a.category_id');
         db_from('a_asset a');
-        if(isset($data_search['search']) && having_value($data_search['search'])):
+
+        if(isset($data_search['search']) && having_value($data_search['search']))
+        {
             db_where("upper(c.category_name) like '%".trim($data_search['search'])."%'");
-        endif;
+        }
+
+        if( isset( $data_search['category_id']) && $data_search['category_id'] != "")
+        {
+            db_where("c.category_id", $data_search['category_id']);
+        }
+
+        if( isset( $data_search["rental_status"] ) && $data_search["rental_status"] != "" )
+        {
+            db_where("a.rental_status", $data_search['rental_status']);
+        }
+
         db_where('a.soft_delete',SOFT_DELETE_FALSE);
         return db_count_results();
     }
@@ -42,12 +55,12 @@ class M_a_asset extends CI_Model
     function insert_a_asset($data_insert){
         db_insert('a_asset',$data_insert);
         $user_id = get_insert_id('a_asset');
-          $data_audit_trail['log_id']                  = 6007;
-          $data_audit_trail['remark']                  = "Tambah Kod Harta";
-          $data_audit_trail['status']                  = PROCESS_STATUS_SUCCEED;
-          $data_audit_trail['user_id']                 = $this->curuser['USER_ID'];
-          $data_audit_trail['refer_id']                = $user_id; //refer to db_where
-          $this->audit_trail_lib->add($data_audit_trail);
+        $data_audit_trail['log_id']                  = 6007;
+        $data_audit_trail['remark']                  = "Tambah Kod Harta";
+        $data_audit_trail['status']                  = PROCESS_STATUS_SUCCEED;
+        $data_audit_trail['user_id']                 = $this->curuser['USER_ID'];
+        $data_audit_trail['refer_id']                = $user_id; //refer to db_where
+        $this->audit_trail_lib->add($data_audit_trail);
         return $user_id;
     }
 
@@ -63,36 +76,55 @@ class M_a_asset extends CI_Model
         endif;
     }
 
-    function update_a_asset($data_update,$id){
+    function update_a_asset($data_update,$id)
+    {
         db_where('asset_id',$id);
         db_update('a_asset',$data_update);
-        if ($data_update["soft_delete"] == 1)
-        {  // code...
-          if(db_affected_rows()!=0):
-                $data_audit_trail['log_id']                  = 6009;
-                $data_audit_trail['remark']                  = "Padam Kot Harta";
-                $data_audit_trail['status']                  = PROCESS_STATUS_SUCCEED;
-                $data_audit_trail['user_id']                 = $this->curuser['USER_ID'];
-                $data_audit_trail['refer_id']                = $id; //refer to db_where
-                $this->audit_trail_lib->add($data_audit_trail);
-              return true;
-          else:
-              return false;
-          endif;
+
+        if ( isset( $data_update["soft_delete"] ) )
+        {
+            if ($data_update["soft_delete"] == 1)
+            {
+                if( db_affected_rows() != 0 )
+                {
+                    $data_audit_trail['log_id']                  = 6009;
+                    $data_audit_trail['remark']                  = "Padam Kot Harta";
+                    $data_audit_trail['status']                  = PROCESS_STATUS_SUCCEED;
+                    $data_audit_trail['user_id']                 = $this->curuser['USER_ID'];
+                    $data_audit_trail['refer_id']                = $id; //refer to db_where
+                    $this->audit_trail_lib->add($data_audit_trail);
+                    return true;
+                }
+                else if( db_affected_rows() == 0 )
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
         }
         else
-        { // code...
-          if(db_affected_rows()!=0):
-                $data_audit_trail['log_id']                  = 6008;
-                $data_audit_trail['remark']                  = "Kemaskini Kot Harta";
-                $data_audit_trail['status']                  = PROCESS_STATUS_SUCCEED;
-                $data_audit_trail['user_id']                 = $this->curuser['USER_ID'];
-                $data_audit_trail['refer_id']                = $id; //refer to db_where
+        {
+            if( db_affected_rows() != 0 )
+            {
+                $data_audit_trail['log_id']      =    6008;
+                $data_audit_trail['remark']      =    "Kemaskini Kot Harta";
+                $data_audit_trail['status']      =    PROCESS_STATUS_SUCCEED;
+                $data_audit_trail['user_id']     =    $this->curuser['USER_ID'];
+                $data_audit_trail['refer_id']    =    $id; //refer to db_where
                 $this->audit_trail_lib->add($data_audit_trail);
-              return true;
-          else:
-              return false;
-          endif;
+                return true;
+            }
+            else if( db_affected_rows() == 0 )
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 

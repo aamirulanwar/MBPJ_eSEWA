@@ -750,9 +750,7 @@ class Rental_application extends CI_Controller
         if(!$get_details):
             return false;
         endif;
-        
 
-        //pre($get_details);
         $data['data_details']   = $get_details;
         $data['dependent']      = $this->m_acc_dependent->get_dependent_by_applicant_id($get_details['APPLICANT_ID']);
         $data['asset']          = $this->m_a_asset->get_a_asset_active_available_by_category_id($get_details['CATEGORY_ID']);
@@ -917,7 +915,7 @@ class Rental_application extends CI_Controller
         if( validation_run() == false )
         {
             templates('/rental_application/form_'.$get_details['FORM_TYPE'].'/v_form_'.$get_details['FORM_TYPE'].'_details',$data);
-                    }
+        }
         else
         {
             if($get_details['FORM_TYPE']==1):

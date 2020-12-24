@@ -572,7 +572,7 @@ class Asset extends CI_Controller
         $this->auth->restrict_access($this->curuser,array(3010));
 
         $data['link_1']     = 'Kod Fail';
-        $data['link_2']     = '<a href="/asset/asset_type">Kod Harta</a>';
+        $data['link_2']     = '<a href="/asset/asset_unit">Kod Harta</a>';
         $data['link_3']     = 'Tambah Kod Harta';
         $data['pagetitle']  = '';
 
@@ -589,13 +589,20 @@ class Asset extends CI_Controller
             $data_insert['category_id']     = input_data('category_id');
             $data_insert['asset_add']       = input_data('address');
 
+            $insert_id = $this->m_a_asset->insert_a_asset($data_insert);
+
             #updat_available_unit
-            $data_category = $this->m_a_category->get_a_category_details($data_insert['category_id']);
-            $data_update_category['TOTAL_UNIT']             = $data_category['TOTAL_UNIT']+1;
-            $data_update_category['TOTAL_AVAILABLE_UNIT']   = $data_category['TOTAL_UNIT']+1;
+            $data_search_asset["category_id"]   =   $data_insert['category_id'];
+            $total_asset_under_category         =   $this->m_a_asset->count_a_asset( $data_search_asset );
+
+            $data_search_asset["rental_status"] =   "0";
+            $total_asset_under_category_rented  =   $this->m_a_asset->count_a_asset( $data_search_asset );
+
+            $data_update_category['TOTAL_UNIT']             =   $total_asset_under_category;
+            $data_update_category['TOTAL_AVAILABLE_UNIT']   =   $total_asset_under_category_rented;
+
             $this->m_a_category->update_a_category($data_update_category,$data_insert['category_id']);
 
-            $insert_id = $this->m_a_asset->insert_a_asset($data_insert);
             if(is_numeric($insert_id)):
                 set_notify('notify_msg',TEXT_SAVE_RECORD);
             else:
@@ -613,12 +620,12 @@ class Asset extends CI_Controller
         $data['link_3']     = 'Kemaskini Kod Harta';
         $data['pagetitle']  = '';
 
-        $id = urlDecrypt(uri_segment(3));
-        if(!is_numeric($id)):
+        $asset_id = urlDecrypt(uri_segment(3));
+        if(!is_numeric($asset_id)):
             return false;
         endif;
 
-        $get_details = $this->m_a_asset->get_a_asset_by_id($id);
+        $get_details = $this->m_a_asset->get_a_asset_by_id($asset_id);
         if(!$get_details):
             return false;
         endif;
@@ -640,13 +647,25 @@ class Asset extends CI_Controller
             $data_update['RENTAL_FEE']      = currencyToDouble(input_data('harga_sewaan'));
             $data_update['asset_add']       = input_data('address');
 
-            $result_update = $this->m_a_asset->update_a_asset($data_update,$id);
+            $result_update = $this->m_a_asset->update_a_asset($data_update,$asset_id);
 
             $data_account_update['estimation_rental_charge'] = currencyToDouble(input_data('harga_sewaan')); 
             $data_account_update['rental_charge'] = currencyToDouble(input_data('harga_sewaan'));
-            $this->m_acc_account->update_a_acc_account_by_asset_id($data_account_update,$id);
+            $this->m_acc_account->update_a_acc_account_by_asset_id($data_account_update,$asset_id);
 
             if($result_update):
+                #updat_available_unit
+                $data_search_asset["category_id"]   =   $data_update['category_id'];
+                $total_asset_under_category         =   $this->m_a_asset->count_a_asset( $data_search_asset );
+
+                $data_search_asset["rental_status"] =   "0";
+                $total_asset_under_category_rented  =   $this->m_a_asset->count_a_asset( $data_search_asset );
+
+                $data_update_category['TOTAL_UNIT']             =   $total_asset_under_category;
+                $data_update_category['TOTAL_AVAILABLE_UNIT']   =   $total_asset_under_category_rented;
+
+                $this->m_a_category->update_a_category($data_update_category,$data_update['category_id']);
+
                 set_notify('notify_msg',TEXT_UPDATE_RECORD);
             else:
                 set_notify('notify_msg',TEXT_UPDATE_UNSUCCESSFUL,2);
@@ -655,20 +674,24 @@ class Asset extends CI_Controller
         endif;
     }
 
-    function delete_asset_type(){
-
-        if(is_ajax()):
+    function delete_asset_type()
+    {
+        if(is_ajax())
+        {
             $delete_id = input_data('delete_id');
             $data_update['soft_delete'] = SOFT_DELETE_TRUE;
             $delete = $this->m_a_type->update_asset_type($data_update,$delete_id);
-            if($delete):
+            if($delete)
+            {
                 set_notify('user',TEXT_DELETE_RECORD,1);
                 echo TEXT_DELETE_RECORD;
-            else:
+            }
+            else
+            {
                 set_notify('user',TEXT_DELETE_UNSUCCESSFUL,2);
                 echo TEXT_DELETE_UNSUCCESSFUL;
-            endif;
-        endif;
+            }
+        }
     }
 
     function delete_asset_tenant_type(){
@@ -701,19 +724,39 @@ class Asset extends CI_Controller
         endif;
     }
 
-    function delete_asset_unit(){
-        if(is_ajax()):
+    function delete_asset_unit()
+    {
+        if(is_ajax())
+        {
             $delete_id = input_data('delete_id');
+            $data_update['rental_status'] = "0";
             $data_update['soft_delete'] = SOFT_DELETE_TRUE;
+            $category_id = $this->m_a_asset->get_a_asset_by_id($delete_id)["CATEGORY_ID"];
             $delete = $this->m_a_asset->update_a_asset($data_update,$delete_id);
-            if($delete):
+
+            if($delete)
+            {
+                #updat_available_unit
+                $data_search_asset["category_id"]      =   $category_id;
+                $total_asset_under_category            =   $this->m_a_asset->count_a_asset( $data_search_asset );
+
+                $data_search_asset["rental_status"]    =   "0";
+                $total_asset_under_category_rented     =   $this->m_a_asset->count_a_asset( $data_search_asset );
+
+                $data_update_category['TOTAL_UNIT']             =   $total_asset_under_category;
+                $data_update_category['TOTAL_AVAILABLE_UNIT']   =   $total_asset_under_category_rented;
+
+                $this->m_a_category->update_a_category($data_update_category,$category_id);
+
                 set_notify('user',TEXT_DELETE_RECORD,1);
                 echo TEXT_DELETE_RECORD;
-            else:
+            }
+            else
+            {
                 set_notify('user',TEXT_DELETE_UNSUCCESSFUL,2);
                 echo TEXT_DELETE_UNSUCCESSFUL;
-            endif;
-        endif;
+            }
+        }
     }
 
     function delete_asset_category(){

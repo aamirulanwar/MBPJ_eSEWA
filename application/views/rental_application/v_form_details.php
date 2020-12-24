@@ -8,7 +8,7 @@
 <div class="form-group row">
     <label class="col-sm-3 col-form-label">Kod harta / no. gerai <span class="mandatory">*</span></label>
     <div class="col-sm-5">
-        <select id="asset_id" onchange="get_asset_status(),get_rent(),calculate_rental_deposit()" name="asset_id" class="form-control">
+        <select id="asset_id" onchange="get_asset_status(),get_rent(),calculate_rental_deposit()" name="asset_id" class="form-control" style="text-align-last: center">
             <?php
             if($asset):
                 echo '<option value=""> - Sila pilih - </option>';
@@ -16,7 +16,7 @@
                     echo option_value($row['ASSET_ID'],$row['ASSET_NAME'],'asset_id',$data_details['ASSET_ID']);
                 endforeach;
             else:
-                echo '<option value="0"> Tiada </option>';
+                echo '<option value=""> -- Tiada kod harta yang boleh disewa -- </option>';
             endif;
             ?>
         </select>

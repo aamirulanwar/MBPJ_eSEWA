@@ -77,36 +77,55 @@ class M_a_category extends CI_Model
         endif;
     }
 
-    function update_a_category($data_update,$id){
+    function update_a_category($data_update,$id)
+    {
         db_where('category_id',$id);
         db_update('a_category',$data_update);
-        if ($data_update["soft_delete"] == 1)
-        {  // code...
-          if(db_affected_rows()!=0):
-                $data_audit_trail['log_id']                  = 6006;
-                $data_audit_trail['remark']                  = "Padam Kot Kategori";
-                $data_audit_trail['status']                  = PROCESS_STATUS_SUCCEED;
-                $data_audit_trail['user_id']                 = $this->curuser['USER_ID'];
-                $data_audit_trail['refer_id']                = $id; //refer to db_where
-                $this->audit_trail_lib->add($data_audit_trail);
-              return true;
-          else:
-              return false;
-          endif;
+
+        if ( isset( $data_update["soft_delete"] ) )
+        {
+            if ($data_update["soft_delete"] == 1)
+            {
+                if( db_affected_rows() != 0 )
+                {
+                    $data_audit_trail['log_id']                  = 6006;
+                    $data_audit_trail['remark']                  = "Padam Kot Kategori";
+                    $data_audit_trail['status']                  = PROCESS_STATUS_SUCCEED;
+                    $data_audit_trail['user_id']                 = $this->curuser['USER_ID'];
+                    $data_audit_trail['refer_id']                = $id; //refer to db_where
+                    $this->audit_trail_lib->add($data_audit_trail);
+                    return true;
+                }
+                else if( db_affected_rows() == 0 )
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
         }
         else
-        { // code...
-          if(db_affected_rows()!=0):
+        {
+            if( db_affected_rows() != 0 )
+            {
                 $data_audit_trail['log_id']                  = 6005;
                 $data_audit_trail['remark']                  = "Kemaskini Kot Kategori";
                 $data_audit_trail['status']                  = PROCESS_STATUS_SUCCEED;
                 $data_audit_trail['user_id']                 = $this->curuser['USER_ID'];
                 $data_audit_trail['refer_id']                = $id; //refer to db_where
                 $this->audit_trail_lib->add($data_audit_trail);
-              return true;
-          else:
-              return false;
-          endif;
+                return true;
+            }
+            else if( db_affected_rows() == 0 )
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 

@@ -6,7 +6,7 @@ checking_validation(validation_errors());
 <form action="/asset/edit_asset_unit/<?php echo uri_segment(3)?>" method="post" class="form-horizontal">
     <div class="card card-accent-info">
         <div class="card-header">
-            <h3 class="box-title">Tambah Kod Harta</h3>
+            <h3 class="box-title">Kemaskini Kod Harta</h3>
         </div>
         <div class="card-body">
             <div class="form-group row">
