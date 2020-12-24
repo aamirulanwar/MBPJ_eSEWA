@@ -586,31 +586,53 @@ class Generate_word {
     {
         $get_details = $this->ci->m_acc_account->get_account_details($id);
 
-        if($notice_level==0):
+        if($notice_level==0)
+        {
             $template = 'notis_memulakan_perniagaan.docx';
-        elseif($notice_level==NOTICE_LEVEL_1):
+        }
+        elseif($notice_level==NOTICE_LEVEL_1)
+        {
             $template = '1.notis_tuntutan_pembayaran_sewaan_-_BORANG_A.docx';
-        elseif($notice_level==NOTICE_LEVEL_2):
+        }
+        elseif($notice_level==NOTICE_LEVEL_2)
+        {
             $template = '2.notis_tuntutan_pembayaran_sewaan_-_BORANG_B.docx';
-        elseif($notice_level==NOTICE_LEVEL_3):
+        }
+        elseif($notice_level==NOTICE_LEVEL_3)
+        {
             $template = '3.notis_tuntutan_pembayaran_sewaan_-_BORANG_C.docx';
-        elseif($notice_level==NOTICE_LEVEL_4):
-            if($notice_info['SEWAAN'] > 0 || $notice_info['TIPPING'] > 0  && $get_details['STATUS_ACC'] != 1):
+        }
+        elseif($notice_level==NOTICE_LEVEL_4)
+        {
+            if($notice_info['TOTAL_TUNGGAKAN_SEWAAN'] > 0 || $notice_info['TOTAL_TUNGGAKAN_TIPPING'] > 0  && $get_details['STATUS_ACC'] != 1)
+            {
                 $template = '4.LOD_dan_notis_mahkamah_with_tunggakan_caj.docx';
-            elseif($notice_info['SEWAAN'] > 0 || $notice_info['TIPPING'] > 0 && $get_details['STATUS_ACC'] == 1):
+            }
+            elseif($notice_info['TOTAL_TUNGGAKAN_SEWAAN'] > 0 || $notice_info['TOTAL_TUNGGAKAN_TIPPING'] > 0 && $get_details['STATUS_ACC'] == 1)
+            {
                 $template = '4.LOD_dan_notis_mahkamah_withboth_ticks.docx';
-            elseif(($notice_info['SEWAAN'] == 0 || $notice_info['TIPPING'] == 0) && $get_details['STATUS_ACC'] == 1):
+            }
+            elseif(($notice_info['TOTAL_TUNGGAKAN_SEWAAN'] == 0 || $notice_info['TOTAL_TUNGGAKAN_TIPPING'] == 0) && $get_details['STATUS_ACC'] == 1)
+            {
                 $template = '4.LOD_dan_notis_mahkamah_with_akaun_aktif.docx';
-            else:
+            }
+            else
+            {
                 $template = '4.LOD_dan_notis_mahkamah.docx';
-            endif;
-        elseif($notice_level==NOTICE_LEVEL_5):
+            }
+        }
+        elseif($notice_level==NOTICE_LEVEL_5)
+        {
             $template = '5.notis_tarik_balik_-_BORANG_D.docx';
-        elseif($notice_level==NOTICE_LEVEL_6):
+        }
+        elseif($notice_level==NOTICE_LEVEL_6)
+        {
             $template = '6.tindakan_mahkamah.docx';
-        else:
+        }
+        else
+        {
             return false;
-        endif;
+        }
 
         $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($_SERVER['DOCUMENT_ROOT'].'/file_download/notis/'.$template);
 
@@ -621,21 +643,21 @@ class Generate_word {
         $address = str_replace('<br>', ' ', $address);
 
 
-        $templateProcessor->setValue('name',strtoupper($get_details['NAME']));
-        $templateProcessor->setValue('address',strtoupper($address));
-        $templateProcessor->setValue('ic_number',display_ic_number($get_details['IC_NUMBER']));
-        $templateProcessor->setValue('file_number_juu',$get_details['FILE_NUMBER_JUU']);
-        $templateProcessor->setValue('account_number',$get_details['ACCOUNT_NUMBER']);
-        $templateProcessor->setValue('letter_date',date_display(timenow(),'d F Y','malay'));
-        $templateProcessor->setValue('asset_name',$get_details['ASSET_NAME']);
-        $templateProcessor->setValue('category_name',$get_details['CATEGORY_NAME']);
-        $templateProcessor->setValue('category_name_caps',strtoupper($get_details['CATEGORY_NAME']));
-        $templateProcessor->setValue('current_date',date_display($notice_info['DT_ADDED'],'d F Y','malay'));
-        $templateProcessor->setValue('overdue_rent',num($notice_info['SEWAAN']));
-        $templateProcessor->setValue('overdue_utility',num($notice_info['AIR']));
-        $templateProcessor->setValue('overdue_tipping_fee',num($notice_info['TIPPING']));
-        $templateProcessor->setValue('total_overdue',num($notice_info['TOTAL_TUNGGAKAN']));
-        $templateProcessor->setValue('total_overdue_lod',num($notice_info['TOTAL_TUNGGAKAN'])+ 10);
+        $templateProcessor->setValue(   'name'                 , strtoupper($get_details['NAME'])                 );
+        $templateProcessor->setValue(   'address'              , strtoupper($address)                             );
+        $templateProcessor->setValue(   'ic_number'            , display_ic_number($get_details['IC_NUMBER'])     );
+        $templateProcessor->setValue(   'file_number_juu'      , $get_details['FILE_NUMBER_JUU']                  );
+        $templateProcessor->setValue(   'account_number'       , $get_details['ACCOUNT_NUMBER']                   );
+        $templateProcessor->setValue(   'letter_date'          , date_display(timenow(),'d F Y','malay')          );
+        $templateProcessor->setValue(   'asset_name'           , $get_details['ASSET_NAME']                       );
+        $templateProcessor->setValue(   'category_name'        , $get_details['CATEGORY_NAME']                    );
+        $templateProcessor->setValue(   'category_name_caps'   , strtoupper($get_details['CATEGORY_NAME'])        );
+        $templateProcessor->setValue(   'current_date'         , date_display(timenow(),'d F Y','malay')          );
+        $templateProcessor->setValue(   'overdue_rent'         , num($notice_info['TOTAL_TUNGGAKAN_SEWAAN'])      );
+        $templateProcessor->setValue(   'overdue_utility'      , num($notice_info['TOTAL_TUNGGAKAN_AIR'])         );
+        $templateProcessor->setValue(   'overdue_tipping_fee'  , num($notice_info['TOTAL_TUNGGAKAN_TIPPING'])     );
+        $templateProcessor->setValue(   'total_overdue'        , num($notice_info['TOTAL_TUNGGAKAN'])             );
+        $templateProcessor->setValue(   'total_overdue_lod'    , num($notice_info['TOTAL_TUNGGAKAN'] + 10)        );
 
         //Check and replace if symbol in name exist that might make the file to be corrupted or cant be named
         $filename_replace = preg_replace("/[^A-Za-z0-9' ]/", "", $get_details['NAME']); 

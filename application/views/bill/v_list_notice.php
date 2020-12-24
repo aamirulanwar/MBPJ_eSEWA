@@ -85,7 +85,7 @@ notify_msg('notify_msg');
                                 <?php echo '<strong>'.$row['CATEGORY_CODE'].'</strong> - '.$row['CATEGORY_NAME'] ?>
                             </td>
                             <td class="text-right">
-                                <?php echo num($row['total_tunggakan'])?><br>
+                                <?php echo num($row['OUTSTANDING_AMOUNT'])?><br>
                             </td>
                             <td class="text-center">
                             <?php

@@ -135,6 +135,9 @@ class Bill extends CI_Controller
         $data_search_manual_bil["DISPLAY_STATUS"]   =   "M";
         $data_search_manual_bil["ACCOUNT_ID"]       =   $id;
         $manual_added_bil = $this->m_bill_item->get( $data_search_manual_bil );
+        $current_bill = array();
+        $others_bill = array();
+        $current_outstanding_bill = array();
 
         // Resorting the bill transaction to be display in current bill
         foreach ($bill_item as $item) 
@@ -339,21 +342,32 @@ class Bill extends CI_Controller
 
         $data['total_result']   = $total;
 
-        $new_data_list = array();
-        if($data_list):
-            foreach ($data_list as $row):
-                #get latest tunggakan
-                $latest_notice = $this->m_notice_log->get_log_notice($row['ACCOUNT_ID']);
-                $row['total_tunggakan'] = 0;
-                if($latest_notice):
-                    $row['total_tunggakan'] = $latest_notice['TOTAL_TUNGGAKAN'];
-                endif;
+        $this->load->library('BillGenerator');
+        foreach ($data_list as $key => $account) 
+        {
+            // Retrieve outstanding amount and attach the amount as new array index inside array $data_List
+            $account_id        =   $account['ACCOUNT_ID'];
+            // $list_outstanding_charges    =  $this->billgenerator->getCurrentMonthOutstandingCharge($id);
+            $list_outstanding_charges    =  $this->billgenerator->calcPastTransaction($account_id);
 
-                $new_data_list[] = $row;
-            endforeach;
-        endif;
+            // ---- Outstanding Charge ----
+            $total_outstanding_amount = 0; 
+            $tipping_fee_outstanding_amount = 0; 
+            $sewaan_bill_outstanding_amount = 0; 
+
+            foreach ($list_outstanding_charges as $outstanding_charges)
+            {
+                if ( $outstanding_charges["BALANCE_AMOUNT"] > 0 )
+                {
+                    $total_outstanding_amount = $total_outstanding_amount + $outstanding_charges["BALANCE_AMOUNT"];
+                }
+            }
+
+            $data_list[$key]["OUTSTANDING_AMOUNT"] = $total_outstanding_amount;
+        }
+
         $data['data_search']    = $data_search;
-        $data['data_list']      = $new_data_list;
+        $data['data_list']      = $data_list;
 
         templates('bill/v_list_notice',$data);
     }
@@ -366,32 +380,36 @@ class Bill extends CI_Controller
             return false;
         endif;
 
-        // echo $notice_level;
-
-        // if($notice_level<=4):
-        //     $get_all_notice = $this->m_notice_log->get_notice_level($id,$notice_level);
-        // else:
-        //     $get_all_notice = $this->m_notice_log->get_notice_level($id,99);
-        // endif;
-
         $this->load->library('BillGenerator');
-        $list_outstanding_charges    =  $this->billgenerator->getCurrentMonthOutstandingCharge($id);
+        // $list_outstanding_charges    =  $this->billgenerator->getCurrentMonthOutstandingCharge($id);
+        $list_outstanding_charges    =  $this->billgenerator->calcPastTransaction($id);
 
         // ---- Outstanding Charge ----
-        $total_outstanding_amount = 0;
-        foreach ($list_outstanding_charges as $outstanding_charges) 
-        {
-            // $data[] = array( 
-            //                     'TR_CODE_OLD'      =>  $outstanding_charges["TR_CODE_OLD_TUNGGAKAN"],
-            //                     'TR_CODE_NEW'      =>  $outstanding_charges["TR_CODE_TUNGGAKAN"],
-            //                     'TR_DESC'          =>  $outstanding_charges["TR_DESC_TUNGGAKAN"],
-            //                     'AMOUNT'           =>  $outstanding_charges["BALANCE_AMOUNT"],
-            //                     'DISPLAY_PRIORITY' =>  '3',
-            //                 );
-            $total_outstanding_amount = $total_outstanding_amount + $outstanding_charges["BALANCE_AMOUNT"];
+        $total_outstanding_amount = 0; 
+        $tipping_fee_outstanding_amount = 0; 
+        $sewaan_bill_outstanding_amount = 0; 
+        $excluded_tr_code = array("12021", "12018", "12033","12110014", "12110016", "12110020");
 
-            // echo "<pre>";
-            // var_dump($outstanding_charges["BALANCE_AMOUNT"]);
+        foreach ($list_outstanding_charges as $outstanding_charges)
+        {
+            if ( $outstanding_charges["BALANCE_AMOUNT"] > 0 )
+            {
+                $total_outstanding_amount = $total_outstanding_amount + $outstanding_charges["BALANCE_AMOUNT"];
+            }
+            
+            if ( $outstanding_charges["TR_CODE_TUNGGAKAN"] == "12021" || $outstanding_charges["TR_CODE_TUNGGAKAN"] == "12110014" )          // Get tipping fee outstanding amount
+            {
+                $tipping_fee_outstanding_amount = $tipping_fee_outstanding_amount + $outstanding_charges["BALANCE_AMOUNT"];
+            }
+            else if ( $outstanding_charges["TR_CODE_TUNGGAKAN"] == "12018" || $outstanding_charges["TR_CODE_TUNGGAKAN"] == "12110016")      // Get water bill outstanding amount
+            {
+                $water_bill_outstanding_amount = $water_bill_outstanding_amount + $outstanding_charges["BALANCE_AMOUNT"];
+            }
+            else if ( !in_array( $outstanding_charges["TR_CODE_TUNGGAKAN"], $excluded_tr_code) )                                            // Get sewaan bill outstanding amount
+            {
+                $sewaan_bill_outstanding_amount = $sewaan_bill_outstanding_amount + $outstanding_charges["BALANCE_AMOUNT"];
+            }
+
         }
 
         // save record lod generation to db for reporting feature
@@ -448,6 +466,13 @@ class Bill extends CI_Controller
                 $this->m_lod_generation->update_record_generation($data_update_condition_notis_mahkamah, $data_update_notis_mahkamah);
             }
         }
+
+        // Generate data to be pass to word_document function
+        $required_data = $this->m_acc_account->get_account_details($id);
+        $get_all_notice["TOTAL_TUNGGAKAN_SEWAAN"]     = $sewaan_bill_outstanding_amount;
+        $get_all_notice["TOTAL_TUNGGAKAN_AIR"]        = $water_bill_outstanding_amount;
+        $get_all_notice["TOTAL_TUNGGAKAN_TIPPING"]    = $tipping_fee_outstanding_amount;
+        $get_all_notice["TOTAL_TUNGGAKAN"]            = $total_outstanding_amount;
 
         load_library('Generate_word');
         $this->generate_word->word_document($id, DOC_NOTICE, $notice_level,$get_all_notice);
