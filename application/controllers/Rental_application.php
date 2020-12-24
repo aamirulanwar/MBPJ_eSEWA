@@ -165,8 +165,8 @@ class Rental_application extends CI_Controller
             validation_rules('rental_use_id','<strong>jenis perniagaan</strong>','required');
         endif;
 
-        validation_rules('ic_number_pic_status','<strong>salinan kad pengenalan</strong>','required');
-        validation_rules('passport_pic_status','<strong>gambar passport</strong>','required');
+        validation_rules('ic_number_pic_status','<strong>salinan kad pengenalan</strong>');
+        validation_rules('passport_pic_status','<strong>gambar passport</strong>');
         validation_rules('ssm_pic_status','<strong>salinan pendaftaran perniagaan (SSM)</strong>');
 
         if(input_data('rental_use_id')==RENTAL_USE_OTHERS):
@@ -460,11 +460,11 @@ class Rental_application extends CI_Controller
         validation_rules('operation_use','<strong>cadangan operasi / kegunaan tapak / bangunan</strong>','required');
         validation_rules('structure_type_building','<strong>cadangan jenis struktur bangunan</strong>','required');
         validation_rules('letter_application_file_status','<strong>surat permohonan</strong>','required');
-        validation_rules('ic_number_pic_status','<strong>salinan kad pengenalan</strong>','required');
+        validation_rules('ic_number_pic_status','<strong>salinan kad pengenalan</strong>');
         validation_rules('location_plan_file_status','<strong>pelan lokasi (Google map)</strong>','required');
         validation_rules('photo_location_file_status','<strong>foto lokasi</strong>','required');
         validation_rules('suggestion_structure_plan_file_status','<strong>salinan cadangan pelan struktur</strong>','required');
-        validation_rules('app_ssm_file_status','<strong>carian SSM</strong>','required');
+        validation_rules('app_ssm_file_status','<strong>carian SSM</strong>');
 
         if(input_data('rental_use_id')==RENTAL_USE_OTHERS):
             validation_rules('rental_use_remark','<strong>catatan jenis perniagaan</strong>','required');
@@ -590,7 +590,7 @@ class Rental_application extends CI_Controller
         validation_rules('starting_of_service_date','<strong>tarikh mula berkhidmat</strong>','required');
         validation_rules('home_phone_number','<strong>no. telefon rumah</strong>','');
         validation_rules('mobile_phone_number','<strong>no. telefon bimbit</strong>','required');
-        validation_rules('ic_number_pic_status','<strong>salinan kad pengenalan</strong>','required');
+        validation_rules('ic_number_pic_status','<strong>salinan kad pengenalan</strong>');
         validation_rules('category_id','<strong>lokasi yang dipohon</strong>','required');
 
         if(input_data('rental_use_id')==RENTAL_USE_OTHERS):

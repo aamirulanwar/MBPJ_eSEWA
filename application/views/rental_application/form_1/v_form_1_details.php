@@ -300,7 +300,7 @@ checking_validation(validation_errors());
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label">Salinan kad pengenalan <span class="mandatory">*</span></label>
+                <label class="col-sm-3 col-form-label">Salinan kad pengenalan</label>
                 <div class="col-sm-5">
                     <div id="ic_number_pic_content">
                         <?php
@@ -320,7 +320,7 @@ checking_validation(validation_errors());
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label">Gambar passport <span class="mandatory">*</span></label>
+                <label class="col-sm-3 col-form-label">Gambar passport </label>
                 <div class="col-sm-5">
                     <div id="passport_pic_content">
                         <?php
@@ -415,18 +415,19 @@ checking_validation(validation_errors());
         ?>
         occupation_status_clicked();
 
-        if('<?php echo uri_segment(4)?>'=='print'){
-            // setTimeout(function(){
-            //     javascript:window.print();
-            // }, 3000);
-            //
-            // // window.print();
-            // window.onfocus=function () {
-            //     window.close();
-            // }
+        if('<?php echo uri_segment(4)?>'=='print')
+        {
 
-            window.print();
-            setTimeout(window.close, 0);
+            $( window ).on('load', '', function(event) {
+                window.print();
+            });
+
+            $(function()
+            {
+                $("body").hover(function(){
+                    window.close();
+                });
+            });
         }
     });
 
