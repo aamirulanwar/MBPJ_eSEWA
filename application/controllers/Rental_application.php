@@ -750,6 +750,8 @@ class Rental_application extends CI_Controller
         if(!$get_details):
             return false;
         endif;
+        
+
         //pre($get_details);
         $data['data_details']   = $get_details;
         $data['dependent']      = $this->m_acc_dependent->get_dependent_by_applicant_id($get_details['APPLICANT_ID']);
@@ -811,7 +813,6 @@ class Rental_application extends CI_Controller
             validation_rules('director_name','<strong>nama pengarah/pegawai</strong>','required');
             validation_rules('mobile_phone_number','<strong>no. telefon pengarah/pegawai</strong>','required');
             validation_rules('total_income_a_year','<strong>jumlah pendapatan setahun</strong>','required');
-
         elseif ($get_details['FORM_TYPE']==3):
             $data['letter_application'] = $this->m_file_gallery->get_file($id,PERMOHONAN_SURAT_PERMOHONAN);
             $data['ic_number_pic']      = $this->m_file_gallery->get_file($id,PERMOHONAN_SALINAN_KAD_PENGENALAN);
@@ -838,7 +839,6 @@ class Rental_application extends CI_Controller
             validation_rules('structure_type_building','<strong>cadangan jenis struktur bangunan</strong>','required');
             validation_rules('charge_use_in_a_month','<strong>cadangan caj penggunaan / penyelanggaraan sebulan</strong>','required');
             validation_rules('operation_use','<strong>cadangan operasi / kegunaan tapak / bangunan</strong>','required');
-
         elseif ($get_details['FORM_TYPE']==4):
             $get_department_layer_1 = $this->m_dept->get_department_layer_1();
             $department_arr = array();
@@ -872,7 +872,6 @@ class Rental_application extends CI_Controller
             validation_rules('mobile_phone_number','<strong>no. telefon bimbit</strong>','required');
         endif;
 
-
         validation_rules('no_fail','<strong>no. fail</strong>');
         validation_rules('asset_id','<strong>kod harta / no. gerai</strong>','required');
         validation_rules('rental_fee','<strong>harga sewaan</strong>','required');
@@ -886,30 +885,41 @@ class Rental_application extends CI_Controller
         validation_rules('rental_duration','<strong>>tempoh sewaan & bil</strong>','required');
         validation_rules('bill_type','<strong>jenis bil</strong>','required');
         validation_rules('waste_management_bills','<strong>dikenakan bil pengurusan sampah</strong>','required');
-        if(input_data('waste_management_bills')==1):
-            validation_rules('waste_management_charge','<strong>caj pengurusan sampah</strong>','required');
-        endif;
         validation_rules('freezer_management_bills','<strong>dikenakan bil simpanan sejuk beku</strong>','required');
-        if(input_data('freezer_management_bills')==1):
-            validation_rules('freezer_management_charge','<strong>caj simpanan sejuk beku</strong>','required');
-        endif;
 
-        if($get_details['STATUS_APPLICATION'] == STATUS_APPLICATION_NEW || $get_details['STATUS_APPLICATION'] == STATUS_APPLICATION_KIV):
-            if(input_data('status_application')!=STATUS_APPLICATION_NEW):
+        if(input_data('waste_management_bills')==1)
+        {
+            validation_rules('waste_management_charge','<strong>caj pengurusan sampah</strong>','required');
+        }
+        
+        if(input_data('freezer_management_bills')==1)
+        {
+            validation_rules('freezer_management_charge','<strong>caj simpanan sejuk beku</strong>','required');
+        }
+
+        if($get_details['STATUS_APPLICATION'] == STATUS_APPLICATION_NEW || $get_details['STATUS_APPLICATION'] == STATUS_APPLICATION_KIV)
+        {
+            if(input_data('status_application')!=STATUS_APPLICATION_NEW)
+            {
                 validation_rules('meeting_number','<strong>no. bilangan mesyuarat penuh majlis/no. rujukan</strong>','required');
                 validation_rules('date_meeting','<strong>tarikh mesyuarat / keputusan</strong>','required');
                 validation_rules('status_application','<strong>status permohonan</strong>','required');
                 validation_rules('remark','<strong>catatan</strong>');
-            endif;
-        elseif ($get_details['STATUS_APPLICATION'] == STATUS_APPLICATION_APPROVED):
+            }
+        }
+        elseif ($get_details['STATUS_APPLICATION'] == STATUS_APPLICATION_APPROVED)
+        {
             validation_rules('status_agree','<strong>status setuju terima</strong>','required');
             validation_rules('date_agree','<strong>tarikh keputusan</strong>','required');
             validation_rules('remark_agree','<strong>catatan</strong>');
-        endif;
+        }
 
-        if(validation_run()==false):
+        if( validation_run() == false )
+        {
             templates('/rental_application/form_'.$get_details['FORM_TYPE'].'/v_form_'.$get_details['FORM_TYPE'].'_details',$data);
-        else:
+                    }
+        else
+        {
             if($get_details['FORM_TYPE']==1):
                 $data_update_applicant['name']                = input_data('name');
                 $data_update_applicant['ic_number']           = trim(str_replace(array(' ', '-', '/'), '', input_data('ic_number')));
@@ -982,7 +992,6 @@ class Rental_application extends CI_Controller
                 $data_update['structure_type_building']     = input_data('structure_type_building');
                 $data_update['charge_use_in_a_month']       = currencyToDouble(input_data('charge_use_in_a_month'));
                 $data_update['operation_use']               = input_data('operation_use');
-
             elseif ($get_details['FORM_TYPE']==4):
                 $data_update_applicant['name']                  = input_data('name');
                 $data_update_applicant['ic_number']             = input_data('ic_number');
@@ -1007,78 +1016,109 @@ class Rental_application extends CI_Controller
 
             $get_asset = $this->m_a_asset->get_a_asset_by_id(input_data('asset_id'));
 
-            $data_update['file_number']             = input_data('no_fail');
-            if($get_asset['ASSET_NAME']):
+            $data_update['file_number'] = input_data('no_fail');
+
+            if($get_asset['ASSET_NAME'])
+            {
                 $file_number_juu =  input_data('no_fail').'('.$get_asset['ASSET_NAME'].')'.$get_details['REF_NUMBER'];
-            else:
+            }
+            else
+            {
                 $file_number_juu =  input_data('no_fail').$get_details['REF_NUMBER'];
-            endif;
-            $data_update['file_number_juu']         = $file_number_juu;
-            $data_update['asset_id']                = input_data('asset_id');
-            $data_update['estimation_rental_charge']= currencyToDouble(input_data('rental_fee'));
-            $data_update['difference_rental_charge']= currencyToDouble(input_data('difference_rental_charge'));
-            $data_update['difference_rental_charge_type']= (input_data('difference_rental_charge_type'));
-            $data_update['rental_fee']              = currencyToDouble(input_data('rental_charge'));
-            $data_update['waste_management_bills']  = input_data('waste_management_bills');
-            if(input_data('waste_management_bills')==1):
+            }
+
+            $data_update['file_number_juu']                 =       $file_number_juu;
+            $data_update['asset_id']                        =       input_data('asset_id');
+            $data_update['estimation_rental_charge']        =       currencyToDouble(input_data('rental_fee'));
+            $data_update['difference_rental_charge']        =       currencyToDouble(input_data('difference_rental_charge'));
+            $data_update['difference_rental_charge_type']   =       (input_data('difference_rental_charge_type'));
+            $data_update['rental_fee']                      =       currencyToDouble(input_data('rental_charge'));
+            $data_update['waste_management_bills']          =       input_data('waste_management_bills');
+            $data_update['freezer_management_bills']        =       input_data('freezer_management_bills');
+            $data_update['deposit_rental']                  =       currencyToDouble(input_data('deposit_rental'));
+            $data_update['rental_agreement_cost']           =       currencyToDouble(input_data('rental_agreement_cost'));
+            $data_update['date_start']                      =       input_data('date_start');
+            $data_update['date_end']                        =       input_data('date_end');
+            $data_update['rental_duration']                 =       input_data('rental_duration');
+            $data_update['bill_type']                       =       input_data('bill_type');
+
+            if(input_data('waste_management_bills')==1)
+            {
                 $data_update['waste_management_charge']  = currencyToDouble(input_data('waste_management_charge'));
-            else:
+            }
+            else
+            {
                 $data_update['waste_management_charge']  = 0.00;
-            endif;
-
-            $data_update['freezer_management_bills']  = input_data('freezer_management_bills');
-            if(input_data('freezer_management_bills')==1):
+            }
+            
+            if(input_data('freezer_management_bills')==1)
+            {
                 $data_update['freezer_management_charge']  = currencyToDouble(input_data('freezer_management_charge'));
-            else:
+            }
+            else
+            {
                 $data_update['freezer_management_charge']  = 0.00;
-            endif;
+            }
+           
 
-            $data_update['deposit_rental']          = currencyToDouble(input_data('deposit_rental'));
-            $data_update['rental_agreement_cost']   = currencyToDouble(input_data('rental_agreement_cost'));
-            $data_update['date_start']              = input_data('date_start');
-            $data_update['date_end']                = input_data('date_end');
-            $data_update['rental_duration']         = input_data('rental_duration');
-            $data_update['bill_type']               = input_data('bill_type');
-
-            if($get_details['STATUS_APPLICATION'] == STATUS_APPLICATION_NEW || $get_details['STATUS_APPLICATION'] == STATUS_APPLICATION_KIV):
-                if(input_data('status_application')!=STATUS_APPLICATION_NEW):
-                    $data_update['status_application']  = input_data('status_application');
-                    $data_update['meeting_number']      = strtoupper(input_data('meeting_number'));
-                    $data_update['remark']              = input_data('remark');
-                    $data_update['date_meeting']        = input_data('date_meeting');
-                endif;
-
+            if($get_details['STATUS_APPLICATION'] == STATUS_APPLICATION_NEW || $get_details['STATUS_APPLICATION'] == STATUS_APPLICATION_KIV)
+            {
                 $data_audit_trail['log_id'] = 2002;
-                if(input_data('status_application')==STATUS_APPLICATION_NEW):
-                    $data_audit_trail['log_id'] = 2002;
-                elseif(input_data('status_application')==STATUS_APPLICATION_APPROVED):
-                    $data_audit_trail['log_id'] = 2003;
-                elseif(input_data('status_application')==STATUS_APPLICATION_REJECTED):
-                    $data_audit_trail['log_id'] = 2004;
-                elseif(input_data('status_application')==STATUS_APPLICATION_KIV):
-                    $data_audit_trail['log_id'] = 2005;
-                endif;
 
-            elseif ($get_details['STATUS_APPLICATION'] == STATUS_APPLICATION_APPROVED):
-                if(input_data('status_agree')!=STATUS_AGREE_DEFAULT):
+                if(input_data('status_application')!=STATUS_APPLICATION_NEW)
+                {
+                    $data_update['status_application']  =   input_data('status_application');
+                    $data_update['meeting_number']      =   strtoupper(input_data('meeting_number'));
+                    $data_update['remark']              =   input_data('remark');
+                    $data_update['date_meeting']        =   input_data('date_meeting');
+                }
+                
+                if(input_data('status_application')==STATUS_APPLICATION_NEW)
+                {
+                    $data_audit_trail['log_id'] = 2002;
+                }
+                elseif(input_data('status_application')==STATUS_APPLICATION_APPROVED)
+                {
+                    $data_audit_trail['log_id'] = 2003;
+                }
+                elseif(input_data('status_application')==STATUS_APPLICATION_REJECTED)
+                {
+                    $data_audit_trail['log_id'] = 2004;
+                }
+                elseif(input_data('status_application')==STATUS_APPLICATION_KIV)
+                {
+                    $data_audit_trail['log_id'] = 2005;
+                }
+            }
+            elseif ($get_details['STATUS_APPLICATION'] == STATUS_APPLICATION_APPROVED)
+            {
+                $data_audit_trail['log_id'] = 2002;
+
+                if(input_data('status_agree')!=STATUS_AGREE_DEFAULT)
+                {
                     $data_update['status_agree']        = input_data('status_agree');
                     $data_update['date_agree']          = input_data('date_agree');
                     $data_update['remark_agree']        = input_data('remark_agree');
-                endif;
-
-                $data_audit_trail['log_id'] = 2002;
-                if(input_data('status_agree')==STATUS_AGREE_DEFAULT):
+                }
+                
+                if(input_data('status_agree')==STATUS_AGREE_DEFAULT)
+                {
                     $data_audit_trail['log_id'] = 2002;
-                elseif(input_data('status_agree')==STATUS_AGREE_ACCEPTED):
+                }
+                elseif(input_data('status_agree')==STATUS_AGREE_ACCEPTED)
+                {
                     $data_audit_trail['log_id'] = 2006;
-                elseif(input_data('status_agree')==STATUS_AGREE_REJECTED):
+                }
+                elseif(input_data('status_agree')==STATUS_AGREE_REJECTED)
+                {
                     $data_audit_trail['log_id'] = 2007;
-                endif;
-            endif;
+                }
+            }
 
             $update_status = $this->m_p_application->update_application($data_update,$id);
 
-            if($update_status):
+            if($update_status)
+            {
                 $data_audit_trail['remark']                  = $this->input->post();
                 $data_audit_trail['status']                  = PROCESS_STATUS_SUCCEED;
                 $data_audit_trail['user_id']                 = $this->curuser['USER_ID'];
@@ -1086,16 +1126,21 @@ class Rental_application extends CI_Controller
                 $this->audit_trail_lib->add($data_audit_trail);
 
                 set_notify('notify_msg',TEXT_UPDATE_RECORD);
-            else:
+            }
+            else
+            {
                 set_notify('notify_msg',TEXT_UPDATE_UNSUCCESSFUL,2);
-            endif;
+            }
 
-            if($get_details['STATUS_APPLICATION'] == STATUS_APPLICATION_APPROVED && $get_details['STATUS_AGREE'] == STATUS_AGREE_ACCEPTED):
+            if($get_details['STATUS_APPLICATION'] == STATUS_APPLICATION_APPROVED && $get_details['STATUS_AGREE'] == STATUS_AGREE_ACCEPTED)
+            {
                 redirect('/account/create_acc/'.urlEncrypt($id));
-            else:
+            }
+            else
+            {
                 redirect('/rental_application/application_process/'.urlEncrypt($id));
-            endif;
-        endif;
+            }
+        }
     }
 
     function get_data_category_by_type()

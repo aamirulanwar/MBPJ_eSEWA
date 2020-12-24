@@ -415,18 +415,19 @@ checking_validation(validation_errors());
         ?>
         occupation_status_clicked();
 
-        if('<?php echo uri_segment(4)?>'=='print'){
-            // setTimeout(function(){
-            //     javascript:window.print();
-            // }, 3000);
-            //
-            // // window.print();
-            // window.onfocus=function () {
-            //     window.close();
-            // }
+        if('<?php echo uri_segment(4)?>'=='print')
+        {
 
-            window.print();
-            setTimeout(window.close, 0);
+            $( window ).on('load', '', function(event) {
+                window.print();
+            });
+
+            $(function()
+            {
+                $("body").hover(function(){
+                    window.close();
+                });
+            });
         }
     });
 
