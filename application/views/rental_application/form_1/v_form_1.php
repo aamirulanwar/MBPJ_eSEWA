@@ -345,7 +345,7 @@ checking_validation(validation_errors());
                 ?>
             </div>
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label">Salinan kad pengenalan <span class="mandatory">*</span></label>
+                <label class="col-sm-3 col-form-label">Salinan kad pengenalan</label>
                 <div class="col-sm-5">
                     <div id="ic_number_pic_content">
                         <?php
@@ -365,7 +365,7 @@ checking_validation(validation_errors());
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label">Gambar passport <span class="mandatory">*</span></label>
+                <label class="col-sm-3 col-form-label">Gambar passport</label>
                 <div class="col-sm-5">
                     <div id="passport_pic_content">
                         <?php
