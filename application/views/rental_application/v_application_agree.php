@@ -51,7 +51,7 @@ checking_validation(validation_errors());
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-hover table-bordered">
+                <table class="table table-hover table-bordered" style="font-size: 9pt;">
                     <tr>
                         <th>No.</th>
                         <th>Tarikh permohonan</th>
@@ -121,7 +121,8 @@ checking_validation(validation_errors());
                                         <?php
                                         else:
                                             ?>
-                                            <input type="file" accept="image/png,image/jpeg,image/jpg" onchange="upload_picture('attachment_agree_<?php echo $row['APPLICATION_ID']?>')" name="attachment_agree_<?php echo $row['APPLICATION_ID']?>" id="attachment_agree_<?php echo $row['APPLICATION_ID']?>" class="form-control">
+                                            <input type="file" accept="image/png,image/jpeg,image/jpg" onchange="upload_picture('attachment_agree_<?php echo $row['APPLICATION_ID']?>')" name="attachment_agree_<?php echo $row['APPLICATION_ID']?>" id="attachment_agree_<?php echo $row['APPLICATION_ID']?>" class="form-control" style="display:none;">
+                                            <label class="btn btn-warning" for="attachment_agree_<?php echo $row['APPLICATION_ID']?>">Muatnaik Lampiran</label>
                                         <?php
                                         endif;
                                         ?>
