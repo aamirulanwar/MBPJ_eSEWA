@@ -450,11 +450,11 @@
                         <?php endif;?>
                         <?php if($this->auth->access_view($this->curuser,array(8006))):?>
                         <li class="nav-item">
-                            <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('highest_overdue '))?>" href="/report/highest_overdue">
+                            <a class="nav-link <?php echo set_active_menu(uri_segment(1).'/'.uri_segment(2).'/'.uri_segment(3),'report/highest_overdue')?>" href="/report/highest_overdue">
                                 <i class="nav-icon fa fa-circle fa-sm"></i> Tunggakan Tertinggi</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('highest_overdue '))?>" href="/report/highest_overdue/two">
+                            <a class="nav-link <?php echo set_active_menu(uri_segment(1).'/'.uri_segment(2).'/'.uri_segment(3),'report/highest_overdue/two')?>" href="/report/highest_overdue/two">
                                 <i class="nav-icon fa fa-circle fa-sm"></i> Tunggakan</a>
                         </li>
                         <?php endif;?>
@@ -502,7 +502,7 @@
                         <?php endif;?>
                         <?php if($this->auth->access_view($this->curuser,array(8014))):?>
                         <li class="nav-item">
-                            <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('perjanjian'))?>" href="/report/perjanjian_kutipan">
+                            <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('perjanjian_kutipan'))?>" href="/report/perjanjian_kutipan">
                                 <i class="nav-icon fa fa-circle fa-sm"></i> Laporan Perbandingan Jumlah Perjanjian & Kutipan</a>
                         </li>
                         <?php endif;?>
@@ -514,7 +514,7 @@
                         <?php endif;?>
                         <?php if($this->auth->access_view($this->curuser,array(8016))):?>
                         <li class="nav-item">
-                            <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('iso'))?>" href="/report/laporan_iso">
+                            <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('laporan_iso'))?>" href="/report/laporan_iso">
                                 <i class="nav-icon fa fa-circle fa-sm"></i> Laporan Pencapaian Objektif Kualiti</a>
                         </li>
                         <?php endif;?>
