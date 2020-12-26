@@ -191,91 +191,21 @@
     <button class="navbar-toggler sidebar-toggler d-md-down-none" type="button" data-toggle="sidebar-lg-show">
         <span class="navbar-toggler-icon"></span>
     </button>
-    <!--    <ul class="nav navbar-nav d-md-down-none">-->
-    <!--        <li class="nav-item px-3">-->
-    <!--            <a class="nav-link" href="#">Dashboard</a>-->
-    <!--        </li>-->
-    <!--        <li class="nav-item px-3">-->
-    <!--            <a class="nav-link" href="#">Users</a>-->
-    <!--        </li>-->
-    <!--        <li class="nav-item px-3">-->
-    <!--            <a class="nav-link" href="#">Settings</a>-->
-    <!--        </li>-->
-    <!--    </ul>-->
     <ul class="nav navbar-nav ml-auto">
-    <!--        <li class="nav-item d-md-down-none">-->
-    <!--            <a class="nav-link" href="#">-->
-    <!--                <i class="icon-bell"></i>-->
-    <!--                <span class="badge badge-pill badge-danger">0</span>-->
-    <!--            </a>-->
-    <!--        </li>-->
-    <!--        <li class="nav-item d-md-down-none">-->
-    <!--            <a class="nav-link" href="#">-->
-    <!--                <i class="icon-list"></i>-->
-    <!--            </a>-->
-    <!--        </li>-->
-    <!--        <li class="nav-item d-md-down-none">-->
-    <!--            <a class="nav-link" href="#">-->
-    <!--                <i class="icon-location-pin"></i>-->
-    <!--            </a>-->
-    <!--        </li>-->
         <li class="nav-item dropdown">
             <a class="nav-link" data-toggle="dropdown" href="/profile" role="button" aria-haspopup="true"
                aria-expanded="false">
                 <img class="img-avatar" src="/assets/images/user.png" alt="administrator"><?php echo $this->curuser['USER_NAME']?>&nbsp;&nbsp;
             </a>
             <div class="dropdown-menu dropdown-menu-right">                
-                <!-- <div class="dropdown-header text-center">
-                    <strong>Account</strong>
-                </div>
-                <a class="dropdown-item" href="#">
-                    <i class="fa fa-bell-o"></i> Updates
-                    <span class="badge badge-info">42</span>
-                </a>
-                <a class="dropdown-item" href="#">
-                    <i class="fa fa-envelope-o"></i> Messages
-                    <span class="badge badge-success">42</span>
-                </a>
-                <a class="dropdown-item" href="#">
-                    <i class="fa fa-tasks"></i> Tasks
-                    <span class="badge badge-danger">42</span>
-                </a>
-                <a class="dropdown-item" href="#">
-                    <i class="fa fa-comments"></i> Comments
-                    <span class="badge badge-warning">42</span>
-                </a>
-                <div class="dropdown-header text-center">
-                    <strong>Settings</strong>
-                </div> -->
                 <a class="dropdown-item" href="/profile">
                     <i class="fa fa-user"></i> Profil</a>
-                    <!-- 
-                    <a class="dropdown-item" href="#">
-                        <i class="fa fa-wrench"></i> Settings</a>
-                    <a class="dropdown-item" href="#">
-                        <i class="fa fa-usd"></i> Payments
-                        <span class="badge badge-secondary">42</span>
-                    </a>
-                    <a class="dropdown-item" href="#">
-                        <i class="fa fa-file"></i> Projects
-                        <span class="badge badge-primary">42</span>
-                    </a>
-                    <div class="divider"></div>
-                    <a class="dropdown-item" href="#">
-                        <i class="fa fa-shield"></i> Lock Account</a>  
-                    -->
                 <a class="dropdown-item" href="/logout">
                     <i class="fa fa-lock"></i> Log keluar        
                 </a>
             </div>
         </li>
     </ul>
-    <!--    <button class="navbar-toggler aside-menu-toggler d-md-down-none" type="button" data-toggle="aside-menu-lg-show">-->
-    <!--        <span class="navbar-toggler-icon"></span>-->
-    <!--    </button>-->
-    <!--    <button class="navbar-toggler aside-menu-toggler d-lg-none" type="button" data-toggle="aside-menu-show">-->
-    <!--        <span class="navbar-toggler-icon"></span>-->
-    <!--    </button>-->
 </header>
 <div class="app-body">
     <div class="sidebar">
@@ -349,8 +279,6 @@
                         <?php endif;?>
                         <?php if($this->auth->access_view($this->curuser,array(3013))):?>
                         <li class="nav-item">
-                            <!-- <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('asset_location','add_asset_location','edit_asset_location'))?>" href="/asset/asset_location">
-                                <i class="nav-icon icon-action-redo"></i> Kawasan</a> -->
                             <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('rental_use','add_asset_rental_use','edit_asset_rental_use'))?>" href="/asset/rental_use">
                                 <i class="nav-icon fa fa-circle fa-sm"></i> Kegunaan Sewaan</a>
                         </li>
@@ -359,10 +287,6 @@
                         <li class="nav-item">
                             <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('tenant_type','add_asset_tenant_type','edit_asset_tenant_type'))?>" href="/asset/tenant_type">
                                 <i class="nav-icon fa fa-circle fa-sm"></i> Jenis Penyewa</a>
-                                <!--    <a class="nav-link" href="/asset/tenant_type">-->
-                                <!--        <i class="nav-icon icon-puzzle"></i> Kod Dokumen</a>-->
-                                <!--    <a class="nav-link" href="/code_utility">-->
-                                <!--        <i class="nav-icon icon-puzzle"></i> Kod Utiliti</a>-->
                         </li>
                         <?php endif;?>
                     </ul>
@@ -421,7 +345,7 @@
                         <?php endif;?>
                         <?php if($this->auth->access_view($this->curuser,array(5003))):?>
                         <li class="nav-item">
-                            <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('account_list'))?>" href="/account/account_list">
+                            <a class="nav-link <?php echo set_active_menu(uri_segment(1)."/".uri_segment(2),'account/account_list')?>" href="/account/account_list">
                                 <i class="nav-icon fa fa-circle fa-sm"></i> Senarai Akaun</a>
                         </li>
                         <?php endif;?>
@@ -448,7 +372,7 @@
                     <ul class="nav-dropdown-items">
                         <?php if($this->auth->access_view($this->curuser,array(6001))):?>
                         <li class="nav-item">
-                            <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('account_list','generate_current_bill','current_bill'))?>" href="/bill/account_list">
+                            <a class="nav-link <?php echo set_active_menu(uri_segment(1)."/".uri_segment(2),array('bill/account_list','bill/generate_current_bill','bill/current_bill'))?>" href="/bill/account_list">
                                 <i class="nav-icon fa fa-circle fa-sm"></i> Akaun</a>
                         </li>
                         <?php endif;?>
@@ -467,19 +391,19 @@
                     <ul class="nav-dropdown-items">
                         <?php if($this->auth->access_view($this->curuser,array(7001))):?>
                         <li class="nav-item">
-                            <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('account_list','generate_current_bill','current_bill'))?>" href="/journal/search">
+                            <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('search'))?>" href="/journal/search">
                                 <i class="nav-icon fa fa-circle fa-sm"></i>Senarai Pelarasan</a>
                         </li>
                         <?php endif;?>
                         <?php if($this->auth->access_view($this->curuser,array(7002))):?>
                         <li class="nav-item">
-                            <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('account_list','generate_current_bill','current_bill'))?>" href="/journal/entry">
+                            <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('entry'))?>" href="/journal/entry">
                                 <i class="nav-icon fa fa-circle fa-sm"></i>Senarai Kemasukan</a>
                         </li>
                         <?php endif;?>
                         <?php if($this->auth->access_view($this->curuser,array(7003))):?>
                         <li class="nav-item">
-                            <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('account_list','generate_current_bill','current_bill'))?>" href="/journal/index">
+                            <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('index'))?>" href="/journal/index">
                                 <i class="nav-icon fa fa-circle fa-sm"></i>Senarai Kelulusan</a>
                         </li>
                         <?php endif;?>
@@ -488,47 +412,12 @@
                 </li>
                 <?php endif;?>
 
-
-                <!--                <li class="nav-item nav-dropdown --><?php //echo set_active_dropdown(uri_segment(1),array('journal'))?><!--">-->
-                <!--                    <a class="nav-link nav-dropdown-toggle --><?php //echo set_active_menu(uri_segment(1),array('journal'))?><!--" href="/journal/insert">-->
-                <!--                        <i class="nav-icon icon-layers"></i> Penyelarasan</a>-->
-                <!--                    <ul class="nav-dropdown-items">-->
-                <!--                        <li class="nav-item">-->
-                <!--                            <a class="nav-link --><?php //echo set_active_menu(uri_segment(2),array('account_list','generate_current_bill','current_bill'))?>
-                                                    <!-- " href="/bill/account_list"> -->
-                <!--                                <i class="nav-icon fa fa-circle fa-sm"></i> Akaun</a>-->
-                <!--                        </li>-->
-                <!--                        <li class="nav-item">-->
-                <!--                            <a class="nav-link --><?php //echo set_active_menu(uri_segment(2),array('notice_list'))?><!--" href="/bill/notice_list">-->
-                <!--                                <i class="nav-icon fa fa-circle fa-sm"></i> Tunggakan</a>-->
-                <!--                        </li>-->
-                <!--                    </ul>-->
-                <!--                </li>-->
-
                 <?php if($this->auth->access_main_view($this->curuser,array(8000))):?>
                 <li class="nav-item nav-dropdown <?php echo set_active_dropdown(uri_segment(1),array('report'))?>">
                     <a class="nav-link nav-dropdown-toggle <?php echo set_active_menu(uri_segment(1),array('report'))?>" href="#5">
                         <i class="nav-icon icon-chart"></i> Laporan</a>
                     <ul class="nav-dropdown-items">
-                        <!-- <li class="nav-item">
-                            <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('rent_summary'))?>" href="/report/rent_summary">
-                                <i class="nav-icon fa fa-circle fa-sm"></i> Ringkasan Sewaan</a>
-                        </li> -->
-                        <!--                        <li class="nav-item">-->
-                        <!--                            <a class="nav-link --><?php //echo set_active_menu(uri_segment(2),array('gl_summary'))?><!--" href="/report/gl_summary">-->
-                        <!--                                <i class="nav-icon fa fa-circle fa-sm"></i> Hasil Kod GL</a>-->
-                        <!--                        </li>-->
-
-                        <!--                        <li class="nav-item">-->
-                        <!--                            <a class="nav-link --><?php //echo set_active_menu(uri_segment(2),array('category_adjustment'))?><!--" href="/report/category_adjustment">-->
-                        <!--                                <i class="nav-icon fa fa-circle fa-sm"></i> Penyata Penyesuaian</a>-->
-                        <!--                        </li>-->
-
-
-                        <!--                        <li class="nav-item">-->
-                        <!--                            <a class="nav-link --><?php //echo set_active_menu(uri_segment(2),array('category_aging'))?><!--" href="/report/category_aging">-->
-                        <!--                                <i class="nav-icon fa fa-circle fa-sm"></i> Aging Sewaan</a>-->
-                        <!--                        </li>-->
+                        
                         <?php if($this->auth->access_view($this->curuser,array(8001))):?>
                         <li class="nav-item">
                             <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('category_aging_details'))?>" href="/report/category_aging_details">
@@ -541,14 +430,6 @@
                                 <i class="nav-icon fa fa-circle fa-sm"></i> Aging Sewaan Ringkasan</a>
                         </li>
                         <?php endif;?>
-                        <!--                        <li class="nav-item">-->
-                        <!--                            <a class="nav-link --><?php //echo set_active_menu(uri_segment(2),array('account_outstanding'))?><!--" href="/report/account_outstanding">-->
-                        <!--                                <i class="nav-icon fa fa-circle fa-sm"></i> Tunggakan Tertinggi</a>-->
-                        <!--                        </li>-->
-                        <!-- <li class="nav-item">
-                            <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('account_adjustment'))?>" href="/report/account_adjustment">
-                                <i class="nav-icon fa fa-RFcircle fa-sm"></i> Penyesuaian Akaun</a>
-                        </li> -->
                         <?php if($this->auth->access_view($this->curuser,array(8003))):?>
                         <li class="nav-item">
                             <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('gst_rental'))?>" href="/report/gst_rental">
