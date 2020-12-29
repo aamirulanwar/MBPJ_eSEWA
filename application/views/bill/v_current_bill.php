@@ -213,6 +213,9 @@ notify_msg('notify_msg');
 
                             if($current_bill)
                             {
+                                echo '  <tr>';
+                                echo '    <td colspan="3" style="width: 100px;font-weight: bold">BIL SEMASA</td>';
+                                echo '  </tr>';
                                 foreach ($current_bill as $current_bill_item)
                                 {
                                     $total = $total + $current_bill_item['AMOUNT'];                                
@@ -227,6 +230,7 @@ notify_msg('notify_msg');
                                     }
 
                                     echo '  <tr>';
+                                    echo '    <td style="min-width: 15px;">&nbsp;</td>';
                                     echo '    <td>'.$current_bill_item['TR_DESC'].'</td>';
                                     echo '    <td class="text-right">'.num($amount).'</td>';
                                     echo '  </tr>';
@@ -234,6 +238,7 @@ notify_msg('notify_msg');
                                     if ( $current_bill_item['AMOUNT'] < 0)
                                     {
                                         echo '  <tr>';
+                                        echo '    <td>&nbsp;</td>';
                                         echo '    <td>LEBIHAN BAYARAN '.$current_bill_item['TR_DESC'].'</td>';
                                         echo '    <td class="text-right">'.num($current_bill_item['AMOUNT']).'</td>';
                                         echo '  </tr>';
@@ -250,6 +255,10 @@ notify_msg('notify_msg');
 
                             if($outstanding_bill)
                             {
+                                echo '  <tr style="height:10px;"></tr>';
+                                echo '  <tr>';
+                                echo '    <td colspan="3" style="width: 100px;font-weight: bold">TUNGGAKAN</td>';
+                                echo '  </tr>';
                                 // Ini sample function bagi line subtotal utk paparan lebih
                                 // Commented as no better view is found
                                 // echo "<tr style='height:5px;' ><td colspan='2'></td></tr>";
@@ -267,6 +276,7 @@ notify_msg('notify_msg');
                                     }
 
                                     echo '  <tr>';
+                                    echo '    <td>&nbsp;</td>';
                                     echo '    <td>'.$outstanding_bill_item['TR_DESC'].'</td>';
                                     echo '    <td class="text-right">'.num($amount).'</td>';
                                     echo '  </tr>';
@@ -274,6 +284,7 @@ notify_msg('notify_msg');
                                     if ( $outstanding_bill_item['AMOUNT'] < 0)
                                     {
                                         echo '  <tr>';
+                                        echo '    <td>&nbsp;</td>';
                                         echo '    <td>LEBIHAN BAYARAN '.$outstanding_bill_item['TR_DESC'].'</td>';
                                         echo '    <td class="text-right">'.num($outstanding_bill_item['AMOUNT']).'</td>';
                                         echo '  </tr>';
@@ -290,6 +301,10 @@ notify_msg('notify_msg');
 
                             if($others_bill)
                             {
+                                echo '  <tr style="height:10px;"></tr>';
+                                echo '  <tr>';
+                                echo '    <td colspan="3" style="width: 100px;">LAIN - LAIN</td>';
+                                echo '  </tr>';
                                 // Ini sample function bagi line subtotal utk paparan lebih
                                 // Commented as no better view is found
                                 // echo "<tr style='height:5px;' ><td colspan='2'></td></tr>";
@@ -307,6 +322,7 @@ notify_msg('notify_msg');
                                     }
 
                                     echo '  <tr>';
+                                    echo '    <td>&nbsp;</td>';
                                     echo '    <td>'.$others_bill_item['TR_DESC'].'</td>';
                                     echo '    <td class="text-right">'.num($amount).'</td>';
                                     echo '  </tr>';
@@ -314,6 +330,7 @@ notify_msg('notify_msg');
                                     if ( $others_bill_item['AMOUNT'] < 0)
                                     {
                                         echo '  <tr>';
+                                        echo '    <td>&nbsp;</td>';
                                         echo '    <td>LEBIHAN BAYARAN '.$others_bill_item['TR_DESC'].'</td>';
                                         echo '    <td class="text-right">'.num($others_bill_item['AMOUNT']).'</td>';
                                         echo '  </tr>';
@@ -321,8 +338,9 @@ notify_msg('notify_msg');
                                 }
                             }
                         ?>
+                        <tr style="height:10px;"></tr>
                         <tr>
-                            <td>JUMLAH BAYARAN</td>
+                            <td colspan="2" style="font-weight: bold">JUMLAH BAYARAN</td>
                             <td class="text-right" style="border-top: 1px solid;border-bottom: 1px double"><?=num($total)?></td>
                         </tr>
                     </table>
