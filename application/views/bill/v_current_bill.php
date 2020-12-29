@@ -238,7 +238,7 @@ notify_msg('notify_msg');
                                     if ( $current_bill_item['AMOUNT'] < 0)
                                     {
                                         echo '  <tr>';
-                                        echo '    <td>&nbsp;</td>';
+                                        echo '    <td style="width: 35px;">&nbsp;</td>';
                                         echo '    <td>LEBIHAN BAYARAN '.$current_bill_item['TR_DESC'].'</td>';
                                         echo '    <td class="text-right">'.num($current_bill_item['AMOUNT']).'</td>';
                                         echo '  </tr>';
@@ -276,7 +276,7 @@ notify_msg('notify_msg');
                                     }
 
                                     echo '  <tr>';
-                                    echo '    <td>&nbsp;</td>';
+                                    echo '    <td style="width: 35px;">&nbsp;</td>';
                                     echo '    <td>'.$outstanding_bill_item['TR_DESC'].'</td>';
                                     echo '    <td class="text-right">'.num($amount).'</td>';
                                     echo '  </tr>';
@@ -284,7 +284,7 @@ notify_msg('notify_msg');
                                     if ( $outstanding_bill_item['AMOUNT'] < 0)
                                     {
                                         echo '  <tr>';
-                                        echo '    <td>&nbsp;</td>';
+                                        echo '    <td style="width: 35px;">&nbsp;</td>';
                                         echo '    <td>LEBIHAN BAYARAN '.$outstanding_bill_item['TR_DESC'].'</td>';
                                         echo '    <td class="text-right">'.num($outstanding_bill_item['AMOUNT']).'</td>';
                                         echo '  </tr>';
@@ -322,7 +322,7 @@ notify_msg('notify_msg');
                                     }
 
                                     echo '  <tr>';
-                                    echo '    <td>&nbsp;</td>';
+                                    echo '    <td style="width: 35px;">&nbsp;</td>';
                                     echo '    <td>'.$others_bill_item['TR_DESC'].'</td>';
                                     echo '    <td class="text-right">'.num($amount).'</td>';
                                     echo '  </tr>';
@@ -330,7 +330,7 @@ notify_msg('notify_msg');
                                     if ( $others_bill_item['AMOUNT'] < 0)
                                     {
                                         echo '  <tr>';
-                                        echo '    <td>&nbsp;</td>';
+                                        echo '    <td style="width: 35px;">&nbsp;</td>';
                                         echo '    <td>LEBIHAN BAYARAN '.$others_bill_item['TR_DESC'].'</td>';
                                         echo '    <td class="text-right">'.num($others_bill_item['AMOUNT']).'</td>';
                                         echo '  </tr>';
