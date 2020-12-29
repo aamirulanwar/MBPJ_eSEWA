@@ -230,7 +230,7 @@ notify_msg('notify_msg');
                                     }
 
                                     echo '  <tr>';
-                                    echo '    <td style="min-width: 15px;">&nbsp;</td>';
+                                    echo '    <td style="width: 35px;">&nbsp;</td>';
                                     echo '    <td>'.$current_bill_item['TR_DESC'].'</td>';
                                     echo '    <td class="text-right">'.num($amount).'</td>';
                                     echo '  </tr>';
