@@ -47,6 +47,7 @@ class Report extends CI_Controller
             'gst_rental_simple',
             'print_gst_rental_simple',
             'code_gl',
+            'print_code_gl',
             'highest_overdue',
             'print_highest_overdue',
             'record_transaction',
@@ -829,6 +830,25 @@ class Report extends CI_Controller
         endif;
 
         templates('/report/v_code_gl',$data);
+    }
+
+    function print_code_gl()
+    {
+        $data_search = get_session('arr_filter_code_gl');
+        $data['data_type']          = $this->m_type->get_a_type();
+        $data['data_code_object']   = $this->m_tran_code->get_tr_code_list();
+
+        if($data_search):
+            $data_report = $this->m_bill_item->report_code_gl($data_search);
+            // echo last_query();
+            $data['data_report']       = $data_report;
+            $data['data_search']    = $data_search;
+        else:
+            $data['data_report']       = array();
+            $data['data_search']    = $data_search;
+        endif;
+
+        $this->load->view('/report/v_print_code_gl',$data);
     }
 
     function highest_overdue()
