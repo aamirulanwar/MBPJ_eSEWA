@@ -88,7 +88,7 @@
                 if($data_report):
                     ?>
                     <div class="pull-right">
-                        <button onclick="print_report()" class="btn btn-warning btn-sm pull-right">Cetak</button>
+                        <a class="btn btn-warning btn-sm pull-right" href="/report/print_code_gl" target="_blank">Cetak</a>
                     </div>
                     <br>
                     <br>
