@@ -245,6 +245,7 @@ class M_acc_account extends CI_Model
         db_select("to_char(a.date_agreement, 'dd-mm-yyyy hh:mi:ss') as date_agreement");        
         db_select('a.bill_type as bill_type');
         db_select("to_char(a.dt_added, 'yyyy-mm-dd hh24:mi:ss') as dt_create_acc",false);
+        db_select("to_char(a.dt_added, 'dd/mm/yyyy') as dt_letter");
         db_select("to_char(acc.date_of_birth, 'dd-mm-yyyy') as date_of_birth",false);
         db_select('acc.address as user_address');
         db_select('acc.department_id as department_id');

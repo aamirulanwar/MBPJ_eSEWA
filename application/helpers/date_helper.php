@@ -296,6 +296,70 @@ function date_display($date,$format = 'd M Y',$lang='eng'){
     return $dt;
 }
 
+function date_display_bm($date,$format = 'd/m/Y')
+{
+    $date = DateTime::createFromFormat($format, $date);
+
+    if(!$date)
+    {
+        return '';
+    }
+
+    $day = $date->format('d');
+    $month = $date->format('n');
+    $year = $date->format('Y');
+
+    if( $month == 1)
+    {
+        $new_date_in_bm = $day." Januari ".$year;
+    }
+    else if( $month == 2)
+    {
+        $new_date_in_bm = $day." Februari ".$year;
+    }
+    else if( $month == 3)
+    {
+        $new_date_in_bm = $day." Mac ".$year;
+    }
+    else if( $month == 4)
+    {
+        $new_date_in_bm = $day." April ".$year;
+    }
+    else if( $month == 5)
+    {
+        $new_date_in_bm = $day." Mei ".$year;
+    }
+    else if( $month == 6)
+    {
+        $new_date_in_bm = $day." Jun ".$year;
+    }
+    else if( $month == 7)
+    {
+        $new_date_in_bm = $day." Julai ".$year;
+    }
+    else if( $month == 8)
+    {
+        $new_date_in_bm = $day." Ogos ".$year;
+    }
+    else if( $month == 9)
+    {
+        $new_date_in_bm = $day." September ".$year;
+    }
+    else if( $month == 10)
+    {
+        $new_date_in_bm = $day." Oktober ".$year;
+    }
+    else if( $month == 11)
+    {
+        $new_date_in_bm = $day." November ".$year;
+    }
+    else if( $month == 12)
+    {
+        $new_date_in_bm = $day." Disember ".$year;
+    }
+    return $new_date_in_bm;
+}
+
 function get_working_days($startDate,$endDate){
             
     $endDate    = strtotime($endDate);

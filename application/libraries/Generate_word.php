@@ -437,9 +437,11 @@ class Generate_word {
         $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($_SERVER['DOCUMENT_ROOT'].'/file_download/perjanjian/'.$template);
         
         $templateProcessor->setValue('letter_date',date_display(timenow(),'d F Y','malay'));
+        // $templateProcessor->setValue('letter_date1',date_display($get_details['DT_ADDED'],'d F Y','malay'));
+        $templateProcessor->setValue( 'letter_date1', date_display_bm( $get_details['DT_LETTER']) );
         $templateProcessor->setValue('letter_date_hijri',date_display_hijri(timenow()));
-        $templateProcessor->setValue('letter_date1',$application_details['DATE_APPLICATION']);
-        $templateProcessor->setValue('file_number',$application_details['FILE_NUMBER']);
+        // $templateProcessor->setValue('letter_date1',$application_details['DATE_APPLICATION']);
+        // $templateProcessor->setValue('file_number',$application_details['FILE_NUMBER']);
         $templateProcessor->setValue('file_number_juu',$get_details['FILE_NUMBER_JUU']);
         $templateProcessor->setValue('name',$get_details['NAME']);
         $templateProcessor->setValue('name_caps',strtoupper($get_details['NAME']));
