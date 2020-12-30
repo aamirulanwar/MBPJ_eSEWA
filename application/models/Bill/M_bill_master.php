@@ -138,7 +138,7 @@ class M_bill_master extends CI_Model
             db_where("m.dt_added <= to_date('".date('d-M-y',strtotime($data_search['date_end']))."')");
         endif;
         if(isset($data_search['account_number']) && having_value($data_search['account_number'])):
-            db_where("a.account_number",$data_search['account_number']);
+            db_where("a.account_number like '%".$data_search['account_number']."%'");
         endif;
         db_join('acc_account a','a.account_id=m.account_id');
         db_from('b_master m');
