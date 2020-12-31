@@ -41,6 +41,8 @@ class Generate_word {
             $this->generate_agreement($id);
         elseif($doc_type==DOC_SIGNATURE):
             $this->generate_signature($id);
+        elseif($doc_type==SURAT_PENGAMBILAN_PERJANJIAN):
+            $this->generate_surat_pengambilan_perjanjian($id);
         elseif($doc_type==DOC_NOTICE):
             $this->generate_notice($id, $doc_sub_type,$notice_info);
         elseif($doc_type==DOC_QUARTERS):
@@ -572,6 +574,52 @@ class Generate_word {
         //Check and replace if symbol in name exist that might make the file to be corrupted or cant be named
         $filename_replace = preg_replace("/[^A-Za-z0-9' ]/", "_", $get_details['NAME']); 
         $filename = 'Dokumen Tandatangan - '.$filename_replace.'.docx';
+        $templateProcessor->saveAs($filename);
+        header('Content-Disposition: attachment; filename='.$filename);
+        header('Content-Transfer-Encoding: binary');
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Expires: 0');
+        header('Pragma: public');
+        flush();
+        readfile($filename);
+        unlink($filename);
+        exit;
+    }
+
+    private function generate_surat_pengambilan_perjanjian($id)
+    {
+        $get_details = $this->ci->m_acc_account->get_account_details($id);
+        $template = 'surat pengambilan perjanjian.docx';
+
+        $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($_SERVER['DOCUMENT_ROOT'].'/file_download/perjanjian/'.$template);
+
+        $address = display_address($get_details['MAIL_ADDRESS_1'],$get_details['MAIL_ADDRESS_2'],$get_details['MAIL_ADDRESS_3'],$get_details['MAIL_POSTCODE'],strtolower($get_details['MAIL_STATE']));
+        if(empty($address)):
+            $address = display_address($get_details['ADDRESS_1'],$get_details['ADDRESS_2'],$get_details['ADDRESS_3'],$get_details['POSTCODE'],ucwords(strtolower($get_details['STATE'])));
+        endif;
+        $address = str_replace('<br>', ' ', $address);
+
+
+        $templateProcessor->setValue(   'name'                 , strtoupper($get_details['NAME'])                 );
+        $templateProcessor->setValue(   'address'              , strtoupper($address)                             );
+        $templateProcessor->setValue(   'ic_number'            , display_ic_number($get_details['IC_NUMBER'])     );
+        $templateProcessor->setValue(   'file_number_juu'      , $get_details['FILE_NUMBER_JUU']                  );
+        $templateProcessor->setValue(   'account_number'       , $get_details['ACCOUNT_NUMBER']                   );
+        $templateProcessor->setValue(   'phone_number'         , display_mobile_number($get_details['MOBILE_PHONE_NUMBER']));
+        $templateProcessor->setValue(   'letter_date'          , date_display(timenow(),'d F Y','malay')          );
+        $templateProcessor->setValue(   'asset_name'           , $get_details['ASSET_NAME']                       );
+        $templateProcessor->setValue(   'category_name'        , $get_details['CATEGORY_NAME']                    );
+        $templateProcessor->setValue(   'category_name_caps'   , strtoupper($get_details['CATEGORY_NAME'])        );
+        $templateProcessor->setValue(   'current_date'         , date_display(timenow(),'d F Y','malay')          );
+        $templateProcessor->setValue(   'rental_duration'      ,$get_details['RENTAL_DURATION']);
+        $templateProcessor->setValue(   'rental_duration_word' ,convertNumberToWord($get_details['RENTAL_DURATION']));
+        $templateProcessor->setValue(   'date_start'           ,date_display($get_details['DATE_START'],'d F Y','malay'));
+        $templateProcessor->setValue(   'date_end'             ,date_display($get_details['DATE_END'],'d F Y','malay'));
+
+        ob_clean();
+        //Check and replace if symbol in name exist that might make the file to be corrupted or cant be named
+        $filename_replace = preg_replace("/[^A-Za-z0-9' ]/", "_", $get_details['NAME']); 
+        $filename = 'SURAT PENGAMBILAN PERJANJIAN - '.$filename_replace.'.docx';
         $templateProcessor->saveAs($filename);
         header('Content-Disposition: attachment; filename='.$filename);
         header('Content-Transfer-Encoding: binary');

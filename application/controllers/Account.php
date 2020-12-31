@@ -38,6 +38,7 @@ class Account extends CI_Controller
             'account_create_list',
             'doc_agreement',
             'doc_signature',
+            'surat_pengambilan_perjanjian',
             'doc_quarters',
             'update_acc',
             'detail_acc',
@@ -1219,6 +1220,20 @@ class Account extends CI_Controller
             load_library('Generate_word');
 
             $this->generate_word->word_document($id, DOC_SIGNATURE);
+
+        endif;
+    }
+
+    function surat_pengambilan_perjanjian(){
+        $this->auth->restrict_access($this->curuser,array(5007));
+
+        $id = urlDecrypt(uri_segment(3));
+        if(!is_numeric($id)):
+            return false;
+        elseif(is_numeric($id)):
+
+            load_library('Generate_word');
+            $this->generate_word->word_document($id, SURAT_PENGAMBILAN_PERJANJIAN);
 
         endif;
     }
