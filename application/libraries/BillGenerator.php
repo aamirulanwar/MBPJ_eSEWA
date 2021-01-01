@@ -497,7 +497,6 @@ class BillGenerator
                     }
                 }
 
-
                 if ( $bill_transaction["TR_CODE"] != "" && strlen( $bill_transaction["TR_CODE"] ) > 5 )
                 {
                     $original_trcode = $bill_transaction["TR_CODE"];
@@ -1049,7 +1048,7 @@ class BillGenerator
 
                 $this->CI->m_bill_item->delete($data_delete);
 
-                if ( $last_year_balance < 0 )
+                if ( round($last_year_balance,2) < 0 )
                 {
                     $search_lebihan_trcode["MCT_TRCODENEW"] = "11119999";
                     $tr_code_lebihan_detail =  $this->CI->m_tr_code->get_tr_code( $search_lebihan_trcode );
@@ -1067,28 +1066,109 @@ class BillGenerator
                 }
                 else
                 {
+                    // Get list of outstanding bill transaction
                     $list_of_outstanding = $this->calcPastTransaction($account_id);
 
-                    if ( $list_of_outstanding !== false )
+                    // Get list of tr_code that exists in the pass year
+                    $list_of_tr_code_exist_last_year    =  $this->CI->m_bill_item->getLastYearTrCodeThatExists( date('Y') - 1, $account_id );
+
+                    // Add list tr_code that already exist in the past year to be compare in this year
+                    if ( isset( $list_of_tr_code_exist_last_year ) )
                     {
-                        foreach ($list_of_outstanding as $transaction) 
+                        $list_tr = array();
+                        foreach ( $list_of_tr_code_exist_last_year as $tr_code ) 
                         {
                             # code...
-                            if ( $transaction["BALANCE_AMOUNT"] > 0 )
-                            {
-                                $data_insert['BILL_ID']         = $b_master["BILL_ID"];
-                                $data_insert['TR_CODE']         = $transaction['TR_CODE_TUNGGAKAN'];
-                                $data_insert['TR_CODE_OLD']     = $transaction['TR_CODE_OLD_TUNGGAKAN'];
-                                $data_insert['AMOUNT']          = $transaction['BALANCE_AMOUNT'];
-                                $data_insert['PRIORITY']        = $transaction['PRIORITY'];
-                                $data_insert['ACCOUNT_ID']      = $account_id;
-                                $data_insert['ITEM_DESC']       = $transaction['TR_DESC_TUNGGAKAN'];
-                                $data_insert['BILL_CATEGORY']   = "B";
+                            $outstanding_tr_code_sewaan              = "11".substr( $tr_code["LIST_TR_CODE"] , 2) ;
+                            $outstanding_tr_code_tungk_sewaan        = "12".substr( $tr_code["LIST_TR_CODE"] , 2) ;
+                            $outstanding_tr_code_byrn_sewaan         = "21".substr( $tr_code["LIST_TR_CODE"] , 2) ;
+                            $outstanding_tr_code_byrn__tungk_sewaan  = "22".substr( $tr_code["LIST_TR_CODE"] , 2) ;
 
-                                $this->CI->m_bill_item->insert_bill_item($data_insert);
+                            if ( !in_array( $outstanding_tr_code_sewaan, $list_tr) )
+                            {
+                                array_push( $list_tr, $outstanding_tr_code_sewaan ); // Add tr_code for current bill
+                            }
+
+                            if ( !in_array( $outstanding_tr_code_tungk_sewaan, $list_tr) )
+                            {
+                                array_push( $list_tr, $outstanding_tr_code_tungk_sewaan ); // Add tr_code for tunggakan bill
+                            }
+
+                            if ( !in_array( $outstanding_tr_code_byrn_sewaan, $list_tr) )
+                            {
+                                array_push( $list_tr, $outstanding_tr_code_byrn_sewaan ); // Add tr_code for bayaran current bill
+                            }
+
+                            if ( !in_array( $outstanding_tr_code_byrn_sewaan, $list_tr) )
+                            {
+                                array_push( $list_tr, "22".substr( $tr_code["LIST_TR_CODE"] , 2) ); // Add tr_code for  bayaran tunggakan bill
                             }
                         }
                     }
+
+                    if ( $list_of_outstanding !== false )
+                    {
+                        foreach ($list_of_outstanding as $outstanding_charges) 
+                        {
+                            if ( isset($outstanding_charges["TR_CODE_TUNGGAKAN"]) )
+                            {
+                                $tr_code_outstanding_charges = $outstanding_charges["TR_CODE_TUNGGAKAN"];
+                            }
+                            else if ( isset($outstanding_charges["TR_CODE_OLD_TUNGGAKAN"]) )
+                            {
+                                $tr_code_outstanding_charges = $outstanding_charges["TR_CODE_OLD_TUNGGAKAN"];
+                            }
+
+                            // echo $tr_code_outstanding_charges."</br>";
+
+                            // Check if tr_code is exist in the pass year
+                            if ( in_array( $tr_code_outstanding_charges, $list_tr ) )
+                            {
+                                if ( $outstanding_charges["BALANCE_AMOUNT"] > 0 )
+                                {
+                                    // $data[] = array( 
+                                    //                     'TR_CODE_OLD'      =>  $outstanding_charges["TR_CODE_OLD_TUNGGAKAN"],
+                                    //                     'TR_CODE_NEW'      =>  $outstanding_charges["TR_CODE_TUNGGAKAN"],
+                                    //                     'TR_DESC'          =>  $outstanding_charges["TR_DESC_TUNGGAKAN"],
+                                    //                     'AMOUNT'           =>  $outstanding_charges["BALANCE_AMOUNT"],
+                                    //                     'DISPLAY_PRIORITY' =>  '3',
+                                    //                 );
+
+                                    $data_insert['BILL_ID']         = $b_master["BILL_ID"];
+                                    $data_insert['TR_CODE']         = $outstanding_charges['TR_CODE_TUNGGAKAN'];
+                                    $data_insert['TR_CODE_OLD']     = $outstanding_charges['TR_CODE_OLD_TUNGGAKAN'];
+                                    $data_insert['AMOUNT']          = $outstanding_charges['BALANCE_AMOUNT'];
+                                    $data_insert['PRIORITY']        = $outstanding_charges['PRIORITY'];
+                                    $data_insert['ACCOUNT_ID']      = $account_id;
+                                    $data_insert['ITEM_DESC']       = $outstanding_charges['TR_DESC_TUNGGAKAN'];
+                                    $data_insert['BILL_CATEGORY']   = "B";
+
+                                    $this->CI->m_bill_item->insert_bill_item($data_insert);
+                                }
+                            }
+                        }
+                    }
+
+                    // if ( $list_of_outstanding !== false )
+                    // {
+                    //     foreach ($list_of_outstanding as $transaction) 
+                    //     {
+                    //         # code...
+                    //         if ( $transaction["BALANCE_AMOUNT"] > 0 )
+                    //         {
+                    //             $data_insert['BILL_ID']         = $b_master["BILL_ID"];
+                    //             $data_insert['TR_CODE']         = $transaction['TR_CODE_TUNGGAKAN'];
+                    //             $data_insert['TR_CODE_OLD']     = $transaction['TR_CODE_OLD_TUNGGAKAN'];
+                    //             $data_insert['AMOUNT']          = $transaction['BALANCE_AMOUNT'];
+                    //             $data_insert['PRIORITY']        = $transaction['PRIORITY'];
+                    //             $data_insert['ACCOUNT_ID']      = $account_id;
+                    //             $data_insert['ITEM_DESC']       = $transaction['TR_DESC_TUNGGAKAN'];
+                    //             $data_insert['BILL_CATEGORY']   = "B";
+
+                    //             $this->CI->m_bill_item->insert_bill_item($data_insert);
+                    //         }
+                    //     }
+                    // }
                 }
 
                 $data_update_master["TOTAL_AMOUNT"] = $this->CI->m_bill_item->getBillItemTotalAmount( $b_master["BILL_ID"] )["TOTAL_AMOUNT"];
