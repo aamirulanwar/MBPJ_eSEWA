@@ -38,6 +38,11 @@ class M_bill_item extends CI_Model
             db_where('i.DISPLAY_STATUS',$data_search['DISPLAY_STATUS']);
         }
 
+        if (isset($data_search["EARLY_YEAR_BILL"]) && $data_search['EARLY_YEAR_BILL'] == 0 )
+        {
+            db_where("i.bill_id in (select bill_id from b_master where bill_month = 1 and bill_year = to_char(sysdate, 'yyyy') ) and substr(i.tr_code, 1, 2) = '12' ");
+        }
+
         $sql = db_get('');
 
         if($sql)
@@ -74,6 +79,8 @@ class M_bill_item extends CI_Model
         {
             db_where('DISPLAY_STATUS',$data_delete['DISPLAY_STATUS']);
         }
+
+        db_where(" substr(tr_code,1,2) != '12' and tr_code != '11119999' ");
 
         $ci->db->delete('B_ITEM');
         return true;

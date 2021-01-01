@@ -57,6 +57,8 @@ class M_b_int_latest extends CI_Model
         $sql = db_get('');
         if($sql):
             return $sql->result_array();
+        else:
+            return array();
         endif;
     }
 

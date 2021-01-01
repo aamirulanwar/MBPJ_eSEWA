@@ -976,6 +976,43 @@ class BillGenerator
                     }
                 }
 
+                // Get new year outstanding bill only for January bill
+                if ( date('n') == 1 )
+                {
+                    $data_search_carry["ACCOUNT_ID"] = $account_id;
+                    $data_search_carry["EARLY_YEAR_BILL"] = 0;
+                    $carry_forward_outstanding_bill = $this->CI->m_bill_item->get($data_search_carry);
+
+                    if ( count($carry_forward_outstanding_bill) > 0 )
+                    {
+                        foreach ($carry_forward_outstanding_bill as $carry_forward_bill) 
+                        {
+                            // After add record on b_item, add to b_int_latest for system "KUTIPAN" to retreive bill record and process
+                            $data_insert_b_int_latest['ACCOUNT_NUMBER']  = $account_detail["ACCOUNT_NUMBER"];
+                            $data_insert_b_int_latest['TR_CODE']         = $carry_forward_bill['TR_CODE_OLD'];
+                            $data_insert_b_int_latest['TR_CODE_NEW']     = $carry_forward_bill['TR_CODE'];
+                            $data_insert_b_int_latest['AMOUNT']          = $carry_forward_bill['AMOUNT'];
+                            $data_insert_b_int_latest['PROSES_STATUS']   = "0";
+
+                            // Check bill item in b_int_latest before add. If no record then add new record else update record
+                            $data_condition = $data_insert_b_int_latest;
+                            $data_condition["CURRENT_MONTH"] = date('n');
+                            $data_condition["CURRENT_YEAR"] = date('Y');
+                            unset( $data_condition['AMOUNT'] );
+                            $b_int_latest_status = $this->CI->m_b_int_latest->get($data_condition);
+
+                            if ( isset($b_int_latest_status) && count($b_int_latest_status) == 0 )
+                            {
+                                $this->CI->m_b_int_latest->insert($data_insert_b_int_latest);
+                            }
+                            else if ( isset($b_int_latest_status) && count($b_int_latest_status) > 0 )
+                            {
+                                $this->CI->m_b_int_latest->update( $data_condition, $data_insert_b_int_latest );
+                            }
+                        }
+                    }
+                }
+
                 $data_update_master["TOTAL_AMOUNT"] = $this->CI->m_bill_item->getBillItemTotalAmount( $b_master["BILL_ID"] )["TOTAL_AMOUNT"];
                 $this->CI->m_bill_master->updateBillMasterTotalAmount($b_master["BILL_ID"],$account_id,$data_update_master);
 
