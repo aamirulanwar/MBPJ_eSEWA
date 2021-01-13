@@ -19,13 +19,15 @@
             <table id="table_kewangan_dataTable" class="table table-striped table-bordered">
                 <thead>
                     <th>No.</th>
-                    <th>Kod Kategori</th>
-                    <th>Perihal Kategori</th>
+                    <th>Kod Kredit GL</th>
+                    <th>Jenis Harta</th>
+                    <th>Kod Transaksi</th>
                     <th>Jumlah Bilangan Bil</th>
                     <th>Jumlah Amaun Bil</th>
                 </thead>
                 <tbody>
                 <?php
+                    $total_bill = 0;
                     $total_bill_amount = 0;
                     if($bill_record)
                     {
@@ -34,12 +36,14 @@
                         {
                             $i=$i+1;
                             $tab = '10px';
+                            $total_bill = $total_bill + $bill["TOTAL_BILL_COUNT"];
                             $total_bill_amount = $total_bill_amount + $bill["TOTAL_BILL_AMOUNT"];
                             
                             echo "<tr>";
                             echo "<td>".$i."</td>";
-                            echo "<td>".$bill["CATEGORY_CODE"]."</td>";
-                            echo "<td>".$bill["CATEGORY_NAME"]."</td>";
+                            echo "<td>".$bill["GL_CR_CODE"]."</td>";
+                            echo "<td>".$bill["TYPE_NAME"]."</td>";
+                            echo "<td>".$bill["TR_CODE"]." - ".$bill["ITEM_DESC"]."</td>";
                             echo "<td>".$bill["TOTAL_BILL_COUNT"]."</td>";
                             echo "<td>".$bill["TOTAL_BILL_AMOUNT"]."</td>";
                             echo "</tr>";

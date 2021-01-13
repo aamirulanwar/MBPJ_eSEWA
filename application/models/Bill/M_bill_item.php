@@ -409,11 +409,13 @@ class M_bill_item extends CI_Model
         db_where('i.TR_CODE IS NOT NULL ');
 
         if(isset($data_search['date_start']) && having_value($data_search['date_start'])):
-            db_where("m.dt_added >= to_date('".date('d-M-y',strtotime($data_search['date_start']))."')");
+            // db_where("m.dt_added >= to_date('".date('d-M-y',strtotime($data_search['date_start']))."')");
+            db_where("m.dt_added >= to_date('".$data_search['date_start']."','dd mon yyyy')");
         endif;
 
         if(isset($data_search['date_end']) && having_value($data_search['date_end'])):
-            db_where("m.dt_added <= to_date('".date('d-M-y',strtotime($data_search['date_end']))."')");
+            // db_where("m.dt_added <= to_date('".date('d-M-y',strtotime($data_search['date_end']))."')");
+            db_where("m.dt_added <= to_date('".$data_search['date_end']."','dd mon yyyy')");
         endif;
 
         if(isset($data_search['acc_status']) && having_value($data_search['acc_status'])):

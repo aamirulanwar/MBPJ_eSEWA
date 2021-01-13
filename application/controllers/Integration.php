@@ -39,7 +39,7 @@ class Integration extends CI_Controller
         $data_search["BILL_CATEGORY"] = "B";
 
         $data["bill_record"] = $this->m_bill_master->getTotalBillGeneratedByKodKategory( $data_search["BILL_MONTH"], $data_search["BILL_YEAR"]  );
-        $data["total_bill"] = count( $this->m_bill_master->get( $data_search ) );
+        // $data["total_bill"] = count( $this->m_bill_master->get( $data_search ) );
 
         
         templates('/integration/v_integrasi_kewangan',$data);

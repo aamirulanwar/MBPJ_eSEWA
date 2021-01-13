@@ -225,20 +225,25 @@ class M_bill_master extends CI_Model
 
     function getTotalBillGeneratedByKodKategory($month,$year)
     {
-        db_select('count(b_master.bill_id) as total_bill_count');
-        db_select('sum(b_master.total_amount) as total_bill_amount');
-        db_select('b_master.bill_month');
-        db_select('b_master.bill_year');
-        db_select('b_master.bill_category');
-        db_select('a_category.category_code');
-        db_select('a_category.category_name');
-        db_from('b_master');
-        db_join('acc_account','acc_account.account_id = b_master.account_id');
-        db_join('a_category','a_category.category_id = acc_account.category_id');
+        db_select('count(b_item.item_id) as total_bill_count');
+        db_select('sum(b_item.amount) as total_bill_amount');
+        db_select('a_type.type_name');
+        db_select('b_item.tr_code');
+        db_select('b_item.item_desc');
+        db_select("(select mct_glcrdtnew from admin.mctrancode where mct_mdcode = 'B' and mct_trcodenew = b_item.tr_code) as gl_cr_code");
+        db_from('b_item');
+        db_join('b_master','b_item.bill_id = b_master.bill_id');
+        db_join('acc_account','b_master.account_id = acc_account.account_id');
+        db_join('a_category','acc_account.category_id = a_category.category_id');
+        db_join('a_type','a_category.type_id = a_type.type_id');
         db_where('b_master.bill_month',$month);
         db_where('b_master.bill_year',$year);
         db_where('b_master.bill_category','B');
-        db_group('b_master.bill_month, b_master.bill_year, b_master.bill_category, a_category.category_code, a_category.category_name');
+        db_where(" substr(b_item.tr_code,1,2) = '11' ");
+        db_where(" b_item.tr_code_old != '11090' ");
+        db_where(" b_item.tr_code != '11119999' ");
+        db_group('a_type.type_name, b_item.tr_code, b_item.item_desc');
+        db_order('a_type.type_name','asc');
 
         $sql = db_get();
         if($sql):
