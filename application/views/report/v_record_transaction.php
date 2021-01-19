@@ -348,38 +348,6 @@
     }
 </style>
 
-<script async >
-    $( document ).ready(function() {
-        <?php
-            if(uri_segment(3)=='post'):
-                ?>
-                    $('#my_form').submit();
-                <?php
-            endif;
-        ?>
-
-        window.onafterprint = function(){
-            console.log("Printing completed...");
-            $('.data-print').addClass('table-scroll')
-        }
-    });
-
-    $(document).ready(function()
-    {
-        $('.test1').DataTable( {
-            "scrollY": "200px",
-            "autoWidth" : true,
-            "pagingType": "full_numbers",
-            "ordering": false,
-            "paging": false,
-            "searching": false,
-            "info": false,
-        } );
-        // document.title = backupTitle;
-    });
-    
-</script>
-
 <script type="text/javascript">
     function printAll()
     {
