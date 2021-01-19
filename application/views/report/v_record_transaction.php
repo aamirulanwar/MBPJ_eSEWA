@@ -358,4 +358,19 @@
     {
         window.open('/report/print_all_record_transaction?year=' + year,'_blank');
     }
+
+    $(document).ready(function()
+    {
+        $('.test1').DataTable( {
+            "scrollY": "200px",
+            "autoWidth" : true,
+            "pagingType": "full_numbers",
+            "ordering": false,
+            "paging": false,
+            "searching": false,
+            "info": false,
+        } );
+        // document.title = backupTitle;
+    });
+
 </script>
