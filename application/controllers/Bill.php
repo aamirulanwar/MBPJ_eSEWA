@@ -658,13 +658,6 @@ class Bill extends CI_Controller
 
     function bill_history()
     {
-       // $this->auth->restrict_access($this->curuser,array(6004));
-
-       // $data['link_1']     = 'Bil sewaan';
-       // $data['link_2']     = 'Senarai akaun';
-       // $data['link_3']     = 'Resit terdahulu';
-       // $data['pagetitle']  = 'Senarai resit terdahulu';
-
         $id = urlDecrypt(uri_segment(3));
         if(!is_numeric($id)):
             return false;
@@ -675,37 +668,17 @@ class Bill extends CI_Controller
             return false;
         endif;
 
-       // $data['data_account'] = $data_account;
-
-       // $per_page       = 20;
-       // $search_segment = uri_segment(4);
-       // $data_search['bill_category']   = 'R';
-       // $data_search['account_id']      = $id;
-       // $data_list = $this->m_bill_master->get_bill_history_list($per_page,$search_segment,$data_search);
-       // if(!$data_list):
-       //     return false;
-       // endif;
-
-       // $total = $this->m_bill_master->count_bill_history($data_search);
-       // $links          = '/bill/bill_history/'.uri_segment(3);
-       // $uri_segment    = 4;
-       // $per_page       = 20;
-       // paging_config($links,$total,$per_page,$uri_segment);
-
-       // $data['data_list']      = $data_list;
-       // $data['total_result']   = $total;
-
-       // templates('bill/v_list_bill_history',$data);
-        $data_search['date_start']  = '';
+        $data_search['date_start']  = date_display(timenow(), 'd M Y');
         $data_search['date_end']    = '';
         $data_search['type_id']     = '';
         $data_search['category_id'] = '';
         $data_search['account_id']  = $id;
-        $data_search['order_by']    = '';
+        $data_search['order_by']    = 'i.dt_added';
+        $data_search['tr_code']     = '';
+
         $this->session->set_userdata('arr_filter_record_transaction', $data_search);
 
-        redirect('/report/record_transaction/post/'.uri_segment(4).'/'.uri_segment(5));
-
+        redirect('/report/record_transaction/'.uri_segment(4).'/');
     }
 
     function statement()

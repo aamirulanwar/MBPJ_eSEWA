@@ -1014,7 +1014,7 @@ class Report extends CI_Controller
 
         $new_data_report = array();
 
-        if ($_POST):
+        if ($_POST || ( $data_search["account_id"] != "" && strlen($data_search["account_id"]) > 1 ) ):
             // $data_report = $this->m_bill_item->record_transaction($data_search);
             // $data_report = $this->m_bill_item->rekodTransaksi($data_search);
             // $data['data_report'] = $data_report;

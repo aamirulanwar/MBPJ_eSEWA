@@ -127,7 +127,7 @@ notify_msg('notify_msg');
                                 <a class="btn btn-block btn-success btn-display" href="/bill/current_bill/<?php echo urlEncrypt($row['ACCOUNT_ID'])?>"><span class="glyphicon glyphicon-edit"></span> Bil semasa </a>
                                 <?php endif;?>
                                 <?php if($this->auth->access_view($this->curuser,array(6004))):?>
-                                <div><a href="/bill/bill_history/<?php echo urlEncrypt($row['ACCOUNT_ID'])?>/<?php echo $row['ACCOUNT_NUMBER']?>/<?php echo $row['NAME']?>" >Penyata</div></a>
+                                <div><a href="/bill/bill_history/<?php echo urlEncrypt($row['ACCOUNT_ID'])?>/<?php echo $row['ACCOUNT_NUMBER']?>/?>" >Penyata</div></a>
                                 <?php endif;?>
                             </td>
                         </tr>
