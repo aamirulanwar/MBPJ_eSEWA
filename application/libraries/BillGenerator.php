@@ -380,7 +380,6 @@ class BillGenerator
             foreach ($list_of_transaction as $bill_transaction) 
             {
                 // echo json_encode($bill_transaction)."</br>";
-                // echo "</br>";
                 if ( $prev_year != $bill_transaction["BILL_YEAR"] )
                 {
                     $already_check = 0;
@@ -409,6 +408,15 @@ class BillGenerator
                     else if ( $last_year_extra == 0 )
                     {
                         unset($outstandingBill);
+                    }
+                    else if( $last_year_extra > 0 )
+                    {
+                        foreach ($outstandingBill as $key_trcode => $value_trcode) 
+                        {
+                            # code...
+                            $outstandingBill[$key_trcode] = 0;
+                            // echo "<p style='font-color=red'>".$key_trcode." - ".$value_trcode."</p>";
+                        }
                     }
 
                     // Check if extra payment on standard gst tr_code exist, then change to extra payment for default account tr_code
@@ -568,7 +576,7 @@ class BillGenerator
                     }
                 }
 
-                // echo " ==============> ".json_encode($outstandingBill)."<br>";
+                // echo " ==============> ".json_encode($outstandingBill)."</br></br>";
 
                 $prev_year = $bill_transaction["BILL_YEAR"];
                 // $i++;
@@ -631,8 +639,6 @@ class BillGenerator
             $data = false;
         }
 
-        // echo "<pre>";
-        // var_dump($data);
         return $data;
     }
 
@@ -1259,7 +1265,14 @@ class BillGenerator
                 $outstanding_tr_code_sewaan              = "11".substr( $tr_code["LIST_TR_CODE"] , 2) ;
                 $outstanding_tr_code_tungk_sewaan        = "12".substr( $tr_code["LIST_TR_CODE"] , 2) ;
                 $outstanding_tr_code_byrn_sewaan         = "21".substr( $tr_code["LIST_TR_CODE"] , 2) ;
-                $outstanding_tr_code_byrn__tungk_sewaan  = "22".substr( $tr_code["LIST_TR_CODE"] , 2) ;
+                $outstanding_tr_code_byrn_tungk_sewaan   = "22".substr( $tr_code["LIST_TR_CODE"] , 2) ;
+
+                // Add list of tr_code that essential [START]
+                if ( !in_array( "11119999", $list_tr) )
+                {
+                    array_push( $list_tr, "11119999" ); 
+                }
+                // Add list of tr_code that essential [END]
 
                 if ( !in_array( $outstanding_tr_code_sewaan, $list_tr) )
                 {
@@ -1276,9 +1289,9 @@ class BillGenerator
                     array_push( $list_tr, $outstanding_tr_code_byrn_sewaan ); // Add tr_code for bayaran current bill
                 }
 
-                if ( !in_array( $outstanding_tr_code_byrn_sewaan, $list_tr) )
+                if ( !in_array( $outstanding_tr_code_byrn_tungk_sewaan, $list_tr) )
                 {
-                    array_push( $list_tr, "22".substr( $tr_code["LIST_TR_CODE"] , 2) ); // Add tr_code for  bayaran tunggakan bill
+                    array_push( $list_tr, $outstanding_tr_code_byrn_tungk_sewaan ); // Add tr_code for  bayaran tunggakan bill
                 }
             }
         }
@@ -1339,6 +1352,10 @@ class BillGenerator
                 }
             }
         }
+
+        // echo "<pre>";
+        // var_dump($outstanding_charges);
+        // die();
 
         // Calculate monthly charges
         // ---- Current charge ----  

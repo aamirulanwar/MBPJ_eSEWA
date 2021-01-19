@@ -131,6 +131,10 @@ class Bill extends CI_Controller
         $data['bill_master']    = $data_bill_master;
         $bill_item     = $this->billgenerator->listCurrentBill($id);
 
+        // echo "<pre>";
+        // var_dump($bill_item);
+        // die();
+
         $data_search_manual_bil["BILL_ID"]          =   $bill_master_id['BILL_ID'];
         $data_search_manual_bil["DISPLAY_STATUS"]   =   "M";
         $data_search_manual_bil["ACCOUNT_ID"]       =   $id;
