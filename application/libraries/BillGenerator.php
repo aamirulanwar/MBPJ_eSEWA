@@ -906,7 +906,7 @@ class BillGenerator
                     $data_insert_b_item['BILL_ID']         = $b_master["BILL_ID"];
                     $data_insert_b_item['TR_CODE']         = $item['KOD_CAJ_BARU'];
                     $data_insert_b_item['TR_CODE_OLD']     = $item['KOD_CAJ_LAMA'];
-                    $data_insert_b_item['AMOUNT']          = $item['CAJ_ANGGARAN'];
+                    $data_insert_b_item['AMOUNT']          = $item['CAJ'];
                     $data_insert_b_item['PRIORITY']        = $item['PRIORITY'];
                     $data_insert_b_item['ACCOUNT_ID']      = $account_id;
                     $data_insert_b_item['ITEM_DESC']       = $item['PERIHAL_CAJ_BARU'];
@@ -918,7 +918,7 @@ class BillGenerator
                     $data_insert_b_int_latest['ACCOUNT_NUMBER']  = $account_detail["ACCOUNT_NUMBER"];
                     $data_insert_b_int_latest['TR_CODE']         = $item['KOD_CAJ_LAMA'];
                     $data_insert_b_int_latest['TR_CODE_NEW']     = $item['KOD_CAJ_BARU'];
-                    $data_insert_b_int_latest['AMOUNT']          = $item['CAJ_ANGGARAN'];
+                    $data_insert_b_int_latest['AMOUNT']          = $item['CAJ'];
                     $data_insert_b_int_latest['PROSES_STATUS']   = "0";
 
                     // Check bill item in b_int_latest before add. If no record then add new record else update record
@@ -1058,7 +1058,7 @@ class BillGenerator
                 $data_search["ACCOUNT_ID"]      =  $account_id;
                 $data_search["BILL_CATEGORY"]   =  "B";
                 $data_search["CUSTOM_DT_ADDED"] =  "01/01/".$year;
-                $date_search["CUSTOM_COLUMN"]   =  "BILL_ID";
+                $data_search["CUSTOM_COLUMN"]   =  "BILL_ID";
 
                 if ( $account["BILL_TYPE"] == 1 )
                 {
@@ -1368,7 +1368,7 @@ class BillGenerator
                 $tr_code_old        =   $monthly_charge_item["KOD_CAJ_LAMA"];
                 $tr_code_new        =   $monthly_charge_item["KOD_CAJ_BARU"];
                 $tr_desc            =   $monthly_charge_item["PERIHAL_CAJ_BARU"];
-                $caj                =   $monthly_charge_item["CAJ_ANGGARAN"] ;
+                $caj                =   $monthly_charge_item["CAJ"] ;
                 $tunggakan_tr_code  =   '12'.substr($monthly_charge_item["KOD_CAJ_BARU"], 2);
 
                 if ( isset($temp_outstanding_charges[ $tunggakan_tr_code ] ) )
