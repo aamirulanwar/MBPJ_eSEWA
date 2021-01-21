@@ -538,7 +538,7 @@ class BillGenerator
                         }
                         else if ( isset( $outstandingBill[ $temp_trcode ] ) )
                         {
-                            if ( substr( $temp_trcode,0,2 ) == '12' && substr( $original_trcode,0,2 ) == '12' )
+                            if ( substr( $temp_trcode,0,2 ) == '12' && substr( $original_trcode,0,2 ) == '12' && $bill_transaction["BILL_CATEGORY"] == "B")
                             {
                                 if ( $outstandingBill[$temp_trcode] == $bill_transaction["TOTAL_AMOUNT"] )
                                 {
