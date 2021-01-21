@@ -669,7 +669,7 @@ class BillGenerator
                 $extra_value_in_single_data = 0;
                 foreach ($data as $key => $single_trx) 
                 {
-                    if ( $single_trx["BALANCE_AMOUNT"] < 0 )
+                    if ( $single_trx["BALANCE_AMOUNT"] < 0 && count($data) > 1 )
                     {
                         $extra_value_in_single_data = $single_trx["BALANCE_AMOUNT"];
 
