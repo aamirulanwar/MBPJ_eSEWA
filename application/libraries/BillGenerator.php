@@ -489,7 +489,7 @@ class BillGenerator
                 if ( $bill_transaction["TR_CODE"] == "11119999" || $bill_transaction["TR_CODE_OLD"] == "11090" )
                 {
                     // Compare with the value $last_year_extra
-                    if ( isset($outstandingBill["11119999"] ) && $outstandingBill["11119999"] != $bill_transaction["TOTAL_AMOUNT"] )
+                    if ( isset($outstandingBill["11119999"] ) && $outstandingBill["11119999"] != $bill_transaction["TOTAL_AMOUNT"] && $bill_transaction["BILL_CATEGORY"] == "B" )
                     {
                         // $tr_code_tunggakan_special should be used in here only
                         $tr_code_tunggakan_special = "12".substr( $default_trcode,2 );
@@ -503,6 +503,12 @@ class BillGenerator
                         $tr_code_tunggakan_special = "12".substr( $default_trcode,2 );
                         $outstandingBill[ $tr_code_tunggakan_special ] = $bill_transaction["TOTAL_AMOUNT"];
                         $outstandingBill["11119999"] = $bill_transaction["TOTAL_AMOUNT"];
+                    }
+                    else if ( $bill_transaction["BILL_CATEGORY"] == "J" )
+                    {
+                        $tr_code_tunggakan_special = "12".substr( $default_trcode,2 );
+                        $outstandingBill[ $tr_code_tunggakan_special ] = $outstandingBill[ $tr_code_tunggakan_special ] + $bill_transaction["TOTAL_AMOUNT"];
+                        $outstandingBill["11119999"] = $outstandingBill["11119999"] + $bill_transaction["TOTAL_AMOUNT"];
                     }
                 }
 
