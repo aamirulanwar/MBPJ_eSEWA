@@ -501,6 +501,13 @@ class BillGenerator
                     {
                         // $tr_code_tunggakan_special should be used in here only
                         $tr_code_tunggakan_special = "12".substr( $default_trcode,2 );
+
+                        // If empty that recreate with null
+                        if ( empty($outstandingBill[ $tr_code_tunggakan_special ]) )
+                        {
+                            $outstandingBill[ $tr_code_tunggakan_special ] = 0;
+                        }
+                        
                         $outstandingBill[ $tr_code_tunggakan_special ] = round( $outstandingBill[ $tr_code_tunggakan_special ], 2) + round( $bill_transaction["TOTAL_AMOUNT"], 2);
                         $outstandingBill["11119999"] = round( $bill_transaction["TOTAL_AMOUNT"], 2);
                     }
