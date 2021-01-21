@@ -359,12 +359,21 @@ class Bill extends CI_Controller
             $tipping_fee_outstanding_amount = 0; 
             $sewaan_bill_outstanding_amount = 0; 
 
-            foreach ($list_outstanding_charges as $outstanding_charges)
+            if ( isset($list_outstanding_charges) && $list_outstanding_charges != false )
             {
-                if ( $outstanding_charges["BALANCE_AMOUNT"] > 0 )
+                foreach ($list_outstanding_charges as $outstanding_charges)
                 {
-                    $total_outstanding_amount = $total_outstanding_amount + $outstanding_charges["BALANCE_AMOUNT"];
+                    if ( $outstanding_charges["BALANCE_AMOUNT"] > 0 )
+                    {
+                        $total_outstanding_amount = $total_outstanding_amount + $outstanding_charges["BALANCE_AMOUNT"];
+                    }
                 }
+            }
+            else
+            {
+                $total_outstanding_amount = 0;
+                $data_update["NOTICE_LEVEL"] = 0;
+                $this->m_acc_account->update_account($data_update,$account_id);
             }
 
             $data_list[$key]["OUTSTANDING_AMOUNT"] = $total_outstanding_amount;
