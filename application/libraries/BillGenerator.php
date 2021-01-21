@@ -664,24 +664,27 @@ class BillGenerator
             }
 
             // Check stored transaction in variable $data
-            $extra_value_in_single_data = 0;
-            foreach ($data as $key => $single_trx) 
+            if ( isset($data) && $data != false )
             {
-                if ( $single_trx["BALANCE_AMOUNT"] < 0 )
+                $extra_value_in_single_data = 0;
+                foreach ($data as $key => $single_trx) 
                 {
-                    $extra_value_in_single_data = $single_trx["BALANCE_AMOUNT"];
-
-                    if ( isset( $data[$key] ) )
+                    if ( $single_trx["BALANCE_AMOUNT"] < 0 )
                     {
-                        $data[$key]["BALANCE_AMOUNT"] = 0.00; 
+                        $extra_value_in_single_data = $single_trx["BALANCE_AMOUNT"];
+
+                        if ( isset( $data[$key] ) )
+                        {
+                            $data[$key]["BALANCE_AMOUNT"] = 0.00; 
+                        }
                     }
-                }
 
-                if ( $single_trx["BALANCE_AMOUNT"] >= 0 && $extra_value_in_single_data < 0 )
-                {
-                    if ( isset( $data[$key] ) )
+                    if ( $single_trx["BALANCE_AMOUNT"] >= 0 && $extra_value_in_single_data < 0 )
                     {
-                        $data[$key]["BALANCE_AMOUNT"] = $data[$key]["BALANCE_AMOUNT"] + $extra_value_in_single_data; 
+                        if ( isset( $data[$key] ) )
+                        {
+                            $data[$key]["BALANCE_AMOUNT"] = $data[$key]["BALANCE_AMOUNT"] + $extra_value_in_single_data; 
+                        }
                     }
                 }
             }
