@@ -507,7 +507,7 @@ class BillGenerator
                         {
                             $outstandingBill[ $tr_code_tunggakan_special ] = 0;
                         }
-                        
+
                         $outstandingBill[ $tr_code_tunggakan_special ] = round( $outstandingBill[ $tr_code_tunggakan_special ], 2) + round( $bill_transaction["TOTAL_AMOUNT"], 2);
                         $outstandingBill["11119999"] = round( $bill_transaction["TOTAL_AMOUNT"], 2);
                     }
@@ -661,6 +661,29 @@ class BillGenerator
             {
                 unset($data);
                 $data = false;
+            }
+
+            // Check stored transaction in variable $data
+            $extra_value_in_single_data = 0;
+            foreach ($data as $key => $single_trx) 
+            {
+                if ( $single_trx["BALANCE_AMOUNT"] < 0 )
+                {
+                    $extra_value_in_single_data = $single_trx["BALANCE_AMOUNT"];
+
+                    if ( isset( $data[$key] ) )
+                    {
+                        $data[$key]["BALANCE_AMOUNT"] = 0.00; 
+                    }
+                }
+
+                if ( $single_trx["BALANCE_AMOUNT"] >= 0 && $extra_value_in_single_data < 0 )
+                {
+                    if ( isset( $data[$key] ) )
+                    {
+                        $data[$key]["BALANCE_AMOUNT"] = $data[$key]["BALANCE_AMOUNT"] + $extra_value_in_single_data; 
+                    }
+                }
             }
         }
         else
