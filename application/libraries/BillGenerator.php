@@ -698,7 +698,19 @@ class BillGenerator
                     {
                         if ( isset( $data[$key] ) )
                         {
-                            $data[$key]["BALANCE_AMOUNT"] = $data[$key]["BALANCE_AMOUNT"] + $extra_value_in_single_data; 
+                            $temp_val = $data[$key]["BALANCE_AMOUNT"] + $extra_value_in_single_data;    // Store temp result for balance amount after inculde extra payment
+
+                            // Check if after include extra payment still have balance to be carried to next transaction if any
+                            if ( abs($temp_val) > $data[$key]["BALANCE_AMOUNT"] )
+                            {
+                                $extra_value_in_single_data = $temp_val;
+                                $data[$key]["BALANCE_AMOUNT"] = 0;
+                            }
+                            else if ( abs($temp_val) <= $data[$key]["BALANCE_AMOUNT"] )
+                            {
+                                $extra_value_in_single_data = 0;
+                                $data[$key]["BALANCE_AMOUNT"] = $temp_val;
+                            }
                         }
                     }
                 }
