@@ -676,6 +676,12 @@ class BillGenerator
             if ( isset($data) && $data != false )
             {
                 $extra_value_in_single_data = 0;
+
+                // Sort existing $data variable with ascending order by balance amount
+                usort($data, function($a, $b) {
+                    return $a['BALANCE_AMOUNT'] - $b['BALANCE_AMOUNT'];
+                });
+
                 foreach ($data as $key => $single_trx) 
                 {
                     if ( $single_trx["BALANCE_AMOUNT"] < 0 && count($data) > 1 )
@@ -688,7 +694,7 @@ class BillGenerator
                         }
                     }
 
-                    if ( $single_trx["BALANCE_AMOUNT"] >= 0 && $extra_value_in_single_data < 0 )
+                    if ( $single_trx["BALANCE_AMOUNT"] > 0 && $extra_value_in_single_data < 0 )
                     {
                         if ( isset( $data[$key] ) )
                         {
