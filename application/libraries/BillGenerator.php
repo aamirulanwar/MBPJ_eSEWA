@@ -494,8 +494,8 @@ class BillGenerator
                         // $tr_code_tunggakan_special should be used in here only
                         $tr_code_tunggakan_special = "12".substr( $default_trcode,2 );
                         $outstandingBill[ $tr_code_tunggakan_special ] = $bill_transaction["TOTAL_AMOUNT"];
-                        // $outstandingBill["11119999"] = $bill_transaction["TOTAL_AMOUNT"];
-                        unset($outstandingBill["11119999"]);
+                        $outstandingBill["11119999"] = $bill_transaction["TOTAL_AMOUNT"];
+                        // unset($outstandingBill["11119999"]);
                     }
                     else if ( empty($outstandingBill["11119999"] ) )
                     {
@@ -618,7 +618,17 @@ class BillGenerator
                 }
             }
 
-            if ( array_sum($outstandingBill) < 0 )
+            // Variable to check bill balance
+            $check_sum_array = $outstandingBill;
+
+            // Remove kod lebihan from $check_sum_array
+            unset($check_sum_array["11119999"]);
+
+            // echo "<pre>";
+            // var_dump($check_sum_array);
+            // die();
+
+            if ( array_sum($check_sum_array) < 0 )
             {
                 // Get tr_code description
                 $data_search_tunggakan["MCT_TRCODENEW"] = "11119999";
@@ -631,7 +641,7 @@ class BillGenerator
                                     'TR_CODE_OLD_TUNGGAKAN' => $tr_detail_tunggakan["MCT_TRCODE"],
                                     'TR_DESC_TUNGGAKAN'     => $tr_detail_tunggakan["MCT_TRDESC"],
                                     'PRIORITY'              => $tr_detail_tunggakan['MCT_PRIORT'],
-                                    'BALANCE_AMOUNT'        => array_sum($outstandingBill), 
+                                    'BALANCE_AMOUNT'        => array_sum($check_sum_array), 
                                 );
             }
         }
