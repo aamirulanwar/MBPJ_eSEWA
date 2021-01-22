@@ -695,7 +695,7 @@ class BillGenerator
                 {
                     if ( $single_trx["BALANCE_AMOUNT"] < 0 && count($data) > 1 )
                     {
-                        $extra_value_in_single_data = $single_trx["BALANCE_AMOUNT"];
+                        $extra_value_in_single_data = $extra_value_in_single_data + $single_trx["BALANCE_AMOUNT"];
 
                         if ( isset( $data[$key] ) )
                         {
@@ -710,12 +710,12 @@ class BillGenerator
                             $temp_val = $data[$key]["BALANCE_AMOUNT"] + $extra_value_in_single_data;    // Store temp result for balance amount after inculde extra payment
 
                             // Check if after include extra payment still have balance to be carried to next transaction if any
-                            if ( abs($temp_val) > $data[$key]["BALANCE_AMOUNT"] )
+                            if ( $temp_val < 0 )
                             {
                                 $extra_value_in_single_data = $temp_val;
                                 $data[$key]["BALANCE_AMOUNT"] = 0;
                             }
-                            else if ( abs($temp_val) <= $data[$key]["BALANCE_AMOUNT"] )
+                            else
                             {
                                 $extra_value_in_single_data = 0;
                                 $data[$key]["BALANCE_AMOUNT"] = $temp_val;
