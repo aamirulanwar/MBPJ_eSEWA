@@ -370,7 +370,7 @@ class BillGenerator
         $default_trcode = $category_code["TRCODE_CATEGORY"];
 
         $list_of_transaction = $this->CI->m_bill_item->groupAmountByYearTrcode( $account_id );
-
+        $check_trcode_if_required = 0;
         if ( !empty($list_of_transaction) )
         {
             $prev_year = 0;
@@ -562,7 +562,15 @@ class BillGenerator
                                 }
                                 else if ( $outstandingBill[$temp_trcode] != $bill_transaction["TOTAL_AMOUNT"] && $bill_transaction["BILL_CATEGORY"] == "B")
                                 {
-                                    $outstandingBill[$temp_trcode] = round( $bill_transaction["TOTAL_AMOUNT"], 2);
+                                    if ( $check_trcode_if_required == $original_trcode )
+                                    {
+                                        $outstandingBill[$temp_trcode] = round( $outstandingBill[$temp_trcode], 2) + round( $bill_transaction["TOTAL_AMOUNT"], 2);
+                                    }
+                                    else
+                                    {
+                                        $outstandingBill[$temp_trcode] = round( $bill_transaction["TOTAL_AMOUNT"], 2);
+                                    }
+
                                 }
                                 else
                                 {
@@ -602,6 +610,7 @@ class BillGenerator
                 // echo " ==============> ".json_encode($outstandingBill)."</br></br>";
 
                 $prev_year = $bill_transaction["BILL_YEAR"];
+                $check_trcode_if_required = $original_trcode;
                 // $i++;
             }
 
