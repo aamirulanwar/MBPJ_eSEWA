@@ -154,6 +154,19 @@ class M_a_category extends CI_Model
         endif;
     }
 
+    function get_a_category_all_active(){
+        db_select('*');
+        db_from('a_category a');
+        db_where('active',STATUS_ACTIVE);
+        db_where('soft_delete',SOFT_DELETE_FALSE);
+        // db_order('type_id');
+        db_order('category_code');
+        $sql = db_get();
+        if($sql):
+            return $sql->result_array();
+        endif;
+    }
+
     function get_data_category_by_type($type_id){
         db_select('*');
         db_from('a_category a');

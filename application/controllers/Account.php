@@ -1107,7 +1107,7 @@ class Account extends CI_Controller
 
         $data['data_search']    = $data_search;
         $data['data_type']      = $this->m_a_type->get_a_type();
-        $data['data_category']  = $this->m_a_category->get_a_category_all();
+        $data['data_category']  = $this->m_a_category->get_a_category_all_active();
 
         $total = $this->m_acc_account->count_account($data_search);
         $links          = '/account/account_list';
