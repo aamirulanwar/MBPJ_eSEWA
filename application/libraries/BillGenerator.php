@@ -805,7 +805,7 @@ class BillGenerator
         $total_payment_delayed_4_times = $this->CI->m_bill_master->get($date_search_4);
         $total_payment_delayed_5_times = $this->CI->m_bill_master->get($date_search_5);
 
-        if ( count($total_payment_delayed_5_times) == 0 )
+        if ( count($total_payment_delayed_5_times) == 0 && date('n') > 5 )
         {
             // add LOD charge
             $current_lod_transaction = "11110020";      // Please change this value if "LOD SEWAAN" is not using this transaction code
@@ -825,7 +825,7 @@ class BillGenerator
             $data_update["NOTICE_LEVEL"] = 5;
             $this->CI->m_acc_account->update_account($data_update,$account_id);
         }
-        else if ( count($total_payment_delayed_4_times) == 0 )
+        else if ( count($total_payment_delayed_4_times) == 0 && date('n') > 4 )
         {
             // add LOD charge
             $current_lod_transaction = "11110020";      // Please change this value if "LOD SEWAAN" is not using this transaction code
@@ -846,19 +846,19 @@ class BillGenerator
             $data_update["NOTICE_LEVEL"] = 4;
             $this->CI->m_acc_account->update_account($data_update,$account_id);
         }
-        else if ( count($total_payment_delayed_3_times) == 0 )
+        else if ( count($total_payment_delayed_3_times) == 0 && date('n') > 3 )
         {
             $data_update["NOTICE_LEVEL"] = 3;
             $this->CI->m_acc_account->update_account($data_update,$account_id);
             $data = false;
         }
-        else if ( count($total_payment_delayed_2_times) == 0 )
+        else if ( count($total_payment_delayed_2_times) == 0 && date('n') > 2 )
         {
             $data_update["NOTICE_LEVEL"] = 2;
             $this->CI->m_acc_account->update_account($data_update,$account_id);
             $data = false;
         }
-        else if ( count($total_payment_delayed_1_times) == 0 )
+        else if ( count($total_payment_delayed_1_times) == 0 && date('n') > 1 )
         {
             $data_update["NOTICE_LEVEL"] = 1;
             $this->CI->m_acc_account->update_account($data_update,$account_id);
