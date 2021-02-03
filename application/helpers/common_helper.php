@@ -356,6 +356,28 @@ function convertNumberToWord($num = false)
     return trim(preg_replace('/\s\s+/', ' ', upper_case_first_char(implode(' ', $words))));
 }
 
+function convertNumberOfMonthToYearMonth($num = 0)
+{
+    $year = round($num / 12);
+    $month = ($num % 12);
+
+    if ( $year < 1 && $num > 0 )
+    {
+        return convertNumberToWord($num)." ($num) Bulan";
+    }
+    else if ( $year >= 1  && $num > 0)
+    {
+        if ($month >= 1)
+        {
+            return convertNumberToWord($year)." ($year) Tahun dan ".convertNumberToWord($month)." ($month) Bulan";
+        }
+        else if ($month < 1)
+        {
+            return convertNumberToWord($year)." ($year) Tahun";
+        }
+    }
+}
+
 function search_default($data=array(),$key=''){
     if(is_array($data)):
         if(isset($data[$key])):

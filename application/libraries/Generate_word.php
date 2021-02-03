@@ -464,8 +464,8 @@ class Generate_word {
         $templateProcessor->setValue('location_billboard',$get_details['LOCATION_BILLBOARD']);
         $templateProcessor->setValue('area_billboard',$get_details['AREA_BILLBOARD']);
         $templateProcessor->setValue('phone_number',display_mobile_number($get_details['MOBILE_PHONE_NUMBER']));
-        $templateProcessor->setValue('rental_duration',$get_details['RENTAL_DURATION']);
-        $templateProcessor->setValue('rental_duration_word',convertNumberToWord($get_details['RENTAL_DURATION']));
+        $templateProcessor->setValue('rental_duration', "" );
+        $templateProcessor->setValue('rental_duration_word',convertNumberOfMonthToYearMonth($get_details['RENTAL_DURATION']));
         $templateProcessor->setValue('date_start',date_display($get_details['DATE_START'],'d F Y','malay'));
         $templateProcessor->setValue('date_end',date_display($get_details['DATE_END'],'d F Y','malay'));
         $templateProcessor->setValue('date_start_month',ucfirst(date_display($get_details['DATE_START'],'F Y','malay')));
