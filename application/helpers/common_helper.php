@@ -369,7 +369,7 @@ function convertNumberOfMonthToYearMonth($num = 0)
     {
         if ($month >= 1)
         {
-            return convertNumberToWord($year)." ($year) Tahun dan ".convertNumberToWord($month)." ($month) Bulan";
+            return convertNumberToWord($year)." ($year) Tahun ".convertNumberToWord($month)." ($month) Bulan";
         }
         else if ($month < 1)
         {
