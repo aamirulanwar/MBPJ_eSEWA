@@ -639,7 +639,7 @@ class M_bill_item extends CI_Model
         db_from('b_item i');
         db_join('b_master m','m.bill_id = i.bill_id');
         db_join('acc_account a','a.ACCOUNT_ID = m.ACCOUNT_ID');
-        db_where("i.display_status != 'X'");
+        db_where("i.display_status = 'Y'");
 
         if(isset($data_search['date_start']) && having_value($data_search['date_start'])):
             db_where("i.dt_added > to_date('".$data_search['date_start']."','DD-MM-YYYY')-1");
