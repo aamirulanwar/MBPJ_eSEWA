@@ -28,6 +28,21 @@ class M_b_int_payment extends CI_Model
         {
             db_where('PROCESS_STATUS',$data_search["PROCESS_STATUS"]);
         }
+
+        if ( isset($data_search["NO_RESIT"]) && $data_search["NO_RESIT"] != "" )
+        {
+            db_where('NO_RESIT',$data_search["NO_RESIT"]);
+        }
+
+        if ( isset($data_search["PAY_STATUS"]) && $data_search["PAY_STATUS"] != "" )
+        {
+            db_where('PAY_STATUS',$data_search["PAY_STATUS"]);
+        }
+
+        if ( isset($data_search["UNIQ_PAY_DATE"]) && $data_search["UNIQ_PAY_DATE"] != "" )
+        {
+            db_where( "to_char(dt_added,'ddmmyyyy')", $data_search["UNIQ_PAY_DATE"] );
+        }
         
         $sql = db_get('');
         if($sql):
@@ -55,6 +70,11 @@ class M_b_int_payment extends CI_Model
         if ( isset($data_condition["PROCESS_STATUS"]) && $data_condition["PROCESS_STATUS"] != "" )
         {
             db_where('PROCESS_STATUS',$data_condition["PROCESS_STATUS"]);
+        }
+
+        if ( isset($data_condition["NO_RESIT"]) && $data_condition["NO_RESIT"] != "" )
+        {
+            db_where('NO_RESIT',$data_condition["NO_RESIT"]);
         }
 
         db_update('b_int_payment',$data_update);

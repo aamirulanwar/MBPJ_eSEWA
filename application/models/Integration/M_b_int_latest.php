@@ -53,6 +53,11 @@ class M_b_int_latest extends CI_Model
         {
             db_where("to_char(dt_added,'yyyy') = ".$data_search["CURRENT_YEAR"]);
         }
+
+        if ( isset($data_search["UNIQ_BILL_DATE"]) && $data_search["UNIQ_BILL_DATE"] != "" )
+        {
+            db_where( "to_char(dt_added,'ddmmyyyy')", $data_search["UNIQ_BILL_DATE"] );
+        }
         
         $sql = db_get('');
         if($sql):
@@ -83,6 +88,12 @@ class M_b_int_latest extends CI_Model
         {
             db_where('PROSES_STATUS',$data_condition["PROSES_STATUS"]);
         }
+
+        if ( isset($data_condition["DT_ADDED"]) && $data_condition["DT_ADDED"] != "" )
+        {
+            db_where('DT_ADDED',$data_condition["DT_ADDED"]);
+        }
+        
 
         db_update('b_int_latest',$data_update);
         return true;
