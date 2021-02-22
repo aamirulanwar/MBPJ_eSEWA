@@ -38,6 +38,11 @@ class M_bill_master extends CI_Model
             db_where('ACCOUNT_ID',$data_search['ACCOUNT_ID']);
         }
 
+        if ( isset($data_search["BILL_NUMBER"]) && $data_search["BILL_NUMBER"] != "" )
+        {
+            db_where('BILL_NUMBER',$data_search['BILL_NUMBER']);
+        }
+
         if ( isset($data_search["BILL_MONTH"]) && $data_search["BILL_MONTH"] != "" )
         {
             db_where('BILL_MONTH',$data_search['BILL_MONTH']);

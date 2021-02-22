@@ -35,6 +35,7 @@ class Cron extends CI_Controller
             'update_payment_transaction',
             'generate_bill',
             'generate_bill_awal_tahun',
+            'check_cancelled_payment',
         );
         #set pages data
         (in_array($method,$array)) ? $this->$method() : $this->index();
@@ -730,7 +731,8 @@ class Cron extends CI_Controller
     {
         // Check payment transaction on b_int_payment for all account except account "SEWAAN KUARTERS" bill
         // B_INT_PAYMENT
-        $data_search_int_pay["PROCESS_STATUS"] = "0";
+        $data_search_int_pay["PAY_STATUS"]      = "P";
+        $data_search_int_pay["PROCESS_STATUS"]  = "0";
         $payment_sewaan = $this->m_b_int_payment->get($data_search_int_pay);
 
         if ( count($payment_sewaan) > 0 )
@@ -832,6 +834,75 @@ class Cron extends CI_Controller
         }
     }
 
+    function check_cancelled_payment()
+    {
+        $data_search["PAY_STATUS"] = "B";
+        $data_search["PROCESS_STATUS"] = "0";
+
+        $list_of_cancelled_payment = $this->m_b_int_payment->get($data_search);
+
+        if ( count( $list_of_cancelled_payment) > 0 )
+        {
+            $a = 1;
+            $total_cancel = count($list_of_cancelled_payment);
+            foreach ($list_of_cancelled_payment as $row) 
+            {
+                # code...
+                // echo $row["NO_RESIT"]."</br>";
+
+                $no_resit = $row["NO_RESIT"];
+                $account_no = $row["ACCOUNT_NUMBER"];
+                $amount = $row["AMOUNT"];
+                $trcode = $row["TR_CODE"];
+                $trcodenew = $row["TR_CODE_NEW"];
+                $custom_dt_added = $row["CUSTOM_DT_ADDED"];
+
+                // Get account_id
+                $data_search_account["ACCOUNT_NUMBER"] = $account_no;
+                $account_detail = $this->m_acc_account->get_account_details_by_accountNo( $account_no );
+                $account_id = $account_detail["ACCOUNT_ID"];
+
+                // Get resit transaction that to be cancel
+                $data_search_bmaster["ACCOUNT_ID"]      = $account_id;
+                $data_search_bmaster["BILL_NUMBER"]     = $no_resit;
+                $data_search_bmaster["BILL_CATEGORY"]   = "R";
+                $data_search_bmaster["CUSTOM_DT_ADDED"] = $custom_dt_added;
+                $bill_master_detail = $this->m_bill_master->get($data_search_bmaster)[0];
+
+                $data_search_bitem["ACCOUNT_ID"]      = $account_id;
+                $data_search_bitem["BILL_ID"]         = $bill_master_detail["BILL_ID"];
+                $data_search_bitem["BILL_CATEGORY"]   = "R";
+                $bill_item_detail = $this->m_bill_item->get($data_search_bitem);
+
+                // Update the transaction to hidden
+                foreach ($bill_item_detail as $items) 
+                {
+                    # code...
+                    $item_id = $items["ITEM_ID"];
+                    $data_update_bitem["DISPLAY_STATUS"] = "N";
+
+                    $this->m_bill_item->update_bill_item( $item_id, $data_update_bitem );
+                }
+
+                $data_update_int_payment["PROCESS_STATUS"] = "1";
+                $data_update_int_payment["PAY_STATUS"] = "B";
+                $this->m_b_int_payment->update($row, $data_update_int_payment);
+
+                // -----------------------------------------------------------------------------------
+                $this->generate_progress_bar_CLI($a,$total_cancel);
+                $a++;
+            }
+
+            echo "\r".PHP_EOL;
+            echo $total_cancel." rekod pembatalan bayaran telah diproses hari ini.";
+            echo "\n";
+        }
+        else
+        {
+            echo count($list_of_cancelled_payment)." rekod pembatalan bayaran telah diproses hari ini.\n";
+        }
+    }
+
     function update_payment_transaction()
     {
         // Check payment transaction on payroll.sewa_staging for account "SEWAAN KUARTERS" bill
@@ -841,6 +912,10 @@ class Cron extends CI_Controller
         // Check payment transaction on b_int_payment for all account except account "SEWAAN KUARTERS" bill
         // B_INT_PAYMENT
         $this->check_payment_sewaan();
+
+        // Check cancelled payment
+        // B_INT_PAYMENT
+        $this->check_cancelled_payment();
     }
 
     function generate_bill()

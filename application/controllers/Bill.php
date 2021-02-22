@@ -27,6 +27,9 @@ class Bill extends CI_Controller
         load_model('Notice/M_notice_log', 'm_notice_log');
         load_model('Notice/M_lod_generation', 'm_lod_generation');
         load_model('Notice/M_notis_mah_generation', 'm_notis_mah_generation');
+
+        load_model('Integration/M_b_int_latest', 'm_b_int_latest');
+        load_model('Integration/M_b_int_payment', 'm_b_int_payment');
     }
 
     function _remap($method)
@@ -43,7 +46,9 @@ class Bill extends CI_Controller
             'generate_barcode',
             'add_journal_transaction',
             'addLODcharge',
-            'updateBillAmount'
+            'updateBillAmount',
+            'restoreTestData',
+            'revertCekTendangPaymentTransaction',
         );
         #set pages data
         (in_array($method,$array)) ? $this->$method() : $this->account_list();
@@ -844,7 +849,8 @@ class Bill extends CI_Controller
         }
     }
 
-    // Do not enable this function unless for custom usage
+    //****************************************** Do not enable below function unless for custom usage ******************************************
+    /*
     function updateBillAmount()
     {
         // $data_search["ACCOUNT_ID"] = 6949;
@@ -921,4 +927,41 @@ class Bill extends CI_Controller
 
         // $this->m_bill_master->updateBillMasterTotalAmount($bill_id,$account_id,$bill_master_update);
     }
+
+    function restoreTestData()
+    {
+        $ref_no = $_GET["ref_no"];
+
+        $data_search["NO_RESIT"] = $ref_no;
+        $data_search["PAY_STATUS"] = "P";
+        $data_search["ACCOUNT_NUMBER"] = "B110000001";
+        $data_search["UNIQ_BILL_DATE"] = "01022021";
+        $data_search["UNIQ_PAY_DATE"] = "22022021";
+
+        $int_latest = $this->m_b_int_latest->get($data_search);
+        $int_payment = $this->m_b_int_payment->get($data_search);
+
+        echo "<pre>";
+        var_dump($int_latest);
+        echo "<pre>";
+        var_dump($int_payment);
+        // die();
+
+        $data_update_int_latest["PROSES_STATUS"] = "0";
+        $data_update_int_payment["PROCESS_STATUS"] = "0";
+        $data_update_int_payment["PAY_STATUS"] = "B";
+
+        // Revert payment record
+        if ( count($int_payment) > 0 )
+        {
+            $this->m_b_int_payment->update($int_payment[0], $data_update_int_payment);
+        }
+
+        if ( count($int_latest) > 0 )
+        {
+            $this->m_b_int_latest->update($int_latest[0], $data_update_int_latest);
+        }
+    } 
+
+    */
 }
