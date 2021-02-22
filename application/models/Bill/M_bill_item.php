@@ -907,6 +907,7 @@ class M_bill_item extends CI_Model
         db_where('a.bill_id = b.bill_id');
         db_where('a.account_id = b.account_id ');
         db_where('b.account_id',$account_id);
+        db_where("a.display_status",'Y');
         db_where('b.bill_id in (select bill_id from b_master where dt_added < to_date('."'01/".date('m')."/".date('Y')."',"."'dd/mm/yyyy'".') )');
         db_group("b.bill_year,b.account_id,a.tr_code_old,a.tr_code,a.BILL_CATEGORY");
         db_order('b.BILL_YEAR', 'asc');
@@ -936,6 +937,7 @@ class M_bill_item extends CI_Model
         db_where('a.bill_id = b.bill_id');
         db_where('a.account_id = b.account_id ');
         db_where('b.account_id',$account_id);
+        db_where("a.display_status",'Y');
         db_where('b.bill_year in (select max(bill_year) from b_master where account_id = '.$account_id.')');
         db_where('b.bill_id in (select bill_id from b_master where dt_added < to_date('."'01/".date('m')."/".date('Y')."',"."'dd/mm/yyyy'".') )');
         db_group("b.bill_year,b.account_id,a.tr_code_old,a.tr_code,a.BILL_CATEGORY");
@@ -1087,6 +1089,7 @@ class M_bill_item extends CI_Model
                   where
                   acc_account.account_id = b_item.account_id and 
                   acc_account.category_id is not null and 
+                  b_item.display_status = 'Y' and 
                   ".$customWhere."
                   b_item.dt_added between to_date( ".db_escape($start_date).", 'dd mon yyyy') and to_date( ".db_escape($end_date).", 'dd mon yyyy' )
                 )
@@ -1215,6 +1218,7 @@ class M_bill_item extends CI_Model
                   where
                   acc_account.account_id = b_item.account_id and 
                   acc_account.category_id is not null and 
+                  b_item.display_status = 'Y' and 
                   ".$customWhere."
                   b_item.dt_added between to_date( ".db_escape($start_date).", 'dd mon yyyy') and to_date( ".db_escape($end_date).", 'dd mon yyyy' )
                 )
@@ -1304,6 +1308,7 @@ class M_bill_item extends CI_Model
                     from b_item, b_master 
                     where 
                     b_item.bill_id = b_master.bill_id and 
+                    b_item.display_status = 'Y' and 
                     ".$customWhere1."
                 ) custom_table right join acc_account on custom_table.account_id = acc_account.account_id
                 where 
@@ -1397,6 +1402,7 @@ class M_bill_item extends CI_Model
                       tr_code_old
                       from b_item, b_master 
                       where 
+                      b_item.display_status = 'Y' and 
                       b_item.bill_id = b_master.bill_id and b_master.bill_year = to_char(sysdate,'yyyy')
                   ) custom_table right join acc_account on custom_table.account_id = acc_account.account_id
                   where acc_account.status_acc != 0 and
@@ -1474,6 +1480,7 @@ class M_bill_item extends CI_Model
                       select i.bill_id,i.item_id,i.account_id,i.amount,i.tr_code,i.tr_code_old,i.bill_category,i.b_journal_id
                       from b_item i
                       where 
+                      i.display_status = 'Y' and 
                       length(tr_code_old) > 4 and length(tr_code) > 4 and 
                       substr(tr_code_old,1,1) = '2' and substr(tr_code,1,1) = '2' and 
                       i.dt_added between to_date(".db_escape($date_start).",'dd/mm/yyyy') and to_date(".db_escape($date_end).",'dd/mm/yyyy')
@@ -1503,7 +1510,12 @@ class M_bill_item extends CI_Model
     function getLaporanTunggakan( $data_search=array() )
     {
         $customWhere1 = "";
-        
+        $search_year = date('Y');
+
+        if ( isset( $data_search["search_year"] ) && $data_search["search_year"] != "" )
+        {
+            $search_year = $data_search["search_year"];
+        }
 
         if ( isset( $data_search["account_id"] ) && $data_search["account_id"] != "" )
         {
@@ -1548,22 +1560,22 @@ class M_bill_item extends CI_Model
                         nvl(acc_account.waste_management_charge,0) as waste_management_charge,
                         nvl((
                           select sum(b_item.amount) from b_item, b_master
-                          where b_item.bill_id = b_master.bill_id and b_item.account_id = acc_account.account_id and b_master.bill_year = 2020 and substr(b_item.tr_code_old,1,2) = '11'
+                          where b_item.bill_id = b_master.bill_id and b_item.account_id = acc_account.account_id and b_master.bill_year = ".$search_year." and substr(b_item.tr_code_old,1,2) = '11' and b_item.display_status = 'Y'
                           group by substr(b_item.tr_code_old,1,2)
                         ),0) as current_billed_amount,
                         nvl((
                           select sum(b_item.amount) from b_item, b_master
-                          where b_item.bill_id = b_master.bill_id and b_item.account_id = acc_account.account_id and b_master.bill_year = 2020 and substr(b_item.tr_code_old,1,2) = '12'
+                          where b_item.bill_id = b_master.bill_id and b_item.account_id = acc_account.account_id and b_master.bill_year = ".$search_year." and substr(b_item.tr_code_old,1,2) = '12' and b_item.display_status = 'Y'
                           group by substr(b_item.tr_code_old,1,2)
                         ),0) as outstanding_amount,
                         nvl((
                           select sum(b_item.amount) from b_item, b_master
-                          where b_item.bill_id = b_master.bill_id and b_item.account_id = acc_account.account_id and b_master.bill_year = 2020 and substr(b_item.tr_code_old,1,2) = '21'
+                          where b_item.bill_id = b_master.bill_id and b_item.account_id = acc_account.account_id and b_master.bill_year = ".$search_year." and substr(b_item.tr_code_old,1,2) = '21' and b_item.display_status = 'Y'
                           group by substr(b_item.tr_code_old,1,2)
                         ),0) as pay_current_billed_amount,
                         nvl((
                           select sum(b_item.amount) from b_item, b_master
-                          where b_item.bill_id = b_master.bill_id and b_item.account_id = acc_account.account_id and b_master.bill_year = 2020 and substr(b_item.tr_code_old,1,2) = '22'
+                          where b_item.bill_id = b_master.bill_id and b_item.account_id = acc_account.account_id and b_master.bill_year = ".$search_year." and substr(b_item.tr_code_old,1,2) = '22' and b_item.display_status = 'Y'
                           group by substr(b_item.tr_code_old,1,2)
                         ),0) as pay_outstanding_amount,
                         acc_account.type_id,
