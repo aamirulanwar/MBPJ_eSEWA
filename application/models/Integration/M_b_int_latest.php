@@ -39,9 +39,9 @@ class M_b_int_latest extends CI_Model
             db_where('AMOUNT',$data_search["AMOUNT"]);
         }
 
-        if ( isset($data_search["PROSES_STATUS"]) && $data_search["PROSES_STATUS"] != "" )
+        if ( isset($data_search["PROCESS_STATUS"]) && $data_search["PROCESS_STATUS"] != "" )
         {
-            db_where('PROSES_STATUS',$data_search["PROSES_STATUS"]);
+            db_where('PROCESS_STATUS',$data_search["PROCESS_STATUS"]);
         }
 
         if ( isset($data_search["CURRENT_MONTH"]) && $data_search["CURRENT_MONTH"] != "" )
@@ -84,9 +84,9 @@ class M_b_int_latest extends CI_Model
             db_where('TR_CODE_NEW',$data_condition["TR_CODE_NEW"]);
         }
 
-        if ( isset($data_condition["PROSES_STATUS"]) && $data_condition["PROSES_STATUS"] != "" )
+        if ( isset($data_condition["PROCESS_STATUS"]) && $data_condition["PROCESS_STATUS"] != "" )
         {
-            db_where('PROSES_STATUS',$data_condition["PROSES_STATUS"]);
+            db_where('PROCESS_STATUS',$data_condition["PROCESS_STATUS"]);
         }
 
         if ( isset($data_condition["DT_ADDED"]) && $data_condition["DT_ADDED"] != "" )
