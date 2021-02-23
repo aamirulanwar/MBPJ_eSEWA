@@ -2,6 +2,7 @@
 
 class BillGenerator
 {
+    // 
     public $curuser;
 
     public function __construct()
