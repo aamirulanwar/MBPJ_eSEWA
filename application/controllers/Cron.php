@@ -763,6 +763,7 @@ class Cron extends CI_Controller
                 $data_search_b_master2["BILL_YEAR"]       =  $bill_year;
                 $data_search_b_master2["BILL_MONTH"]      =  $bill_month;
                 $data_search_b_master2["ACCOUNT_ID"]      =  $account_id;
+                $data_search_b_master2["BILL_NUMBER"]     =  $bill_resit_no;
                 $data_search_b_master2["BILL_CATEGORY"]   =  "R";
                 $data_search_b_master2["CUSTOM_COLUMN"]   =  "BILL_ID";
 
