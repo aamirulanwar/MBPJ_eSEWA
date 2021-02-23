@@ -947,7 +947,7 @@ class Bill extends CI_Controller
         var_dump($int_payment);
         // die();
 
-        $data_update_int_latest["PROSES_STATUS"] = "0";
+        $data_update_int_latest["PROCESS_STATUS"] = "0";
         $data_update_int_payment["PROCESS_STATUS"] = "0";
         $data_update_int_payment["PAY_STATUS"] = "B";
 
