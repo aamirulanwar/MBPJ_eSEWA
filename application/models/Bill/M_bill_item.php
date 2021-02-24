@@ -631,11 +631,12 @@ class M_bill_item extends CI_Model
         db_select('i.ACCOUNT_ID');
         db_select('a.ACCOUNT_NUMBER');
         db_select('i.BILL_CATEGORY');
+        db_select("decode(i.BILL_CATEGORY,'B',1,'R',2,'J',3) as custom_sort");
         db_select('m.BILL_CATEGORY as master_bill_category');
         db_select('i.AMOUNT');
         db_select('m.BILL_NUMBER');
         db_select(" case when i.BILL_CATEGORY = 'J' and i.b_journal_id is not null then (select bill_number from b_journal_temp where id = i.b_journal_id) else m.BILL_NUMBER end as reference_no");
-        db_select("to_char(i.DT_ADDED,'dd/mm/yyyy') as TKH_BIL");
+        db_select(" TO_CHAR(I.DT_ADDED, 'DD/MM/YYYY') as TKH_BIL");
         db_from('b_item i');
         db_join('b_master m','m.bill_id = i.bill_id');
         db_join('acc_account a','a.ACCOUNT_ID = m.ACCOUNT_ID');
@@ -644,20 +645,36 @@ class M_bill_item extends CI_Model
         if(isset($data_search['date_start']) && having_value($data_search['date_start'])):
             db_where("i.dt_added > to_date('".$data_search['date_start']."','DD-MM-YYYY')-1");
         endif;
+
         if(isset($data_search['tr_code']) && having_value($data_search['tr_code'])):
             db_where('i.tr_code',$data_search['tr_code']);
         endif;
+
         if(isset($data_search['date_end']) && having_value($data_search['date_end'])):
             db_where("i.dt_added < to_date('".$data_search['date_end']."','DD-MM-YYYY')+1");
         endif;
+
         if(isset($data_search['account_id']) && having_value($data_search['account_id'])):
             db_where('m.account_id',$data_search['account_id']);
         endif;
-        if(isset($data_search['order_by']) && having_value($data_search['order_by'])):
-            db_order($data_search['order_by']);
-        else:
-            db_order("TKH_BIL");
-        endif;
+
+        if(isset($data_search['order_by']) && having_value($data_search['order_by']))
+        {
+            if ( $data_search['order_by'] == "i.dt_added" )
+            {
+                db_order("TKH_BIL, CUSTOM_SORT,TR_CODE");
+            }
+            else
+            {
+                db_order($data_search['order_by']);
+                db_order("CUSTOM_SORT, TR_CODE");
+            }
+        }
+        else
+        {
+            db_order("TKH_BIL, CUSTOM_SORT, TR_CODE");
+        }
+
         $sql = db_get('');
         if($sql):
             return $sql->result_array('');
