@@ -1009,7 +1009,7 @@ class BillGenerator
                     $data_insert_b_int_latest['TR_CODE']         = $item['KOD_CAJ_LAMA'];
                     $data_insert_b_int_latest['TR_CODE_NEW']     = $item['KOD_CAJ_BARU'];
                     $data_insert_b_int_latest['AMOUNT']          = $item['CAJ'];
-                    $data_insert_b_int_latest['PROSES_STATUS']   = "0";
+                    $data_insert_b_int_latest['PROCESS_STATUS']   = "0";
 
                     // Check bill item in b_int_latest before add. If no record then add new record else update record
                     $data_condition = $data_insert_b_int_latest;
@@ -1053,7 +1053,7 @@ class BillGenerator
                         $data_insert_b_int_latest['TR_CODE']         = $other_charge['TR_CODE_OLD'];
                         $data_insert_b_int_latest['TR_CODE_NEW']     = $other_charge['TR_CODE_NEW'];
                         $data_insert_b_int_latest['AMOUNT']          = $other_charge['AMOUNT'];
-                        $data_insert_b_int_latest['PROSES_STATUS']   = "0";
+                        $data_insert_b_int_latest['PROCESS_STATUS']   = "0";
 
                         // Check bill item in b_int_latest before add. If no record then add new record else update record
                         $data_condition = $data_insert_b_int_latest;
@@ -1089,7 +1089,7 @@ class BillGenerator
                             $data_insert_b_int_latest['TR_CODE']         = $carry_forward_bill['TR_CODE_OLD'];
                             $data_insert_b_int_latest['TR_CODE_NEW']     = $carry_forward_bill['TR_CODE'];
                             $data_insert_b_int_latest['AMOUNT']          = $carry_forward_bill['AMOUNT'];
-                            $data_insert_b_int_latest['PROSES_STATUS']   = "0";
+                            $data_insert_b_int_latest['PROCESS_STATUS']   = "0";
 
                             // Check bill item in b_int_latest before add. If no record then add new record else update record
                             $data_condition = $data_insert_b_int_latest;
