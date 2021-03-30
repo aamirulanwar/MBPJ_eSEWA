@@ -51,7 +51,7 @@ notify_msg('user');
                                 <a class="btn btn-primary btn-display" href="/asset/edit_asset_tenant_type/<?php echo urlEncrypt($row['TENANT_TYPE_ID'])?>"><span class="glyphicon glyphicon-edit"></span> Kemaskini </a>
                                 <?php endif;?>
                                 <?php if($this->auth->access_view($this->curuser,array(3020))):?>
-                                <button class="btn btn-danger btn-display" onclick="delete_modal('/asset/delete_asset_tenant_type/','<?php echo $row['TENANT_TYPE_ID']?>')"><span class="glyphicon glyphicon-remove"></span> padam </button>
+                                <button class="btn btn-danger btn-display" onclick="delete_modal('/asset/delete_asset_tenant_type/','<?php echo $row['TENANT_TYPE_ID']?>')"><span class="glyphicon glyphicon-remove"></span> Padam </button>
                                 <?php endif;?>
                             </td>
                         </tr>

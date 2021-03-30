@@ -19,13 +19,15 @@ class M_login extends ci_model
         $username = trim_strtolower($username);
 
         if(empty($username)):
-            validation_message('_external', 'The <strong>email address</strong> field is required.');
+            validation_message('_external', 'Sila masukkan <strong>ID Pengguna</strong>');
+            // validation_message('_external', 'The <strong>email address</strong> field is required.');
             return false;
         endif;
 
         db_where('user_email',$username);
         if(db_count_results('users')==0):
-            validation_message('_external','Wrong <strong>email address</strong>');
+            validation_message('_external','Sila masukkan <strong>ID Pengguna</strong> yang betul');
+            // validation_message('_external','Wrong <strong>email address</strong>');
             return false;
         endif;
     }
@@ -37,7 +39,8 @@ class M_login extends ci_model
         $ttl2 = '';
 
         if(empty($pass)):
-            validation_message('_external', 'The <strong>password</strong> field is required.');
+            validation_message('_external', 'Sila masukkan <strong>Katalaluan</strong>');
+            // validation_message('_external', 'The <strong>password</strong> field is required.');
             return false;
         endif;
 
@@ -55,7 +58,8 @@ class M_login extends ci_model
         endif;
 
         if($ttl2==0):
-            validation_message('_external', 'Wrong <strong>password</strong>');
+            validation_message('_external', 'Sila masukkan <strong>Katalaluan</strong> yang betul');
+            // validation_message('_external', 'Wrong <strong>password</strong>');
 
             load_library('audit_trail_lib');
             $post_arr = $this->input->post();

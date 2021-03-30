@@ -16,7 +16,7 @@
     <meta name="description" content="CoreUI - Open Source Bootstrap Admin Template">
     <meta name="author" content="Łukasz Holeczek">
     <meta name="keyword" content="Bootstrap,Admin,Template,Open,Source,jQuery,CSS,HTML,RWD,Dashboard">
-    <title>Sistem Pengurusan Sewaan MPKj</title>
+    <title>Sistem Sewa Elektronik MBPJ</title>
     <!-- Icons-->
     <link rel="icon" href="<?=base_url()?>/favicon.ico" type="image/x-icon">
     <link href="/assets/node_modules/@coreui/icons/css/coreui-icons.min.css" rel="stylesheet">
@@ -195,7 +195,7 @@
         <li class="nav-item dropdown">
             <a class="nav-link" data-toggle="dropdown" href="/profile" role="button" aria-haspopup="true"
                aria-expanded="false">
-                <img class="img-avatar" src="/assets/images/user.png" alt="administrator"><?php echo $this->curuser['USER_NAME']?>&nbsp;&nbsp;
+                <img class="img-avatar" src="/assets/images/user.jpg" alt="administrator"><?php echo $this->curuser['USER_NAME']?>&nbsp;&nbsp;
             </a>
             <div class="dropdown-menu dropdown-menu-right">                
                 <a class="dropdown-item" href="/profile">

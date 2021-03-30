@@ -39,10 +39,10 @@
     <div class="login-box">
         <div class="login-box-body">
             <div class="text-center">
-                <img class="center" src="/assets/images/logompkj.gif" style="height: 110px;">
+                <img class="center" src="/assets/images/logombpj.png" style="height: 110px;">
             </div>
-            <p class="login-box-msg" style="color: #1F1F1F;font-size: 22px; font-weight: bold;margin: 0px;padding: 0px;">SPS MPKj</p>
-            <p class="login-box-msg" style="color: #1F1F1F;font-size: 18px; font-weight: bold">Sistem Pengurusan Sewaan</p>
+            <p class="login-box-msg" style="color: #1F1F1F;font-size: 22px; font-weight: bold;margin: 0px;padding: 0px;">eSEWA MBPJ</p>
+            <p class="login-box-msg" style="color: #1F1F1F;font-size: 18px; font-weight: bold">Sistem Sewa Elektronik</p>
             <form method="post" action="/login" class="form-horizontal">
                 <div class="form-group has-feedback">
                     <input class="form-control" type="text" name="username" value="<?php echo input_data('username')?>" placeholder="ID Pengguna">
@@ -56,7 +56,8 @@
                 </div>
                 <div class="row">
                     <div class="col-12 text-center">
-                        <button class="btn btn-success btn-square px-4" type="submit">MASUK</button>
+                        <button class="btn btn-outline-info px-4" type="submit">MASUK</button>
+                        <!-- <button class="btn btn-success btn-square px-4" type="submit">MASUK</button> -->
                     </div>
                 </div>
             </form>

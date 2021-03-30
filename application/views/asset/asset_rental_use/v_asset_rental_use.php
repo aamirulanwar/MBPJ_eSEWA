@@ -50,7 +50,7 @@ notify_msg('user');
                             </td>
                             <td class="text-center">
                                 <?php if($this->auth->access_view($this->curuser,array(3015))):?>
-                                <a class="btn btn-primary btn-display" href="/asset/edit_asset_rental_use/<?php echo urlEncrypt($row['RENTAL_USE_ID'])?>"><span class="glyphicon glyphicon-edit"></span> kemaskini </a>
+                                <a class="btn btn-primary btn-display" href="/asset/edit_asset_rental_use/<?php echo urlEncrypt($row['RENTAL_USE_ID'])?>"><span class="glyphicon glyphicon-edit"></span> Kemaskini </a>
                                 <?php endif;?>
                                 <?php if($this->auth->access_view($this->curuser,array(3016))):?>
                                 <button class="btn btn-danger btn-display" onclick="delete_modal('/asset/delete_asset_rental_use/','<?php echo $row['RENTAL_USE_ID']?>')"><span class="glyphicon glyphicon-remove"></span> Padam </button>
