@@ -335,7 +335,7 @@ checking_validation(validation_errors());
                 <div class="form-group row">
                     <label class="col-sm-3 col-form-label">Harga sewaan <span class="mandatory">*</span></label>
                     <div class="col-sm-5">
-                        <input type="input" name="estimation_rental_charge" id="estimation_rental_charge" onkeyup="currency_format(this),calculate_cost()" onchange="currency_format(this)" class="form-control" placeholder="Harga sewaan" value="<?php echo set_value('estimation_rental_charge')?>">
+                        <input type="input" name="estimation_rental_charge" id="estimation_rental_charge" onkeyup="currency_format(this),calculate_cost()" onchange="currency_format(this)" class="form-control" placeholder="Harga sewaan" value="<?php echo set_value('estimation_rental_charge',$data_asset[0]['RENTAL_FEE'])?>">
                         <?php echo form_error('estimation_rental_charge')?>
                     </div>
                 </div>
@@ -365,7 +365,7 @@ checking_validation(validation_errors());
             <div class="form-group row">
                 <label class="col-sm-3 col-form-label">Jumlah sewaan (RM) <span class="mandatory">*</span></label>
                 <div class="col-sm-5">
-                    <input type="text" class="form-control" readonly onkeyup="currency_format(this)" name="rental_charge" id="rental_charge" placeholder="Jumlah sewaan (RM)" value="<?php echo set_value('rental_charge')?>">
+                    <input type="text" class="form-control" readonly onkeyup="currency_format(this)" name="rental_charge" id="rental_charge" placeholder="Jumlah sewaan (RM)" value="<?php echo set_value('rental_charge',$data_asset[0]['RENTAL_FEE'])?>">
                     <?php echo form_error('rental_charge')?>
                 </div>
             </div>
