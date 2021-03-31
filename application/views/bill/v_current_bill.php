@@ -100,7 +100,7 @@ notify_msg('notify_msg');
                 <button onclick="window.print()" class="btn btn-warning btn-sm pull-right">Print</button>
             </div>
             <div class="col-sm-3 text-center">
-                <img src="/assets/images/logompkj.gif" style="max-width: 100px;width: 100%">
+                <img src="/assets/images/logombpj.png" style="max-width: 130px;width: 100%">
             </div>
             <div class="col-sm-6 text-center">
                 <h2 style="font-weight: bold">MAJLIS PERBANDARAN KAJANG</h2>
