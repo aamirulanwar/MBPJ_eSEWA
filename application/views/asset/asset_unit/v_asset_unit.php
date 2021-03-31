@@ -27,8 +27,8 @@ notify_msg('user');
             <table class="table table-hover table-bordered">
                 <tr>
                     <th>No.</th>
-                    <th>Kod Harta</th>
-                    <th>Kod Kategori</th>
+                    <th>Kawasan Aset</th>
+                    <th>Kod Seksyen</th>
                     <th>Harga Sewaan</th>
                     <th>Status</th>
                     <th>Status Sewaan</th>

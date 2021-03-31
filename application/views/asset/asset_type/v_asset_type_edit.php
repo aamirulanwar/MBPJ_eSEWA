@@ -5,11 +5,11 @@
 <form action="/asset/edit_asset_type/<?php echo uri_segment(3)?>" method="post" class="form-horizontal">
     <div class="card card-accent-info">
         <div class="card-header">
-            <h3 class="box-title">Kemaskini Jenis Harta</h3>
+            <h3 class="box-title">Kemaskini Jenis Aset</h3>
         </div>
         <div class="card-body">
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label">Nama jenis harta <span class="mandatory">*</span></label>
+                <label class="col-sm-3 col-form-label">Nama jenis Aset <span class="mandatory">*</span></label>
                 <div class="col-sm-5">
                     <input type="input" name="name_asset_type" class="form-control" placeholder="Nama jenis harta" value="<?php echo set_value('name_asset_type',$data['TYPE_NAME'])?>">
                     <?php echo form_error('name_asset_type')?>

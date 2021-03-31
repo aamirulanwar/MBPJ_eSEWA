@@ -55,10 +55,10 @@ class Asset extends CI_Controller
     function category(){
         $this->auth->restrict_access($this->curuser,array(3005));
 
-        $data['link_1']     = 'Kod Fail';
-        $data['link_2']     = 'Kod Kategori';
+        $data['link_1']     = 'Pendaftaran Aset';
+        $data['link_2']     = 'Kod Aset';
         $data['link_3']     = '';
-        $data['pagetitle']  = 'Senarai Kod Kategori';
+        $data['pagetitle']  = 'Senarai Kod Ssksyen';
 
         $data_input = $this->input->post();
         if(!empty($data_input)):
@@ -92,8 +92,8 @@ class Asset extends CI_Controller
         $this->auth->restrict_access($this->curuser,array(3007));
 
         $data['link_1']     = 'Kod Fail';
-        $data['link_2']     = '<a href="/asset/category">Kod Kategori</a>';
-        $data['link_3']     = 'Kemaskini Kod Kategori ';
+        $data['link_2']     = '<a href="/asset/category">Kod Seksyen</a>';
+        $data['link_3']     = 'Kemaskini Kod Seksyen ';
         $data['pagetitle']  = '';
 
         $id = urlDecrypt(uri_segment(3));
@@ -165,7 +165,7 @@ class Asset extends CI_Controller
 
         $data['link_1']     = 'Kod Fail';
         $data['link_2']     = '<a href="/asset/category">Kod Kategori</a>';
-        $data['link_3']     = 'Tambah Kod Kategori ';
+        $data['link_3']     = 'Tambah Kod Seksyen ';
         $data['pagetitle']  = '';
 
         $data['asset_type']     = $this->m_a_type->get_a_type_active();
@@ -181,7 +181,7 @@ class Asset extends CI_Controller
         // validation_rules('total_unit','<strong>jumlah unit</strong>','integer');
         validation_rules('current_value');
         validation_rules('value_perunit','<strong>harga sewaan</strong>','required');
-        validation_rules('trans_code','<strong>kod transaksi</strong>','required');
+        validation_rules('trans_code','<strong>kod transaksi</strong>');
 
         if(validation_run()==false):
             templates('/asset/asset_category/v_asset_category_add',$data);

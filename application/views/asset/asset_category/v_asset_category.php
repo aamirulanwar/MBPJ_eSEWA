@@ -16,7 +16,7 @@ notify_msg('user');
         <form class="form-horizontal" action="/asset/category" method="post">
             <div class="col-lg-4 row" style="margin-top: 20px;margin-bottom: 20px;">
                 <div class="input-group">
-                     <input type="text" name="type_name" value="<?php echo search_default($data_search,'type_name');?>" class="form-control" placeholder="Jenis Harta">
+                     <input type="text" name="type_name" value="<?php echo search_default($data_search,'type_name');?>" class="form-control" placeholder="Jenis Aset">
                     <span class="input-group-btn">
                     <button class="btn btn-success btn-square" type="submit">Carian</button>
                 </span>
@@ -27,7 +27,7 @@ notify_msg('user');
             <table class="table table-hover table-bordered">
                 <tr>
                     <th>No.</th>
-                    <th>Kod / Nama kategori</th>
+                    <th>Kod / Nama Seksyen</th>
                     <th>Jumlah kekosongan / Jumlah unit</th>
                     <th>Nilai Harta (RM)</th>
                     <th>Jenis</th>

@@ -6,18 +6,18 @@ checking_validation(validation_errors());
 <form action="/asset/edit_asset_unit/<?php echo uri_segment(3)?>" method="post" class="form-horizontal">
     <div class="card card-accent-info">
         <div class="card-header">
-            <h3 class="box-title">Kemaskini Kod Harta</h3>
+            <h3 class="box-title">Kemaskini Kawasan Aset</h3>
         </div>
         <div class="card-body">
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label">Nama kod harta <span class="mandatory">*</span></label>
+                <label class="col-sm-3 col-form-label">Nama Kawasan Aset <span class="mandatory">*</span></label>
                 <div class="col-sm-5">
                     <input type="input" name="name_asset" class="form-control" placeholder="Nama kod harta" value="<?php echo set_value('name_asset',$data['ASSET_NAME'])?>">
                     <?php echo form_error('name_asset')?>
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label">Kod kategori <span class="mandatory">*</span></label>
+                <label class="col-sm-3 col-form-label">Kod Seksyen <span class="mandatory">*</span></label>
                 <div class="col-sm-5">
                     <select name="category_id" class="form-control">
                         <option value=""> - Sila pilih - </option>

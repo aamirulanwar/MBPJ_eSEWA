@@ -6,11 +6,11 @@
 <form action="/asset/edit_category/<?php echo uri_segment(3)?>" method="post" class="form-horizontal">
     <div class="card card-accent-info">
         <div class="card-header">
-            <h3 class="box-title">Tambah kod kategori</h3>
+            <h3 class="box-title">Tambah kod Seksyen</h3>
         </div>
         <div class="card-body">
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label">Jenis harta <span class="mandatory">*</span></label>
+                <label class="col-sm-3 col-form-label">Jenis Aset<span class="mandatory">*</span></label>
                 <div class="col-sm-5">
                     <select name="type" class="form-control">
                         <option value=""> - Sila pilih - </option>
@@ -38,14 +38,14 @@
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label">Kod kategori <span class="mandatory">*</span></label>
+                <label class="col-sm-3 col-form-label">Kod Seksyen<span class="mandatory">*</span></label>
                 <div class="col-sm-5">
                     <input type="input" name="category_code" class="form-control" placeholder="Kod Kategori" value="<?php echo set_value('category_code',$data['CATEGORY_CODE'])?>">
                     <?php echo form_error('category_code')?>
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label">Nama kategori <span class="mandatory">*</span></label>
+                <label class="col-sm-3 col-form-label">Nama Seksyen <span class="mandatory">*</span></label>
                 <div class="col-sm-5">
                     <input type="input" name="category_name" class="form-control" placeholder="Nama Kategori" value="<?php echo set_value('category_name',$data['CATEGORY_NAME'])?>">
                     <?php echo form_error('category_name')?>
@@ -86,20 +86,20 @@
                     <?php echo form_error('value_perunit')?>
                 </div>
             </div>
-            <div class="form-group row">
+            <!-- <div class="form-group row">
                 <label class="col-sm-3 col-form-label">Kod transaksi <span class="mandatory">*</span></label>
                 <div class="col-sm-5">
                     <select class="form-control js-example-basic-single" name="trans_code">
                         <?php
-                        echo  option_value('','- Sila pilih -','trans_code');
-                        foreach ($code_trans as $row):
-                            echo option_value($row['MCT_TRCODENEW'],$row['MCT_TRCODENEW'].' - '.$row['MCT_TRDESC'],'trans_code',$data['TRCODE_CATEGORY']);
-                        endforeach;
+                        //echo  option_value('','- Sila pilih -','trans_code');
+                        // foreach ($code_trans as $row):
+                            // echo option_value($row['MCT_TRCODENEW'],$row['MCT_TRCODENEW'].' - '.$row['MCT_TRDESC'],'trans_code',$data['TRCODE_CATEGORY']);
+                        // endforeach;
                         ?>
                     </select>
                     <?php echo form_error('trans_code')?>
                 </div>
-            </div>
+            </div> -->
         </div>
         <div class="checkbox">
             <label class="col-sm-5 pull-right">

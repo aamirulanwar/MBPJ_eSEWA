@@ -257,24 +257,24 @@
                 <?php if($this->auth->access_main_view($this->curuser,array(3000))):?>
                 <li class="nav-item nav-dropdown <?php echo set_active_dropdown(uri_segment(1),array('asset'))?>">
                     <a class="nav-link nav-dropdown-toggle <?php echo set_active_menu(uri_segment(1),array('asset'))?>" href="#2">
-                        <i class="nav-icon icon-settings"></i> Kod Fail</a>
+                        <i class="nav-icon icon-settings"></i> Pendaftaran Aset</a>
                     <ul class="nav-dropdown-items">
                         <?php if($this->auth->access_view($this->curuser,array(3001))):?>
                         <li class="nav-item">
                             <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('asset_type','add_asset_type','edit_asset_type'))?>" href="/asset/asset_type">
-                                <i class="nav-icon fa fa-circle fa-sm"></i> Jenis Harta</a>
+                                <i class="nav-icon fa fa-circle fa-sm"></i> Jenis Aset</a>
                         </li>
                         <?php endif;?>
                         <?php if($this->auth->access_view($this->curuser,array(3005))):?>
                         <li class="nav-item">
                             <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('category','add_category','edit_category'))?>" href="/asset/category">
-                                <i class="nav-icon fa fa-circle fa-sm"></i> Kod Kategori</a>
+                                <i class="nav-icon fa fa-circle fa-sm"></i> Seksyen Aset</a>
                         </li>
                         <?php endif;?>
                         <?php if($this->auth->access_view($this->curuser,array(3009))):?>
                         <li class="nav-item">
                             <a class="nav-link <?php echo set_active_menu(uri_segment(2),array('asset_unit','add_asset_unit','edit_asset_unit'))?>" href="/asset/asset_unit">
-                                <i class="nav-icon fa fa-circle fa-sm"></i> Kod Harta</a>
+                                <i class="nav-icon fa fa-circle fa-sm"></i> Kawasan Aset</a>
                         </li>
                         <?php endif;?>
                         <?php if($this->auth->access_view($this->curuser,array(3013))):?>
